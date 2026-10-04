@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>《数字图像处理》直击心灵的15个问题 —— 你以为你在"看图"，其实你在"算图"</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: #0f172a;
+    color: #e2e8f0;
+    padding: 32px 20px;
+    line-height: 1.8;
+  }
+  .container { max-width: 800px; margin: 0 auto; }
+
+  .header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding: 40px 20px;
+    background: linear-gradient(135deg, #1e3a5f 0%, #0f172a 100%);
+    border-radius: 16px;
+    border: 1px solid #334155;
+  }
+  .header h1 { font-size: 24px; margin-bottom: 12px; color: #f8fafc; }
+  .header .subtitle { font-size: 14px; color: #94a3b8; }
+
+  .intro {
+    background: #1e293b;
+    border-radius: 12px;
+    padding: 20px 24px;
+    border: 1px solid #334155;
+    margin-bottom: 30px;
+    color: #cbd5e1;
+    font-size: 15px;
+  }
+
+  .question-card {
+    background: #1e293b;
+    border-radius: 12px;
+    padding: 24px;
+    border: 1px solid #334155;
+    margin-bottom: 20px;
+  }
+  .question-num {
+    display: inline-block;
+    background: #3b82f6;
+    color: white;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 32px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    font-size: 14px;
+  }
+  .question-title {
+    font-size: 17px;
+    font-weight: 600;
+    color: #f8fafc;
+    margin-bottom: 12px;
+  }
+  .scenario {
+    background: #0f172a;
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 14px;
+    border-left: 3px solid #f59e0b;
+  }
+  .scenario .label { font-size: 12px; color: #f59e0b; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+  .scenario p { color: #cbd5e1; font-size: 14px; }
+  .book-view { margin-bottom: 14px; }
+  .book-view .label { font-size: 12px; color: #3b82f6; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+  .book-view p { color: #93c5fd; font-size: 14px; }
+  .reflection {
+    background: #1e293b;
+    border-radius: 8px;
+    padding: 14px 16px;
+    border: 1px dashed #475569;
+  }
+  .reflection .label { font-size: 12px; color: #10b981; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+  .reflection p { color: #6ee7b7; font-size: 14px; }
+
+  .footer { text-align: center; margin-top: 40px; padding: 20px; color: #64748b; font-size: 13px; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <h1>你以为你在"看图"，其实你在"算图"</h1>
+    <div class="subtitle">《数字图像处理》· 15个让你重新审视"图像"这件事的问题</div>
+  </div>
+
+  <div class="intro">
+    💡 读完每个问题，先停下来想想自己的答案。<br>
+    这些问题不是考你算法，而是让你意识到：你每天看的照片、视频、屏幕，本质上都是数学运算。
+  </div>
+
+  <!-- 问题1 -->
+  <div class="question-card">
+    <div class="question-num">1</div>
+    <div class="question-title">一张照片到底是什么？</div>
+    <div class="scenario">
+      <div class="label">场景假设</div>
+      <p>你手机里有一张照片，很美好，有山有水有夕阳。但从计算机的角度看，这张照片到底是什么？</p>
+    </div>
+    <div class="book-view">
+      <div class="label">书里的答案</div>
+      <p>一幅图像就是一个二维函数f(x, y)。每个像素就是一个数字——0到255之间的灰度值。所谓"照片"，就是一个巨大的数字矩阵。</p>
+    </div>
+    <div class="reflection">
+      <div class="label">你的反思</div>
+      <p>当你知道一张照片本质上是一串数字的时候，你对"修图"这件事的理解，有没有变？</p>
+    </div>
+  </div>
+
+  <!-- 问题2 -->
+  <div class="question-card">
+    <div class="question-num">2</div>
+    <div class="question-title">"对比度"到底在对比什么？</div>
+    <div class="scenario">
+      <div class="label">场景假设</div>
+      <p>你修图的时候，拉了一下"对比度"，图像突然变得清晰了。对比度到底在对比什么？</p>
+    </div>
+    <div class="book-view">
+      <div class="label">书里的答案</div>
+      <p>对比度拉伸就是把暗的地方压得更暗，亮的地方拉得更亮——把灰度范围拉大。本质上是一个数学变换：s = T(r)。</p>
+    </div>
+    <div class="reflection">
+      <div class="label">你的反思</div>
+      <p>生活中有没有什么东西，也是"对比度"太低了——你看不清，但稍微拉一下，就突然清楚了？</p>
+    </div>
+  </div>
+
+  <!-- 问题3 -->
+  <div class="question-card">
+    <div class="question-num">3</div>
+    <div class="question-title">"模糊"到底是怎么来的？</div>
+    <div class="scenario">
+      <div class="label">场景假设</div>
+      <p>为什么高斯模糊能让图片变模糊？模糊到底是什么物理过程？</p>
+    </div>
+    <div class="book-view">
+      <div class="label">书里的答案</div>
+      <p>模糊就是"平均"——每个像素的值，变成了它周围几个像素的平均值。3x3的邻域，9个像素加起来除以9。这就是"低通滤波"——把高频细节滤掉了。</p>
+    </div>
+    <div class="reflection">
+      <div class="label">你的反思</div>
+      <p>你看一件事的时候，有没有"模糊"的时候——就是把周围的信息都平均了，反而看不清细节了？</p>
+    </div>
+  </div>
+
+  <!-- 问题4 -->
+  <div class="question-card">
+    <div class="question-num">4</div>
+    <div class="question-title">"锐化"到底在锐化什么？</div>
+    <div class="scenario">
+      <div class="label">场景假设</div>
+      <p>和模糊相反，"锐化"让图片边缘更清楚。锐化到底在做什么？</p>
+    </div>
+    <div class="book-view">
+      <div class="label">书里的答案</div>
+      <p>锐化就是"高通滤波"——把高频细节加强。边缘就是灰度变化剧烈的地方，锐化就是把这种变化放大。</p>
+    </div>
+    <div class="reflection">
+      <div class="label">你的反思</div>
+      <p>你对一件事的"锐度"够吗？你是看到了细节，还是只看到了大概？</p>
+    </div>
+  </div>
+
+  <!-- 问题5 -->
+  <div class="question-card">
+    <div class="question-num">5</div>
+    <div class="question-title">为什么噪点让人不舒服？</div>
+    <div class="scenario">
+      <div class="label">场景假设</div>
+      <p>晚上拍照，照片上有很多颗粒——就是"噪点"。为什么噪点让人不舒服？它到底是什么？</p>
+    </div>
+    <div class="book-view">
+      <div class="label">书里的答案</div>
+      <p>噪点就是图像里的随机噪声——每个像素的值都被随机扰动了一下。真实的图像应该是"平滑"的，相邻像素的值应该差不多。噪点打破了这种平滑。</p>
+    </div>
+    <div class="reflection">
+      <div class="label">你的反思</div>
+      <p>你对一件事的判断里，有没有"噪点"——那些随机的、没道理的干扰？</p>
+    </div>
+  </div>
+
+  <!-- 问题6 -->
+  <div class="question-card">
+    <div class="question-num">6</div>
+    <div class="question-title">"频率域"到底是什么？为什么要换一个角度看？</div>
+    <div class="scenario">
+      <div class="label">场景假设</div>
+      <p>书里说，图像可以在"空间域"处理，也可以在"频率域"处理。频率域到底是什么？为什么要换一个角度？</p>
+    </div>
+    <div class="book-view">
+      <div class="label">书里的答案</div>
+      <p>傅里叶变换告诉我们：任何图像都可以分解成不同频率的正弦波的叠加。空间域里做卷积，在频率域里就是简单的乘法。有时候换个角度，问题就变简单了。</p>
+    </div>
+    <div class="reflection">
+      <div class="label">你的反思</div>
+      <p>你遇到难题的时候，有没有试过"换个角度"？就像从空间域换到频率域一样——同一个问题，换个坐标系，突然就简单了？</p>
+    </div>
+  </div>
+
+  <!-- 问题7 -->
+  <div class="question-card">
+    <div class="question-num">7</div>
+    <div class="question-title">"边缘检测"到底在检测什么？</div>
+    <div class="scenario">
+      <div class="label">场景假设</div>
+      <p>边缘检测——找出图片里物体的边缘。边缘到底是什么？为什么它这么重要？</p>
+    </div>
+    <div class="book-view">
+      <div class="label">书里的答案</div>
+      <p>边缘就是灰度变化剧烈的地方。Sobel算子、Canny算子，本质上都是在找"梯度大"的地方。边缘是物体的轮廓——找到了边缘，就找到了物体。</p>
+    </div>
+    <div class="reflection">
+      <div class="label">你的反思</div>
+      <p>你对一个人的"边缘"清楚吗？你知道他的边界在哪里吗？</p>
+    </div>
+  </div>
+
+  <!-- 问题8 -->
+  <div class="question-card">
+    <div class="question-num">8</div>
+    <div class="question-title">"分割"到底在分什么？</div>
+    <div class="scenario">
+      <div class="label">场景假设</div>
+      <p>图像分割——把图片分成不同的区域。分割到底在分什么？为什么它这么难？</p>
+    </div>
+    <div class="book-view">
+      <div class="label">书里的答案</div>
+      <p>分割就是"把属于同一个物体的像素归到一起"。听起来简单，但做起来很难——因为"什么是同一个物体"这件事，本身就是个理解问题。</p>
+    </div>
+    <div class="reflection">
+      <div class="label">你的反思</div>
+      <p>你对一件事的"分割"清楚吗？你能把不同的事情分开，还是搅在一起？</p>
+    </div>
+  </div>
+
+  <!-- 问题9 -->
+  <div class="question-card">
+    <div class="question-num">9</div>
+    <div class="question-title">"压缩"到底在压缩什么？为什么能压那么小？</div>
+    <div class="scenario">
+      <div class="label">场景假设</div>
+      <p>一张原图10MB，压成JPEG后只有500KB——为什么能压这么多？压掉的是什么？</p>
+    </div>
+    <div class="book-view">
+      <div class="label">书里的答案</div>
+      <p>压掉的是"冗余信息"——人眼其实分辨不出来的细节。JPEG就是利用了人眼的视觉特性，把不重要的信息去掉。</p>
+    </div>
+    <div class="reflection">
+      <div class="label">你的反思</div>
+      <p>你脑子里有没有"冗余信息"——那些你记着但其实不重要的东西？能不能"压缩"一下？</p>
+    </div>
+  </div>
+
+  <!-- 问题10 -->
+  <div class="question-card">
+    <div class="question-num">10</div>
+    <div class="question-title">"形态学"到底在做什么？为什么叫这个名字？</div>
+    <div class="scenario">
+      <div class="label">场景假设</div>
+      <p>形态学图像处理——腐蚀、膨胀、开运算、闭运算。为什么叫"形态学"？它到底在做什么？</p>
+    </div>
+    <div class="book-view">
+      <div class="label">书里的答案</div>
+      <p>形态学就是"形状操作"——腐蚀就是把物体"变瘦"一圈，膨胀就是"变胖"一圈。用来清理二值图像——去掉小噪点、连接断开的地方、提取骨架。</p>
+    </div>
+    <div class="reflection">
+      <div class="label">你的反思</div>
+      <p>你对一件事的"形状"清楚吗？是清晰锐利的，还是模糊不清的？</p>
+    </div>
+  </div>
+
+  <!-- 问题11 -->
+  <div class="question-card">
+    <div class="question-num">11</div>
+    <div class="question-title">"特征"到底是什么？为什么它这么重要？</div>
+    <div class="scenario">
+      <div class="label">场景假设</div>
+      <p>特征提取——从图片里提取"特征"。特征到底是什么？为什么机器要靠"特征"来识别物体？</p>
+    </div>
+    <div class="book-view">
+      <div class="label">书里的答案</div>
+      <p>特征就是"能代表这个物体的关键信息"。SIFT特征——尺度不变特征——不管图片放大缩小、旋转角度，都能提取出同样的特征。这样机器才能认出"这是同一个物体"。</p>
+    </div>
+    <div class="reflection">
+      <div class="label">你的反思</div>
+      <p>你对一个人的"特征"清楚吗？不管他穿什么衣服、在什么场景下，你都能认出他吗？你靠的是什么"特征"？</p>
+    </div>
+  </div>
+
+  <!-- 问题12 -->
+  <div class="question-card">
+    <div class="question-num">12</div>
+    <div class="question-title">"分类"到底在分什么？为什么它是最终目标？</div>
+    <div class="scenario">
+      <div class="label">场景假设</div>
+      <p>全书最后一章是"图像模式分类"——神经网络、深度学习、CNN。为什么分类是最终目标？</p>
+    </div>
+    <div class="book-view">
+      <div class="label">书里的答案</div>
+      <p>前面所有的处理——滤波、增强、分割、特征提取——都是为了最后一步："这是什么？"识别出来，分类出来，图像处理才算完成了它的使命。</p>
+    </div>
+    <div class="reflection">
+      <div class="label">你的反思</div>
+      <p>你做了那么多"处理"——学了那么多东西、看了那么多书——最后要"分类"出什么？你到底想搞清楚什么？</p>
+    </div>
+  </div>
+
+  <!-- 问题13 -->
+  <div class="question-card">
+    <div class="question-num">13</div>
+    <div class="question-title">"复原"到底在复原什么？为什么它是个"逆问题"？</div>
+    <div class="scenario">
+      <div class="label">场景假设</div>
+      <p>图像复原——把模糊的图片变清楚。为什么它是个"逆问题"？为什么很难？</p>
+    </div>
+    <div class="book-view">
+      <div class="label">书里的答案</div>
+      <p>因为从"清楚"到"模糊"是正向的——你知道退化过程。但从"模糊"反推回"清楚"，是逆问题——解不唯一。就像把一杯墨水滴进清水里，你能看到水变浑了，但你没法反推回"原来的墨水是什么形状"。</p>
+    </div>
+    <div class="reflection">
+      <div class="label">你的反思</div>
+      <p>生活中有没有"逆问题"——事情已经发生了，你想"复原"回去，但解不唯一？</p>
+    </div>
+  </div>
+
+  <!-- 问题14 -->
+  <div class="question-card">
+    <div class="question-num">14</div>
+    <div class="question-title">"彩色"到底是什么？为什么需要单独一章？</div>
+    <div class="scenario">
+      <div class="label">场景假设</div>
+      <p>这本书前6章都是讲灰度图像，第7章突然开始讲彩色图像处理。为什么彩色需要单独一章？它和灰度有什么本质区别？</p>
+    </div>
+    <div class="book-view">
+      <div class="label">书里的答案</div>
+      <p>灰度图像是二维的——x, y坐标加一个灰度值。彩色图像是三维的——RGB三个通道。处理方式不一样：彩色不仅有空间信息，还有颜色信息。</p>
+    </div>
+    <div class="reflection">
+      <div class="label">你的反思</div>
+      <p>你看事情的时候，是只看"灰度"（黑白、好坏、对错），还是能看到"彩色"（不同的维度、不同的层次）？</p>
+    </div>
+  </div>
+
+  <!-- 问题15 -->
+  <div class="question-card">
+    <div class="question-num">15</div>
+    <div class="question-title">最后一个问题：你今天"算"了多少张图？</div>
+    <div class="scenario">
+      <div class="label">场景假设</div>
+      <p>现在，停下来想想：你今天看了多少张图？手机屏幕、电脑屏幕、照片、视频……每一张图，你的大脑都在做大量的"图像处理"——滤波、增强、分割、识别。你意识到了吗？</p>
+    </div>
+    <div class="book-view">
+      <div class="label">书里的答案</div>
+      <p>视觉是人类最高级的感知。你看到的不是"现实"，而是你的大脑经过大量计算后"构建"出来的版本。你以为你在"看"，其实你在"算"。</p>
+    </div>
+    <div class="reflection">
+      <div class="label">你的反思</div>
+      <p>看完这本书之后，你有没有开始"看见"一些以前没注意到的东西？那些东西一直都在那里——只是你以前没意识到，你的大脑一直在"算"。</p>
+    </div>
+  </div>
+
+  <div class="footer">
+    《数字图像处理》· 15个直击心灵的问题 · Gonzalez & Woods<br>
+    你以为你在"看图"，其实你在"算图"
+  </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>《视觉》整体架构 —— 从像素到物体的重建之路</title>
+<style>
+  :root{
+    --bg:#0f172a;
+    --panel:#1a2337;
+    --panel2:#141d2f;
+    --edge:#334155;
+    --ink:#e8eef7;
+    --ink-mid:#b8c4d6;
+    --ink-soft:#8296b0;
+    --calc:#e0913a;        /* 计算理论：输入端，暖琥珀 */
+    --calc-soft:#3a2a12;
+    --prim:#4fb3a6;        /* 基元草图：冷青 */
+    --prim-soft:#12302e;
+    --two5:#7c8ce0;        /* 2.5维草图：靛蓝 */
+    --two5-soft:#1e2447;
+    --three:#b06fd0;       /* 三维模型：紫 */
+    --three-soft:#2e1c3d;
+    --warn:#d9534f;        /* 反例与误区：暗红 */
+    --warn-soft:#3a1a19;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--bg);color:var(--ink);padding:36px 20px 48px;line-height:1.85;
+    -webkit-font-smoothing:antialiased;
+  }
+  .container{max-width:940px;margin:0 auto;}
+
+  .header{
+    text-align:center;margin-bottom:32px;padding:46px 24px 42px;
+    background:linear-gradient(135deg,#1e3a5f 0%,#0f172a 100%);
+    border:1px solid var(--edge);border-radius:16px;
+  }
+  .header h1{font-size:27px;color:#f8fafc;margin-bottom:14px;letter-spacing:.5px;}
+  .header .subtitle{font-size:14.5px;color:var(--ink-soft);}
+  .header .author{margin-top:16px;font-size:12.5px;color:#64748b;letter-spacing:.5px;}
+
+  .intro{
+    background:var(--panel);border:1px solid var(--edge);border-left:4px solid var(--calc);
+    border-radius:12px;padding:22px 26px;margin-bottom:32px;font-size:14.5px;color:var(--ink-mid);
+  }
+  .intro h3{color:var(--calc);font-size:15px;margin-bottom:10px;letter-spacing:.5px;}
+  .intro ol{margin-left:20px;}
+  .intro li{margin-bottom:6px;}
+  .intro strong{color:var(--ink);}
+
+  .section-title{
+    font-size:20px;font-weight:700;color:#f1f5f9;margin:46px 0 8px;
+    padding-left:13px;border-left:4px solid var(--prim);letter-spacing:.3px;
+  }
+  .section-sub{color:var(--ink-soft);font-size:13.5px;margin:0 0 18px 17px;}
+
+  .card{
+    background:var(--panel);border:1px solid var(--edge);border-radius:12px;
+    padding:22px 26px;margin-bottom:16px;
+  }
+  .card h3{color:var(--prim);margin-bottom:10px;font-size:16.5px;}
+  .card p{color:var(--ink-mid);font-size:14.5px;}
+  .card p+p{margin-top:9px;}
+  .card strong{color:var(--ink);}
+  .card em{color:var(--calc);font-style:normal;font-weight:600;}
+
+  /* 核心命题 */
+  .credo{
+    background:var(--panel);border:1px solid var(--edge);border-left:5px solid var(--calc);
+    border-radius:12px;padding:28px 30px;margin-bottom:18px;
+  }
+  .credo h3{font-size:18px;color:var(--calc);margin-bottom:12px;}
+  .credo p{color:var(--ink-mid);font-size:15px;}
+  .credo .big{
+    font-size:19px;color:var(--ink);font-weight:700;line-height:1.7;
+    margin:14px 0;padding-left:16px;border-left:3px solid var(--two5);
+  }
+
+  /* 三层 */
+  .levels{display:flex;flex-direction:column;gap:0;margin-bottom:18px;}
+  .lvl{
+    background:var(--panel);border:1px solid var(--edge);border-left:4px solid;
+    border-radius:12px;padding:19px 24px;margin-bottom:10px;position:relative;
+  }
+  .lvl .tag{
+    position:absolute;right:20px;top:18px;font-size:10.5px;padding:2px 10px;
+    border-radius:20px;font-weight:700;letter-spacing:.5px;
+  }
+  .lvl h4{font-size:16.5px;color:var(--ink);margin-bottom:7px;}
+  .lvl p{color:var(--ink-mid);font-size:14px;}
+  .lvl .q{color:var(--ink-soft);font-size:13px;font-style:italic;margin-top:8px;}
+  .lvl.l1{border-left-color:var(--calc);} .lvl.l1 .tag{background:var(--calc-soft);color:var(--calc);}
+  .lvl.l2{border-left-color:var(--prim);} .lvl.l2 .tag{background:var(--prim-soft);color:var(--prim);}
+  .lvl.l3{border-left-color:var(--two5);} .lvl.l3 .tag{background:var(--two5-soft);color:var(--two5);}
+  .arrow{text-align:center;color:var(--edge);font-size:17px;margin:-3px 0 3px;}
+
+  /* 三个表征 */
+  .reps{display:grid;grid-template-columns:repeat(auto-fit,minmax(255px,1fr));gap:15px;margin-bottom:18px;}
+  .rep{
+    background:var(--panel);border:1px solid var(--edge);border-top:4px solid;
+    border-radius:12px;padding:20px;
+  }
+  .rep:nth-child(1){border-top-color:var(--prim);}
+  .rep:nth-child(2){border-top-color:var(--two5);}
+  .rep:nth-child(3){border-top-color:var(--three);}
+  .rep .n{font-size:11.5px;letter-spacing:1px;color:var(--ink-soft);font-weight:700;margin-bottom:6px;}
+  .rep h3{font-size:16px;color:var(--ink);margin-bottom:9px;}
+  .rep .q{font-size:13px;color:var(--ink-soft);font-style:italic;margin-bottom:10px;padding-bottom:10px;border-bottom:1px dashed var(--edge);}
+  .rep p{color:var(--ink-mid);font-size:13.5px;}
+
+  table{width:100%;border-collapse:collapse;margin:13px 0;font-size:13.5px;}
+  th,td{padding:10px 12px;border:1px solid var(--edge);text-align:left;vertical-align:top;}
+  th{background:var(--panel2);color:var(--prim);font-weight:700;font-size:13px;}
+  td{color:var(--ink-mid);}
+  td strong{color:var(--ink);}
+
+  .quote{
+    background:var(--panel2);border:1px solid var(--edge);border-left:4px solid var(--calc);
+    border-radius:12px;padding:20px 24px;margin:24px 0;
+  }
+  .quote p{font-size:15.5px;color:#f0d9b5;font-style:italic;line-height:1.8;}
+  .quote .src{margin-top:10px;font-size:12.5px;color:var(--ink-soft);text-align:right;font-style:normal;}
+
+  .pit{
+    background:var(--warn-soft);border-left:4px solid var(--warn);border-radius:0 10px 10px 0;
+    padding:15px 20px;margin-bottom:12px;font-size:14px;color:#f0b8b5;
+  }
+  .pit .lbl{color:#f08a85;font-weight:700;display:block;margin-bottom:6px;font-size:12.5px;letter-spacing:.5px;}
+  .pit strong{color:#f8d0cd;}
+
+  .route-item{
+    display:flex;gap:14px;align-items:flex-start;
+    background:var(--panel);border:1px solid var(--edge);border-left:4px solid;
+    border-radius:12px;padding:15px 20px;margin-bottom:10px;
+  }
+  .route-item.must{border-left-color:var(--calc);}
+  .route-item.skim{border-left-color:var(--prim);}
+  .route-item.skip{border-left-color:#475569;}
+  .route-badge{
+    flex-shrink:0;font-size:11.5px;padding:3px 10px;border-radius:20px;
+    font-weight:700;margin-top:3px;white-space:nowrap;letter-spacing:.5px;
+  }
+  .must .route-badge{background:var(--calc-soft);color:var(--calc);}
+  .skim .route-badge{background:var(--prim-soft);color:var(--prim);}
+  .skip .route-badge{background:#243044;color:var(--ink-soft);}
+  .route-body strong{color:var(--ink);display:block;margin-bottom:3px;font-size:14.5px;}
+  .route-body span{color:var(--ink-mid);font-size:13px;}
+
+  .footer{text-align:center;margin-top:44px;padding:22px;color:#64748b;font-size:12.5px;line-height:1.9;}
+
+  @media(max-width:640px){
+    .header h1{font-size:20px;}
+    .section-title{font-size:17.5px;}
+    body{padding:20px 14px 32px;}
+    .lvl .tag{position:static;display:inline-block;margin-bottom:8px;}
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <h1>从像素到物体的重建之路</h1>
+    <div class="subtitle">《视觉》整体架构 · 马尔的三层理论与三个表征</div>
+    <div class="author">David Marr · A Computational Investigation into the Human Representation and Processing of Visual Information · MIT Press</div>
+  </div>
+
+  <div class="intro">
+    <h3>📖 怎么用这张图</h3>
+    <ol>
+      <li><strong>先读"视觉问题的本质"</strong>——为什么"看见"是一件比想象中难得多的事。</li>
+      <li><strong>再看马尔的三层理论</strong>——这是全书方法论的地基，也是他对认知科学最大的贡献。</li>
+      <li><strong>然后看三个表征</strong>——基元草图 → 2.5 维草图 → 三维模型，这是视觉计算的实际流水线。</li>
+      <li><strong>最后看"马尔反对什么"</strong>——他同时批评了格式塔和吉布森两派，理由很值得记住。</li>
+    </ol>
+  </div>
+
+  <!-- ================= 核心问题 ================= -->
+  <div class="section-title">视觉问题的本质：为什么"看见"这么难</div>
+  <div class="section-sub">马尔问的不是"眼睛怎么工作"，而是"从图像恢复世界为什么在计算上如此困难"</div>
+
+  <div class="credo">
+    <h3>核心命题</h3>
+    <p>落在视网膜上的是一个<strong>二维的光强阵列</strong>。而你看到的是一个充满物体、有远近、有材质、有颜色的<strong>三维世界</strong>。这中间的跨度，就是视觉要解决的问题。</p>
+    <div class="big">图像是欠定的：同一张图像，可以由无穷多个不同的三维世界产生。</div>
+    <p>所以视觉不是"把图像读出来"，而是<em>在无穷多个可能的解释中，选出一个合理的</em>。马尔的核心贡献，就是把这个问题从哲学争论变成了可以动手做的计算问题。</p>
+    <p>他给出的思路是：<strong>要理解一个信息处理系统，必须先弄清它要解决什么问题、为什么这个问题难、以及有哪些约束可以被利用。</strong></p>
+  </div>
+
+  <div class="card">
+    <h3>为什么"欠定"是关键</h3>
+    <p>一个经典例子：一张照片上有一条明暗分界线。它可能是——</p>
+    <p>• 一个物体的<strong>边缘</strong>（前面是白墙，后面是黑墙）<br>
+       • 同一个表面的<strong>阴影</strong>（同一面墙，一部分被挡住光）<br>
+       • 同一材质的<strong>反射率变化</strong>（墙被刷成了两种颜色）<br>
+       • <strong>照明本身</strong>的变化（聚光灯的边缘）</p>
+    <p>光强阵列里，这四种情况<strong>完全一样</strong>。所以仅凭局部信息，你无法判断看到的是哪种。视觉系统必须借助<em>额外的假设</em>——比如"边缘通常对应物体边界"、"光照一般变化平缓"——才能得出唯一解。</p>
+    <p><strong>这就是马尔把视觉称为"计算"的原因</strong>：它是一个在约束下求解的过程，不是一个被动记录的过程。</p>
+  </div>
+
+  <!-- ================= 三层理论 ================= -->
+  <div class="section-title">马尔的三层理论：全书最重要的方法论</div>
+  <div class="section-sub">理解任何一个信息处理系统，都要在三个层次上分别提问</div>
+
+  <div class="levels">
+    <div class="lvl l1">
+      <span class="tag">第一层</span>
+      <h4>计算理论（Computational Theory）</h4>
+      <p><strong>要解决什么问题？为什么这个问题难？有什么约束可以利用？</strong></p>
+      <p>这一层完全不涉及"用什么硬件实现"。它问的是任务的<em>逻辑本质</em>——输入是什么、输出是什么、目标是什么、为什么光凭输入不足以得到输出。</p>
+      <div class="q">例：从图像中恢复表面的朝向。目标明确（得到朝向），难点明确（同一亮度可由不同朝向产生），约束明确（表面通常光滑）。</div>
+    </div>
+    <div class="arrow">↓</div>
+    <div class="lvl l2">
+      <span class="tag">第二层</span>
+      <h4>表征与算法（Representation and Algorithm）</h4>
+      <p><strong>用什么形式表示输入和输出？用什么步骤从前者算出后者？</strong></p>
+      <p>这一层要选定<em>数据结构和计算过程</em>。马尔强调：<strong>表征的选择决定了算法的难度</strong>——选对了表征，算法可能很简单；选错了，怎么努力都不行。</p>
+      <div class="q">例：用"边缘片段及其方向"来表示基元草图的输出，而不是用原始像素。</div>
+    </div>
+    <div class="arrow">↓</div>
+    <div class="lvl l3">
+      <span class="tag">第三层</span>
+      <h4>硬件实现（Hardware Implementation）</h4>
+      <p><strong>这套算法在真实的神经硬件上怎么跑起来？</strong></p>
+      <p>这一层才关心神经元、突触、膜电位。马尔的关键主张是：<strong>这三层是相对独立的</strong>——你可以在不知道神经元细节的情况下，把计算理论搞清楚。</p>
+      <div class="q">例：视网膜神经节细胞的中心-周边感受野，是"检测局部亮度变化"这个计算的硬件实现。</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>为什么这个区分如此重要</h3>
+    <p>因为它划出了<strong>三种不同的混淆</strong>——而认知科学史上的大量争论，正是这三种混淆造成的：</p>
+    <table>
+      <tr><th>混淆</th><th>表现</th></tr>
+      <tr><td>用硬件解释代替计算解释</td><td>"因为神经元会侧抑制，所以你能看到马赫带"——这只是机制，没回答<em>为什么需要</em>检测亮度变化</td></tr>
+      <tr><td>用计算问题代替算法</td><td>描述了任务目标，却没说大脑实际怎么算出来的</td></tr>
+      <tr><td>跳过计算层直接做算法</td><td>马尔最反对的一种：先设计一个算法，再去找它解决的问题</td></tr>
+    </table>
+    <p><strong>他的判断是：只有第一层（计算理论）才是真正要紧的。</strong>因为一旦把"要解决什么问题、为什么难、有什么约束"搞清楚了，算法和实现往往有相当大的自由度——不同的算法和硬件都能完成同一个计算任务。</p>
+    <p>他用一个类比来说明：要理解一台计算器在做什么，你不需要先搞清它是用晶体管还是继电器做的。<em>先问它在算什么。</em></p>
+  </div>
+
+  <div class="quote">
+    <p>"试图把视觉理解为一个信息处理任务，就必须先弄清：它要解决什么问题，以及为什么这个问题需要被解决。"</p>
+    <div class="src">—— 马尔的核心方法论立场</div>
+  </div>
+
+  <!-- ================= 三个表征 ================= -->
+  <div class="section-title">三个表征：视觉计算的实际流水线</div>
+  <div class="section-sub">马尔把从图像到物体的过程拆成三个阶段的内部表示</div>
+
+  <div class="reps">
+    <div class="rep">
+      <div class="n">第一阶段 · 早期视觉</div>
+      <h3>基元草图（Primal Sketch）</h3>
+      <div class="q">"图像上哪里有变化？变化是什么形状？"</div>
+      <p>从原始光强阵列中提取<strong>强度变化</strong>，把它们组织成边缘、线段、斑点、端点这类"基元"。</p>
+      <p>关键技术是多尺度分析：用不同尺度的算子去检测变化，因为<em>尺度过小会被噪声淹没，尺度过大会漏掉细节</em>。</p>
+    </div>
+    <div class="rep">
+      <div class="n">第二阶段 · 中期视觉</div>
+      <h3>2.5 维草图（2½-D Sketch）</h3>
+      <div class="q">"这些表面朝哪个方向？离我多远？"</div>
+      <p>在<strong>以观察者为中心</strong>的坐标系里，表示可见表面的<strong>朝向和深度</strong>。</p>
+      <p>叫"2.5 维"是因为：它比二维图像多出深度与朝向，但还<em>不是</em>完整的三维物体描述——它只是从你这个视角看到的那一层壳。</p>
+      <p>信息来源：立体视觉、运动、纹理梯度、明暗、轮廓。</p>
+    </div>
+    <div class="rep">
+      <div class="n">第三阶段 · 晚期视觉</div>
+      <h3>三维模型（3-D Model）</h3>
+      <div class="q">"这是个什么东西？它是什么形状？"</div>
+      <p>在<strong>以物体为中心</strong>的坐标系里，表示三维形状与空间关系，并且<em>与视角无关</em>。</p>
+      <p>马尔的方案是用<strong>广义圆柱体</strong>这类体积基元及其组合来描述物体，使同一物体从不同角度看都得到同一个描述。</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>三个阶段的关键差别：坐标系变了</h3>
+    <p>这条流水线最重要的一条线索是<strong>坐标系的转换</strong>：</p>
+    <table>
+      <tr><th>阶段</th><th>坐标系</th><th>能回答的问题</th></tr>
+      <tr><td>基元草图</td><td>图像坐标（像素位置）</td><td>哪里有边缘、什么方向</td></tr>
+      <tr><td>2.5 维草图</td><td><strong>以观察者为中心</strong></td><td>表面朝向、深度、可见性</td></tr>
+      <tr><td>三维模型</td><td><strong>以物体为中心</strong></td><td>物体是什么、形状如何</td></tr>
+    </table>
+    <p>为什么要换成以物体为中心？因为<strong>识别必须与视角无关</strong>——你必须能在从未见过的角度认出同一把椅子。如果表征永远绑在"我这个视角"上，就无法实现这种恒常性。</p>
+  </div>
+
+  <!-- ================= 模块化 ================= -->
+  <div class="section-title">模块化原则：为什么视觉不是一块整布</div>
+
+  <div class="card">
+    <h3>核心主张</h3>
+    <p>马尔认为视觉系统<strong>不是一个大一统的通用推理机</strong>，而是由一组<em>相对独立、各有专职</em>的模块组成：立体视觉、运动检测、颜色分析、形状提取各管一段。</p>
+    <p>这个主张的证据方向是：不同的视觉能力<strong>可以分离地受损</strong>——有人能看见运动却认不出物体，有人能认出物体却看不见运动。这类"双重分离"是模块化最有力的论据。</p>
+    <p><strong>为什么这个设计合理</strong>：因为不同的视觉任务面临不同的约束，用一套通用机制去做，会把约束条件混在一起。分开做，每个模块可以用<em>只对它自己成立</em>的假设。</p>
+  </div>
+
+  <div class="card">
+    <h3>一个具体的例子：边缘检测为什么必须多尺度</h3>
+    <p>要检测"强度变化"，直觉是算差分。但立刻遇到两难：</p>
+    <p>• 算子<strong>太小</strong> → 一点噪声就被当成边缘<br>
+       • 算子<strong>太大</strong> → 真实的细节边缘被抹掉</p>
+    <p>马尔的解法是<strong>同时在多个尺度上做检测</strong>，然后把结果组织起来：大尺度给出稳定的轮廓，小尺度给出细节，两者之间还有跨尺度的对应关系。这不是"折中"，而是<em>把尺度本身变成表征的一部分</em>。</p>
+    <p>这个思路影响极广——它后来成为多尺度信号分析在小波理论等方向的先声之一。</p>
+  </div>
+
+  <!-- ================= 马尔反对什么 ================= -->
+  <div class="section-title">马尔反对什么：他对两个学派的批评</div>
+  <div class="section-sub">这部分常被忽略，但它最能说明马尔的立场为什么独特</div>
+
+  <div class="pit">
+    <span class="lbl">对格式塔学派的批评</span>
+    格式塔学派正确指出了"整体大于部分之和"，也给出了大量漂亮的知觉现象。但马尔认为它<strong>止步于描述</strong>——它说清了"看起来是什么样"，却没有说清"为什么必然是这个样"。<br>
+    <span style="display:block;margin-top:8px;">用马尔的话说：格式塔把现象当成了理论。<em>描述一种错觉，不等于解释它为什么发生。</em></span>
+  </div>
+
+  <div class="pit">
+    <span class="lbl">对吉布森"直接知觉"理论的批评</span>
+    吉布森主张：环境中的光本身已经携带了足够的信息（他称为"环境光阵"里的不变量），所以知觉是<strong>直接拾取</strong>的，不需要内部表征，也不需要计算。<br>
+    <span style="display:block;margin-top:8px;">马尔的批评是：<strong>他证明了信息"存在"，但没有证明"如何被提取"。</strong>即使环境中真有那些不变量，一个物理系统要把它取出来，仍然需要一套机制——而那套机制就是计算。<em>把"信息可得"当成"加工已完成"，是跳过了整个问题。</em></span>
+  </div>
+
+  <div class="card">
+    <h3>他的立场可以概括成一句话</h3>
+    <p style="color:#e0913a;font-weight:600;margin:12px 0;font-size:15.5px;">"知觉必须被理解为一个信息处理过程，而信息处理必须被理解为计算。"</p>
+    <p>这个立场同时拒绝了两个极端：<strong>不承认</strong>现象描述本身就是解释（反格式塔），也<strong>不承认</strong>只要信息在环境中存在、知觉就自动成立（反吉布森）。</p>
+  </div>
+
+  <!-- ================= 为什么值得读 ================= -->
+  <div class="section-title">这本书为什么在四十多年后仍然值得读</div>
+
+  <div class="card">
+    <h3>① 它给了"心与物之间"一个可操作的中间层</h3>
+    <p>在马尔之前，讨论知觉要么是哲学的（观念、经验），要么是生理的（神经元、电位）。他造出了第三个层次：<strong>计算的层次</strong>。这个层次一旦建立，问题就变得可以分析、可以争论、可以检验。</p>
+  </div>
+
+  <div class="card">
+    <h3>② 它对人工智能的启示反而更清晰了</h3>
+    <p>马尔的框架预言了一件事：<strong>如果你不知道一个任务在计算上要解决什么，堆再多算力和数据也会走弯路。</strong></p>
+    <p>这一点在深度学习时代被反复验证——视觉模型在特定数据集上超越人类，却仍会被<em>换一个纹理</em>或<em>旋转三十度</em>打败。原因往往不是网络不够大，而是我们<strong>始终没有真正说清"视觉的计算目标是什么"</strong>。这正是马尔认为必须先回答的问题。</p>
+  </div>
+
+  <div class="card">
+    <h3>③ 三层理论是一个通用工具，不只用于视觉</h3>
+    <p>你可以拿它去审查任何声称"解释"了某个认知现象的说法：</p>
+    <p>• 它有没有说清<strong>要解决什么问题</strong>？<br>
+       • 它有没有说清<strong>为什么这个问题难</strong>？<br>
+       • 它给的是<strong>现象描述</strong>、<strong>算法</strong>，还是<strong>硬件机制</strong>？<br>
+       • 它有没有<strong>跳过计算层</strong>，直接拿机制当解释？</p>
+    <p>这四个问题足以拆掉大量听上去很完整的"解释"。</p>
+  </div>
+
+  <!-- ================= 阅读路线 ================= -->
+  <div class="section-title">怎么读这本书</div>
+  <div class="section-sub">这是一本未完成的书——马尔在出版前去世，部分章节由编者整理</div>
+
+  <div class="route-item must">
+    <div class="route-badge">必读核心</div>
+    <div class="route-body">
+      <strong>第 1 章 序论与哲学</strong>
+      <span>全书地基。三层理论、表征的概念、对格式塔与吉布森的批评，都在这里。如果只读一章，读这一章。</span>
+    </div>
+  </div>
+  <div class="route-item must">
+    <div class="route-badge">必读核心</div>
+    <div class="route-body">
+      <strong>第 2 章 图像的表征</strong>
+      <span>从光强阵列出发，讲清"欠定"到底难在哪，以及多尺度分析的必要性。这是"计算理论"层最漂亮的示范。</span>
+    </div>
+  </div>
+  <div class="route-item must">
+    <div class="route-badge">必读核心</div>
+    <div class="route-body">
+      <strong>第 3–4 章 基元草图</strong>
+      <span>边缘检测与多尺度算子。技术与方法最密集的部分，也是影响后续计算机视觉最深的部分。</span>
+    </div>
+  </div>
+  <div class="route-item must">
+    <div class="route-badge">必读核心</div>
+    <div class="route-body">
+      <strong>第 5 章 2.5 维草图</strong>
+      <span>立体视觉、运动、明暗、纹理如何共同给出表面朝向与深度。这一章解释了"2.5 维"这个奇怪名字的来历。</span>
+    </div>
+  </div>
+
+  <div class="route-item skim">
+    <div class="route-badge">可以略读</div>
+    <div class="route-body">
+      <strong>第 6 章 三维模型与识别</strong>
+      <span>马尔的方案（广义圆柱体）后来并未成为主流，这一步是全书最"未完成"的部分。但<em>问题</em>提得很好：识别为什么必须与视角无关。</span>
+    </div>
+  </div>
+  <div class="route-item skim">
+    <div class="route-badge">可以略读</div>
+    <div class="route-body">
+      <strong>各章的技术附录与数学推导</strong>
+      <span>马尔写得相当克制，但书末附录里的算子推导需要一定数学准备。<strong>先抓思想，推导可以后补。</strong></span>
+    </div>
+  </div>
+
+  <div class="route-item skip">
+    <div class="route-badge">可以跳过</div>
+    <div class="route-body">
+      <strong>编者前言与后记的学术史部分</strong>
+      <span>建议<em>读完正文后再看</em>。它们解释了这本书的成书过程与影响，但会提前给你结论。</span>
+    </div>
+  </div>
+
+  <!-- ================= 与其他书的连接 ================= -->
+  <div class="section-title">这本书在你的知识结构里的位置</div>
+
+  <div class="card">
+    <h3>它和《数字图像处理》的关系</h3>
+    <p>冈萨雷斯那本讲的是<strong>工程方法</strong>——滤波、变换、压缩、复原。马尔讲的是<strong>为什么这些运算有认知意义</strong>。前者给你工具箱，后者告诉你为什么某个工具在这里是对的。</p>
+    <p>一个直接的连接点：冈萨雷斯里的边缘检测算子（Sobel、Laplacian），在马尔的框架里获得了<em>计算上的理由</em>——它们之所以有用，是因为"检测强度变化"确实是早期视觉必须解决的一个计算任务。</p>
+  </div>
+
+  <div class="card">
+    <h3>它和《思考，快与慢》的关系</h3>
+    <p>两本书都在讲"你的判断不是世界的直接反映"。区别在于层次：</p>
+    <p>• <strong>马尔</strong>：在<em>知觉</em>层面，你看到的三维世界是脑重建出来的，不是眼睛收到的。<br>
+       • <strong>卡尼曼</strong>：在<em>判断</em>层面，你的信念是系统一快速构造的，不是从证据推出来的。</p>
+    <p>两者合起来说明一件事：<strong>从"世界"到"我以为的世界"，中间隔着一整套构造过程，而这个过程大部分不在意识里。</strong></p>
+  </div>
+
+  <div class="card">
+    <h3>它和《非对称风险》的关系</h3>
+    <p>一个不太明显但很深的连接：马尔的核心论证方式是<strong>"先问要解决什么问题，再问怎么解决"</strong>。这个次序和塔勒布"先问谁承担后果，再问他说得对不对"是同一种思路——<em>都是把评价标准从"听起来如何"换成"结构上如何"</em>。</p>
+  </div>
+
+  <div class="quote">
+    <p>"视觉是一个信息处理任务。研究它的困难在于，我们对自己完成这件事的方式毫无意识——正因为结果来得太容易，我们才误以为过程也很简单。"</p>
+    <div class="src">—— 马尔立场的概括</div>
+  </div>
+
+  <div class="footer">
+    《视觉》整体架构 · David Marr · MIT Press<br>
+    计算理论 · 表征与算法 · 硬件实现<br>
+    基元草图 · 2.5 维草图 · 三维模型<br>
+    看见不是收到，而是重建
+  </div>
+
+</div>
+</body>
+</html>

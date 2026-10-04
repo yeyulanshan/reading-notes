@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>自我诊断手册 —— 查出我把哪些流行信念当成了事实</title>
+<style>
+  :root{
+    --paper:#faf6f2; --card:#fffdfb; --edge:#e0d5cc;
+    --ink:#2a211c; --ink-mid:#5c4f47; --ink-soft:#92847a;
+    --core:#8c4a5c; --core-soft:#f7e8ec;
+    --struct:#7a5a3a; --struct-soft:#f4ece0;
+    --self:#4a6b7a; --self-soft:#e5eef2;
+    --inter:#5a7a4a; --inter-soft:#eaf0e3;
+    --warn:#a8442f; --warn-soft:#f9e7e2;
+    --key:#96702a; --key-soft:#f6efdc;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--paper);color:var(--ink);padding:36px 20px 48px;line-height:1.85;
+    -webkit-font-smoothing:antialiased;
+  }
+  .container{max-width:940px;margin:0 auto;}
+
+  .header{text-align:center;margin-bottom:30px;padding:46px 24px 40px;background:var(--card);border:1px solid var(--edge);border-top:5px solid var(--self);border-radius:4px;}
+  .header .kicker{font-size:11.5px;letter-spacing:2.5px;color:var(--ink-soft);margin-bottom:14px;}
+  .header h1{font-size:26px;color:var(--ink);margin-bottom:14px;letter-spacing:.5px;line-height:1.5;}
+  .header .subtitle{font-size:14.5px;color:var(--ink-mid);}
+  .header .author{margin-top:16px;font-size:12.5px;color:var(--ink-soft);}
+
+  .preface{background:var(--card);border:1px solid var(--edge);border-left:4px solid var(--self);border-radius:3px;padding:22px 26px;margin-bottom:20px;font-size:14.5px;color:var(--ink-mid);}
+  .preface h3{color:var(--self);font-size:15.5px;margin-bottom:10px;}
+  .preface p+p{margin-top:9px;} .preface strong{color:var(--ink);}
+  .preface em{color:var(--warn);font-style:normal;font-weight:600;}
+
+  .design{background:var(--key-soft);border:1px solid #e9dfc4;border-left:4px solid var(--key);border-radius:3px;padding:20px 24px;margin-bottom:30px;}
+  .design h3{color:var(--key);font-size:15px;margin-bottom:12px;}
+  .design table{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:10px;}
+  .design th,.design td{padding:9px 11px;border:1px solid #e0d5c4;text-align:left;vertical-align:top;}
+  .design th{background:#f2e9d4;color:var(--key);font-weight:700;font-size:13px;}
+  .design td{color:var(--ink-mid);}
+  .design strong{color:var(--ink);}
+
+  .section-title{font-size:20px;font-weight:700;color:var(--ink);margin:46px 0 8px;padding-left:13px;border-left:4px solid var(--self);letter-spacing:.3px;}
+  .section-sub{color:var(--ink-soft);font-size:13.5px;margin:0 0 18px 17px;}
+
+  /* 诊断条目 */
+  .diag{background:var(--card);border:1px solid var(--edge);border-radius:3px;margin-bottom:18px;overflow:hidden;}
+  .diag-head{background:var(--self-soft);border-bottom:1px solid var(--edge);padding:14px 22px;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;}
+  .diag-head .id{font-size:12px;font-weight:700;color:#fff;background:var(--self);padding:2px 9px;border-radius:2px;letter-spacing:.5px;}
+  .diag-head .cn{font-size:16.5px;font-weight:700;color:var(--ink);}
+  .diag-head .grade{margin-left:auto;font-size:11px;padding:2px 10px;border-radius:20px;font-weight:700;white-space:nowrap;}
+  .grade.a{background:#e6f0e2;color:#3f6b32;}
+  .grade.b{background:var(--key-soft);color:var(--key);}
+  .grade.c{background:var(--warn-soft);color:var(--warn);}
+  .diag-body{padding:20px 22px;}
+
+  .row{display:grid;grid-template-columns:96px 1fr;gap:14px;padding:11px 0;border-bottom:1px dashed var(--edge);}
+  .row:last-child{border-bottom:none;}
+  .row .lbl{font-size:12.5px;font-weight:700;letter-spacing:.5px;padding-top:2px;}
+  .row.belief .lbl{color:var(--inter);}
+  .row.data .lbl{color:var(--self);}
+  .row.ask .lbl{color:var(--core);}
+  .row .v{color:var(--ink-mid);font-size:14px;}
+  .row .v strong{color:var(--ink);}
+  .row .v em{color:var(--warn);font-style:normal;font-weight:600;}
+  .row .v.num{font-family:Consolas,Monaco,monospace;}
+  .ask-list{list-style:none;margin:0;}
+  .ask-list li{padding:5px 0 5px 22px;position:relative;color:var(--ink-mid);font-size:14px;}
+  .ask-list li::before{content:"↳";position:absolute;left:2px;color:var(--core);font-weight:700;}
+
+  .caveat{background:var(--warn-soft);border-left:3px solid var(--warn);border-radius:0 3px 3px 0;padding:12px 16px;margin-top:13px;font-size:13.5px;color:#7d3221;}
+  .caveat .lbl{color:var(--warn);font-weight:700;display:block;margin-bottom:5px;font-size:12.5px;}
+  .caveat strong{color:#6a1a10;}
+
+  table.t{width:100%;border-collapse:collapse;margin:13px 0;font-size:13.5px;}
+  table.t th,table.t td{padding:9px 11px;border:1px solid var(--edge);text-align:left;vertical-align:top;}
+  table.t th{background:var(--core-soft);color:var(--core);font-weight:700;font-size:13px;}
+  table.t td{color:var(--ink-mid);} table.t td strong{color:var(--ink);}
+
+  .checklist{background:var(--card);border:1px solid var(--edge);border-radius:3px;padding:26px;margin-bottom:16px;}
+  .checklist h3{color:var(--self);font-size:16.5px;margin-bottom:16px;}
+  .checklist .cat{color:var(--key);font-size:13.5px;font-weight:700;margin:16px 0 8px;}
+  .checklist ul{list-style:none;}
+  .checklist li{padding:6px 0 6px 28px;position:relative;color:var(--ink-mid);font-size:14px;}
+  .checklist li::before{content:"☐";position:absolute;left:4px;color:#cfc4ba;font-size:15px;}
+
+  .footer{text-align:center;margin-top:44px;padding:22px;color:var(--ink-soft);font-size:12.5px;line-height:1.9;}
+
+  @media(max-width:640px){
+    .header h1{font-size:20px;} .section-title{font-size:17.5px;}
+    .row{grid-template-columns:1fr;gap:4px;}
+    body{padding:20px 14px 32px;}
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="kicker">SELF-DIAGNOSIS HANDBOOK</div>
+    <h1>查出我把哪些流行信念当成了事实</h1>
+    <div class="subtitle">《亲密关系》自我诊断手册 · 罗兰·米勒 · 第 6 版</div>
+    <div class="author">对象是你自己 · 形式是"可以问自己什么" · 目标是拆掉默认设定</div>
+  </div>
+
+  <div class="preface">
+    <h3>为什么这一域不用「助人手册」</h3>
+    <p>其他域用的是助人手册，格式是"<strong>当别人陷入 X 时，你可以这样问</strong>"——它默认你站在关系之外替别人判断。</p>
+    <p>但亲密关系的知识首先要用在<strong>你自己</strong>身上。所以这一域改成：<strong>机制 + 可以问自己什么</strong>。</p>
+    <p>而且这一域有一个别的域没有的风险：<em>你脑子里已经装着一整套关于亲密关系的"常识"，它们大多来自影视、畅销书和朋友的经验谈。</em>这本手册的主要工作不是给你新知识，而是<strong>把那套常识翻出来检查一遍</strong>。</p>
+  </div>
+
+  <div class="design">
+    <h3>⚠️ 使用前必读：三条设计原则</h3>
+    <table>
+      <tr><th style="width:22%">原则</th><th>为什么</th></tr>
+      <tr><td><strong>① 只给"问自己的问题"，不给你贴类型</strong></td><td>依恋类型这类工具极易被误用成标签。米勒自己在原文里就警告："<strong>不要绝对化地理解……依恋类型看似是人们对人际关系的适应行为。</strong>"它描述倾向，不诊断人格</td></tr>
+      <tr><td><strong>② 每条标明证据等级</strong></td><td>这一域的证据等级明显低于其他域（社会心理学正处在复现危机中）。<span style="color:#3f6b32;font-weight:700;">A</span> = 可复现的实证 · <span style="color:#96702a;font-weight:700;">B</span> = 有支持但有明确边界 · <span style="color:#a8442f;font-weight:700;">C</span> = 争议未决（作者自己标为"不确定"）</td></tr>
+      <tr><td><strong>③ 描述性发现 ≠ 规范性建议</strong></td><td>"人平均如此"<strong>推不出</strong>"你应当如此"，也<strong>推不出</strong>"这不可改变"。这是本域最严重的误用方式</td></tr>
+    </table>
+    <p style="margin-top:12px;font-size:13.5px;">最后一条忠告来自米勒本人：<em>"<strong>不要被专业的术语误导</strong>，研究者提及的'显著的'性别差异通常指'统计学上的显著性'——就是说差异在数字上是可靠的——但差异或许根本不大。"</em>本手册所有涉及性别差异的地方都标出了效应量。</p>
+  </div>
+
+  <!-- ============ 第 1 组 ============ -->
+  <div class="section-title">第 1 组 · 关于"什么是亲密关系"</div>
+  <div class="section-sub">先把那个模糊的直觉换成一个可检查的清单</div>
+
+  <div class="diag">
+    <div class="diag-head"><span class="id">D1</span><span class="cn">我脑子里的"亲密"是多维的吗</span><span class="grade a">A 级</span></div>
+    <div class="diag-body">
+      <div class="row belief"><span class="lbl">流行信念</span><div class="v">亲密 = 感情好 = 在一起开心。它是一种整体感受。</div></div>
+      <div class="row data"><span class="lbl">实际内容</span><div class="v">
+        <p>研究者与普通人的看法一致：亲密关系与泛泛之交在<strong>六个方面</strong>存在程度差异——<strong>了解、关心、相互依赖、相互一致性、信任、承诺</strong>。</p>
+        <p>关键是：<strong>这六项可以单独出现。</strong>米勒举的例子很刺人：一对单调乏味、缺少情趣的夫妻可能<em>相互依赖程度很高</em>，在琐事上紧密合作，但"生活在缺少关爱、坦诚或信任的心理荒漠中"。</p>
+        <p>而且<strong>亲密程度在整个关系过程中波动极大</strong>——它不是一次达成的状态，是一个会涨落的量。</p>
+      </div></div>
+      <div class="row ask"><span class="lbl">问自己</span><div class="v"><ul class="ask-list">
+        <li>我这六项里，<strong>哪几项是高的、哪几项是低的</strong>？——分开打分，别给一个总分。</li>
+        <li>我是不是用<em>某一项</em>（比如相互依赖、比如在一起的时间）代替了全部六项，然后以为关系很好？</li>
+        <li>如果关系变差了，我能不能说出<strong>是哪一个维度在变</strong>？还是只有一个模糊的"不如从前"？</li>
+      </ul></div></div>
+      <div class="caveat"><span class="lbl">⚠️ 这条的边界</span>六要素是<strong>程度差异，不是有或无</strong>。米勒的结论是"并不存在单一的亲密关系模式"——所以不要拿这六项当及格线去评判任何一段关系（包括你自己的）。</div>
+    </div>
+  </div>
+
+  <div class="diag">
+    <div class="diag-head"><span class="id">D2</span><span class="cn">我把"关系"当成人生的核心内容了吗</span><span class="grade a">A 级</span></div>
+    <div class="diag-body">
+      <div class="row belief"><span class="lbl">流行信念</span><div class="v">关系是生活的一部分，事业/成就才是主线。</div></div>
+      <div class="row data"><span class="lbl">实际内容</span><div class="v">
+        <p>米勒用一组<strong>生理指标</strong>支撑"归属需要"这个主张，而不是靠抒情：</p>
+        <table class="t">
+          <tr><th>发现</th><th>来源</th></tr>
+          <tr><td>握住爱人的手就能<strong>减弱面对威胁时的脑反应</strong></td><td>Coan et al. 2006</td></tr>
+          <tr><td>看看爱侣的照片，<strong>疼痛就不那么强烈</strong></td><td>Master et al. 2009</td></tr>
+          <tr><td>有人接纳支持时，<strong>伤口愈合更快</strong></td><td>Gouin et al. 2010</td></tr>
+          <tr><td>孤独无伴时<strong>免疫反应变弱</strong></td><td>Pressman et al. 2005</td></tr>
+          <tr><td><strong>9 年纵向研究</strong>：缺乏亲密关系者死亡率是正常人 <strong>2~3 倍</strong></td><td>Berkman &amp; Glass 2000</td></tr>
+        </table>
+        <p>注意其中一条限定：<strong>质量比数量重要</strong>——"个体需要的亲密关系无需太多，几个便可"。</p>
+      </div></div>
+      <div class="row ask"><span class="lbl">问自己</span><div class="v"><ul class="ask-list">
+        <li>如果把"关系质量"和"事业成就"放在同一张表上，我实际的<strong>时间与注意力分配</strong>和我的<em>口头排序</em>一致吗？</li>
+        <li>我有没有把"关系"当成<strong>不需要维护、自然存在的东西</strong>，而把精力都投在需要主动争取的事情上？</li>
+        <li>我是不是在等"忙完这一阵"再去经营关系？——那个"这一阵"结束过吗？</li>
+      </ul></div></div>
+      <div class="caveat"><span class="lbl">⚠️ 这条的边界</span>这些研究大多是<strong>相关设计</strong>。缺乏关系的人死亡率更高，<em>不等于</em>关系本身延长了寿命——也可能是健康的人本来更容易建立关系。米勒自己就提示了这种方向不确定的问题。所以这条能支持"关系值得重视"，但<strong>不能支持"只要有了关系就会更健康"</strong>。</div>
+    </div>
+  </div>
+
+  <!-- ============ 第 2 组 ============ -->
+  <div class="section-title">第 2 组 · 关于"我的期望是从哪来的"</div>
+  <div class="section-sub">这一组要拆掉的是"我的想法是我自己的"这个默认设定</div>
+
+  <div class="diag">
+    <div class="diag-head"><span class="id">D3</span><span class="cn">我的关系标准，有多少是这个时代给我的</span><span class="grade a">A 级（趋势）/ C 级（机制）</span></div>
+    <div class="diag-body">
+      <div class="row belief"><span class="lbl">流行信念</span><div class="v">"该什么时候结婚""要不要同居""什么样的关系算正常"——这些是我自己的判断。</div></div>
+      <div class="row data"><span class="lbl">实际内容</span><div class="v">
+        <p>米勒给了一组 1960 年代 vs 现在的对照（美国数据）：</p>
+        <table class="t">
+          <tr><th>项目</th><th>1960 年代</th><th>现在</th></tr>
+          <tr><td>一生中结过婚的人</td><td><strong>94%</strong></td><td>预测 <strong>85%</strong></td></tr>
+          <tr><td>女性初婚平均年龄</td><td>不到 <strong>21 岁</strong></td><td>超过 <strong>26 岁</strong>（男性超 28）</td></tr>
+          <tr><td>婚前同居</td><td><strong>5%</strong></td><td><strong>超过 60%</strong></td></tr>
+          <tr><td>未婚妈妈生育的婴儿占比</td><td><strong>5%</strong></td><td><strong>41%</strong>（2009）</td></tr>
+          <tr><td>学龄前孩子的妈妈全天在家</td><td>超过 <strong>3/4</strong></td><td><strong>40%</strong></td></tr>
+        </table>
+        <p>而<strong>解释这些变化的机制</strong>是米勒这本书里最大胆的一个假设：<strong>性别比率（sex ratio）</strong>——每 100 位女性对应多少位男性。</p>
+        <p><strong>高性别比率（女少男多）</strong>倾向于支持传统性别角色与性保守：理想新娘应是处女、未婚先孕蒙羞、公开同居绝迹、妇女更早结婚、离婚不受欢迎。<strong>低性别比率（男少女多）</strong>则更宽容：鼓励妇女外出工作、默许婚外性关系、未婚妈妈也无可厚非。</p>
+        <p>历史对照：古罗马时代性别比率低，以骄奢淫逸闻名；维多利亚时期英格兰性别比率高，以贞洁守礼著称；美国喧嚣的 20 年代比率低。<strong>而 1960 年代末——"性解放"与女权运动出现的年代——比率是非常低的。</strong></p>
+        <p style="margin-top:8px;">他的机制解释是：规范演变总是朝着有利于掌握经济政治权力的强势群体（此处是男性）的方向。性别比率高时女性稀缺，男性想长期占有她 → 鼓励她做家庭主妇、反对离婚；比率低时女性过剩，男性不想被拴住 → 妇女得工作、推迟结婚、不满意可以离婚。</p>
+      </div></div>
+      <div class="row ask"><span class="lbl">问自己</span><div class="v"><ul class="ask-list">
+        <li>我关于"什么时候该结婚""要不要同居""什么算正常"的判断里，有多少是<strong>我这一代人共享的默认值</strong>？如果我生在 1960 年，我会不会给出完全相反的答案？</li>
+        <li>我是不是把一个<strong>时代性的安排</strong>误读成了<strong>人性或道德的结论</strong>？</li>
+        <li>我有没有注意到：<em>连"我应该自己独立判断"这件事，本身也是这个时代的产物？</em></li>
+      </ul></div></div>
+      <div class="caveat"><span class="lbl">⚠️ 这条的边界（米勒自己标的）</span>
+        <p><strong>趋势是 A 级证据，机制是 C 级。</strong>米勒的原话：<em>"必须指出，性别比率影响过程（即人际关系规范的变化偏利于男性）的假设<strong>只是一种猜想</strong>。然而，社会文化中的两性比例和人际关系规范的确存在粗糙却真实的关联。"</em></p>
+        <p>所以可以确定的是"<strong>规范随时代大幅变化</strong>"，<strong>不能</strong>确定的是"性别比率是原因"。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="diag">
+    <div class="diag-head"><span class="id">D4</span><span class="cn">我在用"试婚"逻辑吗</span><span class="grade b">B 级（有明确边界）</span></div>
+    <div class="diag-body">
+      <div class="row belief"><span class="lbl">流行信念</span><div class="v">同居是"试婚"——先住一起看看合不合适，这是负责任的做法。</div></div>
+      <div class="row data"><span class="lbl">实际内容</span><div class="v">
+        <p>米勒给的数据与这个直觉<strong>相反</strong>：<em>"如果人们并没有切实的结婚计划，未婚同居并不能确保随后的婚姻幸福美满；相反，<strong>同居增加了夫妻离婚的危险</strong>。"</em></p>
+        <p>他给的机制是：同居情侣的承诺一般不如已婚夫妻（"毕竟同居情侣还有选择的机会"），因此面临更多问题与不确定性、更多冲突、嫉妒、出轨和身体攻击。<strong>"人们同居的时间越长，对婚姻的热情越低，越容易离婚。"</strong></p>
+        <p>一个 5 年追踪 <strong>2 746 名</strong>同居情侣的研究（Wolfinger 2005）：随时间推移，同居情侣<em>结婚</em>的可能性逐渐降低，但<em>分手</em>的可能性并不降低；<strong>同居 5 年后，结婚和分手的可能性就非常接近了</strong>。而婚姻的基本模式完全不同：<strong>婚期越长，离婚可能性越低</strong>。</p>
+        <p>他的结论：草率同居"原本用来测试伴侣能否和睦共处，却好像会<strong>损害人们对婚姻的积极态度和维持婚姻的决心</strong>"。</p>
+      </div></div>
+      <div class="row ask"><span class="lbl">问自己</span><div class="v"><ul class="ask-list">
+        <li>如果我在同居，我是把它当成<strong>有明确结婚计划的过渡</strong>，还是"先看看"？——米勒说前者有害效应"相对轻微"，后者是问题所在。</li>
+        <li>我有没有意识到：<em>"还有选择的机会"这个感觉本身，就会改变我的投入方式</em>？</li>
+        <li>我是在评估伴侣，还是其实在<strong>推迟一个我已经知道答案的决定</strong>？</li>
+      </ul></div></div>
+      <div class="caveat"><span class="lbl">⚠️ 这条的边界（很重要）</span>这是<strong>相关研究</strong>，作者本人也没有把它当作因果定论。至少两种替代解释：①<strong>选择效应</strong>——本来就更容易离婚的人更倾向同居；②<strong>时代效应</strong>——这些数据来自美国特定年代。米勒的表述是"增加了危险"而非"导致离婚"。<strong>不要把这条读成道德判断。</strong></div>
+    </div>
+  </div>
+
+  <!-- ============ 第 3 组 ============ -->
+  <div class="section-title">第 3 组 · 关于"我是什么样的人"</div>
+  <div class="section-sub">这一组最容易变成自我审判，请注意每条末尾的边界</div>
+
+  <div class="diag">
+    <div class="diag-head"><span class="id">D5</span><span class="cn">我用的是"两个维度"还是"一个标签"</span><span class="grade a">A 级</span></div>
+    <div class="diag-body">
+      <div class="row belief"><span class="lbl">流行信念</span><div class="v">我是焦虑型 / 回避型 / 安全型——这是我的类型。</div></div>
+      <div class="row data"><span class="lbl">实际内容</span><div class="v">
+        <p><strong>两个连续维度</strong>才是本体：<strong>回避亲密（avoidance of intimacy）</strong>与<strong>忧虑被弃（anxiety about abandonment）</strong>。四类型（安全/痴迷/恐惧/疏离）只是这两个维度高低组合的<em>便利标签</em>。</p>
+        <p>米勒的原话：<em>"回避亲密和忧虑被弃这两个依恋维度能<strong>由低到高连续变化</strong>……虽然我们能很方便地讨论依恋类型的差异，好像它们不会重叠，是分离、纯粹的类别，<strong>但实际上并非如此</strong>。"</em></p>
+        <p>他还直接点破了一个分类困境：<strong>在两个维度上都处于中等水平的人，"套用上述四种依恋类型的任何一种都是不适合的"。</strong></p>
+        <p>而最要紧的一个数字：<strong>在两年之内，足有三分之一的依恋类型可以发生实质性变化</strong>（Davila &amp; Cobb 2004）。他自己的话：<em>"一次悲痛欲绝的分手会让原本安全型的人不再安全，一段如胶似漆的恋情也能慢慢让回避亲密的人不再怀疑和戒备亲密感情。"</em></p>
+      </div></div>
+      <div class="row ask"><span class="lbl">问自己</span><div class="v"><ul class="ask-list">
+        <li>我能不能不用类型词，改成<strong>回答两个问题</strong>：我在亲密接触时舒服吗？我有多怕被抛弃？——<em>给这两项各打一个 1–7 分</em>。</li>
+        <li>我用"我是回避型"这句话，是在<strong>描述倾向</strong>，还是在<strong>免除改变的责任</strong>？</li>
+        <li>我用"他是回避型"这句话时，是不是已经<strong>替对方定了性</strong>？——米勒的警告正是针对这种用法。</li>
+      </ul></div></div>
+      <div class="caveat"><span class="lbl">⚠️ 这条的边界</span><strong>这不是我的提醒，是米勒自己写的</strong>：他明确说四个类型只是"称呼不同忧虑和回避分数组合的便利标签"，并说"<em>不要绝对化地理解</em>"。而且现在的研究"不再简单地把人们分为四种类型，而是给出人们在忧虑和回避两个维度中的相对位置"。<strong>用它做自我诊断可以，用它给对方定性不行。</strong></div>
+    </div>
+  </div>
+
+  <div class="diag">
+    <div class="diag-head"><span class="id">D6</span><span class="cn">我夸大了男女差异吗</span><span class="grade a">A 级</span></div>
+    <div class="diag-body">
+      <div class="row belief"><span class="lbl">流行信念</span><div class="v">男人来自火星，女人来自金星——两性在交流、感受、需要上"全不一样"。</div></div>
+      <div class="row data"><span class="lbl">实际内容</span><div class="v">
+        <p>米勒直接引了那本畅销书的原话，然后给出实际数据。核心是三个要点：</p>
+        <p><strong>① 有些差异存在，但非常小。</strong>"本书中谈到的两性差异，几乎全部是较小到中度程度的差异。"</p>
+        <p><strong>② 两性<em>性别内</em>的差异通常远大于两性<em>之间</em>的平均差异。</strong>他的例子：一位非常性放任的男人，与<em>女性性放任的平均水平</em>的差别，远低于他与另一位性保守的男人的差别。</p>
+        <p><strong>③ 重合程度大到对方性别里也有许多人超过你的平均。</strong>——<em>在中等程度的性别差异上（d = 0.5），<strong>仍有三分之一女性的得分高于男性平均水平</strong>。</em></p>
+        <p>所以他的结论是：<em>"假如你要寻找性放任的家伙，不要因为听说'男人比女人在性上更放纵'就只找男性；你应该找性放任的个体，其中许多是女性。"</em></p>
+        <p>这项判断的最强证据是一个跨 <strong>87 个国家、141 万参与者</strong>的大数据研究（Peterson &amp; Hyde 2010）：<strong>没有发现任何"两性差异极大"的迹象</strong>。</p>
+      </div></div>
+      <div class="row ask"><span class="lbl">问自己</span><div class="v"><ul class="ask-list">
+        <li>当我说"男人都…""女人都…"的时候，我是在说<strong>平均差</strong>，还是在说<strong>两类人</strong>？</li>
+        <li>我有没有拿一个 d = 0.2 的差异，去预测<strong>某一个具体的人</strong>（包括我伴侣）？</li>
+        <li>我最近一次因为"他是男的所以不会懂"而<strong>没有解释</strong>，是什么时候？</li>
+        <li>反过来：我有没有因为"这是性别差异"而<strong>放弃了理解一个具体的人</strong>？</li>
+      </ul></div></div>
+      <div class="caveat"><span class="lbl">⚠️ 这条的边界</span>这条<strong>不</strong>是说性别差异不存在。米勒明确说"有些性别差异很有意思，有时还很重要"，第 9 章会讲性驱力的平均差异。他要纠正的只是<em>把差异夸大成两类人</em>。他自己的收束是："个体差异才是影响人际交往的更重要的力量。"</div>
+    </div>
+  </div>
+
+  <div class="diag">
+    <div class="diag-head"><span class="id">D7</span><span class="cn">我是不是在等一个"对的人"来补上我缺的那一半</span><span class="grade b">B 级</span></div>
+    <div class="diag-body">
+      <div class="row belief"><span class="lbl">流行信念</span><div class="v">"男人要有男子气，女人要有女人味"；互补的两个人最合适。</div></div>
+      <div class="row data"><span class="lbl">实际内容</span><div class="v">
+        <p>米勒引入了两组更好的词：把与任务有关的"男子气"才能称为<strong>工具性（instrumental）</strong>，把与社交情感有关的"女人味"技能称为<strong>表达性（expressive）</strong>。然后给出分布：</p>
+        <div class="row num" style="display:block;border:none;padding:6px 0;">
+          <p>• 只有<strong>一半</strong>人的特质刚好符合性别角色期望<br>
+             • 约 <strong>35%</strong> 的人是<strong>双性化（androgynous）</strong>——既自信又热情，既敏感又独立<br>
+             • 约 <strong>15%</strong> 是"跨类型"或"未分化"<br>
+             • <strong>在双性化、跨类型和未分化各类型内的男女比例大体相当</strong></p>
+        </div>
+        <p>而后果是不对称的、而且对<strong>双方</strong>都不利：</p>
+        <p><strong>对男人</strong>：屈从于传统性别角色"剥夺了他们本可成为更好丈夫的技能"（表达性低的人不太容易表现出热情和温柔）。<br>
+           <strong>对女人</strong>：屈从于传统性别角色"剥夺了她们可能取得更多成功和成就的技能"，而且"传统性别角色也让女人少赚金钱"。</p>
+        <p>实证：一个经典实验中，被配成对的双方<strong>都符合传统性别角色</strong>时——<em>"双方很少说话，很少注视对方，甚至看不到笑容"</em>，事后报告喜欢对方的程度也更低。而只要有一方是双性化的，相处就更融洽（Ickes &amp; Barnes 1978）。长期看，坚持传统刻板性别角色的夫妇<strong>一般不如非传统的夫妇婚姻幸福</strong>。</p>
+      </div></div>
+      <div class="row ask"><span class="lbl">问自己</span><div class="v"><ul class="ask-list">
+        <li>我把"工具性"和"表达性"当成<strong>两性各自的特质</strong>，还是当成<strong>两种技能</strong>？——米勒说"最理想夫妻的两项通常都很高"。</li>
+        <li>我有没有因为"这不是我该管的事"而<strong>放弃培养某一项能力</strong>？是哪一项？</li>
+        <li>我在关系里，是希望对方<strong>补上我缺的</strong>，还是希望<strong>我们两项都够用</strong>？</li>
+      </ul></div></div>
+      <div class="caveat"><span class="lbl">⚠️ 这条的边界</span>这条讲的是<strong>性别角色（性认同）</strong>，不是生理性别。米勒特意区分：养育子女时女性为母亲是<em>性别（生理）差异</em>；"认为女性比男性更有爱心"则是<em>性认同差异</em>，大部分是<strong>成长过程中习得的</strong>。他给的遗传贡献是<strong>四分之一到三分之一</strong>，其余是后天。另外注意他的脚注：<em>"这种情况更符合美国夫妻（美国比中国更注重个人主义）。与美国不同，中国的夫妻往往有着非常相似的性格。"</em>——所以这条的适用性有文化边界。</div>
+    </div>
+  </div>
+
+  <!-- ============ 第 4 组 ============ -->
+  <div class="section-title">第 4 组 · 关于"我怎么判断一段关系"</div>
+  <div class="section-sub">这一组给的是工具，不是结论</div>
+
+  <div class="diag">
+    <div class="diag-head"><span class="id">D8</span><span class="cn">我把"不满意"和"该离开"混在一起了吗</span><span class="grade a">A 级</span></div>
+    <div class="diag-body">
+      <div class="row belief"><span class="lbl">流行信念</span><div class="v">不开心就应该走；留下来一定是因为爱。</div></div>
+      <div class="row data"><span class="lbl">实际内容</span><div class="v">
+        <p>相互依赖理论给出了三个不同的量，而它们回答的是不同的问题：</p>
+        <table class="t">
+          <tr><th>量</th><th>含义</th><th>回答什么</th></tr>
+          <tr><td><strong>结果</strong> = 奖赏 − 代价</td><td>这段关系的净盈亏</td><td>—</td></tr>
+          <tr><td><strong>比较水平 CL</strong></td><td>我认为自己"<em>应当得到</em>"的结果值（来自过去经验）</td><td><strong>满意吗</strong>（结果 − CL）</td></tr>
+          <tr><td><strong>替代性比较水平 CLalt</strong></td><td>离开后能得到的更好结果</td><td><strong>依赖吗</strong>（结果 − CLalt）</td></tr>
+        </table>
+        <p>于是出现四种关系，其中两种最容易被误读：</p>
+        <table class="t">
+          <tr><th>类型</th><th>状态</th><th>例子</th></tr>
+          <tr><td>结果 &gt; CL 且 &gt; CLalt</td><td><strong>幸福且稳定</strong></td><td>—</td></tr>
+          <tr><td>结果 &lt; CL 但 &gt; CLalt</td><td><strong>不幸福但稳定</strong></td><td>讨厌却辞不掉的工作</td></tr>
+          <tr><td>结果 &gt; CL 但 &lt; CLalt</td><td><strong>幸福但不稳定</strong></td><td>喜欢现在的工作，但有更好的去处</td></tr>
+          <tr><td>结果 &lt; CL 且 &lt; CLalt</td><td><strong>不幸福不稳定</strong></td><td>—</td></tr>
+        </table>
+        <p>米勒把它称为"相互依赖理论最有趣最深刻的发现之一"：<strong>满意度并不是决定去留的主要因素。</strong>原话是——<em>"人们不幸福时并不会去离婚；但如果在别处的前景最终看来更加光明，不管怎样他们都会离婚。"</em></p>
+        <p>而<strong>投入</strong>（有形的家具餐具 + 无形的姻亲朋友的关爱与尊重）会抬高离开的代价、降低 CLalt，从而<strong>锁住一段不满意的关系</strong>。这就是"为什么不满意仍留下"的正式答案。</p>
+      </div></div>
+      <div class="row ask"><span class="lbl">问自己</span><div class="v"><ul class="ask-list">
+        <li>我好几次想离开却没走——是因为<strong>结果高于 CLalt</strong>（确实没更好的选择），还是因为<strong>投入太大</strong>（沉没成本）？</li>
+        <li><em>我的 CL 是怎么升上来的？</em>——CL 会随所得升高。米勒的例子：伴侣每晚按摩加美食成为例行后，某天没了就失望。<strong>"即使没有任何改变（除了我们的期望），具有奖赏意义的亲密关系也会逐渐变得越来越不满意。"</strong></li>
+        <li>我低估了自己的 CLalt 吗？——它是<strong>主观</strong>的，受自尊、习得性无助、信息渠道影响。低自尊者会怀疑自己的吸引力从而低估替代前景。</li>
+        <li>反过来：我是不是因为<em>没有认真找过</em>而以为 CLalt 很低？（米勒引用一项研究：关注替代恋人的大学生更频繁更换恋人。）</li>
+      </ul></div></div>
+      <div class="caveat"><span class="lbl">⚠️ 这条的边界</span>米勒自己回应了"这是不是把爱情庸俗化"：他先问"亲密关系的成败真能庸俗化地贬低为仅仅是人际交往数据表上的盈亏吗？答案当然是否定的"，然后给的结论是<strong>"有保留的肯定"</strong>——而且他指出：<em>自私动机反而会导出宽容大度，因为让伴侣快乐符合自己的利益。</em><strong>不要把它读成冷冰冰的会计学。</strong></div>
+    </div>
+  </div>
+
+  <div class="diag">
+    <div class="diag-head"><span class="id">D9</span><span class="cn">我以为"公平"就是五五分吗</span><span class="grade b">B 级（作者如实说明争议）</span></div>
+    <div class="diag-body">
+      <div class="row belief"><span class="lbl">流行信念</span><div class="v">好的关系是公平的，公平就是各付出一半、各得到一半。不公平会毁掉关系。</div></div>
+      <div class="row data"><span class="lbl">实际内容</span><div class="v">
+        <p>米勒指出公平<strong>不是相等</strong>，而是<strong>成比例</strong>：每个伴侣的<em>结果/贡献</em>之比相等。<em>"公平并不要求伴侣双方得到相等的奖赏。"</em>（50/25 与 100/50 都是公平的，尽管数字完全不同。）</p>
+        <p>他非常诚实地列出了实证的<b>不一致</b>：</p>
+        <p>• <strong>一致的</strong>："没有人喜欢自己获益不足——这点上所有的研究都一致。"<br>
+           • <strong>不一致的</strong>：<em>"过度获益并不总是和满意度的降低有关联。事实上，有些人过度获益时感觉良好。"</em>纵向研究"并不太支持公平理论"。<br>
+           • <strong>更有力的替代</strong>：<em>"人们得到的全部奖赏数量与他们所遭遇的公平水平相比，前者能更好地预测他们的满意度。"</em><br>
+           • <strong>因果方向可能是反的</strong>：<em>"不公平或许并不会使人们感到不满意；相反，感到不满意会导致人们认为自己受到了不公正的待遇。"</em></p>
+        <p>还有一个具体的、不对称的领域——<strong>家务</strong>：职业女性往往承担<strong>两倍于丈夫</strong>的家庭杂务；而"婚姻在某种程度上导致男人更少做家务"。Gottman 的结论很直接：<em>"男人要多做家务、照料小孩、维系爱情，这样才能拥有幸福快乐的妻子。"</em></p>
+      </div></div>
+      <div class="row ask"><span class="lbl">问自己</span><div class="v"><ul class="ask-list">
+        <li>我算的是"<strong>各得一半</strong>"还是"<strong>各得比例相当</strong>"？——这两个标准会得出完全不同的结论。</li>
+        <li>我说"不公平"的时候，是在描述<strong>一个客观比例</strong>，还是在表达<strong>一个已经存在的不满</strong>？（注意上面那条因果反向）</li>
+        <li>如果关系结果整体很好，我还会在意那些不对等吗？——米勒的结论是"如果关系结果完美，不公平也不是大问题"。</li>
+        <li>我有没有在一段<strong>共有关系</strong>里开始精算？——那可能意味着关系已经在变糟：<em>关系顺利时人们不去精算奖赏代价；一旦结果变糟，即使共有的伴侣也开始"使自己的账本收支平衡"。</em></li>
+      </ul></div></div>
+      <div class="caveat"><span class="lbl">⚠️ 这条的边界</span>这是本手册<strong>证据最弱的一组之一</strong>，所以米勒才花那么多笔墨说明它的矛盾。可用的结论只有两条：<strong>获益不足稳定地有害</strong>；<strong>关系结果的质量比公平更重要</strong>。不要把"公平理论"当成可操作的关系准则。</div>
+    </div>
+  </div>
+
+  <!-- ============ 第 5 组 ============ -->
+  <div class="section-title">第 5 组 · 关于"我怎么读数据"</div>
+  <div class="section-sub">这一组针对的是你自己做判断的方式——米勒第 2 章的价值在这里</div>
+
+  <div class="diag">
+    <div class="diag-head"><span class="id">D10</span><span class="cn">我准备用这条结论去推断因果吗</span><span class="grade a">A 级</span></div>
+    <div class="diag-body">
+      <div class="row belief"><span class="lbl">流行信念</span><div class="v">"研究表明 X 和 Y 相关，所以 X 导致 Y。"</div></div>
+      <div class="row data"><span class="lbl">实际内容</span><div class="v">
+        <p>米勒列了三条竞争解释，而且用的第一个例子就是本域最经典的那个相关——相似性与吸引力：</p>
+        <table class="t">
+          <tr><th>解释</th><th>在本例中</th></tr>
+          <tr><td>X → Y</td><td>知道彼此相似 → 更喜欢对方</td></tr>
+          <tr><td>Y → X</td><td>喜欢上某人 → 认为自己与他有许多共同点</td></tr>
+          <tr><td><strong>第三方变量</strong></td><td><strong>他人的俊美长相</strong>——我们既喜欢好看的人，又认为他们和我们相像</td></tr>
+        </table>
+        <p>第三条的意思是：<strong>它足以同时制造"相似—吸引"相关，而相似性实际没有任何因果作用。</strong></p>
+        <p>而他提醒的最实用的一条，是各种测量方法<strong>各有系统偏差</strong>，而且偏差<strong>有方向</strong>：</p>
+        <p>• <strong>自我报告</strong>：<em>50% 的离异者不能准确说出自己哪个月离婚，4% 宣称自己从未离过婚</em>（研究者事先在法院查过判决书）。<br>
+           • <strong>社会赞许性偏差</strong>：因怕不被接纳，参与者不敢诚实报告同性恋取向——<em>这是同性恋普遍性长期有争议的测量学原因之一</em>。<br>
+           • <strong>自我服务偏差</strong>：操持家务的伴侣认为自己做的家务比实际更多。<br>
+           • <strong>理解偏差</strong>：男性回答"和多少人有过性行为"时往往把边缘性行为也计入，女性一般只算真正性交的伴侣——<em>这本身就是男女报告性伴侣数不一致的原因之一</em>。</p>
+      </div></div>
+      <div class="row ask"><span class="lbl">问自己</span><div class="v"><ul class="ask-list">
+        <li>我看到一个"相关"时，<strong>会不会自动补上因果</strong>？现在是哪三条解释我还没排除？</li>
+        <li>这条数据是<strong>自我报告</strong>吗？如果是，它可能向哪个方向偏？</li>
+        <li>这条结论是<strong>横向</strong>还是<strong>纵向</strong>研究得出的？——横断研究混淆<em>年龄</em>与<em>世代</em>（成长背景），这是本域特别容易出错的地方。</li>
+        <li>我最近一次用"我认识一个人就是这样"来反驳一个统计结论，是什么时候？——米勒对这种做法的评价是"幼稚"。</li>
+      </ul></div></div>
+      <div class="caveat"><span class="lbl">⚠️ 这条的边界（双向的）</span>米勒同时警告了<strong>两个方向</strong>的错误。一边是"把相关当因果"；另一边是<strong>因噎废食</strong>——他在脚注里明确说：<em>如果有很多变量存在许多相关、或测量是在多个不同场合得出的，<strong>高级统计分析通常能排除某些可能的因果联系</strong>，"运用高级统计技术却有可能在相关设计的结果上得出一些因果联系的可靠结论"。</em><br>所以正确的读法是：<strong>"简单相关不能定因果"，不是"相关研究没有价值"。</strong></div>
+    </div>
+  </div>
+
+  <div class="diag">
+    <div class="diag-head"><span class="id">D11</span><span class="cn">我拿"显著的"当成"差别很大"了吗</span><span class="grade a">A 级</span></div>
+    <div class="diag-body">
+      <div class="row belief"><span class="lbl">流行信念</span><div class="v">"研究证明男女在这方面有显著差异"——所以这是件大事。</div></div>
+      <div class="row data"><span class="lbl">实际内容</span><div class="v">
+        <p>米勒的原话可以直接当口诀：</p>
+        <p style="padding:11px 15px;background:var(--key-soft);border-left:3px solid var(--key);border-radius:0 3px 3px 0;color:#6d5011;font-style:italic;font-size:14px;">"不要被专业的术语误导，研究者提及的'显著的'性别差异通常指'统计学上的显著性'——就是说差异在数字上是可靠的——<strong>但差异或许根本不大</strong>。"</p>
+        <p>他还给了一个<strong>具体的效应量标注</strong>：中等程度的性别差异是 <strong>d = 0.5</strong>，而<strong>即使在这个程度，仍有三分之一的女性的得分高于男性的平均水平</strong>。</p>
+      </div></div>
+      <div class="row ask"><span class="lbl">问自己</span><div class="v"><ul class="ask-list">
+        <li>我在引用一个"差异"时，能不能说出它的<strong>效应量</strong>（d 值或百分比）？</li>
+        <li>如果 d = 0.2（小差异），两组的分布<strong>几乎完全重合</strong>——这个差异能用来预测<em>某一个具体的人</em>吗？</li>
+        <li>反过来：如果一个结论是"没有显著差异"，我能不能接受它<strong>也是一个发现</strong>，而不是"研究没做出来"？</li>
+      </ul></div></div>
+      <div class="caveat"><span class="lbl">⚠️ 这一条的元意义</span>这条不只用于读这本书，它适用于你读到的<strong>一切</strong>心理学与社会科学结论——包括本项目其他域里的。米勒在第 2 章末尾给读者的定位很值得记住：</div>
+      <p style="margin-top:10px;padding:11px 15px;background:var(--key-soft);border-left:3px solid var(--key);border-radius:0 3px 3px 0;color:#6d5011;font-style:italic;font-size:13.5px;">"<strong>勿将科学的谨慎误解为缺陷。</strong>相反，我们希望你持有这样一种信念，恰恰是这种谨慎体现了科学的尊严……那些声称自己一直正确的人，毫无疑问是招摇过市的江湖骗子。"</p>
+    </div>
+  </div>
+
+  <!-- ============ 自测 ============ -->
+  <div class="section-title">收尾自测</div>
+  <div class="section-sub">不看前面，逐条问自己。答不出来就回去看对应条目</div>
+
+  <div class="checklist">
+    <h3>✅ 逐条自测（共 36 项）</h3>
+
+    <div class="cat">六要素与归属（6 项）</div>
+    <ul>
+      <li>能说出亲密关系的六个维度</li>
+      <li>能举出"六项中只有部分成立"的关系例子</li>
+      <li>知道亲密程度会随关系过程大幅波动</li>
+      <li>能说出归属需要的三条生理证据</li>
+      <li>知道"质量比数量重要"</li>
+      <li>能指出归属需要那些证据是相关而非因果</li>
+    </ul>
+
+    <div class="cat">期望的来源（7 项）</div>
+    <ul>
+      <li>能说出 1960 年代与现在至少四组对比数字</li>
+      <li>能定义性别比率并说出高低比率各自的社会特征</li>
+      <li>知道"性解放"年代对应的是<b>低</b>性别比率</li>
+      <li>能说出米勒自己给性别比率假设标了什么（"只是一种猜想"）</li>
+      <li>能说明"试婚"逻辑与数据的冲突</li>
+      <li>知道同居研究里哪个条件会让有害效应变轻微（有明确结婚计划）</li>
+      <li>能说出至少两条对同居—离婚相关的替代解释</li>
+    </ul>
+
+    <div class="cat">我是什么样的人（7 项）</div>
+    <ul>
+      <li>能说出依恋的两个连续维度名称</li>
+      <li>知道四类型只是"便利标签"</li>
+      <li>知道依恋类型会变（两年内约三分之一）</li>
+      <li>能区分性别（生理）与性认同（社会）差异</li>
+      <li>能解释工具性与表达性，并说出双性化的比例</li>
+      <li>知道传统性别角色对<b>男人和女人各自</b>的伤害</li>
+      <li>能说出 d = 0.5 时"三分之一"这个数字的含义</li>
+    </ul>
+
+    <div class="cat">判断一段关系（8 项）</div>
+    <ul>
+      <li>能写出 结果、CL、CLalt 三者的定义</li>
+      <li>知道满意度由什么决定、依赖度由什么决定</li>
+      <li>能说出"不幸福但稳定"这个类型的现实例子</li>
+      <li>能解释 CL 为什么会自己升高</li>
+      <li>知道 CLalt 是主观的，受哪三个因素影响</li>
+      <li>能说出投入如何锁住一段不满意的关系</li>
+      <li>知道公平是<b>成比例</b>而不是相等</li>
+      <li>能说出公平理论里哪一条结论是稳定的、哪一条不稳定</li>
+    </ul>
+
+    <div class="cat">读数据的方式（8 项）</div>
+    <ul>
+      <li>能说出相关≠因果的三条竞争解释</li>
+      <li>能举出"第三方变量同时制造相关"的例子</li>
+      <li>知道自我报告的三类偏差</li>
+      <li>能说出"显著的"这个词的真实含义</li>
+      <li>知道横断研究混淆了哪两件事</li>
+      <li>知道纵向研究最大的实际问题是什么</li>
+      <li>能说出元分析是做什么的</li>
+      <li>知道米勒对"相关研究"的双向警告</li>
+    </ul>
+  </div>
+
+  <div class="preface" style="margin-top:26px;border-left-color:var(--key);">
+    <h3 style="color:var(--key);">🎯 最后：这本手册的唯一目的</h3>
+    <p style="font-size:15.5px;color:#2a211c;font-weight:600;margin:14px 0;padding-left:16px;border-left:3px solid var(--key);line-height:1.8;">
+      不是让你更懂亲密关系，而是让你发现：<strong>你原本以为是自己想清楚的那些判断，有多少是别人给你的默认值。</strong>
+    </p>
+    <p>米勒在第 2 章里说了一句可以当作这本手册座右铭的话：</p>
+    <p style="padding:12px 16px;background:var(--key-soft);border-left:3px solid var(--key);border-radius:0 3px 3px 0;color:#6d5011;font-style:italic;font-size:14px;margin:12px 0;">"人们喜欢轻松容易的答案，喜欢简单干脆的信息。如果科学事实难于掌握，<strong>很多人实际上更喜欢简单的谬论</strong>，如'男人来自火星、女人来自金星'这样的观点。"</p>
+    <p>这本手册做的是与之相反的事：<strong>把每个简单答案摊开，让你看见它后面有多少条件。</strong></p>
+    <p style="margin-top:12px;color:#92847a;font-size:13.5px;">最后提醒一条本手册自身的边界：<strong>它读的是群体规律，而你是一个具体的人。</strong>它的任何一条都不足以替你判断该不该留在一段关系里——那需要的不只是数据。</p>
+  </div>
+
+  <div class="footer">
+    《亲密关系》自我诊断手册 · 罗兰·米勒 · 第 6 版中译本<br>
+    11 条诊断 · 36 项自测 · 证据等级 A/B/C 标注<br>
+    <em>依恋类型是描述倾向的工具，不是人格标签</em>
+  </div>
+
+</div>
+</body>
+</html>

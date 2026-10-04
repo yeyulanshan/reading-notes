@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>《操作系统导论》精华笔记与专业问题</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: #0f172a;
+    color: #e2e8f0;
+    padding: 32px 20px;
+    line-height: 1.85;
+  }
+  .container { max-width: 900px; margin: 0 auto; }
+
+  .header {
+    text-align: center;
+    margin-bottom: 36px;
+    padding: 40px 20px;
+    background: linear-gradient(135deg, #1e3a5f 0%, #0f172a 100%);
+    border-radius: 16px;
+    border: 1px solid #334155;
+  }
+  .header h1 { font-size: 26px; margin-bottom: 12px; color: #f8fafc; border: none; padding: 0; }
+  .header .subtitle { font-size: 14.5px; color: #94a3b8; }
+
+  main {
+    background: #1e293b;
+    border-radius: 12px;
+    padding: 32px 34px;
+    border: 1px solid #334155;
+  }
+
+  h1 { font-size: 24px; color: #f8fafc; margin: 8px 0 18px; }
+  h2 {
+    font-size: 20px;
+    color: #f8fafc;
+    margin: 38px 0 16px;
+    padding-left: 12px;
+    border-left: 4px solid #3b82f6;
+  }
+  h2:first-child { margin-top: 0; }
+  h3 { font-size: 16.5px; color: #93c5fd; margin: 26px 0 12px; }
+  h4 { font-size: 15px; color: #cbd5e1; margin: 18px 0 8px; }
+
+  p { color: #cbd5e1; font-size: 14.5px; margin-bottom: 12px; }
+  strong { color: #f8fafc; }
+  em { color: #a5b4fc; font-style: normal; }
+
+  ul, ol { margin: 8px 0 14px 24px; }
+  li { color: #cbd5e1; font-size: 14.5px; margin-bottom: 6px; }
+
+  hr { border: none; border-top: 1px solid #334155; margin: 26px 0; }
+
+  /* 表格 */
+  table { width: 100%; border-collapse: collapse; margin: 14px 0 18px; font-size: 13.5px; }
+  th, td { padding: 9px 11px; border: 1px solid #334155; text-align: left; vertical-align: top; }
+  th { background: #0f172a; color: #93c5fd; font-weight: 600; }
+  td { color: #cbd5e1; }
+
+  /* 引用块 = 通俗解释 */
+  blockquote {
+    background: #0f172a;
+    border-left: 4px solid #10b981;
+    border-radius: 0 8px 8px 0;
+    padding: 16px 20px;
+    margin: 14px 0 6px;
+  }
+  blockquote p { color: #6ee7b7; font-size: 14px; margin-bottom: 8px; }
+  blockquote p:last-child { margin-bottom: 0; }
+  blockquote strong { color: #a7f3d0; }
+
+  /* 代码 */
+  code {
+    background: #0f172a;
+    padding: 1.5px 6px;
+    border-radius: 4px;
+    font-family: Consolas, Monaco, monospace;
+    font-size: 13px;
+    color: #6ee7b7;
+  }
+  pre {
+    background: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    padding: 14px 16px;
+    overflow-x: auto;
+    margin: 12px 0 16px;
+  }
+  pre code { background: none; padding: 0; color: #6ee7b7; line-height: 1.65; }
+
+  /* 专业问题标题（加粗行开头的编号） */
+  .q-title {
+    background: rgba(59, 130, 246, .1);
+    border-left: 4px solid #3b82f6;
+    border-radius: 0 8px 8px 0;
+    padding: 12px 16px;
+    margin: 26px 0 12px;
+    color: #f8fafc;
+    font-size: 15.5px;
+    font-weight: 600;
+  }
+
+  .footer {
+    text-align: center;
+    margin-top: 36px;
+    padding: 18px;
+    color: #64748b;
+    font-size: 13px;
+  }
+
+  @media (max-width: 620px) {
+    .header h1 { font-size: 20px; }
+    h2 { font-size: 17.5px; }
+    main { padding: 22px 18px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <h1>《操作系统导论》精华笔记与专业问题</h1>
+    <div class="subtitle">面向有一点计算机基础的工科本科生 · 精读笔记 + 18个专业问题 + 通俗解释</div>
+  </div>
+
+  <main>
+<p><strong>面向有一点计算机基础的工科本科生 · 精读笔记 + 18个专业问题 + 通俗解释</strong></p>
+<blockquote>
+<p>这份文档是《操作系统导论》（OSTEP，Arpaci-Dusseau 夫妇著）的学习伴随材料。第一部分把全书压成一条主线；第二部分用 18 个"看起来简单、答起来有层次"的专业问题，检验你是否真的建立了心智模型。</p>
+<p></p>
+<p>使用方法：<strong>先自己回答，再看解答。</strong> 每题的"通俗解释"是给你检查自己是否真懂用的——如果你能把专业回答讲成通俗解释那个样子，说明你是真的理解了。</p>
+</blockquote>
+<hr>
+<h2>第一部分：精读笔记</h2>
+<h3>一、全书定位与核心观点</h3>
+<p>《操作系统导论》（英文名 <em>Operating Systems: Three Easy Pieces</em>）是威斯康星大学 Remzi 与 Andrea Arpaci-Dusseau 夫妇为操作系统课程撰写的教材，书名向费曼的《Six Easy Pieces》致敬。全书 500 页，围绕<strong>三个主题</strong>展开：虚拟化（virtualization）、并发（concurrency）、持久性（persistence）。</p>
+<p>全书的核心观点可以概括为三句话：</p>
+<ul>
+<li><strong>操作系统是"幻觉制造商"（illusion）</strong>。它把物理资源（处理器、内存、磁盘）转换为更通用、更强大、更易用的虚拟形式。所以它又叫"虚拟机"，也叫"资源管理器"。</li>
+<li><strong>全书的关键问题只有一个</strong>：操作系统<strong>如何</strong>将资源虚拟化？作者特意区分——"为什么"要虚拟化不是主要问题（答案显而易见：让系统更易用），真正要研究的是用哪些<strong>机制</strong>和<strong>策略</strong>、如何高效、需要哪些硬件支持。</li>
+<li><strong>每个假象都有代价</strong>。时分共享的代价是性能损失，分页的代价是额外一次访存，锁的代价是同步开销，日志的代价是写入放大。<strong>理解了代价，才算读懂了这本书。</strong></li>
+</ul>
+<p>本书的写作风格是"描述现实，解释是什么和为什么"，而非空谈"应该怎么做"。</p>
+<h3>二、贯穿全书的三个思维工具</h3>
+<h4>1. 机制与策略分离</h4>
+<p>这是全书最重要的设计原则，也是最好用的思维工具：</p>
+<table><thead><tr><th>对比维度</th><th>机制（mechanism）</th><th>策略（policy）</th></tr></thead><tbody>
+<tr><td>回答的问题</td><td><strong>如何做（how）</strong></td><td><strong>做哪个（which）</strong></td></tr>
+<tr><td>含义</td><td>提供某项功能的低级方法或协议</td><td>在多个选项中做决定的算法</td></tr>
+<tr><td>例子</td><td>上下文切换、地址转换、日志写入</td><td>调度算法、页替换算法、块分配策略</td></tr>
+</tbody></table>
+<p>把两者分开，就能<strong>只改策略而不必重新设计机制</strong>。这是模块化原则的实例：几十年来调度策略换了一代又一代（Linux 的 O(1)、CFS、BFS 之争），但"时钟中断 + 上下文切换"这套机制几乎没变，因为它被正确隔离在了策略之外。</p>
+<h4>2. 抽象 → 机制 → 策略</h4>
+<p>三大部分用的是同一个套路：</p>
+<table><thead><tr><th>主题</th><th>抽象（假象）</th><th>机制（how）</th><th>策略（which）</th></tr></thead><tbody>
+<tr><td>CPU 虚拟化</td><td>进程</td><td>受限直接执行、陷阱、时钟中断、上下文切换</td><td>FIFO→SJF→STCF→RR→MLFQ→彩票/步长</td></tr>
+<tr><td>内存虚拟化</td><td>地址空间</td><td>基址/界限→分段→分页、页表、TLB、交换</td><td>OPT/FIFO/随机/LRU/时钟</td></tr>
+<tr><td>并发</td><td>线程</td><td>原子指令、锁、条件变量、信号量</td><td>锁粒度、自旋 vs 休眠、避免死锁</td></tr>
+<tr><td>持久性</td><td>文件与目录</td><td>I/O+中断+DMA、inode、位图、日志</td><td>磁盘调度、块分配、RAID 级别</td></tr>
+</tbody></table>
+<h4>3. 用历史信息预测未来</h4>
+<p>这是反复出现的技巧（MLFQ、LRU、TLB、分支预测都是）。它的收益是"不需要先验知识"，风险是"规律可能不成立，而且可能被操纵"。</p>
+<h3>三、CPU 虚拟化</h3>
+<p><strong>关键问题</strong>：只有少量物理 CPU，如何提供"有无数个 CPU"的假象？</p>
+<p><strong>答案</strong>：让每个进程只运行一个<strong>时间片</strong>，然后切换——<strong>时分共享（time sharing）</strong>。代价是性能损失。</p>
+<h4>进程的机器状态</h4>
+<p>进程 = 运行中的程序。它的<strong>机器状态</strong>包含三部分：</p>
+<ul>
+<li><strong>内存</strong>（地址空间）：指令和数据都在这里</li>
+<li><strong>寄存器</strong>：特别是<strong>程序计数器（PC/IP）</strong>、栈指针、帧指针</li>
+<li><strong>持久存储的 I/O 信息</strong>：如当前打开的文件列表</li>
+</ul>
+<h4>受限直接执行（LDE）——最漂亮的设计之一</h4>
+<p>矛盾在于：要<strong>快</strong>就得让程序直接在 CPU 上跑；要<strong>控制</strong>就不能让程序为所欲为。</p>
+<p>解法是把两件事分开做：</p>
+<ul>
+<li><strong>"直接执行"</strong>：程序直接在硬件上跑，速度和预期一样快</li>
+<li><strong>"受限"</strong>：启动时先设好硬件限制（陷阱表、时钟中断），等于给 CPU 做<strong>"宝宝防护"</strong>——锁好危险柜子、盖住电源插座，然后让宝宝自由行动</li>
+</ul>
+<p>三个关键部件：</p>
+<ol>
+<li><strong>用户模式 / 内核模式</strong>：用户模式下代码受限（发 I/O 会引发异常）；内核模式下可做特权操作</li>
+<li><strong>陷阱 / 系统调用</strong>：陷阱指令<strong>同时跳入内核并提升特权级别</strong>；完成后由"从陷阱返回"降回用户模式。系统调用看起来像普通函数调用，是因为 C 库把它包成了过程调用，里面藏着陷阱指令</li>
+<li><strong>陷阱表</strong>：发起调用的程序<strong>不能</strong>指定要跳转的地址（否则它就能跳到内核任意位置，比如"跳过权限检查"），所以内核在启动时用特权指令告诉硬件各种事件该运行哪段代码——<strong>这是整个保护机制的根基</strong></li>
+</ol>
+<h4>控制权怎么拿回来</h4>
+<ul>
+<li><strong>协作方式</strong>（早期 Macintosh、Xerox Alto）：操作系统相信进程会通过系统调用（如 <code>yield</code>）主动让出 CPU。<strong>致命缺陷</strong>：进程若进入无限循环且从不系统调用，操作系统唯一办法就是<strong>重启计算机</strong></li>
+<li><strong>非协作方式：时钟中断</strong>。时钟每隔几毫秒中断一次，当前进程停止，中断处理程序运行——操作系统由此<strong>强制</strong>拿回控制权</li>
+</ul>
+<h4>上下文切换：两次寄存器保存</h4>
+<ul>
+<li><strong>第一次</strong>：时钟中断时，硬件把<strong>用户寄存器</strong>隐式保存到该进程的<strong>内核栈</strong></li>
+<li><strong>第二次</strong>：操作系统决定切换时，软件把<strong>内核寄存器</strong>显式保存到该进程的<strong>进程结构</strong>，并<strong>切换内核栈</strong></li>
+</ul>
+<p>后一步让系统"从好像刚刚由 A 陷入内核，变成好像刚刚由 B 陷入内核"。</p>
+<h4>调度：指标与算法的演进</h4>
+<p><strong>两个本质矛盾的指标</strong>：</p>
+<ul>
+<li><strong>周转时间</strong> = 完成时间 − 到达时间（衡量"多快做完"）</li>
+<li><strong>响应时间</strong> = 首次运行时间 − 到达时间（衡量"多久有反应"）</li>
+</ul>
+<table><thead><tr><th>算法</th><th>规则与优点</th><th>致命反例</th></tr></thead><tbody>
+<tr><td><strong>FIFO</strong></td><td>按到达顺序跑完，简单</td><td>护航效应：A=100s 排在前，平均周转 110s</td></tr>
+<tr><td><strong>SJF</strong></td><td>先跑最短的，同时到达时<strong>可证明最优</strong></td><td>需预知运行时间；任务随时到达时失效</td></tr>
+<tr><td><strong>STCF</strong></td><td>SJF + 抢占</td><td>响应时间差</td></tr>
+<tr><td><strong>RR</strong></td><td>一个时间片换人，响应时间极好（平均响应 1 vs SJF 的 5）</td><td>周转时间最差（平均 14，比 FIFO 还差）</td></tr>
+</tbody></table>
+<p><strong>MLFQ 的五条规则</strong>（最该背下来的东西）：</p>
+<ol>
+<li>如果 A 的优先级 &gt; B 的优先级，运行 A（不运行 B）</li>
+<li>如果 A 的优先级 = B 的优先级，轮转运行 A 和 B</li>
+<li>工作进入系统时，放在最高优先级</li>
+<li>一旦工作用完了其在某一层中的<strong>时间配额</strong>（<strong>无论中间主动放弃了多少次 CPU</strong>），就降低其优先级</li>
+<li>经过一段时间 S，就将系统中所有工作重新加入最高优先级队列</li>
+</ol>
+<p>规则 3+4 让它<strong>近似 SJF</strong>（先假定是短任务，不是就慢慢降级）；规则 5 防<strong>饥饿</strong>并适应行为变化；规则 4 里括号那句是为了封堵"愚弄调度程序"——进程可以故意在时间片快用完时发起一次无关 I/O 来保住高优先级。</p>
+<p><strong>比例份额</strong>：彩票调度用"彩票"表示份额，是<strong>概率性</strong>的；步长调度选最小行程值者运行，是<strong>确定性</strong>的，每轮都精确按比例，但需要全局状态。</p>
+<p><strong>多处理器</strong>带来两个新问题：<strong>缓存亲和度</strong>（尽量让进程留在同一 CPU）与<strong>负载不均</strong>（多队列调度的固有难题，靠迁移/工作窃取缓解）。</p>
+<h3>四、内存虚拟化</h3>
+<p><strong>关键问题</strong>：物理内存只有一份，怎么给每个进程一个独立、连续、互不可见的地址空间？</p>
+<p><strong>答案：地址转换。</strong> 程序里看到的<strong>全是虚拟地址</strong>——书里那句要背的话是："<strong>用户程序生成的每个地址都是虚拟地址。</strong>"</p>
+<p><strong>为什么值得这么麻烦</strong>：① <strong>易用</strong>（程序员不用操心变量放哪）；② <strong>隔离与保护</strong>；③ <strong>灵活性</strong>（不假定堆栈往哪长）。</p>
+<h4>机制的演进：三代"问题 → 方案"</h4>
+<table><thead><tr><th>代</th><th>方案</th><th>解决的问题</th><th>遗留问题</th></tr></thead><tbody>
+<tr><td>一</td><td><strong>基址/界限</strong></td><td>进程重定位 + 保护</td><td>整个地址空间必须连续放入内存，栈堆之间的大空洞也占着</td></tr>
+<tr><td>二</td><td><strong>分段</strong></td><td>稀疏地址空间</td><td><strong>外部碎片</strong>（空闲被切成不连续小洞）</td></tr>
+<tr><td>三</td><td><strong>分页</strong></td><td>外部碎片</td><td>页表太大、每次访存变两次</td></tr>
+</tbody></table>
+<p>一句话总结：<strong>把"变长的东西"换成"定长的东西"，是解决空间管理问题的通用套路。</strong></p>
+<h4>分页的连带问题与解法</h4>
+<p><strong>问题①：页表太大。</strong> 32 位地址空间 + 4KB 页 → 20 位 VPN ≈ 100 万个页表项 × 4 字节 = <strong>每进程 4MB</strong>；100 个进程就要 400MB。</p>
+<p>→ 解法：<strong>多级页表</strong>（像树一样，只为真正用到的部分建表）、更大的页、反向页表、把页表本身也换出去。</p>
+<p><strong>问题②：每次访存变两次。</strong> 要先读页表拿到物理地址，再读数据。</p>
+<p>→ 解法：<strong>TLB</strong>（地址转换缓存）。绝大多数访存都命中 TLB。<strong>可以说没有 TLB，虚拟内存就不可能实用。</strong></p>
+<p><strong>问题③：地址空间可以比物理内存大。</strong></p>
+<p>→ 解法：<strong>交换空间</strong> + <strong>存在位/页错误处理</strong>。</p>
+<h4>必记的地址转换算例</h4>
+<p>地址空间 64 字节，页大小 16 字节 → 4 页，虚拟地址 6 位：<strong>前 2 位 VPN，后 4 位偏移量</strong>。</p>
+<p>虚拟地址 <strong>21</strong> = <code>010101</code> → VPN = <code>01</code>（第 1 页），偏移量 = <code>0101</code>（第 5 字节）。页表 VPN1→PFN 7（<code>111</code>）→ 物理地址 = <code>111 0101</code> = <strong>117</strong>。</p>
+<p><strong>关键点：偏移量保持不变。</strong> 通用公式：<code>物理地址 = (PFN &lt;&lt; 偏移量位数) | 偏移量</code>。</p>
+<h4>页表项（PTE）里有什么</h4>
+<table><thead><tr><th>位</th><th>作用</th></tr></thead><tbody>
+<tr><td><strong>有效位</strong></td><td>该地址转换是否有效（支持稀疏地址空间——未使用的页标记无效就不必分配物理帧）</td></tr>
+<tr><td><strong>保护位</strong></td><td>该页是否可读、可写、可执行</td></tr>
+<tr><td><strong>存在位</strong></td><td>在物理内存里，还是被换出到磁盘了</td></tr>
+<tr><td><strong>脏位</strong></td><td>被带入内存后是否被修改过（决定换出时要不要写回）</td></tr>
+<tr><td><strong>参考位/访问位</strong></td><td>是否被访问过（用于替换策略）</td></tr>
+</tbody></table>
+<h4>TLB 的关键细节</h4>
+<ul>
+<li><strong>TLB 未命中 ≠ 页错误</strong>。TLB 未命中只是"缓存里没有"，去页表查一下就有了；页错误是"页表说这页不在物理内存"，需要磁盘 I/O</li>
+<li><strong>两个"有效位"含义不同</strong>：PTE 无效 = 页未申请、访问即被终止；TLB 无效 = 该项没缓存映射</li>
+<li><strong>硬件管理 vs 软件管理</strong>：CISC/x86 由硬件自己遍历页表；RISC（MIPS、SPARC）抛异常由操作系统陷阱处理程序用特权指令填 TLB</li>
+<li><strong>进程切换时</strong>：要么清空 TLB（代价是重新预热），要么给 TLB 项加 <strong>ASID</strong>（地址空间标识符）区分进程</li>
+</ul>
+<h4>页错误处理时间线</h4>
+<ol>
+<li>进程访问虚拟地址 → TLB 未命中 → 查页表</li>
+<li>发现<strong>存在位为 0</strong> → 硬件引发<strong>页错误</strong>，陷入操作系统</li>
+<li>操作系统找空闲物理帧（没有就按<strong>替换策略</strong>踢出一页，脏页要写回磁盘）</li>
+<li>向磁盘发出读请求（进程<strong>阻塞</strong>，操作系统可运行其他进程）</li>
+<li>I/O 完成后更新页表项（填入 PFN、存在位置 1）</li>
+<li><strong>重新执行</strong>刚才那条指令——这次成功</li>
+</ol>
+<h4>替换策略与 Belady 异常</h4>
+<p>把物理内存看成"所有虚拟页的缓存"，目标是让缓存未命中最少。</p>
+<p><strong>衡量指标</strong>：<code>AMAT = (P_Hit × T_M) + (P_Miss × T_D)</code></p>
+<p><strong>策略谱系</strong>：最优（OPT，理论下界，需未来信息故不可实现）→ FIFO → 随机 → LRU（接近最优但实现昂贵）→ <strong>近似 LRU：时钟算法</strong>（使用位 + 时钟指针，最坏只遍历一遍内存）。</p>
+<p><strong>Belady 异常</strong>：对某些访问序列，FIFO 在内存更大时页错误<strong>反而更多</strong>。原因是 FIFO 完全不考虑"这页还会不会被用到"，它不满足"栈性质"。</p>
+<p><strong>普遍启示：一个策略如果不基于正确的信息，增加资源不保证改善结果，甚至可能更糟。</strong></p>
+<h3>五、并发</h3>
+<p><strong>关键问题</strong>：一个程序内部同时做多件事，怎么保证正确？</p>
+<h4>那个著名的例子</h4>
+<p>两个线程各把共享计数器加 1，各循环 <strong>1000 万次</strong>。期望结果 <strong>20000000</strong>。实测常常得到 19345221、19221041 这样的随机数。</p>
+<p><strong>原因</strong>：<code>counter = counter + 1</code> 在机器层面是三条指令（读→加→写回），而调度器可以在<strong>任意两条指令之间</strong>切换线程。如果切换发生在"读完还没写回"的间隙，另一个线程也读到同样的旧值——一次加法凭空消失。</p>
+<p>书中表 26.4 的经典追踪：counter 从 <strong>50</strong> 变到 <strong>51</strong>（正确应为 52）。</p>
+<p><strong>关键结论</strong>：程序逻辑没错，是<strong>你对执行顺序的隐含假设错了</strong>。</p>
+<p><strong>四个术语</strong>：</p>
+<ul>
+<li><strong>临界区</strong>：访问共享资源的代码段</li>
+<li><strong>竞态条件</strong>：多个线程大致同时进入临界区、都试图更新共享数据，导致意外结果</li>
+<li><strong>不确定性</strong>：程序输出因运行而异</li>
+<li><strong>互斥</strong>：保证只有一个线程进入临界区，产生确定的输出</li>
+</ul>
+<h4>锁的评价标准</h4>
+<ol>
+<li><strong>是否提供互斥</strong>——最基本要求</li>
+<li><strong>公平性</strong>——是否有线程会<strong>饿死</strong></li>
+<li><strong>性能</strong>——分三种场景：无竞争、单 CPU 竞争、多 CPU 竞争</li>
+</ol>
+<h4>锁的实现演进</h4>
+<p><strong>控制中断</strong>（只适用单处理器，且要求信任用户程序，还会丢失中断）→ <strong>测试并设置</strong>（TAS，原子地取旧值+写新值）→ <strong>比较并交换</strong>（CAS）→ <strong>链接的加载与条件式存储</strong>（LL/SC）→ <strong>获取并增加</strong>（fetch-and-add，用于 ticket 锁，能保证所有线程最终拿到锁）。</p>
+<p><strong>注意</strong>：朴素的"先测试后设置"<strong>不满足互斥</strong>——因为测试和设置是两步，中间可能被中断。必须依赖硬件的<strong>原子</strong>指令。</p>
+<p><strong>自旋的问题与改进</strong>：自旋锁简单但空耗 CPU。改进路线：<strong>让出（yield）</strong> → <strong>用队列 + 休眠替代自旋</strong>（park/unpark，注意"唤醒/等待竞争"，用 setpark 修复）→ <strong>两阶段锁</strong>（先自旋一段，失败再睡眠）。</p>
+<h4>条件变量：为什么必须用 while</h4>
+<pre><code>
+Pthread_mutex_lock(&amp;m);
+while (done == 0)                 // 是 while，不是 if！
+    Pthread_cond_wait(&amp;c, &amp;m);
+Pthread_mutex_unlock(&amp;m);
+</code></pre>
+<p><strong>三个理由</strong>：</p>
+<ol>
+<li><strong>Mesa 语义</strong>：发信号只是"暗示"状态变了，被唤醒的线程从 wait 返回到真正运行之间，锁可能被别的线程抢走并再次改变状态</li>
+<li><strong>假唤醒</strong>：某些实现下一个信号可能唤醒两个线程</li>
+<li><strong>唤醒对象可能错</strong>：单个条件变量下，消费者可能唤醒另一个消费者而不是生产者，被唤醒者重查条件后睡回去，最终<strong>所有线程都在睡</strong></li>
+</ol>
+<p><strong><code>wait()</code> 必须持有锁</strong>——这不是建议，而是语义强制要求：它要原子地释放锁并休眠，返回前重新获取锁。</p>
+<h4>信号量：一个原语表达两种语义</h4>
+<ul>
+<li><code>sem_wait()</code>：值减一，若为负则等待</li>
+<li><code>sem_post()</code>：值加一，若有等待者则唤醒一个</li>
+</ul>
+<p><strong>初值的三种用途</strong>：</p>
+<ul>
+<li><strong>1</strong> → 当锁用（二值信号量）</li>
+<li><strong>0</strong> → 当条件变量用（等待某事件）</li>
+<li><strong>N</strong> → 控制同时访问某资源的线程数</li>
+</ul>
+<p><strong>信号量的关键优势</strong>：它<strong>自带一个值，有"记账"作用</strong>——post 发生在 wait 之前也不会丢失。而条件变量的 signal 不携带状态，无人在等就丢失。这正是为什么用条件变量实现 join 必须加 <code>done</code> 变量，而用信号量则不需要。</p>
+<h4>生产者/消费者的经典错误</h4>
+<pre><code>
+// 错误：锁的作用域太大
+sem_wait(&amp;mutex);
+sem_wait(&amp;empty);     // ← 持有 mutex 等待资源
+</code></pre>
+<p>消费者先拿到 mutex，然后对 full 阻塞，<strong>但仍持有 mutex</strong>；生产者需要 mutex 才能 post full → 死锁。</p>
+<p><strong>正确口诀：先等资源，再拿锁；先放锁，再发信号。</strong></p>
+<pre><code>
+sem_wait(&amp;empty);
+sem_wait(&amp;mutex);
+put(i);
+sem_post(&amp;mutex);
+sem_post(&amp;full);
+</code></pre>
+<h4>死锁四条件</h4>
+<ol>
+<li><strong>互斥</strong>：资源同一时间只能被一个人占用</li>
+<li><strong>持有并等待</strong>：拿着一个，还在等另一个</li>
+<li><strong>不可抢占</strong>：别人不能从你手里抢走</li>
+<li><strong>循环等待</strong>：A 等 B，B 等 A</li>
+</ol>
+<p><strong>四条同时成立才死锁，缺一条就解开了</strong>——所以预防思路极其清晰：打掉任意一条。</p>
+<ul>
+<li>破坏循环等待 → 规定锁的获取顺序（最常用）</li>
+<li>破坏持有并等待 → 一次性原子地抢到所有锁（不适用封装，降低并发）</li>
+<li>破坏非抢占 → 用 trylock（会引<strong>活锁</strong>，需随机等待缓解）</li>
+<li>破坏互斥 → 无等待数据结构（无死锁，但可能活锁）</li>
+</ul>
+<p><strong>三个概念要分清</strong>：<strong>死锁</strong>（互相等待，都不运行）、<strong>活锁</strong>（一直在运行但没进展）、<strong>饥饿</strong>（某个线程长期拿不到资源）。</p>
+<h4>常见并发缺陷</h4>
+<p><strong>非死锁缺陷（更常见，占 74/105）</strong>：</p>
+<ul>
+<li><strong>违反原子性</strong>：本意原子的代码段没有强制原子性（如"检查 p 非空"和"使用 p"之间被插入）</li>
+<li><strong>违反顺序</strong>：两个内存访问的预期顺序被打破</li>
+</ul>
+<p><strong>约 97% 的非死锁问题都属于这两种模式。</strong></p>
+<h4>基于事件的并发</h4>
+<p>用事件循环代替多线程，从根源上消除锁。但代价是：<strong>不允许阻塞调用</strong>（否则整个服务器卡住）、<strong>状态管理极其复杂</strong>（需要手工栈管理/延续）、<strong>页错误会隐式阻塞</strong>。而且<strong>在现代多核系统上，无锁的简单事件处理已不再可能</strong>——要利用多核就得并行，一并行就重新需要锁。</p>
+<h3>六、持久性</h3>
+<p><strong>关键问题</strong>：内存一断电就没了，如何让数据"永远"存在？</p>
+<h4>磁盘的物理事实</h4>
+<p><strong>I/O 时间 = 寻道时间 + 旋转延迟 + 传输时间</strong>，前两项是机械运动，以毫秒计。</p>
+<p><strong>顺序访问比随机访问快上百倍</strong>。书中的具体数字（Cheetah 15K.5，15000 RPM）：</p>
+<ul>
+<li>随机 4KB 读：4ms 寻道 + 2ms 旋转 + 30μs 传输 ≈ 6ms → <strong>0.66 MB/s</strong></li>
+<li>顺序读 100MB：4ms + 2ms + 800ms → <strong>125 MB/s</strong></li>
+<li><strong>差距约 200 倍</strong></li>
+</ul>
+<p>这个事实支配了整个存储软件设计：</p>
+<ul>
+<li><strong>磁盘调度</strong>（SSTF、电梯算法）想把随机变成顺序</li>
+<li><strong>FFS</strong> 讲究"磁盘意识"，用<strong>柱面组</strong>把相关数据放近</li>
+<li><strong>LFS</strong> 走极端：把整个磁盘当成一条只追加的日志，永远只顺序写</li>
+</ul>
+<h4>RAID：用多块磁盘换性能、容量、可靠性</h4>
+<p>RAID 对上层<strong>透明</strong>——操作系统看到的就是一个大磁盘，不用改一行代码。这种"透明可部署性"是它成功的关键。</p>
+<table><thead><tr><th>级别</th><th>组织方式</th><th>容错</th><th>特点</th></tr></thead><tbody>
+<tr><td><strong>RAID 0</strong></td><td>条带化</td><td><strong>0 块</strong></td><td>容量吞吐最好，但无冗余</td></tr>
+<tr><td><strong>RAID 1</strong></td><td>镜像</td><td><strong>1 块</strong></td><td>可靠，但容量利用率 50%</td></tr>
+<tr><td><strong>RAID 4</strong></td><td>条带 + <strong>专用</strong>校验盘</td><td><strong>1 块</strong></td><td><strong>小写入问题</strong>：校验盘成瓶颈</td></tr>
+<tr><td><strong>RAID 5</strong></td><td>条带 + 校验块<strong>轮流分布</strong></td><td><strong>1 块</strong></td><td>解决 RAID 4 瓶颈；小写需 4 次 I/O</td></tr>
+</tbody></table>
+<p><strong>RAID 4 的瓶颈</strong>：每次小写入都要更新校验块，而校验块只有一块盘，所有写入都要碰它 → 被序列化。<strong>RAID 5 把小写入性能从 R/2 提升到 N/4·R。</strong></p>
+<p><strong>注意</strong>：RAID 5 只能容忍<strong>一块</strong>盘坏。要容忍两块需要 RAID 6/RAID-DP。</p>
+<h4>文件系统：inode 是关键</h4>
+<p>磁盘区域组织成：<strong>超级块</strong> + <strong>inode 位图</strong> + <strong>数据位图</strong> + <strong>inode 表</strong> + <strong>数据块区</strong>。</p>
+<p><strong>inode（index node）</strong> 保存一个文件的<strong>全部元信息</strong>：大小、所有者、权限、时间戳，以及最重要的——<strong>指向数据块的指针</strong>。</p>
+<p>指针分层次：<strong>直接指针</strong>（典型 12 个，指向 48KB）、<strong>间接指针</strong>（增加 1024 个指针）、<strong>双重间接指针</strong>（支持超过 4GB 的文件）。为什么用这种"不平衡树"？因为<strong>大多数文件很小</strong>——12 个直接指针就能直接指向 48KB，很划算。</p>
+<p><strong>inode 里没有文件名！</strong> 文件名存在<strong>目录</strong>里——目录本质是"文件名 → inode 号"的映射表。这解释了两种链接：</p>
+<table><thead><tr><th></th><th>硬链接</th><th>符号链接（软链接）</th></tr></thead><tbody>
+<tr><td>本质</td><td>新目录项指向<strong>同一个 inode</strong></td><td>一个独立的小文件，内容是<strong>目标路径名</strong></td></tr>
+<tr><td>地位</td><td>两个名字完全平等</td><td>是第三种文件类型（<code>ls -al</code> 显示 <code>l</code>）</td></tr>
+<tr><td>删除</td><td>引用计数减一，归零才释放数据</td><td>删掉只是删掉那个路径名</td></tr>
+<tr><td>限制</td><td>不能跨文件系统、不能指向目录</td><td>可跨卷，但会产生<strong>悬空引用</strong></td></tr>
+<tr><td><code>ls -al</code> 大小</td><td>文件大小</td><td><strong>路径名的长度</strong>（<code>file2 -&gt; file</code> 是 4 字节）</td></tr>
+</tbody></table>
+<h4>崩溃一致性：本书的智力高潮</h4>
+<p><strong>问题</strong>：往文件追加数据需要更新<strong>三个</strong>磁盘结构——① inode（指向新块、大小变大）、② 数据位图（标记新块已分配）、③ 数据块本身。如果崩溃只完成了部分写入，文件系统就处于"有趣的状态"。</p>
+<p><strong>六种崩溃场景</strong>中，只有"只写了数据块"是无害的（相当于写入从未发生）；最阴险的是"<strong>写了 inode + 位图但没写数据</strong>"——元数据看起来完全一致，但指针指向垃圾。</p>
+<p><strong>三种解法</strong>：</p>
+<table><thead><tr><th>思路</th><th>做法</th><th>缺点</th></tr></thead><tbody>
+<tr><td><strong>FSCK</strong>（事后救火）</td><td>让系统先坏着，重启后扫全盘修复</td><td>慢；<strong>它不知道本来应该是什么样</strong>，只能猜</td></tr>
+<tr><td><strong>日志/预写日志</strong>（事前记账）</td><td>先写"我打算做什么"到日志，确认落盘后再动手</td><td>写入放大（写两遍）</td></tr>
+<tr><td><strong>写时复制/软更新</strong>（换思路）</td><td>不覆盖，只写新位置，最后原子地切换指针</td><td>产生垃圾；指针切换的原子性需硬件支持</td></tr>
+</tbody></table>
+<p><strong>日志为什么最漂亮</strong>：它<strong>没有让磁盘变快或变可靠</strong>，只是改变了<strong>记账的顺序</strong>。崩溃后只有两种状态——日志不完整（可安全忽略）或日志完整（可重放）。<strong>"部分完成"这个危险状态被从系统里消除了。</strong></p>
+<p><strong>日志协议的关键规则</strong>：<strong>先写入被指对象，再写入指针对象</strong>——这保证了<strong>指针永远不会指向垃圾</strong>。这是崩溃一致性的核心。</p>
+<p><strong>一个精彩的工程细节</strong>：威斯康星的研究生 Vijayan Prabhakaran 提出<strong>在事务开始块和结束块里包含日志内容的校验和</strong>，这样就不必等日志内容写完再写结束块（避免额外旋转）。这个改进被合并进 <strong>Linux ext4</strong>，现在运行在全球数百万台机器上，包括 Android。</p>
+<h4>LFS：把所有写入变成顺序写入</h4>
+<p><strong>三个动机</strong>：内存越来越大（读被缓存，磁盘流量以写为主）；随机与顺序的性能差距不断扩大；现有文件系统写一个小文件要执行大量短寻道写入。</p>
+<p><strong>做法</strong>：先把所有更新（包括元数据）缓冲在内存段中，段满时一次性顺序写到磁盘的<strong>空闲部分</strong>。<strong>永远不覆写。</strong></p>
+<p><strong>两个关键结构</strong>：</p>
+<ul>
+<li><strong>inode 映射（imap）</strong>：inode 号 → 最新 inode 的磁盘地址。因为 LFS 里 inode 位置不断变化，需要一层间接</li>
+<li><strong>检查点区域（CR）</strong>：磁盘上唯一固定位置（地址 0），指向最新的 imap 片段。为原子更新，保留<strong>两个 CR 交替写入</strong></li>
+</ul>
+<p><strong>imap 顺带解决了"递归更新问题"</strong>：永不原地更新时，inode 位置变化本会连锁要求更新目录、父目录……一路向上。但 imap 被更新，目录保持相同的名字到 inode 号映射，链条被切断。</p>
+<p><strong>遗留问题</strong>：<strong>垃圾收集</strong>。旧版本数据留在磁盘上，需要清理程序读入 M 个旧段、把活块打包成 N 个新段（N &lt; M）写回。<strong>对清理成本的担忧可能限制了 LFS 的影响力</strong>，但它的思想被 NetApp WAFL、ZFS、btrfs 继承。</p>
+<h4>数据完整性</h4>
+<p>除了"整块盘坏掉"，还有更隐蔽的故障：</p>
+<ul>
+<li><strong>潜在扇区错误（LSE）</strong>：扇区内容讹误，磁盘能检测（返回错误）。研究显示<strong>廉价盘 3 年内约 9.4% 出现 LSE，昂贵盘 1.4%</strong></li>
+<li><strong>块讹误</strong>：内容错了但磁盘检测不到——<strong>无声故障</strong>，最危险</li>
+</ul>
+<p><strong>检测手段：校验和</strong>。读的时候重新计算并与存储值比对。常用算法：XOR、加法、Fletcher、<strong>CRC</strong>。</p>
+<p><strong>两类特殊的写入错误</strong>：</p>
+<ul>
+<li><strong>错误的写入</strong>：数据写对了但位置错了 → 解法是校验和里<strong>加上物理标识符</strong>（磁盘号+扇区号）</li>
+<li><strong>丢失的写入</strong>：报告写成功但实际没持久 → 基本校验和和物理 ID 都无效（因为旧内容也有正确的校验和），解法是<strong>在文件系统的 inode/间接块中存放数据块的校验和</strong>（ZFS 的做法），或者写入后立即读回验证（慢一倍）</li>
+</ul>
+<p><strong>擦净（scrubbing）</strong>：定期主动读取每个块检查校验和，趁冗余还完好时尽早发现坏块。<strong>不能等用到的时候才发现问题。</strong></p>
+<hr>
+<h2>第二部分：18个专业问题（附通俗解释）</h2>
+<hr>
+<div class="q-title">1. 为什么"受限直接执行"要叫这个名字？"受限"和"直接"不矛盾吗？操作系统怎么同时做到这两点？</div>
+<p><strong>专业回答</strong></p>
+<p>"直接执行"指让用户程序直接在硬件 CPU 上运行，不解释、不模拟、不做额外检查，因此执行速度与预期一致。"受限"指程序不能为所欲为：不能直接发起 I/O、不能访问他人内存、不能执行特权指令。</p>
+<p>表面矛盾（要快要放手，要控制要检查）通过<strong>把"设置限制"与"运行程序"在时间上分离</strong>来化解：操作系统在启动时（内核模式）先完成所有准备工作——初始化<strong>陷阱表</strong>（告诉硬件各种事件该运行哪段代码）、启动<strong>时钟中断</strong>；之后才让程序在受限模式下自由运行，只在两个关键点介入：程序主动发起<strong>系统调用</strong>，或<strong>时钟中断</strong>发生。原文的比喻是给 CPU 做<strong>"宝宝防护"</strong>——先锁好危险柜子、盖住电源插座，然后让宝宝自由行动。</p>
+<p><strong>关键推论</strong>：LDE 的精髓是"<strong>不检查，只在关键点介入</strong>"，而不是"每条指令都检查"。如果每执行一条指令都检查，系统会慢到无法使用。</p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p>想象你让孩子在客厅玩。"直接执行"就是让他自由跑，不去每一步都拦着他（这样他玩得痛快、速度最快）。"受限"就是提前把危险的东西锁进柜子（他不许碰刀、插座）。关键点是：<strong>你不会一直盯着他、每动一下就检查一次</strong>——那是没法玩的。你只在两件事上介入：他主动来问你要东西（系统调用），或者定时器响了你去看一眼（时钟中断）。提前布置好环境，然后放手，这叫"受限直接执行"。</p>
+</blockquote>
+<hr>
+<div class="q-title">2. 用户程序调用 open() 时，从用户态进内核再回来，硬件和操作系统分别做了什么？为什么说"程序不能自己指定陷阱后跳转的地址"？</div>
+<p><strong>专业回答</strong></p>
+<p><code>open()</code> 看起来像普通函数调用，因为它<strong>就是</strong>过程调用——只是隐藏在内部的是<strong>陷阱指令</strong>。C 库按与内核一致的调用约定，把参数和<strong>系统调用号</strong>放到众所周知的位置（栈或特定寄存器），然后执行陷阱指令。</p>
+<p>完整流程：</p>
+<ol>
+<li>执行<strong>陷阱</strong>指令：<strong>同时跳入内核并将特权级别提升到内核模式</strong></li>
+<li>硬件把程序计数器、标志和其他一些寄存器压入该进程的<strong>内核栈</strong>，以便正确返回</li>
+<li>内核根据系统调用号执行相应服务（如打开文件），期间做权限检查</li>
+<li>执行<strong>从陷阱返回</strong>指令：从栈弹出寄存器、<strong>把特权级别降回用户模式</strong>、返回调用程序</li>
+</ol>
+<p><strong>为什么不能让程序指定跳转地址</strong>：如果程序能自己指定"陷阱后跳到哪"，它就可以跳到内核里的<strong>任意位置</strong>——比如跳到"访问文件的代码，但跳过前面的权限检查"。那所有保护都会失效。所以机制是：内核在启动时用特权指令设置<strong>陷阱表</strong>，硬件记住它直到重启；而且"设置陷阱表"这个动作<strong>本身也是特权操作</strong>。</p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p>系统调用就像你去政府窗口办事。你不能自己闯进后台（不能指定跳转地址），只能走到指定的窗口递表格（陷阱指令），工作人员按编号处理（系统调用号），办完从窗口把材料还给你（从陷阱返回）。如果允许你"自己走进后台某个房间"，那你就能绕开所有审核——所以窗口的位置必须由官方预先设定好，而且"设定窗口位置"这件事本身只有官方能做。这个设计是整个安全机制的地基。</p>
+</blockquote>
+<hr>
+<div class="q-title">3. 上下文切换时，寄存器被保存了两次。这两次分别由谁完成、存在哪里、为什么必须两次？</div>
+<p><strong>专业回答</strong></p>
+<p>原文专门强调"有两种类型的寄存器保存/恢复"：</p>
+<ul>
+<li><strong>第一次：时钟中断发生时，由硬件隐式保存。</strong> 硬件把运行进程的<strong>用户寄存器</strong>保存到<strong>该进程的内核栈</strong>上，并转入内核模式、跳到陷阱处理程序。</li>
+<li><strong>第二次：操作系统决定从 A 切换到 B 时，由软件显式保存。</strong> 操作系统调用 <code>switch()</code> 例程，把<strong>内核寄存器</strong>保存到 <strong>A 的进程结构</strong>中，再从 B 的进程结构恢复 B 的寄存器，并<strong>切换内核栈</strong>（栈指针指向 B 的内核栈）。</li>
+</ul>
+<p>后一步的效果是："让系统从好像刚刚由 A 陷入内核，变成好像刚刚由 B 陷入内核。"最后执行从陷阱返回时，恢复的是 B 的寄存器、回到 B 的程序计数器。</p>
+<p><strong>为什么必须两次</strong>：它们保存的是<strong>不同层次的状态</strong>——第一次保存"用户程序被打断时的现场"，第二次保存"内核在处理该进程时的现场"。只有两次都保存好，将来才能完整恢复。</p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p>想象你正在写作业（用户态），突然电话响了（中断）。你先把笔放下、记住写到哪里（第一次保存，自动完成）。然后你决定"这个作业先不做了，改做另一份"——那你得把刚才脑子里关于这份作业的所有思路记到本子上（第二次保存，主动完成），再翻出另一份作业的思路。两次保存缺一不可：第一次只记了"笔在哪"，第二次才记了"思路到哪"。将来要恢复，两次的记录都得用上。</p>
+</blockquote>
+<hr>
+<div class="q-title">4. "周转时间"和"响应时间"的区别是什么？为什么说这两个指标本质上矛盾？请举具体数字。</div>
+<p><strong>专业回答</strong></p>
+<ul>
+<li><strong>周转时间</strong> = 完成时间 − 到达时间（衡量"多快做完"），是<strong>性能</strong>指标</li>
+<li><strong>响应时间</strong> = 首次运行时间 − 到达时间（衡量"多久有反应"），是<strong>交互性</strong>指标</li>
+</ul>
+<p>矛盾的根源：想周转时间好，就要先跑短任务、尽量不停（对长任务不公平，晚到的短任务被迫等待）；想响应时间好，就要频繁切换让每个任务都尽快被碰一次（但切换有开销，每个任务都被拖长）。</p>
+<p><strong>具体数字</strong>（三个任务同时到达，各需 5s）：</p>
+<ul>
+<li><strong>SJF</strong>：平均响应时间 = (0+5+10)/3 = <strong>5</strong>（差）；周转时间好</li>
+<li><strong>RR（1s 时间片）</strong>：平均响应时间 = (0+1+2)/3 = <strong>1</strong>（好）；完成于 13/14/15，平均周转时间 = <strong>14</strong>（"确实是最糟糕的策略之一……在很多情况下甚至比简单的 FIFO 更差"）</li>
+</ul>
+<p>原文结论：<strong>"任何公平的策略（如 RR）在周转时间这类指标上表现都很差……你不能既拥有蛋糕又吃掉它。"</strong></p>
+<p>因此作者在总结对话里说：调度策略之争可能永远没有结论，因为"连我们自己的度量指标都不一致"。</p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p>你在银行排队。如果目标是"让所有人平均等待时间最短"（周转时间），那就先办简单业务、把复杂的晾着——但那个办复杂业务的人会极其愤怒。如果目标是"每个人都尽快被叫到号、哪怕只问一句"（响应时间），那就每 1 分钟换一个人——但所有人的事都被拖得很久。这两个目标是打架的，没有哪个方案能同时让两个都好。这就是为什么课本里没有"最好的调度算法"。</p>
+</blockquote>
+<hr>
+<div class="q-title">5. 请写出 MLFQ 的五条规则，并解释规则 4 里"无论中间主动放弃了多少次 CPU"这句话为什么重要。</div>
+<p><strong>专业回答</strong></p>
+<ol>
+<li>如果 A 的优先级 &gt; B 的优先级，运行 A（不运行 B）</li>
+<li>如果 A 的优先级 = B 的优先级，轮转运行 A 和 B</li>
+<li>工作进入系统时，放在最高优先级（最上层队列）</li>
+<li>一旦工作用完了其在某一层中的<strong>时间配额</strong>（<strong>无论中间主动放弃了多少次 CPU</strong>），就降低其优先级（移入低一级队列）</li>
+<li>经过一段时间 S，就将系统中所有工作重新加入最高优先级队列</li>
+</ol>
+<p><strong>规则 4 中那句括号的重要性</strong>：早期版本的规则是分开的两条——4a（用完整个时间片就降级）、4b（在时间片内主动释放 CPU 则优先级不变）。这留下了一个漏洞：进程可以<strong>故意</strong>在时间片快用完时发起一次无关的 I/O 操作，从而保持高优先级。原文说，如果它"每运行 99% 的时间片时间就主动放弃一次 CPU"，就能"<strong>几乎独占 CPU</strong>"。</p>
+<p>修正后的规则 4 改成<strong>记录进程在该层消耗的总时间</strong>（而不是每次重新计时），不论一次用完还是拆成多次用完，配额用尽就降级——漏洞被封堵。</p>
+<p><strong>另外</strong>：规则 5 解决的是<strong>饥饿</strong>问题（太多交互型任务时，长任务永远得不到 CPU）；规则 3+4 一起让它<strong>近似 SJF</strong>（先假定是短任务，不是就慢慢降级）。</p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p>规则 4 原来有个漏洞，就像学生钻考试规则的空子：规则说"连续做满 10 分钟就扣分"，那学生就做 9 分 59 秒、然后假装去喝水（做一次无关的 I/O），回来继续——永远不被扣分，永远占着第一排的好位置。修正后的规则改成"<strong>累计</strong>做满 10 分钟就扣分，不管你有没有中间喝水"，空子就没了。这个细节告诉我们：<strong>任何只看"单次行为"而不看"累计行为"的规则，都容易被钻空子。</strong></p>
+</blockquote>
+<hr>
+<div class="q-title">6. 分页解决了分段的外部碎片问题，但引入了两个致命代价。这两个代价是什么？分别怎么解决？</div>
+<p><strong>专业回答</strong></p>
+<p><strong>代价一：页表太大。</strong> 32 位地址空间、4KB 页、4 字节 PTE → VPN 20 位 ≈ 100 万个页表项 × 4 字节 = <strong>每进程 4MB 页表</strong>；100 个进程就要 <strong>400MB</strong> 仅用于地址转换。</p>
+<p>→ <strong>解法</strong>：① <strong>多级页表</strong>（把页表本身也分页，只为真正用到的部分建表，利用地址空间的<strong>稀疏性</strong>）；② <strong>更大的页</strong>（16KB 页使页表缩到 1MB，但增加内部碎片，且多页大小的真正主因是减少 TLB 压力）；③ <strong>反向页表</strong>（每物理页一项）；④ 把页表本身交换到磁盘。</p>
+<p><strong>代价二：每次访存变两次。</strong> 因为页表存在内存里，要转换地址就得先访问内存读页表项，拿到 PFN 后再真正访问数据。"每次指令获取、显式加载或保存，都要额外读一次内存……这慢得无法接受。"</p>
+<p>→ <strong>解法：TLB（地址转换缓存）</strong>。CPU 内部小而快的硬件缓存，缓存最近用过的 VPN→PFN 映射。绝大多数访存都命中 TLB，几乎没有额外开销。<strong>原文说 TLB "使得虚拟内存成为可能"。</strong></p>
+<p><strong>注意多级页表本身也有代价</strong>：TLB 未命中时，线性页表只需 1 次额外访存，多级页表需要 <strong>2 次</strong>（先页目录，再 PTE）。这是典型的<strong>时间—空间折中</strong>。</p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p>分页就像把书拆成一页一页随便放，好处是不会有"大空隙浪费"。但带来两个麻烦：一是"目录"本身变得巨大（每个进程一份、每页都要记在哪），二是每次找内容都要先查目录、再去找书页，等于多跑一趟。解决第一个麻烦的办法是"目录也分级"——先查总目录、再查分目录，没用到的地方根本不建分目录（这就是多级页表省内存的原理）。解决第二个麻烦的办法是"把最近查过的几条记录写在便利贴上贴在手边"（这就是 TLB）。</p>
+</blockquote>
+<hr>
+<div class="q-title">7. TLB 未命中、页错误、段错误，这三个概念有什么区别？</div>
+<p><strong>专业回答</strong></p>
+<p>三者处于<strong>完全不同的层次</strong>：</p>
+<table><thead><tr><th></th><th>触发条件</th><th>处理方式</th><th>后果</th></tr></thead><tbody>
+<tr><td><strong>TLB 未命中</strong></td><td>TLB 缓存里没有该 VPN 的映射</td><td>查页表（硬件或操作系统）取得映射，插入 TLB，<strong>重新执行</strong>指令</td><td>通常很快，只是少了缓存加速</td></tr>
+<tr><td><strong>页错误（page fault）</strong></td><td>页表项<strong>存在位为 0</strong>，即该页合法但不在物理内存</td><td>陷入操作系统，找空闲帧（可能踢出一页）、从磁盘读入、更新页表、<strong>重新执行</strong>指令</td><td>需要磁盘 I/O，代价极高（可能是内存访问的 10 万倍）</td></tr>
+<tr><td><strong>段错误（segmentation fault）</strong></td><td>页表项<strong>有效位为 0</strong>，即访问了未申请的非法地址</td><td>陷入操作系统，通常<strong>终止进程</strong></td><td>程序崩溃</td></tr>
+</tbody></table>
+<p><strong>TLB 未命中 ≠ 页错误</strong>：这是最容易混淆的一对。TLB 未命中只是"缓存没命中"，去页表查一下就有了，和磁盘无关。只有页表项显示该页不在内存时才会触发页错误。</p>
+<p><strong>两个"有效位"含义不同</strong>：PTE 的<strong>有效位</strong>表示"这个地址转换是否有效"（无效 = 页未申请，访问即被终止）；TLB 项的<strong>有效位</strong>只表示"这个 TLB 项是否是一个有效的地址映射"（启动时全无效，随运行逐渐填满）。</p>
+<p><strong>为什么空指针访问会段错误</strong>：<code>*p = 10</code>（p = NULL）产生虚拟地址 0 → TLB 未命中 → 查页表发现 VPN 0 的项<strong>被标记为无效</strong> → 非法访问交给操作系统 → 终止进程。这是<strong>设计出来的</strong>：代码段永远不会从第 0 页开始，零页被特意标记为不可访问，正是为了帮助检测空指针——<strong>设计地址空间时要考虑对调试的支持</strong>。</p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p>三者就像找东西时的三种情况。<strong>TLB 未命中</strong>：东西其实在你家，只是不在手边的抽屉里，去储物间拿一下就行。<strong>页错误</strong>：东西不在家，得去很远的地方取（去仓库），很慢但能拿到。<strong>段错误</strong>：你找的是根本不存在的东西，或者那东西不是你的（非法访问）——直接失败。所以"TLB 未命中"和"页错误"最大的区别是：前者根本不用出门，后者要出一趟远门。</p>
+</blockquote>
+<hr>
+<div class="q-title">8. 什么是 Belady 异常？它为什么会发生？这个现象给我们的普遍启示是什么？</div>
+<p><strong>专业回答</strong></p>
+<p><strong>Belady 异常</strong>：对某些访问序列，使用 FIFO 替换策略时，<strong>内存变大页错误反而更多</strong>。</p>
+<p>经典引用串：<code>1,2,3,4,1,2,5,1,2,3,4,5</code></p>
+<ul>
+<li>FIFO，缓存 3 页：<strong>9 次未命中</strong>（命中率 25%）</li>
+<li>FIFO，缓存 4 页：<strong>10 次未命中</strong>（命中率约 16.7%）</li>
+</ul>
+<p><strong>为什么会发生</strong>：因为 FIFO <strong>完全不考虑"这一页还会不会被用到"</strong>，它的决策只依赖"谁先来"。当内存变大时，被淘汰的"最早进来的那一页"可能恰好是马上要用的页；内存较小时被淘汰的反而是一个已经不再需要的页。</p>
+<p><strong>理论解释：栈性质（stack property）</strong>。大小为 N+1 的缓存如果自然包含大小为 N 的缓存内容，命中率就不会下降——这叫栈性质。<strong>LRU 具有栈性质，所以不会有 Belady 异常；FIFO 和随机没有。</strong></p>
+<p><strong>普遍启示</strong>：<strong>一个策略如果不基于正确的信息，增加资源不保证改善结果，甚至可能让它更糟。</strong></p>
+<p>推广开去：如果你优化时依据的信息和你的目标不相关，那么投入更多资源（时间、钱、人）可能只是在放大错误。所以优化之前要先问：<strong>我的决策依据真的和我的目标相关吗？</strong></p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p>想象一个停车场按"最先进来的车先赶走"的规则管理。停车场小的时候，被赶走的往往是停了很久没人管的车。停车场变大了，反而可能把某辆刚停进来、车主只是去拿个东西的车赶走（因为它"进来得早"），车主回来发现车没了，又得重新找位置（相当于多一次页错误）。这听起来荒谬，但规则只看"谁先进来"、不看"谁还需要"，就会产生这种结果。<strong>规则用错了信息，资源变多反而更糟。</strong></p>
+</blockquote>
+<hr>
+<div class="q-title">9. 两个线程各把共享计数器加 1000 万次，为什么结果常常不是 20000000？请给出具体的交错过程。</div>
+<p><strong>专业回答</strong></p>
+<p><strong>根本原因</strong>：<code>counter = counter + 1</code> 在 x86 上被编译成<strong>三条指令</strong>：</p>
+<pre><code>
+mov  0x8049a1c, %eax   ; ① 从内存读到寄存器
+add  $0x1, %eax        ; ② 寄存器加一
+mov  %eax, 0x8049a1c   ; ③ 写回内存
+</code></pre>
+<p>而<strong>调度器可以在任意两条指令之间切换线程</strong>。</p>
+<p><strong>书中表 26.4 的经典追踪</strong>（counter 初始为 50，两个线程各执行一遍加一）：</p>
+<ol>
+<li>线程 1 执行 ①：把 50 读到自己的 eax（eax = 50）</li>
+<li>线程 1 执行 ②：eax = 51。<strong>此时发生中断，线程 1 的状态被保存</strong></li>
+<li>线程 2 开始运行，有自己的 eax。执行 ①：读到 counter = 50</li>
+<li>线程 2 执行 ②③：把 51 写回 counter。此时 counter = 51</li>
+<li>切回线程 1，它从 ③ 继续：把 eax（51）写回 counter</li>
+<li>最终 counter = <strong>51</strong>，而正确结果应该是 <strong>52</strong></li>
+</ol>
+<p><strong>一次加法凭空消失了。</strong> 乘以 1000 万次循环，就得到各种随机的、比期望值小的结果。</p>
+<p><strong>四个关键术语</strong>：</p>
+<ul>
+<li><strong>临界区</strong>：访问共享资源的代码段</li>
+<li><strong>竞态条件</strong>：多个线程大致同时进入临界区、都试图更新共享数据，导致意外结果</li>
+<li><strong>不确定性</strong>：程序输出因运行而异</li>
+<li><strong>互斥</strong>：用同步原语保证只有一个线程进入临界区</li>
+</ul>
+<p><strong>重要提醒</strong>：<code>volatile</code> <strong>不能</strong>解决这个问题——它只禁止编译器把变量优化到寄存器里，<strong>不保证三条指令的原子性</strong>。书里的代码本身就用了 volatile，照样出错。</p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p>两个人共用一本记账本，规则是"看到余额、加上 1、写回去"。现在的余额是 50。A 看到了 50，正准备写 51；这时 B 也看到了 50（因为 A 还没写），B 写下 51；A 回来把自己记的 51 也写上。结果是 51——<strong>两个人各加了一次，但只增加了 1</strong>。问题不在于谁算错了，而在于"看"和"写"之间有个空档，别人可以插进来。所以计数要正确，必须让"看—加—写"变成不可分割的一件事。</p>
+</blockquote>
+<hr>
+<div class="q-title">10. 评价一个锁的实现，应该看哪几个标准？为什么"性能"这一项必须分场景讨论？</div>
+<p><strong>专业回答</strong></p>
+<p>原文给出三条标准（第三条细分为三种场景）：</p>
+<p><strong>① 是否提供互斥（mutual exclusion）</strong>——最基本要求：锁是否真的能阻止多个线程同时进入临界区？一个不能提供互斥的"锁"根本不叫锁。这是<strong>正确性</strong>，是及格线。</p>
+<p><strong>② 公平性（fairness）</strong>——当锁可用时，每个竞争线程是否都有公平的机会抢到锁？更极端的问法是：<strong>会不会有某个线程饿死（starve），一直拿不到锁？</strong> 自旋锁不提供任何公平性保证；而 <strong>ticket 锁</strong>能保证所有线程最终都能拿到锁，这是重大改进。</p>
+<p><strong>③ 性能（performance）</strong>——分三种场景：</p>
+<ul>
+<li><strong>(i) 无竞争</strong>：只有一个线程抢锁、释放锁，开销多大？</li>
+<li><strong>(ii) 单 CPU 多线程竞争</strong>：一个处理器上多个线程竞争，性能如何？</li>
+<li><strong>(iii) 多 CPU 多线程竞争</strong>：多个处理器上多个线程竞争，性能如何？</li>
+</ul>
+<p><strong>为什么必须分场景</strong>：因为不同实现的优劣会<strong>随场景反转</strong>。典型例子是<strong>自旋锁</strong>——它在单 CPU 上很糟（持锁线程被抢占后，其他线程各自空转一整个时间片），但在多 CPU 且线程数与 CPU 数相近时表现很好（持锁者在另一个 CPU 上跑，自旋者很快就能拿到锁）。所以笼统地说"这个锁快"没有意义。</p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p>评价一把锁就像评价一个排队规则。第一，它得真的能防止两个人同时进房间（正确性）。第二，它不能老让某个人永远排不上（公平性）。第三，它得快——但"快"要看情况：只有一个人排队时快不快？很多人抢的时候快不快？在只有一个窗口和有好几个窗口时，表现可能完全相反。比如"站着等"（自旋）在只有一个窗口时很傻（大家都站着干耗），但有好几个窗口时反而最快（轮到你时你立刻就能进去）。所以评价必须分场景，不能一句话下结论。</p>
+</blockquote>
+<hr>
+<div class="q-title">11. 为什么条件变量的等待必须用 while 而不是 if？请说出至少两个理由。</div>
+<p><strong>专业回答</strong></p>
+<p><strong>理由一：Mesa 语义——被唤醒不等于条件成立。</strong></p>
+<p>几乎所有真实系统采用 <strong>Mesa 语义</strong>：发信号只是<strong>唤醒线程、暗示状态发生了变化</strong>，但<strong>不保证</strong>被唤醒的线程真正运行时条件仍然成立。原因在于 <code>wait()</code> 返回前要重新获取锁，而从"被唤醒"到"真正拿到锁并运行"之间有时间窗口——别的线程可能在这期间抢到锁、把状态又改回去。用 <code>if</code> 的话，线程醒来不再检查就直接往下走，于是在条件已经不成立时进入了临界区。</p>
+<p><strong>理由二：假唤醒（spurious wakeup）。</strong></p>
+<p>某些线程库的实现细节可能导致一个信号唤醒<strong>两个</strong>线程，或线程被无故唤醒。用 <code>while</code> 能自然处理——被误唤醒的线程发现条件不成立，继续睡回去。</p>
+<p><strong>理由三（相关但由两个条件变量解决）：单个条件变量会唤醒错对象。</strong></p>
+<p>在生产者/消费者问题里，如果只用一个条件变量：消费者 Tc1 消费完发信号，可能唤醒的是另一个消费者 Tc2 而不是生产者。Tc2 醒来发现缓冲区还是空的，又睡回去——结果<strong>生产者、两个消费者全都在睡，没人能唤醒别人，程序永久卡死</strong>。正确做法是用<strong>两个条件变量</strong>（empty 和 fill），让生产者只等 empty、消费者只等 fill。</p>
+<p><strong>另一个必须记住的点</strong>：<code>Pthread_cond_wait(&amp;c, &amp;m)</code> 的语义是<strong>原子地释放锁 m 并休眠、返回前重新获取 m</strong>。所以调用 wait 时持有锁<strong>不是建议，而是语义强制要求</strong>——它必须拿到锁才能释放它。</p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p>用 <code>if</code> 就好比：你听到门铃响（被唤醒），就认定"外卖到了"，直接开门——但可能门铃是邻居家的，或者外卖员按错了。正确做法是<strong>开门前先看一眼猫眼</strong>（用 while 重新检查条件）。至于"被误唤醒"，就像手机通知误响——你按 while 的逻辑去看一眼，发现没东西，就继续睡。最后那个"唤醒错对象"的问题，好比你在家庭群里喊"饭好了"，结果另一个也在等饭的人先看到、跑来发现还没好、又回去了——真正的做饭的人却没被通知到，最后大家一起饿着。所以要<strong>分开两个群</strong>（两个条件变量）分别通知。</p>
+</blockquote>
+<hr>
+<div class="q-title">12. 信号量的初值设为 1、0、N 分别有什么用途？信号量和条件变量最本质的区别是什么？</div>
+<p><strong>专业回答</strong></p>
+<p><strong>信号量语义</strong>：</p>
+<ul>
+<li><code>sem_wait(s)</code>：把值<strong>减 1</strong>；如果减完之后是<strong>负数</strong>，则等待</li>
+<li><code>sem_post(s)</code>：把值<strong>加 1</strong>；如果有线程在等待，唤醒其中一个</li>
+</ul>
+<p><strong>初值的三种用途</strong>：</p>
+<ul>
+<li><strong>初值 = 1 → 当锁用（二值信号量）</strong>。因为它只有"被持有"和"可用"两种状态。用法：<code>sem_wait(&amp;m); /<em> 临界区 </em>/ sem_post(&amp;m);</code></li>
+<li><strong>初值 = 0 → 当条件变量用（等待某事件）</strong>。等待方先 <code>sem_wait</code>（值变 −1，睡眠）；发出事件方 <code>sem_post</code>（值回到 0，唤醒）。书中 join 的例子：如果子线程先跑完并 post，值从 0 变成 1；父线程随后 wait 把值减回 0，<strong>直接返回不阻塞</strong>——事件没有丢失。</li>
+<li><strong>初值 = N → 控制同时访问某资源的线程数</strong>。例如有 N 个缓冲区槽位，就让 empty 初值为 N。</li>
+</ul>
+<p><strong>信号量与条件变量最本质的区别</strong>：</p>
+<p><strong>信号量自带一个值，具有"记账"作用</strong>——post 发生在 wait 之前也不会丢失。</p>
+<p>而条件变量的 signal <strong>不携带任何状态</strong>——发信号时若没人在等，这个信号就<strong>永远丢失了</strong>。</p>
+<p>这个区别有直接后果：用条件变量实现 join <strong>必须</strong>额外加一个 <code>done</code> 状态变量（否则"子线程先完成"这种情况下信号丢失，父线程永远睡）；而用信号量则<strong>不需要</strong>。也正因为这个差异，<strong>用信号量实现条件变量比看起来难得多</strong>（有研究记录过经验丰富的并发程序员在这上面犯的许多错误），而反方向（用锁+条件变量实现信号量）却"相当简单"。</p>
+<p><strong>要小心的两个错误</strong>：</p>
+<p>① <strong>初值记反</strong>（作锁用必须是 1，作"等待事件"必须是 0）——记反了程序要么立刻死锁，要么完全失去同步作用。</p>
+<p>② <strong>生产者/消费者里把 mutex 放在最外层</strong>——消费者先拿到锁再对 full 阻塞，<strong>但仍持有锁</strong>；生产者需要 mutex 才能 post full → <strong>死锁</strong>。正确顺序是"<strong>先等资源，再拿锁；先放锁，再发信号</strong>"。</p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p>信号量像一个带计数的计数器，能"记账"：你来晚了，但之前发生的事它记着，你照样能读到。条件变量的信号则像"拍一下肩膀"——如果没人站在那儿让你拍，这一下就白拍了，不会留下任何痕迹。这就是为什么用条件变量时你总得额外存一个"状态变量"（比如 <code>done</code>），因为光靠"拍肩膀"会丢信息；而信号量自带计数，就不用额外存。</p>
+</blockquote>
+<hr>
+<div class="q-title">13. 死锁的四个必要条件是什么？为什么"打掉任意一条即可预防死锁"？请对每一条给出具体手段。</div>
+<p><strong>专业回答</strong></p>
+<p>四个条件（<strong>缺一不可，同时成立才会死锁</strong>）：</p>
+<ol>
+<li><strong>互斥</strong>：线程对需要的资源进行互斥访问（例如抢到锁）</li>
+<li><strong>持有并等待</strong>：线程持有了一个资源，同时又在等待其他资源</li>
+<li><strong>非抢占</strong>：线程获得的资源<strong>不能被抢占</strong></li>
+<li><strong>循环等待</strong>：线程之间存在环路，环路上每个线程都持有一个资源，而这个资源又是下一个线程要申请的</li>
+</ol>
+<p><strong>"打掉任意一条"的含义</strong>：因为四条件必须同时成立，所以只要破坏其中任何一条，死锁就不可能发生。</p>
+<ul>
+<li><strong>破坏循环等待 → 规定锁的获取顺序</strong>（最常用）。例如规定"任何情况下必须先申请 L1 再申请 L2"。更精巧的做法是<strong>按锁的地址高低强制顺序</strong>：谁的地址大就先拿谁。Linux 内核内存映射代码的注释里列出了<strong>十组</strong>加锁顺序规则。</li>
+<li><strong>破坏持有并等待 → 一次性原子地抢到所有锁</strong>。先拿一个"预防锁"，再拿所有需要的锁，最后释放预防锁。缺点：<strong>不适用于封装</strong>（必须提前知道要用哪些锁），且因提前占用所有锁而降低并发度。</li>
+<li><strong>破坏非抢占 → 用 trylock()</strong>。拿到 L1 后尝试拿 L2，失败就释放 L1 重来。<strong>会引入新问题——活锁</strong>：两个线程可能一直重复"抢到 L1、L2 失败、释放、重来"，系统一直在运行却没有进展。解决办法是失败后<strong>随机等待一段时间</strong>再重试。</li>
+<li><strong>破坏互斥 → 无等待（wait-free）数据结构</strong>。完全不用锁，靠 CAS 反复尝试。这样<strong>不会有死锁，但可能产生活锁</strong>。</li>
+</ul>
+<p><strong>另外两条思路</strong>：<strong>死锁避免</strong>（需要全局信息，通过调度让可能死锁的线程不同时运行，如银行家算法，过于保守）；<strong>死锁检测与恢复</strong>（允许死锁偶尔发生，定期构建资源图查环，发现后重启，很多数据库系统采用）。</p>
+<p><strong>三个概念必须分清</strong>：<strong>死锁</strong>（互相等待，都不运行）、<strong>活锁</strong>（一直在运行但没进展）、<strong>饥饿</strong>（某个线程长期拿不到资源）。</p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p>死锁就像两个人过独木桥，各站在一头，都等对方先退——永远动不了。书中说死锁要同时满足四个条件才发生，所以<strong>随便破坏一条就行</strong>：比如规定"所有过桥的人都必须从东边开始走"（统一顺序），那就不会出现两人对着顶；或者规定"上桥前先确认对面没人"（一次性拿全）；或者"发现对面有人就退回去等一会儿再来"（用 trylock，但这样可能两人一直互相退让，谁都过不去——这就是"活锁"，看着很忙但没进展）；或者干脆把桥加宽成两车道（无锁）。四条路任选一条即可。</p>
+</blockquote>
+<hr>
+<div class="q-title">14. 磁盘的"顺序访问"和"随机访问"性能差多少？这个物理事实如何支配了整个存储软件的设计？</div>
+<p><strong>专业回答</strong></p>
+<p><strong>磁盘 I/O 时间 = 寻道时间 + 旋转延迟 + 传输时间</strong>。前两项都是<strong>机械运动</strong>，以毫秒计；传输本身快得多。</p>
+<p><strong>书中的具体数字</strong>（Cheetah 15K.5，15000 RPM，平均寻道 4ms，最大传输 125MB/s）：</p>
+<ul>
+<li><strong>随机 4KB 读</strong>：4ms 寻道 + 2ms 旋转 + <strong>30μs</strong> 传输 ≈ <strong>6ms</strong> → <strong>0.66 MB/s</strong></li>
+<li><strong>顺序读 100MB</strong>：4ms + 2ms + 800ms 传输 ≈ <strong>806ms</strong> → <strong>125 MB/s</strong></li>
+<li><strong>差距约 200 倍</strong>（原文说"对于 Cheetah 来说几乎是 200 左右，而对于 Barracuda 来说差不多是 300 倍"）</li>
+</ul>
+<p><strong>这个事实如何支配设计</strong>——至少三个层面的例子：</p>
+<ol>
+<li><strong>磁盘调度算法</strong>。既然寻道这么贵，就不要按到达顺序处理请求。<strong>SSTF（最短寻道时间优先）</strong> 优先服务离当前磁头最近的请求；<strong>SCAN/电梯算法</strong>让磁头像电梯一样单向扫过再反向扫回（避免 SSTF 的饥饿问题）；<strong>SPTF</strong>同时考虑寻道和旋转，最接近 SJF，但需要磁头位置信息，所以通常在驱动器内部实现。</li>
+</ol>
+<ol>
+<li><strong>FFS 的"磁盘意识"</strong>。把磁盘划分成<strong>柱面组</strong>，把每个文件的 inode 和数据块放在同一组、把同一目录下的文件放在同一组。这样一次顺序读取就能拿到需要的大部分内容。它还为大文件做了例外处理（前 12 个直接块放同组，之后每 1024 块换一组），用<strong>摊销</strong>减少寻道占比。</li>
+</ol>
+<ol>
+<li><strong>LFS 把这条思路推到极致</strong>。既然顺序写这么快，那就<strong>永远不覆盖，只追加</strong>——把整个磁盘当成一条只追加的日志。用<strong>检查点区域</strong>和 <strong>inode 映射（imap）</strong> 定位数据，用垃圾收集回收旧段。</li>
+</ol>
+<p><strong>还有一个精彩的印证</strong>：FFS 为了保证顺序读不因"错过旋转"而损失性能，采用了<strong>参数化</strong>布局（跳过若干块），代价是只能获得 50% 峰值带宽；而现代磁盘内部会把<strong>整条磁道</strong>读进<strong>磁道缓冲区</strong>，文件系统就不必再操心这些低级细节了。</p>
+<p><strong>总结</strong>：很多看起来精巧的系统设计，追根究底只是在绕开一个物理限制。<strong>理解底层硬件的物理特性，才能理解上层软件为什么长成这样。</strong></p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p>想象一个巨大的图书馆。从书架上取书（传输）其实很快，但<strong>走到那个书架</strong>（寻道）和<strong>等旋转书架转到你要的那一格</strong>（旋转延迟）非常慢。所以如果每次只取一本、而且随机跑到不同书架，你大部分时间都花在走路上了。这就解释了为什么所有聪明的存储设计都在做同一件事：<strong>尽量一次走一趟就多拿几本、而且尽量按顺序拿</strong>——磁盘调度是"规划路线少走冤枉路"，FFS 是"把相关的书放同一个书架"，LFS 是"干脆永远只在书架末尾按顺序放新书，从不插空"。</p>
+</blockquote>
+<hr>
+<div class="q-title">15. 什么是 inode？它包含哪些信息、不包含什么信息？"不包含文件名"这件事如何解释了硬链接和符号链接的区别？</div>
+<p><strong>专业回答</strong></p>
+<p><strong>inode（index node，索引节点）</strong> 是文件系统中最重要的数据结构之一，保存一个文件的<strong>全部元信息</strong>：文件类型、大小、所有者、权限、时间戳（创建/修改/访问），以及最重要的——<strong>指向数据块的指针</strong>。</p>
+<p><strong>指针分层次</strong>（"不平衡树"，因为大多数文件很小）：</p>
+<ul>
+<li><strong>直接指针</strong>（典型 12 个）：直接指向数据块，可覆盖 48KB</li>
+<li><strong>间接指针</strong>：指向一个"装满指针的块"，4KB 块 + 4 字节地址 → 增加 1024 个指针</li>
+<li><strong>双重间接指针</strong>：再套一层，支持超过 4GB 的文件</li>
+<li>需要更大时还可以加三重间接指针</li>
+</ul>
+<p><strong>inode 里没有文件名！</strong> 文件名存在<strong>目录</strong>里——目录本质上是一张"（用户可读名字，inode 号）"的列表。这条设计直接解释了两种链接的区别：</p>
+<table><thead><tr><th></th><th>硬链接（<code>ln</code>）</th><th>符号链接（<code>ln -s</code>）</th></tr></thead><tbody>
+<tr><td><strong>本质</strong></td><td>在目录中创建一个<strong>新名字指向同一个 inode 号</strong></td><td>一个<strong>独立的小文件</strong>，内容是目标文件的<strong>路径名</strong></td></tr>
+<tr><td><strong>文件是否复制</strong></td><td>不复制，原文件名与新文件名之间没有区别</td><td>是新文件，大小 = 路径名长度</td></tr>
+<tr><td><strong><code>ls -i</code> 结果</strong></td><td>两个名字 inode 号<strong>相同</strong></td><td>inode 号不同</td></tr>
+<tr><td><strong><code>ls -al</code> 首字符</strong></td><td><code>-</code>（常规文件）</td><td><code>l</code>（第三种文件类型）</td></tr>
+<tr><td><strong>删除语义</strong></td><td><code>unlink()</code> 使该 inode 的<strong>引用计数（链接计数）</strong>减一；<strong>只有计数归零</strong>才真正释放 inode 和数据块</td><td>删除只是删掉那个路径名文件，目标文件不受影响</td></tr>
+<tr><td><strong>限制</strong></td><td>不能指向目录（怕在目录树中造成环）；不能跨文件系统（inode 号在特定文件系统内唯一）</td><td>可指向任何文件或目录、可跨卷，但会产生<strong>悬空引用</strong>（目标被删后访问失败）</td></tr>
+</tbody></table>
+<p><strong>为什么删除文件用的是 <code>unlink()</code></strong>：创建文件实际做了两件事——① 构建一个 inode 跟踪文件信息；② 把人类可读的名称链接到该文件并放入目录。因此"删除"在本质上是"取消链接"。</p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p>把 inode 想成"书的实际内容 + 版权页"，把目录想成"图书馆的检索卡片"。<strong>硬链接就是多印了几张卡片指向同一本书</strong>——两张卡片完全平等，撕掉一张，书还在（只要还有别的卡片指向它）。<strong>符号链接则是一张写着"请去看那本书"的便条</strong>——便条本身也是一张卡片（所以它有自己的大小 = 那行字的长度），但那本书被搬走了，便条就失效了（悬空引用）。关键洞察是：<strong>因为 inode 里没有书名，"名字"和"内容"才能分开管理</strong>——这正是硬链接能存在的原因。</p>
+</blockquote>
+<hr>
+<div class="q-title">16. 往文件追加数据需要更新哪三个磁盘结构？崩溃只完成部分写入时会出现哪些"有趣的状态"？日志为什么能解决这个问题？</div>
+<p><strong>专业回答</strong></p>
+<p><strong>三个必须更新的结构</strong>：</p>
+<ol>
+<li><strong>inode</strong>：指向新的数据块，且文件大小要变大</li>
+<li><strong>数据位图</strong>：标记新的数据块已被分配</li>
+<li><strong>数据块本身</strong>：用户写入的实际内容</li>
+</ol>
+<p>注意：用户发出 <code>write()</code> 时这些写操作通常<strong>不会立即发生</strong>——脏的 inode、位图和新数据先在内存的页面缓存/缓冲区缓存里待一段时间（例如 5s 或 30s），之后文件系统才把写请求发给磁盘。</p>
+<p><strong>六种崩溃场景</strong>：</p>
+<p><em>只完成一次写入：</em></p>
+<ul>
+<li><strong>只有数据块写入</strong> → 数据在盘上，但没有 inode 指向它、位图也没标记 → <strong>就好像写入从未发生过</strong>，从一致性角度看<strong>根本不是问题</strong>（但对刚丢失数据的用户是问题）</li>
+<li><strong>只有 inode 写入</strong> → inode 指向的地址还没有新数据 → 信任这个指针就会<strong>读到垃圾数据</strong>；同时<strong>文件系统不一致</strong>（位图说未分配，inode 说已分配）</li>
+<li><strong>只有位图写入</strong> → 块被标记已分配但没有 inode 指向它 → 造成<strong>空间泄露</strong>，该块永远无法被使用</li>
+</ul>
+<p><em>完成两次写入：</em></p>
+<ul>
+<li><strong>inode + 位图成功，但数据没写</strong> → 元数据<strong>完全一致</strong>，但从元数据角度看一切正常，<strong>指针却指向垃圾</strong></li>
+<li><strong>inode + 数据成功，位图没写</strong> → inode 与位图不一致</li>
+<li><strong>位图 + 数据成功，inode 没写</strong> → 即使块已写入且位图标记已用，<strong>我们也不知道它属于哪个文件</strong></li>
+</ul>
+<p><strong>问题本质</strong>：一个逻辑操作被拆成多个物理写入，而磁盘一次只提交一次写入，崩溃可能发生在任意两次之间。这个一般问题叫<strong>崩溃一致性问题</strong>。</p>
+<p><strong>日志（预写日志）的解法</strong>：在真正动手之前，<strong>先把"我打算做什么"写到一个日志区</strong>（包括事务开始块 TxB、所有更新内容、事务结束块 TxE）。确认日志落盘<strong>之后</strong>再去做实际修改（这个动作叫<strong>加检查点</strong>）。</p>
+<p><strong>为什么这样就安全</strong>：崩溃后只有两种可能——</p>
+<ul>
+<li>日志<strong>不完整</strong>（TxE 没写成功）→ 这次操作从未被"提交"，<strong>可以安全忽略</strong></li>
+<li>日志<strong>完整</strong> → 可以<strong>重放</strong>它，把操作做完</li>
+</ul>
+<p><strong>"部分完成"这个危险状态被从系统里消除了。</strong></p>
+<p><strong>关键规则</strong>：<strong>先写入被指对象，再写入指针对象</strong>（先写数据块，再写指向它的 inode）——这保证了<strong>指针永远不会指向垃圾</strong>。这是崩溃一致性的核心。</p>
+<p><strong>还有两个重要细节</strong>：</p>
+<ul>
+<li><strong>TxE 必须是单个 512 字节块</strong>，因为磁盘保证单个 512 字节写入的原子性</li>
+<li><strong>块复用问题</strong>：删掉一个目录后又创建新文件复用了同一块，如果日志里还留着旧的目录数据，重放时会<strong>覆盖新文件的数据</strong>。Linux ext3 的解法是加入<strong>撤销（revoke）记录</strong>，重放时跳过被撤销的数据</li>
+</ul>
+<p><strong>日志的代价</strong>：写入放大（数据日志要写两遍）。所以主流选择是<strong>有序元数据日志</strong>——用户数据不写日志，但必须在提交元数据日志之前先写入最终位置。</p>
+<p><strong>一个精彩的工程改进</strong>：威斯康星的研究生 Vijayan Prabhakaran 提出在事务开始块和结束块中<strong>包含日志内容的校验和</strong>。这样文件系统可以<strong>立即写入整个事务</strong>，不必等 TxB 写完再发 TxE（避免额外旋转）。这个改进被合并进 <strong>Linux ext4</strong>，现在运行在全球数百万台机器上。</p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p>就像寄快递要同时做三件事：把东西装箱（写数据）、在系统里登记这个箱子属于谁（改 inode）、在货架上标记这个位置被占了（改位图）。如果中途断电，可能只完成了一两件——最糟糕的情况是"登记好了、位置也标记了，但箱子里是空的（或还是上一个东西）"，别人来取就会拿到垃圾。日志的做法是：<strong>动手之前，先在一张纸上写清楚"我打算做什么"，签好名（TxE），然后才开始动手。</strong> 如果断电时那张纸没签完名，就当什么都没发生；签完了，就照着纸重做一遍。这样就不会有"做了一半"的状态。而且顺序很重要：<strong>先把东西放进箱子，再登记箱子属于谁</strong>——反过来就会出现"登记指向一个空箱子"。</p>
+</blockquote>
+<hr>
+<div class="q-title">17. LFS（日志结构文件系统）要把所有写入变成顺序写入。它为什么需要"inode 映射"这一层间接？"递归更新问题"是什么，imap 如何解决它？</div>
+<p><strong>专业回答</strong></p>
+<p><strong>基本做法</strong>：LFS 先把所有更新（包括元数据）缓冲在内存段中，段满时一次性顺序写到磁盘的<strong>空闲部分</strong>。<strong>永远不覆写现有数据。</strong></p>
+<p><strong>为什么需要 inode 映射（imap）</strong>：</p>
+<ul>
+<li>老 UNIX 文件系统把所有 inode 放在磁盘的<strong>固定位置</strong>，给定 inode 号乘上 inode 大小再加起始地址就能算出确切位置——<strong>基于数组的索引快速而直接</strong>。FFS 稍复杂但也能算。</li>
+<li><strong>LFS 中生活比较艰难</strong>：inode 分散在整个磁盘上；<strong>更糟的是，因为它永不覆写，最新版本的 inode（即我们想要的那个）会不断移动</strong>。你根本无法通过"inode 号 × 大小 + 起始地址"算出位置。</li>
+</ul>
+<p><strong>解法</strong>：引入一层间接——<strong>imap 把 inode 号映射到最新版本 inode 的磁盘地址</strong>。通常实现为一个简单数组，每条目 4 字节。每次把 inode 写入磁盘，imap 就用它的新位置更新。</p>
+<p><strong>imap 为什么不放在磁盘的固定部分</strong>：因为它<strong>经常更新</strong>。如果放在固定位置，每次更新文件结构后都要额外寻道去更新 imap，性能会受损。所以 LFS 把 imap 的块放在<strong>它写入所有其他新信息的位置旁边</strong>——追加数据时，新数据块、其 inode 和一段 imap 一起写入磁盘。</p>
+<p><strong>而 imap 本身的位置</strong>由<strong>检查点区域（CR）</strong>记录。CR 是磁盘上<strong>唯一固定且已知的位置</strong>（地址 0），包含指向最新 imap 片段的指针。<strong>CR 仅定期更新（例如每 30s 左右）</strong>，所以不影响性能。为保证 CR 更新的原子性，LFS <strong>保留两个 CR 交替写入</strong>，并用"头尾时间戳是否一致"来检测更新期间的崩溃。</p>
+<p><strong>递归更新问题（recursive update problem）</strong>：</p>
+<p>任何<strong>永远不会原地更新</strong>的文件系统都会遇到它。<strong>每当更新 inode，它在磁盘上的位置都会变化</strong>——如果不小心，这会导致对指向该文件的<strong>目录</strong>的更新；目录位置变化又会导致对其<strong>父目录</strong>的更新，依此类推，<strong>一路沿文件系统树向上</strong>。这是一个恶性连锁。</p>
+<p><strong>imap 如何解决它</strong>：即使 inode 的位置变了，<strong>目录本身不需要改变</strong>——因为目录里存的是"名称 → inode 号"的映射，而不是 inode 的物理位置。inode 的位置变化只反映在 <strong>imap</strong> 中。<strong>通过这一层间接，连锁反应被切断了。</strong></p>
+<p><strong>遗留问题：垃圾收集</strong>。旧版本的数据留在磁盘上成为垃圾，需要清理程序定期读入 M 个旧段、把活块打包成 N 个新段（N &lt; M）写回并释放旧段。<strong>判断块死活</strong>靠<strong>段摘要块</strong>（记录每个数据块的 inode 号与偏移量）——查 imap 找到 inode，再看该 inode 是否真的指向这个地址。捷径是<strong>版本号</strong>：文件被截断或删除时递增版本号，比对版本号即可快速判断。</p>
+<p><strong>清理策略的取舍</strong>：<strong>热段</strong>（经常被覆盖）应<strong>延迟清理</strong>（等更多块死掉再一起收），<strong>冷段</strong>应<strong>尽快清理</strong>。</p>
+<p><strong>LFS 的影响</strong>：虽然对清理成本的担忧可能限制了它的直接采用，但它的思想被 <strong>NetApp WAFL</strong>、<strong>Sun ZFS</strong>、<strong>Linux btrfs</strong> 继承。WAFL 甚至把清理问题转化为特性——通过<strong>快照</strong>提供旧版本文件，用户可以在误删后访问旧文件。<strong>LFS 也是闪存转换层（FTL）的基础</strong>，因为 SSD 内部也用日志结构。</p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p>LFS 就像"这本书永远不修改，所有新内容都写在书页末尾"。好处是写起来超快（一直往后加）。坏处是：<strong>你原来在第 10 页的目录说"第 5 页是第一章"，但你现在把第一章搬到了第 500 页</strong>——目录就过期了。如果每次搬家都要改目录、改目录的目录、改目录的目录的目录……那就没完没了（这就是"递归更新问题"）。imap 的作用相当于<strong>在书的最前面放一张"总索引表"</strong>，上面写着"第一章现在在第 500 页"。目录里只说"第一章"，具体在哪页去查总索引表——于是搬家只需要更新总索引表这一处，目录完全不用动。而"总索引表在哪"又由一个<strong>固定位置</strong>（检查点区域）记录，链条到此为止。</p>
+</blockquote>
+<hr>
+<div class="q-title">18. 为什么说"时间线是理解的本质"？请用"页错误处理"举例说明这句话的含义。</div>
+<p><strong>专业回答</strong></p>
+<p>原文在前言中特别强调：<strong>"在许多地方，我们将通过显示一段时间内的行为来解释系统的工作原理。这些时间线（timeline）是理解的本质。如果你知道会发生什么，例如，当进程出现页故障时，你就可以真正了解虚拟内存的运行方式。"</strong></p>
+<p><strong>为什么时间线如此关键</strong>——它抓住了三个"静态描述"抓不住的东西：</p>
+<ol>
+<li><strong>顺序</strong>：哪个先发生、哪个后发生，决定了机制的语义。比如"先写入被指对象，再写入指针对象"这条崩溃一致性规则，<strong>只有看时间线才能理解为什么顺序本身构成正确性</strong>。</li>
+<li><strong>谁在等待</strong>：静态图看不出"此刻谁被阻塞"。日志协议里"TxE 提交前不能开始加检查点"这种约束，本质是时间上的先后依赖。</li>
+<li><strong>代价发生在哪里</strong>：页错误时间线清楚显示"进程在等磁盘 I/O 的这段时间里操作系统可以运行其他进程"——这是<strong>重叠（overlap）</strong>这个优化机会的来源，静态图完全看不出来。</li>
+</ol>
+<p><strong>用页错误处理举例</strong>（完整时间线）：</p>
+<ol>
+<li>进程访问某个虚拟地址 → 查 TLB <strong>未命中</strong> → 硬件（或操作系统）查页表</li>
+<li>发现页表项的<strong>存在位为 0</strong> → 该页不在物理内存中 → 硬件引发<strong>页错误</strong>，陷入操作系统</li>
+<li>操作系统找一个空闲的物理页帧；如果<strong>没有空闲帧</strong>，就要按<strong>替换策略</strong>踢出一页（如果被踢出的页是<strong>脏</strong>的，必须写回磁盘）</li>
+<li>操作系统向磁盘发出请求，把缺失的页读入刚才准备好的物理帧</li>
+<li><strong>进程阻塞等待 I/O</strong>——注意：<strong>操作系统此时可以运行其他进程</strong>（这是重叠的来源）</li>
+<li>磁盘 I/O 完成</li>
+<li>操作系统更新页表项：填入物理帧号、把存在位设为 1</li>
+<li><strong>重新执行</strong>刚才引发页错误的那条指令——这次 TLB 未命中后查页表能拿到有效映射，访问成功</li>
+</ol>
+<p><strong>这条时间线解释了哪些静态描述解释不了的事</strong>：</p>
+<ul>
+<li><strong>为什么第 8 步是"重新执行"而不是"跳过"</strong>——页错误的语义是"这条指令没成功，请再来一次"</li>
+<li><strong>为什么脏页必须写回</strong>——第 3 步踢出脏页时要保证数据不丢</li>
+<li><strong>为什么页错误的代价可能是内存访问的 10 万倍</strong>——因为中间有第 4~6 步的磁盘 I/O</li>
+<li><strong>为什么"进程阻塞"不是浪费</strong>——第 5 步给了其他进程执行机会</li>
+</ul>
+<p><strong>这也是复习方法</strong>：<strong>每当你说不清一个机制时，就把它的时间线画出来。能画出时间线，就是真的懂了。</strong></p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p>时间线就像看一段视频，而不是看一张照片。照片只能告诉你"有什么"，视频才能告诉你"先发生什么、谁在等谁、中间的空档里别人在干什么"。</p>
+<p></p>
+<p>拿"你要的书不在书架上"打比方：<strong>静态描述</strong>只能说"书不在"。<strong>时间线</strong>会说：你去看书架 → 没找到 → 去前台登记 → 前台派人去仓库（<strong>这时你可以先去办别的事</strong>）→ 书取回来了 → 前台通知你 → 你再回书架拿。注意最后一步是"<strong>你重新去书架拿</strong>"而不是"书自己飞到你手上"——页错误的语义正是"那条指令重来一次"。而且你会看到，<strong>在等仓库取书的那段时间里，你并没有干等</strong>——这就是操作系统能在页错误期间运行其他进程的原因。这些洞察，只看静态描述是得不到的。</p>
+</blockquote>
+<hr>
+<h2>附：全书速查表</h2>
+<h3>核心指标与公式</h3>
+<table><thead><tr><th>名称</th><th>公式</th></tr></thead><tbody>
+<tr><td>周转时间</td><td>T&lt;sub&gt;完成&lt;/sub&gt; − T&lt;sub&gt;到达&lt;/sub&gt;</td></tr>
+<tr><td>响应时间</td><td>T&lt;sub&gt;首次运行&lt;/sub&gt; − T&lt;sub&gt;到达&lt;/sub&gt;</td></tr>
+<tr><td>地址转换</td><td>物理地址 = (PFN &lt;&lt; 偏移量位数) \</td><td>偏移量</td></tr>
+<tr><td>页表大小</td><td>(地址空间大小 / 页大小) × sizeof(PTE)</td></tr>
+<tr><td>AMAT</td><td>P&lt;sub&gt;Hit&lt;/sub&gt; × T&lt;sub&gt;M&lt;/sub&gt; + P&lt;sub&gt;Miss&lt;/sub&gt; × T&lt;sub&gt;D&lt;/sub&gt;</td></tr>
+<tr><td>命中率</td><td>Hits / (Hits + Misses)</td></tr>
+<tr><td>I/O 时间</td><td>T&lt;sub&gt;寻道&lt;/sub&gt; + T&lt;sub&gt;旋转&lt;/sub&gt; + T&lt;sub&gt;传输&lt;/sub&gt;</td></tr>
+<tr><td>减法奇偶校验</td><td>P&lt;sub&gt;new&lt;/sub&gt; = (C&lt;sub&gt;old&lt;/sub&gt; ⊕ C&lt;sub&gt;new&lt;/sub&gt;) ⊕ P&lt;sub&gt;old&lt;/sub&gt;</td></tr>
+<tr><td>平均寻道距离</td><td>N/3（N 为磁道数）</td></tr>
+</tbody></table>
+<h3>RAID 对比</h3>
+<table><thead><tr><th></th><th>RAID-0</th><th>RAID-1</th><th>RAID-4</th><th>RAID-5</th></tr></thead><tbody>
+<tr><td>容量</td><td>N</td><td>N/2</td><td>N−1</td><td>N−1</td></tr>
+<tr><td>容错</td><td>0</td><td>1</td><td>1</td><td>1</td></tr>
+<tr><td>顺序读/写</td><td>N·S</td><td>(N/2)·S</td><td>(N−1)·S</td><td>(N−1)·S</td></tr>
+<tr><td>随机读</td><td>N·R</td><td>N·R</td><td>(N−1)·R</td><td>N·R</td></tr>
+<tr><td><strong>随机写</strong></td><td>N·R</td><td>(N/2)·R</td><td><strong>1/2·R</strong></td><td><strong>N/4·R</strong></td></tr>
+</tbody></table>
+<h3>关键数字速记</h3>
+<ul>
+<li>并发竞态例子：两线程各 1000 万次，期望 20000000，实测随机偏小；追踪例子 counter 从 50 变 51（应为 52）</li>
+<li>32 位地址空间 + 4KB 页 + 4B PTE → 每进程页表 <strong>4MB</strong>；100 进程 <strong>400MB</strong></li>
+<li>页表算例：地址空间 64B、页 16B → VPN 2 位 + 偏移 4 位；VA 21 → 物理地址 <strong>117</strong></li>
+<li>AMAT 算例：命中率 99%，T&lt;sub&gt;M&lt;/sub&gt;=100ns，T&lt;sub&gt;D&lt;/sub&gt;=10ms → AMAT ≈ <strong>100μs</strong>（比纯内存慢约 1000 倍）</li>
+<li>磁盘：随机 4KB 读 0.66MB/s vs 顺序读 125MB/s，<strong>差约 200 倍</strong></li>
+<li>RAID 4 小写 = R/2；RAID 5 小写 = N/4·R</li>
+<li>日志恢复时间：从 <strong>O(磁盘大小)</strong> 降到 <strong>O(日志大小)</strong></li>
+<li>LFS 段大小公式：D = F/(1−F) × R&lt;sub&gt;peak&lt;/sub&gt; × T&lt;sub&gt;position&lt;/sub&gt;（F=0.9、T=10ms、R=100MB/s → <strong>9MB</strong>）</li>
+<li>校验和空间开销：4KB 块用 8 字节 → <strong>0.19%</strong></li>
+<li>LSE 发生率（3 年、150 万块盘）：廉价盘 <strong>9.4%</strong>，昂贵盘 <strong>1.4%</strong></li>
+</ul>
+<h3>最重要的 15 条"提示"（全书工程智慧的浓缩）</h3>
+<ol>
+<li><strong>分离策略和机制</strong>——机制回答 how，策略回答 which；分开才能只改策略而不动机制</li>
+<li><strong>采用受保护的控制权转移</strong>——用户模式/内核模式 + 陷阱 + 从陷阱返回</li>
+<li><strong>利用时钟中断重新获得控制权</strong>——非协作式抢占的关键硬件支持</li>
+<li><strong>处理应用程序的不当行为</strong>——现代系统的做法是"一击出局"：终止违规进程</li>
+<li><strong>重新启动是有用的</strong>——让系统回到已知状态、回收泄露资源，而且容易自动化</li>
+<li><strong>摊销可以减少成本</strong>——降低固定成本发生的频度即可降低总成本</li>
+<li><strong>重叠可以提高利用率</strong>——一个进程等 I/O 时让另一个用 CPU</li>
+<li><strong>从历史中学习</strong>——但要小心，它可能让系统做出比一无所知更糟的决定</li>
+<li><strong>避免巫毒常量（Ousterhout 定律）</strong>——尽量不依赖没有理论依据的参数</li>
+<li><strong>对条件变量使用 while（不是 if）</strong>——Mesa 语义 + 假唤醒</li>
+<li><strong>了解并使用工具</strong>——反汇编器、调试器、内存检查器；工具用得越好，系统建得越好</li>
+<li><strong>代码越少越好（劳尔定律）</strong>——"给同样这些人两倍的时间，他们可以只用一半的代码实现"</li>
+<li><strong>当心锁和控制流</strong>——异常/错误路径必须记得解锁（Linux 内核补丁里 40% 是这类稀有路径）</li>
+<li><strong>惰性是一种美德</strong>——推迟工作可能降低延迟，甚至完全避免工作</li>
+<li><strong>先测量后构建（Patterson 定律）</strong>——用实验证据代替直觉</li>
+</ol>
+<hr>
+<p><em>本笔记基于《操作系统导论》（三座大山中文版，500 页）逐章精读整理。所有引文与数字均可回溯至原书对应章节。</em></p>
+  </main>
+
+  <div class="footer">
+    《操作系统导论》精华笔记与专业问题 · OSTEP · Arpaci-Dusseau 夫妇<br>
+    先自己回答，再看解答 —— 能讲成"通俗解释"那个样子，才算真的懂了
+  </div>
+
+</div>
+</body>
+</html>

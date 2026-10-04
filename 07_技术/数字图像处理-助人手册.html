@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>《数字图像处理》反思助人手册 —— 当别人陷入"看不清"的困境时，你可以怎么说</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: #0f172a;
+    color: #e2e8f0;
+    padding: 32px 20px;
+    line-height: 1.8;
+  }
+  .container { max-width: 800px; margin: 0 auto; }
+
+  .header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding: 40px 20px;
+    background: linear-gradient(135deg, #1e3a5f 0%, #0f172a 100%);
+    border-radius: 16px;
+    border: 1px solid #334155;
+  }
+  .header h1 { font-size: 22px; margin-bottom: 12px; color: #f8fafc; }
+  .header .subtitle { font-size: 14px; color: #94a3b8; }
+
+  .intro {
+    background: #1e293b;
+    border-radius: 12px;
+    padding: 20px 24px;
+    border: 1px solid #334155;
+    margin-bottom: 30px;
+    color: #cbd5e1;
+    font-size: 15px;
+  }
+
+  .scenario-card {
+    background: #1e293b;
+    border-radius: 12px;
+    padding: 24px;
+    border: 1px solid #334155;
+    margin-bottom: 20px;
+  }
+  .scenario-title { font-size: 16px; font-weight: 600; color: #f8fafc; margin-bottom: 16px; }
+  .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 14px; }
+  @media (max-width: 600px) { .compare { grid-template-columns: 1fr; } }
+  .dont-say {
+    background: rgba(239, 68, 68, 0.1);
+    border-radius: 8px;
+    padding: 14px;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+  }
+  .dont-say .label { font-size: 12px; color: #ef4444; margin-bottom: 8px; font-weight: 600; }
+  .dont-say p { color: #fca5a5; font-size: 14px; font-style: italic; }
+  .do-say {
+    background: rgba(16, 185, 129, 0.1);
+    border-radius: 8px;
+    padding: 14px;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+  }
+  .do-say .label { font-size: 12px; color: #10b981; margin-bottom: 8px; font-weight: 600; }
+  .do-say p { color: #6ee7b7; font-size: 14px; }
+  .why {
+    background: #0f172a;
+    border-radius: 8px;
+    padding: 14px 16px;
+    border-left: 3px solid #3b82f6;
+  }
+  .why .label { font-size: 12px; color: #3b82f6; margin-bottom: 6px; font-weight: 600; }
+  .why p { color: #93c5fd; font-size: 14px; }
+
+  .footer { text-align: center; margin-top: 40px; padding: 20px; color: #64748b; font-size: 13px; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <h1>当别人陷入"看不清"的困境时</h1>
+    <div class="subtitle">《数字图像处理》· 10个场景的反思助人手册</div>
+  </div>
+
+  <div class="intro">
+    💡 图像处理告诉我们：一张图片之所以"看不清"，可能是因为对比度太低、噪点太多、细节被模糊掉了。<br>
+    人看事情也是一样——有时候不是事情本身复杂，而是我们的"图像处理"出了问题。<br>
+    这本手册，就是当别人"看不清"的时候，你怎么帮他——不是说教，是提问。
+  </div>
+
+  <!-- 场景1 -->
+  <div class="scenario-card">
+    <div class="scenario-title">场景1：朋友说"这件事我想不清楚，太乱了"</div>
+    <div class="compare">
+      <div class="dont-say">
+        <div class="label">❌ 不要这么说</div>
+        <p>"你别想那么多！事情很简单的！"</p>
+      </div>
+      <div class="do-say">
+        <div class="label">✅ 可以这样问</div>
+        <p>"你觉得这件事里，哪些部分是清楚的，哪些部分是乱的？能不能把清楚的先挑出来？"</p>
+      </div>
+    </div>
+    <div class="why">
+      <div class="label">为什么</div>
+      <p>图像处理里，"分割"就是把不同的区域分开。你直接说"事情很简单"，他觉得你不理解他的混乱。不如帮他做"分割"——把清楚的部分和不清楚的部分分开，问题就变小了。</p>
+    </div>
+  </div>
+
+  <!-- 场景2 -->
+  <div class="scenario-card">
+    <div class="scenario-title">场景2：朋友看事情太模糊，抓不住重点</div>
+    <div class="compare">
+      <div class="dont-say">
+        <div class="label">❌ 不要这么说</div>
+        <p>"你能不能抓住重点？别什么都看！"</p>
+      </div>
+      <div class="do-say">
+        <div class="label">✅ 可以这样问</div>
+        <p>"这件事里，哪个部分是最关键的？如果只能记住一点，你会记住哪一点？"</p>
+      </div>
+    </div>
+    <div class="why">
+      <div class="label">为什么</div>
+      <p>这就像"锐化"——把高频细节加强。你直接说"抓重点"，他不知道怎么抓。不如帮他做"锐化"——找出最关键的那一点，其他的自然就淡下去了。</p>
+    </div>
+  </div>
+
+  <!-- 场景3 -->
+  <div class="scenario-card">
+    <div class="scenario-title">场景3：朋友被负面情绪干扰，看不清事实</div>
+    <div class="compare">
+      <div class="dont-say">
+        <div class="label">❌ 不要这么说</div>
+        <p>"你别想太多！都是你自己瞎想的！"</p>
+      </div>
+      <div class="do-say">
+        <div class="label">✅ 可以这样问</div>
+        <p>"你现在看到的这个情况，哪些是事实，哪些是你的情绪加进去的？"</p>
+      </div>
+    </div>
+    <div class="why">
+      <div class="label">为什么</div>
+      <p>这就像"去噪"——把随机噪声去掉。你直接说"你瞎想"，他会防御。不如帮他做"去噪"——把事实和情绪分开，剩下的就是真正的图像。</p>
+    </div>
+  </div>
+
+  <!-- 场景4 -->
+  <div class="scenario-card">
+    <div class="scenario-title">场景4：朋友遇到难题，钻牛角尖出不来</div>
+    <div class="compare">
+      <div class="dont-say">
+        <div class="label">❌ 不要这么说</div>
+        <p>"你钻牛角尖了！换个角度想想！"</p>
+      </div>
+      <div class="do-say">
+        <div class="label">✅ 可以这样问</div>
+        <p>"如果换一个坐标系来看这件事——比如从三年后回头看，会是什么样？"</p>
+      </div>
+    </div>
+    <div class="why">
+      <div class="label">为什么</div>
+      <p>这就像"从空间域换到频率域"——同一个问题，换个坐标系，突然就简单了。你直接说"换个角度"，他不知道怎么换。不如给他一个具体的"坐标系"——三年后、十年后、别人的视角。</p>
+    </div>
+  </div>
+
+  <!-- 场景5 -->
+  <div class="scenario-card">
+    <div class="scenario-title">场景5：朋友对人有偏见，只看到一面</div>
+    <div class="compare">
+      <div class="dont-say">
+        <div class="label">❌ 不要这么说</div>
+        <p>"你对他有偏见！你不了解他！"</p>
+      </div>
+      <div class="do-say">
+        <div class="label">✅ 可以这样问</div>
+        <p>"你是在什么情况下认识他的？他在别的场景下，会不会是完全不同的样子？"</p>
+      </div>
+    </div>
+    <div class="why">
+      <div class="label">为什么</div>
+      <p>这就像"2½-D草图"——你只看到了"你面前的这一面"。要真正认识一个人，需要走到"3-D模型"——从不同角度看。你直接说"有偏见"，他不服。不如帮他意识到：你只看到了这一面，背面是什么样的？</p>
+    </div>
+  </div>
+
+  <!-- 场景6 -->
+  <div class="scenario-card">
+    <div class="scenario-title">场景6：朋友学技术只背公式，不理解原理</div>
+    <div class="compare">
+      <div class="dont-say">
+        <div class="label">❌ 不要这么说</div>
+        <p>"你这样学不对！你要理解原理！不能只背公式！"</p>
+      </div>
+      <div class="do-say">
+        <div class="label">✅ 可以这样问</div>
+        <p>"你觉得这个算法是在解决什么问题？为什么需要它？如果没有它，会怎么样？"</p>
+      </div>
+    </div>
+    <div class="why">
+      <div class="label">为什么</div>
+      <p>这就像"计算理论"——Marr说，最重要的是"问题是什么"，而不是"算法怎么实现"。你直接说"要理解原理"，他不知道怎么理解。不如从"问题"出发，他自然会走到"原理"。</p>
+    </div>
+  </div>
+
+  <!-- 场景7 -->
+  <div class="scenario-card">
+    <div class="scenario-title">场景7：朋友陷入"非黑即白"的思维</div>
+    <div class="compare">
+      <div class="dont-say">
+        <div class="label">❌ 不要这么说</div>
+        <p>"你能不能别这么极端？事情不是非黑即白的！"</p>
+      </div>
+      <div class="do-say">
+        <div class="label">✅ 可以这样问</div>
+        <p>"如果把这件事分成10个灰度级，你觉得它在第几级？为什么？"</p>
+      </div>
+    </div>
+    <div class="why">
+      <div class="label">为什么</div>
+      <p>这就像"灰度级"——图像不是只有黑白两色，而是有256个灰度级。你直接说"别极端"，他觉得你在否定他的判断。不如帮他做"灰度拉伸"——从非黑即白，变成有层次的灰度。</p>
+    </div>
+  </div>
+
+  <!-- 场景8 -->
+  <div class="scenario-card">
+    <div class="scenario-title">场景8：朋友总记着太多细节，反而看不清大局</div>
+    <div class="compare">
+      <div class="dont-say">
+        <div class="label">❌ 不要这么说</div>
+        <p>"你别抠细节了！要看大局！"</p>
+      </div>
+      <div class="do-say">
+        <div class="label">✅ 可以这样问</div>
+        <p>"如果把这件事看成一张大图，你现在是站得太近了，还是太远了？要不要退后几步看看？"</p>
+      </div>
+    </div>
+    <div class="why">
+      <div class="label">为什么</div>
+      <p>这就像"图像金字塔"——不同分辨率下看到的东西不一样。你站得太近，只看到细节；站得远一点，才能看到整体结构。你直接说"看大局"，他不知道怎么退。不如给他一个具体的"距离"。</p>
+    </div>
+  </div>
+
+  <!-- 场景9 -->
+  <div class="scenario-card">
+    <div class="scenario-title">场景9：朋友觉得"我看到的就是真相"</div>
+    <div class="compare">
+      <div class="dont-say">
+        <div class="label">❌ 不要这么说</div>
+        <p>"没有什么客观真相！你看到的都是主观的！"</p>
+      </div>
+      <div class="do-say">
+        <div class="label">✅ 可以这样问</div>
+        <p>"如果换一个人来看同一件事，他会看到和你完全一样的东西吗？如果不一样，差别在哪里？"</p>
+      </div>
+    </div>
+    <div class="why">
+      <div class="label">为什么</div>
+      <p>图像处理告诉我们：你看到的不是"现实"，而是经过"滤波、增强、分割"之后的版本。你说"没有客观真相"，太极端了，他接受不了。不如用一个问题让他自己意识到：不同的人看同一件事，会看到不同的东西。</p>
+    </div>
+  </div>
+
+  <!-- 场景10 -->
+  <div class="scenario-card">
+    <div class="scenario-title">场景10：反过来：当你自己陷入这些状态里</div>
+    <div class="compare">
+      <div class="dont-say">
+        <div class="label">❌ 你最不想听到的</div>
+        <p>"你就是想太多了！""你应该……""你要理性一点！"</p>
+      </div>
+      <div class="do-say">
+        <div class="label">✅ 你最想听到的</div>
+        <p>"我理解。我们一起看看：你现在看到的这个图像，哪里清楚，哪里模糊？我们一起把它调清楚。"</p>
+      </div>
+    </div>
+    <div class="why">
+      <div class="label">为什么</div>
+      <p>我们每个人都会"看不清"——这很正常，这是大脑的工作方式。不用自责。重要的不是"你怎么又看不清了"，而是：你意识到自己"看不清"了——然后，你愿不愿意一起，把图像调清楚？</p>
+    </div>
+  </div>
+
+  <div class="footer">
+    《数字图像处理》反思助人手册 · Gonzalez & Woods<br>
+    我们每个人都在"处理"自己看到的图像——<br>
+    助人的本质，不是把你的图像"强加"给他，<br>
+    而是陪他一起，把他的图像调清楚。
+  </div>
+
+</div>
+</body>
+</html>

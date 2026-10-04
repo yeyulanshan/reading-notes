@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>《数字图像处理》整体架构 —— 从像素到理解的12级台阶</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: #0f172a;
+    color: #e2e8f0;
+    padding: 32px 20px;
+    line-height: 1.7;
+  }
+  .container { max-width: 900px; margin: 0 auto; }
+
+  .header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding: 40px 20px;
+    background: linear-gradient(135deg, #1e3a5f 0%, #0f172a 100%);
+    border-radius: 16px;
+    border: 1px solid #334155;
+  }
+  .header h1 { font-size: 26px; margin-bottom: 12px; color: #f8fafc; }
+  .header .subtitle { font-size: 15px; color: #94a3b8; }
+  .header .author { margin-top: 16px; font-size: 13px; color: #64748b; }
+
+  .section-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #f8fafc;
+    margin: 36px 0 20px;
+    padding-left: 12px;
+    border-left: 4px solid #3b82f6;
+  }
+
+  /* 连续体模型 */
+  .continuum {
+    background: #1e293b;
+    border-radius: 12px;
+    padding: 24px;
+    border: 1px solid #334155;
+    margin-bottom: 20px;
+  }
+  .continuum h3 { color: #3b82f6; margin-bottom: 16px; font-size: 17px; }
+  .levels {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+  }
+  @media (max-width: 600px) {
+    .levels { grid-template-columns: 1fr; }
+  }
+  .level-box {
+    background: #0f172a;
+    border-radius: 8px;
+    padding: 16px;
+    text-align: center;
+    border-top: 3px solid;
+  }
+  .level-box:nth-child(1) { border-top-color: #10b981; }
+  .level-box:nth-child(2) { border-top-color: #f59e0b; }
+  .level-box:nth-child(3) { border-top-color: #ef4444; }
+  .level-box .level-name { font-weight: 600; margin-bottom: 8px; color: #f8fafc; font-size: 14px; }
+  .level-box .level-desc { font-size: 12px; color: #94a3b8; }
+
+  /* 12章阶梯 */
+  .stairs {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .stair {
+    background: #1e293b;
+    border-radius: 10px;
+    padding: 16px 20px;
+    border-left: 4px solid;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .stair:nth-child(1) { border-left-color: #6366f1; }
+  .stair:nth-child(2) { border-left-color: #6366f1; }
+  .stair:nth-child(3) { border-left-color: #8b5cf6; }
+  .stair:nth-child(4) { border-left-color: #8b5cf6; }
+  .stair:nth-child(5) { border-left-color: #a855f7; }
+  .stair:nth-child(6) { border-left-color: #a855f7; }
+  .stair:nth-child(7) { border-left-color: #d946ef; }
+  .stair:nth-child(8) { border-left-color: #d946ef; }
+  .stair:nth-child(9) { border-left-color: #ec4899; }
+  .stair:nth-child(10) { border-left-color: #ec4899; }
+  .stair:nth-child(11) { border-left-color: #f43f5e; }
+  .stair:nth-child(12) { border-left-color: #f43f5e; }
+  .stair-num {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #334155;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+    color: #e2e8f0;
+    flex-shrink: 0;
+  }
+  .stair-content { flex: 1; }
+  .stair-title { font-weight: 600; color: #f8fafc; font-size: 15px; margin-bottom: 4px; }
+  .stair-desc { font-size: 13px; color: #94a3b8; }
+
+  /* 核心思想 */
+  .core-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  .core-card {
+    background: #1e293b;
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid #334155;
+  }
+  .core-card h4 { color: #f59e0b; margin-bottom: 10px; font-size: 15px; }
+  .core-card p { color: #cbd5e1; font-size: 14px; }
+
+  /* 金句 */
+  .quote {
+    background: linear-gradient(135deg, #1e3a5f 0%, #1e293b 100%);
+    border-radius: 12px;
+    padding: 24px;
+    border-left: 4px solid #f59e0b;
+    margin: 30px 0;
+  }
+  .quote p { font-size: 16px; color: #fbbf24; font-style: italic; }
+  .quote .author { margin-top: 12px; font-size: 13px; color: #94a3b8; text-align: right; }
+
+  .footer {
+    text-align: center;
+    margin-top: 40px;
+    padding: 20px;
+    color: #64748b;
+    font-size: 13px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <h1>数字图像处理：从像素到理解的12级台阶</h1>
+    <div class="subtitle">Gonzalez & Woods · 第四版 · 40年经典教材</div>
+    <div class="author">电子工业出版社 · 136万字 · 12章</div>
+  </div>
+
+  <!-- 核心连续体 -->
+  <div class="section-title">核心框架：图像处理是一个连续体</div>
+  <div class="continuum">
+    <h3>从"低级处理"到"高级理解"</h3>
+    <div class="levels">
+      <div class="level-box">
+        <div class="level-name">低级处理</div>
+        <div class="level-desc">输入输出都是图像<br>滤波、增强、去噪</div>
+      </div>
+      <div class="level-box">
+        <div class="level-name">中级处理</div>
+        <div class="level-desc">输入是图像，输出是特征<br>分割、边缘检测、特征提取</div>
+      </div>
+      <div class="level-box">
+        <div class="level-name">高级处理</div>
+        <div class="level-desc">理解图像内容<br>分类、识别、场景理解</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 12章阶梯 -->
+  <div class="section-title">12级台阶：全书的技术脉络</div>
+  <div class="stairs">
+    <div class="stair">
+      <div class="stair-num">1</div>
+      <div class="stair-content">
+        <div class="stair-title">绪论</div>
+        <div class="stair-desc">什么是数字图像处理？应用领域、发展历史、系统组成</div>
+      </div>
+    </div>
+    <div class="stair">
+      <div class="stair-num">2</div>
+      <div class="stair-content">
+        <div class="stair-title">数字图像基础</div>
+        <div class="stair-desc">像素、采样、量化、灰度、坐标系统、像素间关系</div>
+      </div>
+    </div>
+    <div class="stair">
+      <div class="stair-num">3</div>
+      <div class="stair-content">
+        <div class="stair-title">灰度变换与空间滤波</div>
+        <div class="stair-desc">点操作（对比度拉伸、阈值）、空间滤波（平滑、锐化、卷积）</div>
+      </div>
+    </div>
+    <div class="stair">
+      <div class="stair-num">4</div>
+      <div class="stair-content">
+        <div class="stair-title">频率域滤波</div>
+        <div class="stair-desc">傅里叶变换、低通/高通滤波、频率域与空间域的对应</div>
+      </div>
+    </div>
+    <div class="stair">
+      <div class="stair-num">5</div>
+      <div class="stair-content">
+        <div class="stair-title">图像复原与重建</div>
+        <div class="stair-desc">噪声模型、退化函数、逆滤波、维纳滤波、从投影重建</div>
+      </div>
+    </div>
+    <div class="stair">
+      <div class="stair-num">6</div>
+      <div class="stair-content">
+        <div class="stair-title">小波变换和其他图像变换</div>
+        <div class="stair-desc">多分辨率分析、小波变换、图像金字塔</div>
+      </div>
+    </div>
+    <div class="stair">
+      <div class="stair-num">7</div>
+      <div class="stair-content">
+        <div class="stair-title">彩色图像处理</div>
+        <div class="stair-desc">RGB/CMY/HSV彩色模型、彩色变换、彩色滤波</div>
+      </div>
+    </div>
+    <div class="stair">
+      <div class="stair-num">8</div>
+      <div class="stair-content">
+        <div class="stair-title">图像压缩和水印</div>
+        <div class="stair-desc">压缩原理、熵编码、JPEG标准、数字水印</div>
+      </div>
+    </div>
+    <div class="stair">
+      <div class="stair-num">9</div>
+      <div class="stair-content">
+        <div class="stair-title">形态学图像处理</div>
+        <div class="stair-desc">腐蚀、膨胀、开运算、闭运算、骨架提取、区域描述</div>
+      </div>
+    </div>
+    <div class="stair">
+      <div class="stair-num">10</div>
+      <div class="stair-content">
+        <div class="stair-title">图像分割</div>
+        <div class="stair-desc">边缘检测（Sobel、Canny）、阈值处理、区域分割、K均值、超像素</div>
+      </div>
+    </div>
+    <div class="stair">
+      <div class="stair-num">11</div>
+      <div class="stair-content">
+        <div class="stair-title">特征提取</div>
+        <div class="stair-desc">边界描述、区域描述、纹理分析、SIFT尺度不变特征</div>
+      </div>
+    </div>
+    <div class="stair">
+      <div class="stair-num">12</div>
+      <div class="stair-content">
+        <div class="stair-title">图像模式分类</div>
+        <div class="stair-desc">神经网络、深度学习、卷积神经网络（CNN）</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 核心思想 -->
+  <div class="section-title">三个最核心的思想</div>
+  <div class="core-grid">
+    <div class="core-card">
+      <h4>① 图像处理是"算出来"的，不是"看出来"的</h4>
+      <p>一幅图像就是一个二维函数f(x,y)。所有的操作——滤波、增强、分割——都是数学变换。你以为你在"修图"，其实你在做矩阵运算。</p>
+    </div>
+    <div class="core-card">
+      <h4>② 空间域和频率域是同一枚硬币的两面</h4>
+      <p>空间域里的"卷积"，在频率域里就是"乘法"。有时候在空间域难做的事，换到频率域就变简单了。理解了这一点，你就理解了信号处理的本质。</p>
+    </div>
+    <div class="core-card">
+      <h4>③ 从"图像"到"理解"是一个连续谱</h4>
+      <p>没有明确的边界说"这里是图像处理，那里是计算机视觉"。从滤波（低级）到分割（中级）到分类（高级），是一步步从像素走向意义的过程。</p>
+    </div>
+  </div>
+
+  <!-- 金句 -->
+  <div class="quote">
+    <p>"视觉是人类最高级的感知，因此图像在人类感知中起着最重要的作用。"</p>
+    <div class="author">—— Gonzalez & Woods</div>
+  </div>
+
+  <div class="footer">
+    《数字图像处理》第四版 · Gonzalez & Woods · 2018<br>
+    数字图像处理领域的"圣经" · 40年经典 · 全世界通用教材
+  </div>
+
+</div>
+</body>
+</html>

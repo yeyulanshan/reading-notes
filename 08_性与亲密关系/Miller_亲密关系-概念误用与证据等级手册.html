@@ -1,0 +1,458 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>概念误用与证据等级手册 —— 这一域的书不能和其他域同等对待</title>
+<style>
+  :root{
+    --paper:#faf6f2; --card:#fffdfb; --edge:#e0d5cc;
+    --ink:#2a211c; --ink-mid:#5c4f47; --ink-soft:#92847a;
+    --core:#8c4a5c; --core-soft:#f7e8ec;
+    --struct:#7a5a3a; --struct-soft:#f4ece0;
+    --self:#4a6b7a; --self-soft:#e5eef2;
+    --inter:#5a7a4a; --inter-soft:#eaf0e3;
+    --warn:#a8442f; --warn-soft:#f9e7e2;
+    --key:#96702a; --key-soft:#f6efdc;
+    --a:#3f6b32; --a-soft:#e6f0e2;
+    --b:#96702a; --b-soft:#f6efdc;
+    --c:#a8442f; --c-soft:#f9e7e2;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--paper);color:var(--ink);padding:36px 20px 48px;line-height:1.85;
+    -webkit-font-smoothing:antialiased;
+  }
+  .container{max-width:1000px;margin:0 auto;}
+
+  .header{text-align:center;margin-bottom:26px;padding:46px 24px 40px;background:var(--card);border:1px solid var(--edge);border-top:5px solid var(--warn);border-radius:4px;}
+  .header .kicker{font-size:11.5px;letter-spacing:2.5px;color:var(--ink-soft);margin-bottom:14px;}
+  .header h1{font-size:26px;color:var(--ink);margin-bottom:14px;letter-spacing:.5px;line-height:1.5;}
+  .header .subtitle{font-size:14.5px;color:var(--ink-mid);}
+  .header .author{margin-top:16px;font-size:12.5px;color:var(--ink-soft);}
+
+  .guide{background:var(--warn-soft);border:1px solid #eccfc7;border-left:4px solid var(--warn);border-radius:3px;padding:20px 24px;margin-bottom:26px;font-size:14.5px;color:#7d3221;}
+  .guide .g-title{color:var(--warn);font-weight:700;margin-bottom:10px;font-size:13.5px;letter-spacing:.6px;}
+  .guide p+p{margin-top:8px;} .guide strong{color:#6a1a10;}
+
+  .face{display:flex;gap:12px;margin-bottom:30px;flex-wrap:wrap;}
+  .face .f{flex:1;min-width:250px;background:var(--card);border:1px solid var(--edge);border-radius:3px;padding:18px 20px;}
+  .face .f.a{border-top:4px solid var(--core);} .face .f.b{border-top:4px solid var(--c);}
+  .face .f .t{font-size:15px;font-weight:700;margin-bottom:8px;}
+  .face .f.a .t{color:var(--core);} .face .f.b .t{color:var(--c);}
+  .face .f p{font-size:13px;color:var(--ink-mid);} .face .f strong{color:var(--ink);}
+
+  .section-title{font-size:20px;font-weight:700;color:var(--ink);margin:46px 0 8px;padding-left:13px;border-left:4px solid var(--warn);letter-spacing:.3px;}
+  .section-sub{color:var(--ink-soft);font-size:13.5px;margin:0 0 18px 17px;}
+
+  table{width:100%;border-collapse:collapse;margin:13px 0;font-size:12.5px;}
+  th,td{padding:9px 10px;border:1px solid var(--edge);text-align:left;vertical-align:top;}
+  th{background:var(--warn-soft);color:var(--warn);font-weight:700;font-size:12.5px;}
+  td{color:var(--ink-mid);} td strong{color:var(--ink);} td em{color:var(--warn);font-style:normal;font-weight:600;}
+  code{font-family:Consolas,Monaco,monospace;color:var(--core);font-size:12px;background:var(--core-soft);padding:1px 5px;border-radius:2px;}
+
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;}
+  .mitem{background:var(--card);border:1px solid var(--edge);border-radius:3px;padding:17px 19px;border-top:4px solid var(--core);}
+  .mitem .h{display:flex;align-items:baseline;gap:9px;margin-bottom:9px;flex-wrap:wrap;}
+  .mitem .id{font-size:11px;font-weight:700;color:#fff;background:var(--core);padding:2px 8px;border-radius:2px;}
+  .mitem .cn{font-size:15px;font-weight:700;color:var(--ink);}
+  .mitem .g{font-size:10.5px;padding:2px 8px;border-radius:20px;font-weight:700;margin-left:auto;}
+  .g.a{background:var(--a-soft);color:var(--a);} .g.b{background:var(--b-soft);color:var(--b);} .g.c{background:var(--c-soft);color:var(--c);}
+  .mitem .row{padding:7px 0;border-bottom:1px dashed var(--edge);font-size:13px;color:var(--ink-mid);}
+  .mitem .row:last-child{border-bottom:none;}
+  .mitem .row .lb{font-weight:700;color:var(--warn);font-size:11.5px;letter-spacing:.3px;display:block;margin-bottom:2px;}
+  .mitem .row strong{color:var(--ink);}
+  .mitem .row em{color:var(--warn);font-style:normal;font-weight:600;}
+
+  .lvlbox{background:var(--card);border:1px solid var(--edge);border-radius:3px;padding:20px 24px;margin-bottom:16px;}
+  .lvlbox h3{font-size:16px;margin-bottom:12px;}
+  .lvlbox.a h3{color:var(--a);} .lvlbox.b h3{color:var(--b);} .lvlbox.c h3{color:var(--c);}
+  .lvlbox p{font-size:14px;color:var(--ink-mid);} .lvlbox p+p{margin-top:8px;}
+  .lvlbox strong{color:var(--ink);} .lvlbox em{color:var(--warn);font-style:normal;font-weight:600;}
+
+  .checklist{background:var(--card);border:1px solid var(--edge);border-radius:3px;padding:26px;}
+  .checklist h3{color:var(--warn);font-size:16.5px;margin-bottom:16px;}
+  .checklist ul{list-style:none;}
+  .checklist li{padding:5px 0 5px 28px;position:relative;color:var(--ink-mid);font-size:13.5px;}
+  .checklist li::before{content:"☐";position:absolute;left:4px;color:#cfc4ba;font-size:15px;}
+
+  .footer{text-align:center;margin-top:44px;padding:22px;color:var(--ink-soft);font-size:12.5px;line-height:1.9;}
+
+  @media(max-width:640px){
+    .header h1{font-size:20px;} .section-title{font-size:17.5px;}
+    body{padding:20px 14px 32px;} table{font-size:11.5px;}
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="kicker">CONCEPT MISUSE &amp; EVIDENCE GRADING</div>
+    <h1>这一域的书不能和其他域同等对待</h1>
+    <div class="subtitle">《亲密关系》概念误用与证据等级手册 · 罗兰·米勒 · 第 6 版</div>
+    <div class="author">A 面 · 18 个高风险概念误用 &nbsp;|&nbsp; B 面 · 证据等级标注体系</div>
+  </div>
+
+  <div class="guide">
+    <div class="g-title">⚠️ 为什么这一域需要单独一本手册</div>
+    <p>前面八个域里，<code>03_自然与数学</code> 的手册做成了双面——A 面概念误用，B 面定理边界图。理由是形式系统的结论全都带条件，误用定理是论证错误。</p>
+    <p><strong>这一域的问题更严重：它的"常识"已经装在你脑子里了。</strong>社会心理学的结论在被大众接收的过程中普遍经历了三件事——<em>被夸大效应量、被去掉限定条件、被转换成规范性主张</em>。</p>
+    <p>所以这一域的 B 面不是"定理边界图"，而是<strong>证据等级标注体系</strong>：把每个结论按 <span style="color:#3f6b32;font-weight:700;">A（可复现的实证）</span> / <span style="color:#96702a;font-weight:700;">B（有支持但有明确边界）</span> / <span style="color:#a8442f;font-weight:700;">C（争议未决或作者自标为猜测）</span> 定性，并<strong>强制要求"把限定条件一起引用"</strong>。</p>
+    <p>本手册的全部内容是米勒书里已有的东西——<strong>我只是把它按"误用风险"重新组织了一遍。</strong></p>
+  </div>
+
+  <div class="face">
+    <div class="f a">
+      <div class="t">A 面 · 概念误用</div>
+      <p>18 个高风险概念。每个给四栏：<strong>正确含义 → 常见误用 → 为什么会被误用 → 怎么识别</strong>。</p>
+      <p style="margin-top:6px;color:#92847a;">误用这些概念，最多是理解错误。</p>
+    </div>
+    <div class="f b">
+      <div class="t">B 面 · 证据等级</div>
+      <p>把全书结论按 A/B/C 三级定性，并给出<strong>必须一起引用的限定条件</strong>。</p>
+      <p style="margin-top:6px;color:#92847a;">误用证据等级，是<em>论证</em>错误——而且很难被发现，因为你引的数字是真的。</p>
+    </div>
+  </div>
+
+  <!-- ==================== A 面 ==================== -->
+  <div class="section-title">A 面 · 18 个高风险概念误用</div>
+  <div class="section-sub">每个都标明它在书里的证据等级</div>
+
+  <div class="cards">
+
+    <div class="mitem">
+      <div class="h"><span class="id">M1</span><span class="cn">依恋类型</span><span class="g a">A 级</span></div>
+      <div class="row"><span class="lb">正确含义</span>两个<strong>连续维度</strong>——回避亲密与忧虑被弃——上的相对位置。四类型（安全/痴迷/恐惧/疏离）只是"<strong>称呼不同忧虑和回避分数组合的便利标签</strong>"。</div>
+      <div class="row"><span class="lb">常见误用</span>"我是焦虑型，所以我在关系里就是这样" / "他是回避型，所以他不会改变" / 用它给伴侣定性。</div>
+      <div class="row"><span class="lb">为什么会误用</span>类型标签比维度好记，而且它提供了一个<strong>简单归因</strong>——把复杂的关系问题归到一个人的固定属性上。</div>
+      <div class="row"><span class="lb">怎么识别</span>问自己：<em>我是在描述倾向，还是在免除改变的责任？</em>以及——<strong>我能不用类型词、只用两个维度打分来说这件事吗？</strong>（米勒给的关键数字：<strong>两年之内足有三分之一的依恋类型可以发生实质性变化</strong>。）</div>
+    </div>
+
+    <div class="mitem">
+      <div class="h"><span class="id">M2</span><span class="cn">比较水平 CL</span><span class="g a">A 级</span></div>
+      <div class="row"><span class="lb">正确含义</span>认为自己"<strong>应当得到</strong>"的结果值，来自过去经验，是<strong>满意度的参照点</strong>。</div>
+      <div class="row"><span class="lb">常见误用</span>当成"我想要的水平"或"我的理想标准"；或者当成客观市场价。</div>
+      <div class="row"><span class="lb">为什么会误用</span>"应当"和"想要"在日常语言里几乎不分。而两者的行为含义完全不同——CL 会<strong>随所得升高</strong>（享乐适应），"想要"不会。</div>
+      <div class="row"><span class="lb">怎么识别</span>米勒的例子可以当检验标准：<em>伴侣每晚按摩加美食成为例行后，某天没了就失望</em>——<strong>"即使没有任何改变（除了我们的期望），具有奖赏意义的亲密关系也会逐渐变得越来越不满意。"</strong> 如果你的模型解释不了这个现象，你就用错了 CL。</div>
+    </div>
+
+    <div class="mitem">
+      <div class="h"><span class="id">M3</span><span class="cn">替代性比较水平 CLalt</span><span class="g a">A 级</span></div>
+      <div class="row"><span class="lb">正确含义</span>离开后能得到的更好结果——<strong>"就是我们可以容忍目前伴侣的最差结果"</strong>。它决定<strong>依赖度</strong>。</div>
+      <div class="row"><span class="lb">常见误用</span>当成"外面有没有更好的"这种客观盘点；或者以为它只由候选伴侣的质量决定。</div>
+      <div class="row"><span class="lb">为什么会误用</span>它是<strong>主观认知</strong>，但听起来像个客观量。米勒指出它受<strong>自尊</strong>（低自尊者怀疑自己的吸引力从而低估替代前景）、<strong>习得性无助</strong>、<strong>信息渠道</strong>（居家主妇/夫替代信息少）影响；还受<strong>注意方向</strong>影响——对现状满意者不四处寻觅，故自觉 CLalt 低。</div>
+      <div class="row"><span class="lb">怎么识别</span>问：<em>我"知道"没有更好的选择，是因为我找过，还是因为我没找、或者我觉得自己不配？</em>（米勒引的一项研究：关注替代恋人的大学生更频繁更换恋人——注意方向会反过来塑造 CLalt 的估计。）</div>
+    </div>
+
+    <div class="mitem">
+      <div class="h"><span class="id">M4</span><span class="cn">公平理论</span><span class="g b">B 级（实证不一致）</span></div>
+      <div class="row"><span class="lb">正确含义</span>公平不是相等，是<strong>成比例公正</strong>：每个伴侣的<em>结果/贡献</em>之比相等。"公平并不要求伴侣双方得到相等的奖赏。"</div>
+      <div class="row"><span class="lb">常见误用</span>① 把公平理解为"五五分"；② 把公平理论当成已证实的可操作准则。</div>
+      <div class="row"><span class="lb">为什么会误用</span>第一条是日常语言的问题；第二条更麻烦——<strong>因为公平理论在直觉上太对了</strong>，以至于它的实证困难很少被提到。</div>
+      <div class="row"><span class="lb">怎么识别</span>米勒如实列了矛盾：<em>获益不足稳定地有害（"这点上所有的研究都一致"），但"过度获益并不总是和满意度的降低有关联。事实上，有些人过度获益时感觉良好"</em>；纵向研究"并不太支持公平理论"；<strong>更有力的替代解释是"人们得到的全部奖赏数量……比公平水平能更好地预测满意度"</strong>；而且<strong>因果方向可能是反的</strong>——"感到不满意会导致人们认为自己受到了不公正的待遇"。<br><strong>可用的结论只有两条</strong>：获益不足稳定地有害；关系结果质量比公平更重要。</div>
+    </div>
+
+    <div class="mitem">
+      <div class="h"><span class="id">M5</span><span class="cn">自我实现的预言</span><span class="g a">A 级</span></div>
+      <div class="row"><span class="lb">正确含义</span>错误期望通过<strong>五步行为链条</strong>引出被期望的行为：期望 → 知觉者按期望行事 → 目标注意并解释 → 目标以对应方式回应 → <strong>知觉者把目标的反应归因于目标的性格</strong>。</div>
+      <div class="row"><span class="lb">常见误用</span>当成"心想事成"或"吸引力法则"；或者以为只要"积极思考"就能改变关系。</div>
+      <div class="row"><span class="lb">为什么会误用</span>名称里有"自我"和"实现"，容易被读成主观意念的作用。而米勒的机制完全是<strong>行为性</strong>的。</div>
+      <div class="row"><span class="lb">怎么识别</span>三个检验：① 我能不能说出<strong>中间的行为链条</strong>？② 我是否意识到<strong>知觉者完全意识不到自己的作用</strong>——"当错误的期望变成现实，人们从来不会意识到自己犯过的错误"？③ 我是否知道它<strong>会被熟悉性消解</strong>——"当人们日渐变得熟悉彼此，某些最初还站得住脚的预言会消失"？</div>
+    </div>
+
+    <div class="mitem">
+      <div class="h"><span class="id">M6</span><span class="cn">积极错觉</span><span class="g b">B 级（有明确边界）</span></div>
+      <div class="row"><span class="lb">正确含义</span>以善意大度的眼光评价伴侣，是<strong>"对伴侣现实的认识"与"理想化了的知觉"的混合物</strong>——并非忽视缺点，而是认为缺点"不如其他人认为的那么重要"。</div>
+      <div class="row"><span class="lb">常见误用</span>"越理想化越好" / "爱情就是要把对方想得完美"。</div>
+      <div class="row"><span class="lb">为什么会误用</span>因为积极错觉确实有益，所以容易推出"越多越好"。</div>
+      <div class="row"><span class="lb">怎么识别</span>米勒划的界线是：<strong>"问题在于与现实不符合的程度"</strong>。凭空虚构品质 → 注定幻想破灭、新婚夫妻不满日增。有效形式是<strong>了解全部实情但善意诠释</strong>，且<strong>随了解程度不断调整对理想伴侣的期望</strong>。一个反过来的证据很有说服力：<strong>同情之爱"根源于对伴侣优点和缺点更准确的理解之上；我们认识到他们的不足，但我们不管怎样还是爱他们"</strong>。</div>
+    </div>
+
+    <div class="mitem">
+      <div class="h"><span class="id">M7</span><span class="cn">重构性记忆</span><span class="g a">A 级</span></div>
+      <div class="row"><span class="lb">正确含义</span>记忆随新信息被不断修订。"对过去事件的记忆往往混杂着过去真实发生了的和最近才知悉的信息。"</div>
+      <div class="row"><span class="lb">常见误用</span>把"我记得我们以前……"当成关于关系的事实证据；用过去来判断现在的关系质量。</div>
+      <div class="row"><span class="lb">为什么会误用</span>记忆的主观确定感很强。你不知道它被改写过。</div>
+      <div class="row"><span class="lb">怎么识别</span>记住方向：<strong>当前幸福 → 倾向于忘记过去的不愉快；当前痛苦 → 低估过去的幸福和情意。</strong> 而最惊人的一点是纵向追踪的发现——<strong>即使满意度实际在下降，幸福配偶仍会再三报告"现在比过去更幸福"</strong>（Frye &amp; Karney 2004）。<em>所以"我们以前更好"和"我们一直都很好"这两种叙事，都可能是当前满意度的产物。</em></div>
+    </div>
+
+    <div class="mitem">
+      <div class="h"><span class="id">M8</span><span class="cn">关系价值 / 社会排斥</span><span class="g a">A 级</span></div>
+      <div class="row"><span class="lb">正确含义</span>关系价值 = 他人认为与我们的关系珍贵、重要或亲近的程度；低于期望即痛苦。排斥（ostracism）= 被身边人忽视、沉默对待。</div>
+      <div class="row"><span class="lb">常见误用</span>"被冷落只是心理上的，忍一忍就过去了" / "不理他"是一种比吵架更轻的处理方式。</div>
+      <div class="row"><span class="lb">为什么会误用</span>因为它不留可见痕迹——没有争吵、没有伤处，所以看起来代价低。</div>
+      <div class="row"><span class="lb">怎么识别</span>三条独立证据：① <strong>应对感情创伤的生理系统与应对身体疼痛的系统相同</strong>，而<strong>醋氨酚能减少感情创伤</strong>；② 排斥改变基本知觉——<strong>估 40 秒间隔：被接纳者估 42 秒，被拒绝者估 64 秒</strong>；③ Cyberball 最惊人的地方——<strong>即使明知排斥来自计算机程序、不涉及真实人际评价，情感仍受伤害</strong>；<strong>甚至被自己不屑的团体排斥也会受伤</strong>。<br>普及度：<strong>67% 的美国人承认曾冷眼对待过亲密伴侣，75% 曾遭受过。</strong></div>
+    </div>
+
+    <div class="mitem">
+      <div class="h"><span class="id">M9</span><span class="cn">事实偏见</span><span class="g a">A 级</span></div>
+      <div class="row"><span class="lb">正确含义</span>默认伴侣在说真话的倾向（truth bias）。</div>
+      <div class="row"><span class="lb">常见误用</span>把它读成"所以要多怀疑伴侣"——这是<strong>反向</strong>误用。</div>
+      <div class="row"><span class="lb">为什么会误用</span>因为它看起来是个负面发现（准确率低），容易被转成"要警惕"的建议。</div>
+      <div class="row"><span class="lb">怎么识别</span>正确的结论是<strong>"不要把自己的识谎自信当成证据"</strong>，不是"提高警惕"。米勒的数据：元分析 <strong>24 483 人，识破率 54%</strong>（接近掷硬币）；<strong>"随着关系变得更亲密、信任增加，伴侣察觉彼此欺骗的准确性却有减无增"</strong>；<strong>FBI/CIA/NSA 探员与精神病医生也不比外行强</strong>。而信任本身是有价值的——所以准确率低是<strong>信任的代价</strong>，不是怀疑的理由。</div>
+    </div>
+
+    <div class="mitem">
+      <div class="h"><span class="id">M10</span><span class="cn">宽恕</span><span class="g b">B 级（有前提条件）</span></div>
+      <div class="row"><span class="lb">正确含义</span>"一种针对曾不公平对待你的人，放弃你的报复的决定"；是<strong>"双方都确认了有害的行为"</strong>之后，"受害的伴侣给予行为不端的对方以<em>不应得到的</em>宽容"。<strong>宽恕 ≠ 赦免 ≠ 忘记。</strong></div>
+      <div class="row"><span class="lb">常见误用</span>"宽恕总是好事" / "要无条件原谅" / 把宽恕当成道德要求压在受害者身上。</div>
+      <div class="row"><span class="lb">为什么会误用</span>因为它被普遍当作一种德性，而德性听起来应当是无条件的。</div>
+      <div class="row"><span class="lb">怎么识别</span>米勒给了<strong>三个前提</strong>：谦卑真诚的道歉 · 受害者的同理心 · 不沉溺于反刍。<strong>没有这些条件时，宽恕是有害的</strong>——"会被对方认为再犯有理；若伴侣没有悔意，宽恕实际有害——削弱你的自尊，延缓问题的解决"。他的原话是"没有人会建议你一而再地原谅老是欺骗你的不贞伴侣"。<br><strong>注意"确认伤害"是宽恕的前提，不是它的反面</strong>——这是最反直觉也最重要的一点。</div>
+    </div>
+
+    <div class="mitem">
+      <div class="h"><span class="id">M11</span><span class="cn">人众无知</span><span class="g a">A 级</span></div>
+      <div class="row"><span class="lb">正确含义</span>人们错误地认为自己的情感和信念与其他人不一样，结果<strong>每个人都以为某种规范获得广泛认同，但几乎没有人私下支持它</strong>。</div>
+      <div class="row"><span class="lb">常见误用</span>把"大家都这样"当成行为依据；或者以为改变要靠说服每个人。</div>
+      <div class="row"><span class="lb">为什么会误用</span>因为你确实观察到"大家都在做"——但那可能是自我实现的结果，不是偏好的汇总。</div>
+      <div class="row"><span class="lb">怎么识别</span>米勒在性行为这一节的两个应用最清楚：① <strong>"男女两性从自己的随意性行为中体验到的乐趣并不如他们认为得那般美妙"</strong>，但"大多数年轻人仍然认为其他人一般会赞同这类行为，因此他们会感到迫使他们发生随意性行为的社会压力"；② <strong>"女性认为男性对避孕套持更消极的态度，但男性未必如此"</strong>，而<strong>"如今，男性和女性在使用避孕套的意愿上并无差别"</strong>。<br><em>检验方法：去找"私下怎么说"，而不是"公开怎么做"。</em></div>
+    </div>
+
+    <div class="mitem">
+      <div class="h"><span class="id">M12</span><span class="cn">情境性伴侣暴力 vs 亲密恐吓</span><span class="g b">B 级（作者自己的理论整合）</span></div>
+      <div class="row"><span class="lb">正确含义</span>两种<strong>不同</strong>的现象。<strong>情境性伴侣暴力（SCV）</strong>：由 I 立方模型解释——激发因素 + 促动因素引起攻击欲望，但抑制因素强大时不会表现；"即使伴侣双方都不特别有暴力倾向，如果非常生气也可能爆发"。<strong>亲密恐吓</strong>：根源因素更持久，施暴者往往是反社会或自恋者，"暴力只是他们用来达成心愿的另一个工具"。</div>
+      <div class="row"><span class="lb">常见误用</span>把两者混为一谈：要么把所有家暴都归为"脾气失控"（漏掉亲密恐吓），要么把所有家暴都当成"施虐人格"（漏掉 SCV）。</div>
+      <div class="row"><span class="lb">为什么会误用</span>因为大众话语里只有一个词——"家暴"。而这两种类型的<strong>成因、持续性、干预方式完全不同</strong>。</div>
+      <div class="row"><span class="lb">怎么识别</span>看<strong>持续性</strong>这个区分指标：曾在一段关系中发生暴力的人，<strong>只有 30% 在五年后另一段关系里再次发生</strong>（多数 SCV 一旦换伴侣就停止）；而<strong>订婚时进行过身体攻击的男子，婚后 30 个月里有 76% 会再施加暴力，而且很严重</strong>。<br>同时记住<a href="#b5" style="color:var(--warn);">B 面 B5</a>那条<strong>非决定论</strong>：最暴力父母的儿子殴打妻子的可能性高 10 倍，<strong>但即使在这一极端群体中，过去 12 个月里也只有 20% 发生了严重暴力</strong>——<strong>80% 没有</strong>。米勒的原话："这种循环并非不可避免。"</div>
+    </div>
+
+  </div>
+
+  <!-- ==================== B 面 ==================== -->
+  <div class="section-title">B 面 · 证据等级标注体系</div>
+  <div class="section-sub">三级定性 + 强制"把限定条件一起引用"</div>
+
+  <div class="lvlbox a">
+    <h3>◆ A 级 · 可复现的实证</h3>
+    <p>多研究支持、有跨文化或跨样本重复、或有大样本元分析/大数据支持。引用时<strong>仍需注明样本与设计类型</strong>，但结论方向可靠。</p>
+    <table>
+      <tr><th style="width:32%">结论</th><th>证据强度与规模</th></tr>
+      <tr><td><strong>曝光效应</strong>：重复接触增加喜欢</td><td>Moreland &amp; Beach 1992（女生从不交谈，仅出现 5/10/15 次）</td></tr>
+      <tr><td><strong>临近效应</strong>：物理距离决定友谊</td><td>Festinger et al. 1950，<strong>随机分配</strong> + 建筑楼群重复</td></tr>
+      <tr><td><strong>"美的就是好的"偏见</strong>与美丑判断的一致性</td><td>跨种族、跨年龄、<strong>新生儿</strong>先天偏好</td></tr>
+      <tr><td><strong>平均化/对称面孔更有吸引力</strong></td><td>美国、中国、尼日利亚、印度、日本重复</td></tr>
+      <tr><td><strong>WHR 0.7 的跨文化偏好</strong></td><td>含文艺复兴绘画的档案证据</td></tr>
+      <tr><td><strong>相似性—吸引力正相关</strong></td><td>Byrne &amp; Nelson 范式被大量重复，从个案到元分析</td></tr>
+      <tr><td><strong>匹配假设</strong>（在整体适配价值上）</td><td>速配 + 网恋大数据（Hitsch et al. 2010，N=6 485）</td></tr>
+      <tr><td><strong>长相吸引力在最初的喜欢中是最重要因素</strong></td><td>多项速配研究一致</td></tr>
+      <tr><td><strong>男性比女性更易接受陌生人的性邀请</strong></td><td>Clark &amp; Hatfield 1982 复现；丹麦 2009 复现（38% vs 2%）；<strong>40 国 20 000+ 人</strong>调查</td></tr>
+      <tr><td><strong>相互依赖理论的 CL/CLalt 框架</strong></td><td>元分析支持；能预测关系持续、忠诚、受虐妻子是否逃离</td></tr>
+      <tr><td><strong>5:1 奖赏-代价比率</strong></td><td>约 <strong>2 000 对</strong>夫妻调查；高风险组 4 年后 56% 离婚/分居 vs 低风险组 24%</td></tr>
+      <tr><td><strong>社会排斥的生理代价</strong></td><td>三条独立路径（醋氨酚、时间知觉、Cyberball 跨程序重复）</td></tr>
+      <tr><td><strong>说谎识破率约 54%</strong></td><td>元分析 <strong>24 483 人</strong>；专家与外行无差异</td></tr>
+      <tr><td><strong>性胁迫的流行率</strong></td><td>多个独立调查：56% / 1-of-6-per-2-months / 约 25%</td></tr>
+      <tr><td><strong>性别差异整体上是"较小到中度"</strong></td><td><strong>87 国、1 419 807 人</strong>大数据研究</td></tr>
+    </table>
+  </div>
+
+  <div class="lvlbox b">
+    <h3>◆ B 级 · 有支持但有明确边界</h3>
+    <p>效应存在，但<strong>有具体的前提条件或适用范围</strong>。引用时<strong>必须把边界一起说</strong>，否则就变成误用。</p>
+    <table>
+      <tr><th style="width:30%">结论</th><th>必须一起说的边界</th></tr>
+      <tr><td><strong>罗密欧与朱丽叶效应</strong></td><td>米勒自己标注：<em>"当然，这种效应并非总会发生。"</em> 反观<strong>打烊效应</strong>边界更清楚——只在"还在找恋人"的人身上出现，且与饮酒无关</td></tr>
+      <tr><td><strong>互补性</strong></td><td>三重限定：① "大多数互补行为其实是相似的"；② 真正有效的只限<strong>支配—顺从</strong>这一个维度；③ 需约 <strong>15 周</strong>才显现。米勒：<em>"我们不应过分强调这种互补性。"</em></td></tr>
+      <tr><td><strong>同居与离婚风险的正相关</strong></td><td>相关研究。至少两种替代解释：选择效应、时代效应。且<strong>有明确结婚计划时有害效应"相对轻微"</strong></td></tr>
+      <tr><td><strong>月经周期偏好变化</strong></td><td>效应微妙；<strong>服用避孕药后不出现</strong></td></tr>
+      <tr><td><strong>公平理论</strong></td><td>只有"获益不足稳定地有害"这一条稳；过度获益未必有害；因果方向可能相反。<strong>关系结果质量比公平更能预测满意度</strong></td></tr>
+      <tr><td><strong>宽恕有益</strong></td><td><strong>三个前提</strong>（真诚道歉 / 同理心 / 不反刍）。缺条件时宽恕<em>有害</em></td></tr>
+      <tr><td id="b5"><strong>暴力的代际传递</strong></td><td><strong>非决定论</strong>：最暴力父母的儿子风险高 10 倍，但该极端群体中仅 <strong>20%</strong> 在近 12 个月有严重暴力，<strong>80% 没有</strong>。米勒："这种循环并非不可避免"</td></tr>
+      <tr><td><strong>爱情随婚姻减弱</strong></td><td>数据硬（婚后 2 年情爱减半；离婚高峰第 4 年），但<strong>方向不是宿命</strong>——激情消退同时亲密与承诺增强；婚龄 10 年仍深爱者奖赏中枢仍激活</td></tr>
+      <tr><td><strong>性满足与关系满意度相关</strong></td><td><strong>双向因果</strong>。89%/32% 是相关，作者自己说"影响因素很多"；频率只对<strong>男性</strong>更重要</td></tr>
+      <tr><td><strong>传统性别角色损害性满足</strong></td><td>机制清楚（剥夺女性主动权与控制权），但同属自我报告研究</td></tr>
+    </table>
+  </div>
+
+  <div class="lvlbox c">
+    <h3>◆ C 级 · 争议未决或作者自标为猜测</h3>
+    <p>米勒<strong>自己</strong>标注了不确定性。引用这些时<strong>必须保留"未确定"这个信息</strong>——把它们说成结论是最严重的误用。</p>
+    <table>
+      <tr><th style="width:30%">结论</th><th>米勒的原话或状态</th></tr>
+      <tr><td><strong>性别比率解释性道德变迁</strong></td><td><em>"必须指出，性别比率影响过程（即人际关系规范的变化偏利于男性）的假设<strong>只是一种猜想</strong>。"</em> —— 但"两性比例和人际关系规范的确存在粗糙却真实的关联"</td></tr>
+      <tr><td><strong>归属需要的演化解释</strong></td><td><em>"虽然这种观点启发了我们对人类自身的现代行为进行反思……但<strong>必须承认这只是一种猜测</strong>。"</em></td></tr>
+      <tr><td><strong>"女子以美貌交换男子金钱"的成因</strong></td><td>演化论 vs 文化论并存。米勒：<em>"这种婚姻匹配的原因<strong>并不确定</strong>。"</em> 支持文化论的可检验证据：在美国，女性越聪明，其寻找有财富和社会地位的爱侣的欲望越低</td></tr>
+      <tr><td><strong>演化心理学的整个基础假设</strong></td><td><em>"对于人类本性起源的原始社会环境的设想<strong>必然带有猜测性</strong>。此外，对许多有争议现象的解释，演化学模型<strong>并非唯一合理的</strong>。"</em></td></tr>
+      <tr><td><strong>嫉妒的性别差异（性不忠 vs 情感不忠）</strong></td><td>多方法学争议：迫选法夸大差异；充分表达时多数男女说两者同样苦恼；<strong>无怀孕风险（同性私通）时差异消失</strong>；依恋类型可覆盖</td></tr>
+      <tr><td><strong>优质基因假说</strong></td><td>书中原话标注为"<strong>有争议性的回答</strong>"</td></tr>
+      <tr><td><strong>同情之爱对长期关系的必要性</strong></td><td>米勒的诚实缺口：<em>"我们并不知道答案：<strong>这类研究还没做完</strong>。"</em></td></tr>
+      <tr><td><strong>同性恋的人口分布比例</strong></td><td><strong>书中没有给出</strong>。米勒在第 2 章解释了原因：社会赞许性偏差导致"在同性恋的普遍性上一直存在争议"</td></tr>
+      <tr><td><strong>要求/退避模式的两套解释</strong></td><td>性认同差异与社会结构假设<strong>同时被支持</strong>，米勒不裁决</td></tr>
+    </table>
+  </div>
+
+  <!-- ============ 第12-14章的误用 ============ -->
+  <div class="section-title" style="border-left-color:var(--struct);">补 · 第 12–14 章带来的 6 个误用</div>
+  <div class="section-sub">这三章的材料在我初稿时还没读到——而它们澄清了几个流传最广的数字</div>
+
+  <div class="cards">
+
+    <div class="mitem" style="border-top-color:var(--struct);">
+      <div class="h"><span class="id" style="background:var(--struct);">M13</span><span class="cn">离婚率 50%</span><span class="g b">B 级（口径问题）</span></div>
+      <div class="row"><span class="lb">正确含义</span>书中确实写"每年离婚的数量是结婚的一半……所以新婚最终以分居或离婚告终的可能性仍在 50% 左右"。<strong>但它同时给出了更细的口径</strong>：<strong>64%</strong> 的婚姻撑到 10 年、<strong>不到一半</strong>撑到 25 年、<strong>平均婚龄刚过 18 年</strong>。</div>
+      <div class="row"><span class="lb">常见误用</span>把 50% 当成对某一对新人的个体预测；或者把它当成"精确的失败率"。</div>
+      <div class="row"><span class="lb">为什么会误用</span>因为 50% 好记、好听、好传播。而米勒自己在章末明确写了反向的句子：<em>"但即使发生如此巨变，<strong>当今结婚的美国夫妻至少有一半不会以离婚告终</strong>。"</em></div>
+      <div class="row"><span class="lb">怎么识别</span>三个检验：① 它是<strong>"年度离婚数 ÷ 年度结婚数"</strong>的粗率口径——分子分母是<strong>不同人群</strong>，受未婚人口基数、再婚、登记率影响；② 它是<strong>队列概率</strong>，不是个体预测；③ <strong>这是美国口径，不能直接迁移到中国</strong>。</div>
+    </div>
+
+    <div class="mitem" style="border-top-color:var(--warn);">
+      <div class="h"><span class="id" style="background:var(--warn);">M14</span><span class="cn">暴力 = 失控 / 愤怒管理问题</span><span class="g b">B 级（只对一半现象成立）</span></div>
+      <div class="row"><span class="lb">正确含义</span>暴力<strong>不是单一现象</strong>。书中区分两种：<strong>情境性伴侣暴力（SCV）</strong>——"从失去控制的剧烈冲突中突然爆发"，通常温和、<strong>交互的</strong>，最常见；<strong>亲密恐吓（IT）</strong>——"伴侣一方把暴力作为<strong>控制和压迫另一方的工具</strong>"，是"无情地征服自己伴侣计划的一部分"，更频繁、更可能单方、易升级、伤害更重，身体暴力只是威胁、孤立、经济依附等手段之一。</div>
+      <div class="row"><span class="lb">常见误用</span>把两者混为一谈。这会同时产生两个方向的错误：把 IT 当成"情绪失控"送去愤怒管理（无效且有危险）；或者据"女性身体暴力略多于男性"得出性别对称的结论。</div>
+      <div class="row"><span class="lb">为什么会误用</span>大众话语里只有一个词——"家暴"。而这两种类型的<strong>成因、持续性、干预方式完全不同</strong>。</div>
+      <div class="row"><span class="lb">怎么识别</span>用<strong>伤害与工具性</strong>两个指标区分：女性实施身体暴力的可能性确实稍多于男性，但<strong>发生伴侣暴力时 62% 的伤害受害者是女性</strong>，且<strong>89% 的亲密恐吓者是男性</strong>。注意取样效应：对<strong>年轻人</strong>的研究一般发现女性暴力更多；关注<strong>苦恼夫妻</strong>（在治疗中或对簿公堂）的研究通常发现丈夫更暴力。<br>还有一句常被忽略的话：<strong>"男性是否可能成为施虐者通常在一开始就有很明显的信号。"</strong></div>
+    </div>
+
+    <div class="mitem" style="border-top-color:var(--warn);">
+      <div class="h"><span class="id" style="background:var(--warn);">M15</span><span class="cn">"沟通能解决一切"</span><span class="g a">A 级（可被数据推翻）</span></div>
+      <div class="row"><span class="lb">正确含义</span>沟通确实重要，但<strong>它不是离婚的主因，也不是万能的解法</strong>。</div>
+      <div class="row"><span class="lb">常见误用</span>把"离婚都是因为沟通不良"当成常识；把"把话说开"当成所有关系问题的解法。</div>
+      <div class="row"><span class="lb">为什么会误用</span>因为它是"安全"的建议——听起来永远正确，而且它把责任平摊给双方，回避了更难的判断。</div>
+      <div class="row"><span class="lb">怎么识别</span>看那组离婚原因数据（208 人随机样本）：<strong>不贞 22%</strong> 排第一，感情破裂 19%、物质滥用 11%、心生隔阂 10%，而<strong>"沟通困难"只占 9%，排第六</strong>。而且<strong>男性比女性更可能抱怨沟通不良，或干脆说"不知道"</strong>（"不知道"：男 9% / 女 0%）。<br>治疗层面也有一条硬边界：被验证有效的 IBCT 明确承认<strong>"即使伴侣双方的行为表现良好、令人满意，某些令人沮丧的矛盾仍会一直存在"</strong>——它的重要目标是教会伴侣<strong>接纳</strong>改变不了的不合，而不是"沟通到一致"。</div>
+    </div>
+
+    <div class="mitem" style="border-top-color:var(--warn);">
+      <div class="h"><span class="id" style="background:var(--warn);">M16</span><span class="cn">婚姻治疗很神</span><span class="g b">B 级（分母被忽略）</span></div>
+      <div class="row"><span class="lb">正确含义</span>主流行为疗法（BCT / CBCT / IBCT）对<strong>认真参与且完成治疗</strong>的夫妻约 <strong>60%~70%</strong> 有效；EFCT 完成时 <strong>70%</strong> 克服不满；合计粗估约 <strong>2/3</strong> 不再不满。</div>
+      <div class="row"><span class="lb">常见误用</span>把"60~70% 有效"读成"任意一对夫妻去治疗就有 60~70% 概率得救"。</div>
+      <div class="row"><span class="lb">为什么会误用</span>因为<strong>分母被悄悄换掉了</strong>——那是"完成治疗且认真参与者"中的改善比例，不是所有求助者的成功率。</div>
+      <div class="row"><span class="lb">怎么识别</span>三个隐藏的分母/限定：① <strong>"认真进行""治疗完成时"</strong>——脱落者不算；② 书中<strong>没有对照组可比性说明、没有效应量、没有意向治疗（ITT）分析</strong>；③ PREP 的<strong>长期效果不确定</strong>，且参与者多是中产阶级白人、动机极强。<br>更关键的两个现实约束：<strong>"大多数离婚的人根本就没有咨询过婚姻治疗师"</strong>；<strong>"极少数寻求治疗的人通常要等到他们的问题非常严重时才来"</strong>——而"夫妻们的痛苦越深，就越难逆转"。<br>米勒最诚实的一句是：<strong>"但谁也不能担保治疗的效果。"</strong></div>
+    </div>
+
+    <div class="mitem" style="border-top-color:var(--key);">
+      <div class="h"><span class="id" style="background:var(--key);">M17</span><span class="cn">较小利益原则</span><span class="g a">A 级</span></div>
+      <div class="row"><span class="lb">正确含义</span>"在任何伴侣关系中对于继续和维持亲密关系<strong>利益较小</strong>的一方在伴侣关系中拥有<strong>更多的权力</strong>。"米勒的评价：<em>"这听起来有点残酷，但却是事实。"</em></div>
+      <div class="row"><span class="lb">常见误用</span>把它当成"谁更爱谁就输了"这种情感鸡汤；或者当成可以主动使用的策略（"我要装作不在乎")。</div>
+      <div class="row"><span class="lb">为什么会误用</span>因为它的极化版本在流行文化里流传很广，而原始版本是关于<strong>依赖结构</strong>的，不是关于表演的。</div>
+      <div class="row"><span class="lb">怎么识别</span>关键在于<strong>替代来源的易得性</strong>——这一条把"较小利益"从个人心理层面扩展到<strong>结构层面</strong>：如果想要的资源在别处很容易获得，控制该资源的人就拥有更少权力。<br><strong>一个可检验的推论</strong>：书中指出男性平均更渴望性行为，<strong>男性在性上更大的利益给了女性权力</strong>——"这虽然看上去非常不浪漫，但却很有启发意义"。这个推论解释了为什么"性"在异性恋协商中常常是一个权力议题，而不只是生理议题。</div>
+    </div>
+
+    <div class="mitem" style="border-top-color:var(--c);">
+      <div class="h"><span class="id" style="background:var(--c);">M18</span><span class="cn">"为了孩子在一起"</span><span class="g b">B 级（方向取决于冲突水平）</span></div>
+      <div class="row"><span class="lb">正确含义</span>关键变量<strong>不是"在不在一起"，而是双亲冲突的水平</strong>。</div>
+      <div class="row"><span class="lb">常见误用</span>把"为了孩子不离婚"当成无条件正确的选择；或者反过来认为"离婚对孩子总是坏事"。</div>
+      <div class="row"><span class="lb">为什么会误用</span>因为它被表述为一个道德选择，而它实际上是一个<strong>可测量的经验问题</strong>，且答案随冲突水平变化方向。</div>
+      <div class="row"><span class="lb">怎么识别</span>记住那条<strong>交叉</strong>的实证：<strong>低冲突家庭离婚对孩子伤害大；高冲突家庭不离婚对孩子伤害更大。</strong> 在解释离异家庭子女不良结果的四种机制（双亲丧失 / 双亲应激 / 经济困境 / 双亲冲突）里，<strong>最有影响力的是双亲冲突</strong>。<br>而且离异的影响"<strong>始终是负面的，但程度相对适中</strong>"——不是灾难性的，也不是无关紧要的。</div>
+    </div>
+
+  </div>
+
+  <!-- ============ B面补充 ============ -->
+  <div class="section-title" style="border-left-color:var(--struct);">B 面补 · 第 12–14 章的证据等级</div>
+
+  <div class="lvlbox a">
+    <h3>◆ 新增 A 级</h3>
+    <table>
+      <tr><th style="width:32%">结论</th><th>证据强度与规模</th></tr>
+      <tr><td><strong>权力不平等与关系质量负相关</strong></td><td>约 <strong>2 000 对</strong>夫妻数据的图 12.3：共同决策者比一方发号施令者更幸福、更少争吵、更不容易离婚；"权力分享时双方都是赢家，没有人输"</td></tr>
+      <tr><td><strong>较小利益原则</strong></td><td>能解释多个独立现象（性的协商、卖淫、等待承诺），并有 CLalt 的结构性支持</td></tr>
+      <tr><td><strong>离婚的 28 条预测信号</strong></td><td>表 13.2 综合了 28 条各带独立出处的信号；其中<strong>遗传</strong>那条最强：同卵双生子一方离异，另一方离婚可能性是 <strong>5 倍</strong>，即使一出生就分开且从未见过面</td></tr>
+      <tr><td><strong>婚姻满意度是最强的单一预测变量</strong></td><td>"与大部分其他变量相比，婚姻满意度对婚姻的稳定有着更大的影响"——但米勒同时说"<strong>远非预测离婚的完美信号</strong>"</td></tr>
+      <tr><td><strong>SCV 的抑制因素（自我控制）</strong></td><td>自控能力低的少年对恋爱对象的暴力行为是自控能力高者的 <strong>7.5 倍</strong></td></tr>
+      <tr><td><strong>关系维持策略里最重要的一项</strong></td><td>十类策略中只有<strong>积极性、保证、分担任务</strong>三项最能预测幸福婚姻</td></tr>
+    </table>
+  </div>
+
+  <div class="lvlbox b">
+    <h3>◆ 新增 B 级（必须一起说的边界）</h3>
+    <table>
+      <tr><th style="width:30%">结论</th><th>必须一起说的边界</th></tr>
+      <tr><td><strong>离婚率约 50%</strong></td><td>粗率口径（分子分母不同人群）；队列概率非个体预测；美国口径。细口径：10 年 64%、25 年不到一半、平均婚龄 18 年</td></tr>
+      <tr><td><strong>暴力会重复</strong></td><td>换伴侣后只有 <strong>30%</strong> 再犯（多数 SCV 换伴侣即停止）；但<strong>订婚时施暴者婚后 30 个月内 76% 再犯且严重</strong>——两个数字方向相反，取决于类型</td></tr>
+      <tr><td><strong>暴力的代际传递</strong></td><td>风险高 <strong>10 倍</strong>，但该极端群体中近 12 个月仅 <strong>20%</strong> 有严重暴力，<strong>80% 没有</strong>。"这种循环并非不可避免"</td></tr>
+      <tr><td><strong>关系维持策略有效</strong></td><td><strong>效果是短暂的</strong>——"在情人节给伴侣做出的友善之举不可能在七夕节还能让他/她保持满意"</td></tr>
+      <tr><td><strong>婚姻治疗有效</strong></td><td>分母是"认真参与且完成者"；无效应量、无 ITT；长期效果不确定；且大多数离婚者从未咨询过</td></tr>
+      <tr><td><strong>同居与离婚风险正相关</strong></td><td>相关；订婚之后才同居且时间短暂者风险不升高；三种机制（不尊重制度 / 不利期望 / 更强离婚意愿）</td></tr>
+      <tr><td><strong>离婚原因排序</strong></td><td>208 人随机样本、<strong>自我报告</strong>的归因，不是客观原因；且男女报告的排序不同</td></tr>
+    </table>
+  </div>
+
+  <div class="lvlbox c">
+    <h3>◆ 新增 C 级 / 诚实缺口</h3>
+    <table>
+      <tr><th style="width:32%">项目</th><th>状态</th></tr>
+      <tr><td><strong>离婚的预测准确率</strong></td><td><strong>书中没有给出任何"预测准确率百分比"。</strong> 它给的是相对比较，并明确说婚姻满意度"远非预测离婚的完美信号"。<em>不要为它编造一个准确率数字。</em></td></tr>
+      <tr><td><strong>离婚率上升的原因</strong></td><td>米勒列六条相关因素，并强调<strong>"全部都可能是症状，而非造成离婚的社会动因"</strong>。脚注以女性就业为例说明双向因果：<em>"婚姻不满导致女性寻找工作，和女性工作致使婚姻不满，都同样有可能发生……请对社会变迁的影响保持开放的心态。"</em></td></tr>
+      <tr><td><strong>离婚的障碍几乎无效</strong></td><td>12 年追踪：一旦考虑其他危险因素，只有"对伴侣的依赖"和"宗教信仰"两种障碍能区分是否离婚；<strong>并且如果人们真的不满意，连这两种也无关紧要</strong></td></tr>
+      <tr><td><strong>权力姿势效应</strong></td><td>书中引用了 Carney et al. (2010) 的"摆出占据空间的姿势→睾丸激素上升→更冒险"。<strong>该效应此后在大样本重复实验中基本未能复现</strong>——引用时必须加注（这是我在书外补的提醒，书中保留了原始叙述）</td></tr>
+      <tr><td><strong>四种婚姻失败模型的胜负</strong></td><td>持续的动力模型最能预测<strong>将来的幸福程度</strong>；幻灭模型最能预测<strong>是否离婚</strong>——两者预测的<strong>不是同一个东西</strong>，不能合并成"哪个模型对"</td></tr>
+    </table>
+  </div>
+
+  <!-- ==================== 引用规范 ==================== -->
+  <div class="section-title">引用规范：三条硬规则</div>
+  <div class="section-sub">这一域的引用比别的域更容易变形</div>
+
+  <table>
+    <tr><th style="width:6%">#</th><th style="width:26%">规则</th><th>为什么</th></tr>
+    <tr>
+      <td><strong>1</strong></td>
+      <td><strong>效应量必须与结论同行。</strong>不得只说"研究表明男女有显著差异"</td>
+      <td>米勒的原话是口诀：<em>"不要被专业的术语误导，研究者提及的'显著的'性别差异通常指'统计学上的显著性'——就是说差异在数字上是可靠的——<strong>但差异或许根本不大</strong>。"</em> 本书的两性差异"几乎全部是较小到中度程度"。<br><strong>而且要注意出处</strong>：第 9 章给的是<em>原始频次</em>（每周 37 次 vs 9 次），<strong>不含任何 d 值</strong>；d 值框架在<strong>第 1 章</strong>。凡谈"效应量多大"，必须引第 1 章</td>
+    </tr>
+    <tr>
+      <td><strong>2</strong></td>
+      <td><strong>群体统计不得用于个体预测。</strong>尤其不得用来要求或评判具体的某个人</td>
+      <td>即使 d = 0.5 的中等差异，<strong>仍有三分之一的女性的得分高于男性的平均水平</strong>；"两性性别内的行为和观点差异通常远大于两性之间的平均差异"。米勒的推论：<em>"假如你要寻找性放任的家伙……你应该找性放任的个体，其中许多是女性。"</em><br><strong>注意这条是双向的</strong>：也不能因为效应量小就否认差异存在——正确读法是第三条路：<strong>对群体预测有用，对个体判断无用</strong></td>
+    </tr>
+    <tr>
+      <td><strong>3</strong></td>
+      <td><strong>相关结论必须同时给出替代解释。</strong>不得把相关写成因果</td>
+      <td>米勒对每个重要相关都给了竞争解释。最典型的是<strong>同居—离婚</strong>（选择效应？时代效应？）与<strong>公平—满意</strong>（<em>因果方向可能相反</em>）。<br>但<strong>这条规则也有反向边界</strong>（米勒自己在脚注里写的）：如果有很多变量存在许多相关、或测量是在多个不同场合得出的，<strong>"运用高级统计技术却有可能在相关设计的结果上得出一些因果联系的可靠结论"</strong>。所以规则是"简单相关不能定因果"，<em>不是</em>"相关研究没有价值"</td>
+    </tr>
+  </table>
+
+  <!-- ==================== 自测 ==================== -->
+  <div class="section-title">收尾自测</div>
+
+  <div class="checklist">
+    <h3>✅ 24 项自测</h3>
+    <ul>
+      <li>能说出依恋的两个维度，并知道四类型只是标签</li>
+      <li>知道依恋类型会变（两年内约三分之一）</li>
+      <li>能区分 CL（应当得到）与"想要的水平"</li>
+      <li>能解释 CL 为什么会自己升高</li>
+      <li>知道 CLalt 是主观的，受哪三个因素影响</li>
+      <li>知道公平是成比例而非相等</li>
+      <li>能说出公平理论里唯一稳定的那条结论</li>
+      <li>能说出自我实现预言那五步，并知道它不是"心想事成"</li>
+      <li>知道积极错觉的关键变量是"与现实不符合的程度"</li>
+      <li>能说出记忆被改写的方向（幸福→忘掉不快；痛苦→低估过去）</li>
+      <li>能说出社会排斥的三条独立证据</li>
+      <li>能说出"醋氨酚"和"40 秒估成 64 秒"各说明什么</li>
+      <li>知道识谎准确率低是"信任的代价"而不是"该怀疑"</li>
+      <li>能说出宽恕的三个前提条件</li>
+      <li>知道"没有真诚悔悟的宽恕"为什么有害</li>
+      <li>能定义人众无知，并举出书中两个应用</li>
+      <li>能区分情境性伴侣暴力与亲密恐吓</li>
+      <li>能说出区分两者的那个持续性数字（30% / 76%）</li>
+      <li>知道暴力代际传递里的"80% 没有"这个非决定论数字</li>
+      <li>能说出书中提到的那组家暴流行率（CDC/NIJ：52% / 66% / 22% / 7%）</li>
+      <li>能说出 A 级证据里至少四条及其规模</li>
+      <li>能说出至少四条 B 级结论各自必须一起说的边界</li>
+      <li>能说出至少四条米勒自标为"猜测"或"不确定"的结论</li>
+      <li>能说出三条引用硬规则，以及规则 3 的反向边界</li>
+    </ul>
+  </div>
+
+  <div class="guide" style="margin-top:26px;background:var(--key-soft);border-color:#e9dfc4;border-left-color:var(--key);color:#6d5011;">
+    <div class="g-title" style="color:var(--key);">🎯 这本手册的唯一目的</div>
+    <p style="font-size:15.5px;color:#2a211c;font-weight:600;margin:14px 0;padding-left:16px;border-left:3px solid var(--key);line-height:1.8;">
+      不是让你更懂亲密关系，而是让你<strong>发现自己在引用时漏掉了什么</strong>。
+    </p>
+    <p>这一域的知识在你读到它之前就已经被大众化过一遍了——每一个结论都已经被简化、被夸大、被去掉了条件。<strong>这本手册的工作就是把条件装回去。</strong></p>
+    <p style="margin-top:12px;">米勒给读者的定位，也是这本手册的立场：</p>
+    <p style="padding:12px 16px;background:#f2e9d4;border-left:3px solid var(--key);border-radius:0 3px 3px 0;color:#6d5011;font-style:italic;font-size:14px;margin:12px 0;">"<strong>勿将科学的谨慎误解为缺陷。</strong>相反，我们希望你持有这样一种信念，恰恰是这种谨慎体现了科学的尊严……那些声称自己一直正确的人，毫无疑问是招摇过市的江湖骗子。"</p>
+    <p style="margin-top:12px;color:#92847a;font-size:13.5px;">最后一条本手册自身的边界：<strong>它标注的是证据等级，不是价值等级。</strong>A 级结论不比 C 级结论"更重要"——C 级里的性别比率、演化解释这些问题，恰恰是这一域最需要思考的地方。<strong>标注是为了让思考有据，不是为了取消思考。</strong></p>
+  </div>
+
+  <div class="footer">
+    《亲密关系》概念误用与证据等级手册 · 罗兰·米勒 · 第 6 版中译本<br>
+    A 面 18 个概念误用 · B 面三级证据体系 · 3 条引用硬规则 · 24 项自测<br>
+    <em>误用一个数字，比不知道一个数字更危险——因为它是真的</em>
+  </div>
+
+</div>
+</body>
+</html>

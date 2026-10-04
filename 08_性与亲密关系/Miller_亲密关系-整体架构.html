@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>《亲密关系》整体架构 —— 七层结构，一个前提</title>
+<style>
+  :root{
+    --paper:#faf6f2; --card:#fffdfb; --edge:#e0d5cc;
+    --ink:#2a211c; --ink-mid:#5c4f47; --ink-soft:#92847a;
+    --core:#8c4a5c; --core-soft:#f7e8ec;      /* 核心：六要素与归属 */
+    --struct:#7a5a3a; --struct-soft:#f4ece0;  /* 结构层：文化/性别比 */
+    --self:#4a6b7a; --self-soft:#e5eef2;      /* 个体层：依恋/人格/自尊 */
+    --inter:#5a7a4a; --inter-soft:#eaf0e3;    /* 互动层 */
+    --warn:#a8442f; --warn-soft:#f9e7e2;      /* 误读 */
+    --key:#96702a; --key-soft:#f6efdc;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--paper);color:var(--ink);padding:36px 20px 48px;line-height:1.85;
+    -webkit-font-smoothing:antialiased;
+  }
+  .container{max-width:960px;margin:0 auto;}
+
+  .header{
+    text-align:center;margin-bottom:30px;padding:46px 24px 40px;
+    background:var(--card);border:1px solid var(--edge);border-top:5px solid var(--core);border-radius:4px;
+  }
+  .header .kicker{font-size:11.5px;letter-spacing:2.5px;color:var(--ink-soft);margin-bottom:14px;}
+  .header h1{font-size:26px;color:var(--ink);margin-bottom:14px;letter-spacing:.5px;line-height:1.5;}
+  .header .subtitle{font-size:14.5px;color:var(--ink-mid);}
+  .header .author{margin-top:16px;font-size:12.5px;color:var(--ink-soft);}
+
+  .guide{background:var(--core-soft);border:1px solid #e6cdd5;border-left:4px solid var(--core);border-radius:3px;padding:20px 24px;margin-bottom:28px;font-size:14.5px;color:var(--ink-mid);}
+  .guide .g-title{color:var(--core);font-weight:700;margin-bottom:10px;font-size:13.5px;letter-spacing:.6px;}
+  .guide ol{margin-left:20px;} .guide li{margin-bottom:6px;} .guide strong{color:var(--ink);}
+
+  .section-title{font-size:20px;font-weight:700;color:var(--ink);margin:46px 0 8px;padding-left:13px;border-left:4px solid var(--core);letter-spacing:.3px;}
+  .section-sub{color:var(--ink-soft);font-size:13.5px;margin:0 0 18px 17px;}
+
+  .card{background:var(--card);border:1px solid var(--edge);border-radius:3px;padding:22px 26px;margin-bottom:16px;}
+  .card h3{color:var(--core);margin-bottom:10px;font-size:16.5px;}
+  .card p{color:var(--ink-mid);font-size:14.5px;} .card p+p{margin-top:9px;}
+  .card strong{color:var(--ink);} .card em{color:var(--warn);font-style:normal;font-weight:600;}
+
+  table{width:100%;border-collapse:collapse;margin:13px 0;font-size:13.5px;}
+  th,td{padding:10px 12px;border:1px solid var(--edge);text-align:left;vertical-align:top;}
+  th{background:var(--core-soft);color:var(--core);font-weight:700;font-size:13px;}
+  td{color:var(--ink-mid);} td strong{color:var(--ink);}
+  td.num{font-family:Consolas,Monaco,monospace;color:var(--ink);white-space:nowrap;}
+
+  /* 六要素 */
+  .six{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:12px;margin-bottom:18px;}
+  .six .it{background:var(--card);border:1px solid var(--edge);border-top:4px solid var(--core);border-radius:3px;padding:16px 18px;}
+  .six .it .n{font-size:11px;letter-spacing:1.5px;color:var(--ink-soft);font-weight:700;}
+  .six .it .cn{font-size:15.5px;font-weight:700;color:var(--ink);margin:5px 0 3px;}
+  .six .it .en{font-size:11.5px;color:var(--core);font-family:Consolas,Monaco,monospace;margin-bottom:7px;}
+  .six .it p{font-size:12.5px;color:var(--ink-mid);line-height:1.65;}
+
+  /* 层次 */
+  .layer{background:var(--card);border:1px solid var(--edge);border-left:5px solid;border-radius:3px;padding:18px 22px;margin-bottom:11px;}
+  .layer.l0{border-left-color:var(--core);}
+  .layer.l1{border-left-color:var(--struct);}
+  .layer.l2{border-left-color:var(--self);}
+  .layer.l3{border-left-color:var(--inter);}
+  .layer .tag{font-size:11.5px;letter-spacing:1.2px;font-weight:700;margin-bottom:5px;}
+  .layer.l0 .tag{color:var(--core);} .layer.l1 .tag{color:var(--struct);}
+  .layer.l2 .tag{color:var(--self);} .layer.l3 .tag{color:var(--inter);}
+  .layer h4{font-size:16px;color:var(--ink);margin-bottom:7px;}
+  .layer p{color:var(--ink-mid);font-size:14px;} .layer p+p{margin-top:6px;}
+  .layer .who{margin-top:9px;padding-top:9px;border-top:1px dashed var(--edge);font-size:12.5px;color:var(--ink-soft);}
+
+  .quote{background:var(--key-soft);border:1px solid #e9dfc4;border-left:4px solid var(--key);border-radius:3px;padding:18px 22px;margin:22px 0;}
+  .quote p{font-size:15px;color:#6d5011;font-style:italic;line-height:1.8;}
+  .quote .src{margin-top:10px;font-size:12.5px;color:var(--ink-soft);text-align:right;font-style:normal;}
+
+  .pit{background:var(--warn-soft);border-left:4px solid var(--warn);border-radius:0 3px 3px 0;padding:16px 20px;margin-bottom:12px;font-size:14px;color:#7d3221;}
+  .pit .lbl{color:var(--warn);font-weight:700;display:block;margin-bottom:6px;font-size:12.5px;letter-spacing:.5px;}
+  .pit strong{color:#6a1a10;}
+
+  .footer{text-align:center;margin-top:44px;padding:22px;color:var(--ink-soft);font-size:12.5px;line-height:1.9;}
+
+  @media(max-width:640px){
+    .header h1{font-size:20px;} .section-title{font-size:17.5px;}
+    body{padding:20px 14px 32px;}
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="kicker">INTIMATE RELATIONSHIPS · 6TH EDITION</div>
+    <h1>七层结构，一个前提</h1>
+    <div class="subtitle">《亲密关系》整体架构 · 罗兰·米勒 · 六要素 + 三层成因 + 一条纪律</div>
+    <div class="author">罗兰·米勒 · 第 6 版中译本 · 877 页 · 14 章</div>
+  </div>
+
+  <div class="guide">
+    <div class="g-title">📖 怎么用这张图</div>
+    <ol>
+      <li><strong>先看"六要素"</strong>——米勒对"什么是亲密关系"给出的可操作定义。它能替代你脑子里那个模糊的直觉。</li>
+      <li><strong>再看"三层成因"</strong>——文化/结构 → 个体倾向 → 两人互动。这是全书 14 章的骨架。</li>
+      <li><strong>然后看"这一个前提"</strong>——归属需要。它解释了这个域为什么值得单独立一个区。</li>
+      <li><strong>重点看第 5 节"证据纪律"</strong>——米勒本人是怎么处理的。这一节比任何结论都重要。</li>
+      <li><strong>最后看"这本书不承诺什么"</strong>——它是教材，不是操作手册。</li>
+    </ol>
+  </div>
+
+  <!-- ================= 核心定义 ================= -->
+  <div class="section-title">先定义：亲密关系是什么</div>
+  <div class="section-sub">米勒给的不是一个浪漫的定义，而是一组可观察的差异</div>
+
+  <div class="card">
+    <p>研究者与普通人的看法一致：亲密关系与泛泛之交在<strong>六个方面</strong>存在程度差异（Ben-Ari &amp; Lavee 2007；Marston et al. 1998）。注意这句话的措辞——<em>是"程度差异"，不是"有或无"</em>。</p>
+  </div>
+
+  <div class="six">
+    <div class="it"><div class="n">01</div><div class="cn">了解</div><div class="en">knowledge</div><p>广泛而私密的了解：经历、爱好、情感、心愿，且一般不透露给他人</p></div>
+    <div class="it"><div class="n">02</div><div class="cn">关心</div><div class="en">care</div><p>彼此能从对方身上感受到更多的关爱</p></div>
+    <div class="it"><div class="n">03</div><div class="cn">相互依赖</div><div class="en">interdependence</div><p>频繁、强烈、多样、持久——一方的行为会影响另一方的目标与行动能力</p></div>
+    <div class="it"><div class="n">04</div><div class="cn">相互一致性</div><div class="en">mutuality</div><p>认同双方在生活上的融合，自称"我们"而不是"我"和"他/她"</p></div>
+    <div class="it"><div class="n">05</div><div class="cn">信任</div><div class="en">trust</div><p>期望对方会善待和尊重自己；丧失后会变得猜忌疑虑</p></div>
+    <div class="it"><div class="n">06</div><div class="cn">承诺</div><div class="en">commitment</div><p>希望关系持续，并为此投入时间、人力、物力</p></div>
+  </div>
+
+  <div class="card">
+    <h3>三个常被忽略的要点</h3>
+    <p><strong>① 六要素可以单独出现。</strong>米勒举了一个例子：一对单调乏味、缺少情趣的夫妻可能<em>相互依赖程度很高</em>，在日常琐事上紧密合作，但"生活在缺少关爱、坦诚或信任的心理荒漠中"。他们比一般熟人亲密，但不如自己当年结婚时亲密。</p>
+    <p><strong>② 最满意、最有意义的关系包含全部六项。</strong>只有部分特征，亲密程度就会减弱（Fletcher et al. 2000a）。</p>
+    <p><strong>③ 亲密程度在整个关系过程中波动极大。</strong>——所以它不是一次达成的状态，是一个会涨落的量。</p>
+    <p style="margin-top:10px;color:#92847a;font-size:13.5px;">米勒由此得出一句可以直接当作本域方法论的判断：<strong>"并不存在单一的亲密关系模式"</strong>——"种类多样，规格不齐"是人际关系最简单、最基本的特点。</p>
+  </div>
+
+  <!-- ================= 那个前提 ================= -->
+  <div class="section-title">这一个前提：归属需要</div>
+  <div class="section-sub">这一域为什么值得单独立一个区，答案在这里</div>
+
+  <div class="card">
+    <p>米勒开篇用一个思想实验立起这个问题：一个黄金周，住宿精美、美食佳酿、娱乐触手可及——<strong>但没有任何人，不能以任何方式联系任何人</strong>。他的判断是："没有几个人能享受这种孤独，大多数人马上会发现自己完全和他人隔离了，<em>这让人极度紧张</em>。"</p>
+    <p>由此引出全书的公理：<strong>归属需要（need to belong）</strong>——与他人建立亲密关系的普遍而强烈的内驱力，"或许是我们人类的一种本性"（Baumeister &amp; Leary 1995）。</p>
+  </div>
+
+  <div class="card">
+    <h3>它不是一句软话，它有硬指标</h3>
+    <p>米勒用生理学证据支撑这个主张，而不是靠抒情：</p>
+    <table>
+      <tr><th>发现</th><th>来源</th></tr>
+      <tr><td>握住爱人的手就能<strong>减弱面对威胁情境时的脑反应</strong></td><td>Coan et al. 2006</td></tr>
+      <tr><td>只要看看爱侣的照片，<strong>疼痛就不那么强烈</strong></td><td>Master et al. 2009</td></tr>
+      <tr><td>有人接纳和支持时，<strong>伤口愈合更快</strong></td><td>Gouin et al. 2010</td></tr>
+      <tr><td>大学生孤独无伴时<strong>免疫反应变弱</strong>，更易患感冒或流感</td><td>Pressman et al. 2005</td></tr>
+      <tr><td><strong>9 年纵向研究</strong>：缺乏亲密关系者的死亡率是正常人的 <strong>2~3 倍</strong></td><td>Berkman &amp; Glass 2000</td></tr>
+      <tr><td>老年人在丧偶最初几个月内<strong>更可能死亡</strong></td><td>Elwert &amp; Christakis 2008</td></tr>
+    </table>
+    <p>以及一个重要的限定：<strong>质量比数量重要。</strong>"个体需要的亲密关系无需太多，几个便可。"归属需要得到满足后，建立关系的内驱力就会降低。</p>
+  </div>
+
+  <div class="card">
+    <h3>米勒在这里做了一件很诚实的事</h3>
+    <p>他用演化解释归属需要（孤僻的早期人类繁殖成功率更低），但紧接着加了一句——这一句值得单独记住，因为它标出了这本书的自我限定：</p>
+    <blockquote style="border-left:3px solid var(--key);background:var(--key-soft);padding:12px 16px;margin:12px 0;border-radius:0 3px 3px 0;color:#6d5011;font-style:italic;font-size:14px;">"虽然这种观点启发了我们对人类自身的现代行为进行反思……但<strong>必须承认这只是一种猜测</strong>。"</blockquote>
+    <p>——<em>教材作者在自己刚讲完一个漂亮解释时就标出"这是猜测"</em>，这就是这本书值得读的原因。</p>
+  </div>
+
+  <!-- ================= 三层成因 ================= -->
+  <div class="section-title">三层成因：全书 14 章的骨架</div>
+  <div class="section-sub">米勒的组织方式是从远到近——结构塑造你，你带着倾向进入互动，互动再反过来塑造你</div>
+
+  <div class="layer l1">
+    <div class="tag">第 1 层 · 结构</div>
+    <h4>文化、性别比率、技术</h4>
+    <p>规范亲密关系的社会标准。它规定"什么算正常"，从而限定你的期望。</p>
+    <p>这一层最有力的工具是<strong>性别比率（sex ratio）</strong>——每 100 位女性对应多少位男性。米勒的规律：<em>高性别比率（女少男多）支持传统性别角色与性保守；低性别比率（男少女多）更宽容、更支持女性自立。</em></p>
+    <p>1960 年代末美国的性别比率<strong>非常低</strong>——而那正是"性解放"与女权运动出现的年代。</p>
+    <div class="who">→ 第 1 章"文化的影响"。它把"道德变迁"还原成一个可测量的结构变量</div>
+  </div>
+
+  <div class="layer l2">
+    <div class="tag">第 2 层 · 个体</div>
+    <h4>依恋、人格、自尊</h4>
+    <p>你带进关系的"基本姿势"。最核心的是<strong>依恋类型</strong>。</p>
+    <p>但要紧的不是四个标签，而是<strong>两个连续维度</strong>：<strong>回避亲密（avoidance of intimacy）</strong>与<strong>忧虑被弃（anxiety about abandonment）</strong>。四类型（安全/痴迷/恐惧/疏离）只是这两个维度高低组合的<em>便利标签</em>。</p>
+    <div class="who">→ 第 1 章"个人经历的影响"与"个体差异的影响"</div>
+  </div>
+
+  <div class="layer l3">
+    <div class="tag">第 3 层 · 互动</div>
+    <h4>两人之间发生了什么</h4>
+    <p>到这里才进入本书的主体：吸引力（第 3 章）→ 社会认知（第 4 章）→ 沟通（第 5 章）→ 相互依赖（第 6 章）→ 友谊（第 7 章）→ 爱情（第 8 章）→ 性爱（第 9 章）→ 压力与紧张（第 10 章）→ 冲突（第 11 章）→ 权力和暴力（第 12 章）→ 解体（第 13 章）→ 维持和修复（第 14 章）。</p>
+    <div class="who">→ 第 3–14 章。注意这条排列本身就是叙事：吸引 → 维持 → 破裂 → 修复</div>
+  </div>
+
+  <div class="card">
+    <h3>为什么要按这个顺序讲</h3>
+    <p>因为米勒要回答的是：<strong>同一段关系，为什么在不同人手里结果完全不同。</strong></p>
+    <p>只讲第 3 层（互动技巧）会漏掉第 2 层（你带着什么进来）；只讲第 2 层（依恋类型）会滑向宿命论；只讲第 1 层（文化）会看不见个人。三层缺一层，解释就会失真。</p>
+  </div>
+
+  <!-- ================= 全书结构 ================= -->
+  <div class="section-title">14 章各自在做什么</div>
+  <div class="section-sub">每章末尾都有"请你思考"——那是现成的自测题</div>
+
+  <table>
+    <tr><th style="width:16%">章</th><th>任务</th></tr>
+    <tr><td><strong>第 1 章 人际关系的构成</strong></td><td><strong>全书地基</strong>：六要素、归属需要、三层成因。这一章单独就足以改变你看关系的方式</td></tr>
+    <tr><td><strong>第 2 章 研究方法</strong></td><td>关系科学怎么做研究。<em>这一章是全书最被低估的一章</em>——它告诉你怎么判断后面 12 章的每个结论有多可信</td></tr>
+    <tr><td><strong>第 3 章 吸引力</strong></td><td>临近、长相、礼尚往来、相似性、障碍（得不到的就喜欢）</td></tr>
+    <tr><td><strong>第 4 章 社会认知</strong></td><td>第一印象、知觉的力量、印象管理、<strong>我们了解伴侣的程度</strong>（这一节常让人不适）</td></tr>
+    <tr><td><strong>第 5 章 沟通</strong></td><td>非言语、言语、沟通障碍及其应对</td></tr>
+    <tr><td><strong>第 6 章 相互依赖</strong></td><td>社会交换、亲密关系的经济论、<strong>承诺的本质</strong>——这一章用经济学语言解释"为什么人留在一段不满意的关系里"</td></tr>
+    <tr><td><strong>第 7 章 友谊</strong></td><td>友谊的属性与规则、毕生变化、性别差异</td></tr>
+    <tr><td><strong>第 8 章 爱情</strong></td><td>爱情的类型学、文化与历史差异、能否持久</td></tr>
+    <tr><td><strong>第 9 章 性爱</strong></td><td>性态度与行为的事实、性满足与关系满意度、性取向、性胁迫</td></tr>
+    <tr><td><strong>第 10 章 压力与紧张</strong></td><td>嫉妒、欺骗、背叛、宽恕、<strong>排斥与拒绝</strong></td></tr>
+    <tr><td><strong>第 11 章 冲突</strong></td><td>冲突的性质与频率、过程、应对方式、结果</td></tr>
+    <tr><td><strong>第 12 章 权力和暴力</strong></td><td>权力的来源、<strong>亲密关系中的暴力</strong>（发生率与风险因素）</td></tr>
+    <tr><td><strong>第 13 章 解体与消亡</strong></td><td>离婚的真实数字与趋势、解体的过程、离异后的适应</td></tr>
+    <tr><td><strong>第 14 章 维持和修复</strong></td><td>维持机制、自我扩张、认知维持、<strong>关系治疗的效果证据</strong></td></tr>
+  </table>
+
+  <!-- ================= 证据纪律 ================= -->
+  <div class="section-title">这一节比任何结论都重要：米勒的证据纪律</div>
+  <div class="section-sub">我不想只转述他的结论，因为这本书最大的价值是他的<strong>处理方法</strong></div>
+
+  <div class="card">
+    <h3>他反复使用同一个四步套路</h3>
+    <table>
+      <tr><th>步骤</th><th>做法</th></tr>
+      <tr><td><strong>① 摆出流行说法</strong></td><td>常直接引用畅销书（他引了《男人来自火星，女人来自金星》原话）</td></tr>
+      <tr><td><strong>② 给实际数据</strong></td><td>列出一手研究，给出<strong>效应量</strong>而非只给"显著"</td></tr>
+      <tr><td><strong>③ 主动限定</strong></td><td>指明样本、时代、争议、替代解释</td></tr>
+      <tr><td><strong>④ 标出猜测</strong></td><td>把作者自己的推断明确标注为"只是一种猜测"</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>三个可以直接抄进我们自己产出的示范</h3>
+    <p><strong>示范一：把"统计显著"和"差别很大"分开。</strong></p>
+    <blockquote style="border-left:3px solid var(--key);background:var(--key-soft);padding:11px 15px;margin:10px 0;border-radius:0 3px 3px 0;color:#6d5011;font-style:italic;font-size:13.5px;">"不要被专业的术语误导，研究者提及的'显著的'性别差异通常指'统计学上的显著性'——就是说差异在数字上是可靠的——<strong>但差异或许根本不大</strong>。本书中谈到的两性差异，几乎全部是较小到中度程度的差异。"</blockquote>
+    <p><strong>示范二：给出替代解释，而且是最有力的那一个。</strong>他讲完演化心理学对"女性择偶更谨慎"的解释之后，立刻给出社会结构的替代解释，并且把它推到底：</p>
+    <blockquote style="border-left:3px solid var(--key);background:var(--key-soft);padding:11px 15px;margin:10px 0;border-radius:0 3px 3px 0;color:#6d5011;font-style:italic;font-size:13.5px;">"妇女在选择伴侣时必须比男性更谨慎，也的确是因为社会文化通常不允许女性掌握经济资源……<strong>如果赋予女性和男性同样的性别角色和社会地位，上述性别差异就可能大大减小了</strong>。"</blockquote>
+    <p><strong>示范三：主动指出自己学科的基础假设带猜测性。</strong>关于演化："<em>对于人类本性起源的原始社会环境的设想必然带有猜测性。此外，对许多有争议现象的解释，演化学模型并非唯一合理的。</em>"</p>
+  </div>
+
+  <!-- ================= 不承诺什么 ================= -->
+  <div class="section-title">这本书不承诺什么</div>
+
+  <div class="pit">
+    <span class="lbl">边界一 · 它是教材，不是操作手册</span>
+    米勒自己在前言就说了："你会发现本书并不是一本傻瓜式的操作手册。后面章节的学习需要你的领悟力，更需要<strong>运用你自己的信念、价值观和个人经验</strong>来理解这些内容。"——他把"怎么用"这一步留给了读者。
+  </div>
+
+  <div class="pit">
+    <span class="lbl">边界二 · 归纳证据不能直接变成个人建议</span>
+    "男性平均比女性有更高的性驱力"<strong>推不出</strong>"你应该做 X"，也<strong>推不出</strong>"这不可改变"。这是这个域最严重的误用方式，而反过来同样成立：<strong>关于平均数的证据，对"你该怎么做"的指导力有限——因为你不是平均数。</strong>
+  </div>
+
+  <div class="pit">
+    <span class="lbl">边界三 · 依恋类型不是人格标签</span>
+    这不是我的提醒，是<strong>米勒自己写的</strong>。他明确说四个类型只是"称呼不同忧虑和回避分数组合的便利标签"，并警告："<em>不要绝对化地理解……依恋类型看似是人们对人际关系的适应行为。</em>"他还给出一个关键的量化事实：<strong>在两年之内，足有三分之一的依恋类型可以发生实质性变化。</strong>
+  </div>
+
+  <div class="pit">
+    <span class="lbl">边界四 · 相关性不等于因果，而这在本域尤其危险</span>
+    米勒举了一个很好的例子（抑郁与社交缺乏）：缺乏社会交往的人更可能有抑郁、酗酒、饮食障碍——但"容易患精神分裂症的个体也许从一开始就很难与他人建立和保持亲密关系"。<strong>方向是不确定的。</strong>
+  </div>
+
+  <div class="quote">
+    <p>"本书能增进你对亲密关系的理解……这与你在杂志或者电影中所了解到的人际关系不太一样，它<strong>更具科学性、更有逻辑、更为谨慎，却不太浪漫</strong>。"</p>
+    <div class="src">—— 第 1 章开篇</div>
+  </div>
+
+  <!-- ================= 与其他域 ================= -->
+  <div class="section-title">这个域在项目里的位置</div>
+
+  <div class="card">
+    <h3>它前面七个域都没有的东西：<span style="color:var(--core);">你自己的处境</span></h3>
+    <p><code>01</code> 教你判断别人可不可信，<code>02</code> 教你知道自己的认知怎么出错，<code>04</code> 讲陌生人之间的制度，<code>05</code> 讲长时段的历史——<strong>而你每天实际生活在其中的，是这里讲的东西。</strong></p>
+  </div>
+
+  <div class="card">
+    <h3>与 <code>01_哲学与思维地基</code>（塔勒布）的接口</h3>
+    <p>吉登斯的"纯粹关系"（关系只为了关系本身而维持、随时可退出）隐含一个<strong>遍历性问题</strong>：制度曾是亲密关系的安全垫，拆掉之后个体承担全部风险，但也没有了对冲。</p>
+    <p><strong>这正好接得上米勒第 13 章（解体）与第 14 章（维持）的实证材料</strong>——塔勒布给的是结构论证，米勒给的是"这个结构里实际发生了什么"的数据。</p>
+  </div>
+
+  <div class="card">
+    <h3>与 <code>03_自然与数学</code>（道金斯）的接口</h3>
+    <p>第 1 章的"人类本性的影响"整整一节建立在演化论上（性选择、亲代投资、父系不确定）。<strong>而道金斯恰好给了这个机制的底层</strong>——累积选择与亲缘选择。</p>
+    <p>有意思的是：<strong>米勒比道金斯更小心。</strong>他一边给出演化解释，一边给出社会结构的替代解释，还指出"原始社会环境的设想必然带有猜测性"。<em>这正是《盲眼钟表匠》笔记里那条"描述性发现 ≠ 规范性建议"警告的实证版。</em></p>
+  </div>
+
+  <div class="card">
+    <h3>与 <code>05_历史与地理</code> 的接口</h3>
+    <p>性别比率理论把"性道德的历史变迁"还原成一个<strong>可测量的结构变量</strong>——婚姻规范、性保守程度、女性劳动参与率都随它变化。这是本域与 <code>05</code> 最硬的一条连接。</p>
+  </div>
+
+  <div class="card">
+    <h3>唯一不能用"抽象 → 机制 → 策略"处理干净的地方</h3>
+    <p>这一域有两个别人没有的困难：</p>
+    <p><strong>① 证据等级明显更低。</strong>社会心理学正处在复现危机中。<br>
+       <strong>② 有一层知识不可对象化。</strong>你为什么爱这个人而不是那个、失去一个人是什么感觉——这些无法变成机制描述。</p>
+    <p style="margin-top:10px;">所以这个域的读法与前面不同：<strong>读框架和问题，而不是读结论。</strong></p>
+  </div>
+
+  <div class="footer">
+    《亲密关系》整体架构 · 罗兰·米勒 · 第 6 版中译本<br>
+    六要素 · 归属需要 · 三层成因 · 一条证据纪律<br>
+    <em>"更具科学性、更有逻辑、更为谨慎，却不太浪漫"</em>
+  </div>
+
+</div>
+</body>
+</html>

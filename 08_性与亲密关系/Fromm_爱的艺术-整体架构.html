@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>《爱的艺术》整体架构 —— 一个诊断，一个能力，四个条件</title>
+<style>
+  :root{
+    --paper:#fbf7f3; --card:#fffdfb; --edge:#e2d6cb;
+    --ink:#2b2119; --ink-mid:#5d4e42; --ink-soft:#94867a;
+    --core:#8a5a2b; --core-soft:#f8efe3;      /* 核心命题 */
+    --problem:#7a4a52; --problem-soft:#f7ebed; /* 生存问题 */
+    --mature:#4a6b5a; --mature-soft:#e8f0ea;   /* 成熟的爱 */
+    --crit:#7a5a3a; --crit-soft:#f4ece0;       /* 社会批判 */
+    --practice:#3f5f7a; --practice-soft:#e8eef4;/* 实践 */
+    --warn:#a8442f; --warn-soft:#f9e7e2;
+    --key:#96702a; --key-soft:#f6efdc;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--paper);color:var(--ink);padding:36px 20px 48px;line-height:1.85;-webkit-font-smoothing:antialiased;}
+  .container{max-width:960px;margin:0 auto;}
+
+  .header{text-align:center;margin-bottom:26px;padding:46px 24px 40px;background:var(--card);
+    border:1px solid var(--edge);border-top:5px solid var(--core);border-radius:4px;}
+  .header .kicker{font-size:11.5px;letter-spacing:2.5px;color:var(--ink-soft);margin-bottom:14px;}
+  .header h1{font-size:26px;color:var(--ink);margin-bottom:14px;letter-spacing:.5px;line-height:1.5;}
+  .header .subtitle{font-size:14.5px;color:var(--ink-mid);}
+  .header .author{margin-top:16px;font-size:12.5px;color:var(--ink-soft);}
+
+  .warnbox{background:var(--warn-soft);border:1px solid #eccfc7;border-left:4px solid var(--warn);
+    border-radius:3px;padding:20px 24px;margin-bottom:28px;font-size:14.5px;color:#7d3221;}
+  .warnbox .t{color:var(--warn);font-weight:700;margin-bottom:10px;font-size:13.5px;letter-spacing:.5px;}
+  .warnbox p+p{margin-top:8px;} .warnbox strong{color:#6a1a10;}
+  .warnbox em{font-style:italic;}
+
+  .section-title{font-size:20px;font-weight:700;color:var(--ink);margin:46px 0 8px;padding-left:13px;
+    border-left:4px solid var(--core);letter-spacing:.3px;}
+  .section-sub{color:var(--ink-soft);font-size:13.5px;margin:0 0 18px 17px;}
+
+  .card{background:var(--card);border:1px solid var(--edge);border-radius:3px;padding:22px 26px;margin-bottom:16px;}
+  .card h3{color:var(--core);margin-bottom:10px;font-size:16.5px;}
+  .card p{color:var(--ink-mid);font-size:14.5px;} .card p+p{margin-top:9px;}
+  .card strong{color:var(--ink);} .card em{color:var(--warn);font-style:normal;font-weight:600;}
+
+  /* 链条 */
+  .chain{display:flex;flex-direction:column;gap:0;margin:20px 0;}
+  .chain .step{background:var(--card);border:1px solid var(--edge);border-left:5px solid;padding:16px 20px;position:relative;}
+  .chain .step:not(:last-child){border-bottom:none;}
+  .chain .step:first-child{border-radius:3px 3px 0 0;} .chain .step:last-child{border-radius:0 0 3px 3px;}
+  .chain .step.a{border-left-color:var(--problem);} .chain .step.b{border-left-color:var(--mature);}
+  .chain .step.c{border-left-color:var(--crit);} .chain .step.d{border-left-color:var(--practice);}
+  .chain .step .n{font-size:11px;letter-spacing:1.5px;font-weight:700;color:var(--ink-soft);margin-bottom:4px;}
+  .chain .step h4{font-size:15.5px;color:var(--ink);margin-bottom:6px;}
+  .chain .step p{font-size:13.5px;color:var(--ink-mid);}
+  .chain .step strong{color:var(--ink);}
+
+  table{width:100%;border-collapse:collapse;margin:13px 0;font-size:13.5px;}
+  th,td{padding:10px 12px;border:1px solid var(--edge);text-align:left;vertical-align:top;}
+  th{background:var(--core-soft);color:var(--core);font-weight:700;font-size:13px;}
+  td{color:var(--ink-mid);} td strong{color:var(--ink);} td em{color:var(--warn);font-style:normal;font-weight:600;}
+
+  /* 四要素 */
+  .four{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:18px 0;}
+  .four .it{background:var(--card);border:1px solid var(--edge);border-top:4px solid var(--mature);border-radius:3px;padding:16px 18px;}
+  .four .it .cn{font-size:15.5px;font-weight:700;color:var(--ink);margin-bottom:5px;}
+  .four .it .en{font-size:11.5px;color:var(--mature);font-family:Consolas,Monaco,monospace;margin-bottom:7px;}
+  .four .it p{font-size:12.5px;color:var(--ink-mid);line-height:1.65;}
+
+  .quote{background:var(--key-soft);border:1px solid #e9dfc4;border-left:4px solid var(--key);
+    border-radius:3px;padding:18px 22px;margin:22px 0;}
+  .quote p{font-size:15px;color:#6d5011;font-style:italic;line-height:1.8;}
+  .quote .src{margin-top:10px;font-size:12.5px;color:var(--ink-soft);text-align:right;font-style:normal;}
+
+  .pit{background:var(--warn-soft);border-left:4px solid var(--warn);border-radius:0 3px 3px 0;
+    padding:15px 19px;margin-bottom:12px;font-size:14px;color:#7d3221;}
+  .pit .lbl{color:var(--warn);font-weight:700;display:block;margin-bottom:6px;font-size:12.5px;letter-spacing:.4px;}
+  .pit strong{color:#6a1a10;}
+
+  .footer{text-align:center;margin-top:44px;padding:22px;color:var(--ink-soft);font-size:12.5px;line-height:1.9;}
+
+  @media(max-width:640px){
+    .header h1{font-size:20px;} .section-title{font-size:17.5px;}
+    body{padding:20px 14px 32px;}
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="kicker">THE ART OF LOVING · 1956</div>
+    <h1>一个诊断，一个能力，四个条件</h1>
+    <div class="subtitle">《爱的艺术》整体架构 · 艾里希·弗洛姆 · 122 页</div>
+    <div class="author">埃里希·弗洛姆 · 1956 年 · 四章 + 三附录（正文仅 p10–92）</div>
+  </div>
+
+  <div class="warnbox">
+    <div class="t">⚠️ 读这本书必须先知道的一件事</div>
+    <p><strong>它不是实证心理学，是规范哲学 + 社会批判。</strong>弗洛姆在《前言》里就说了：<em>"我努力在这本书里避免使用专业词汇，同时也尽量不援引别的资料。"</em>——<strong>书中几乎没有数据、没有引用、没有可复现的研究。</strong></p>
+    <p>所以它和这个区里米勒《亲密关系》的<strong>证据性质完全不同</strong>：米勒给你的是"研究发现什么"，弗洛姆给你的是"爱情应当是什么，以及我们的社会为什么做不到"。</p>
+    <p><strong>这不等于它不可靠——但它的可靠性来源不同。</strong>它的力量在于<em>概念区分</em>（把混在一起的东西分开）和<em>诊断</em>（指出你没意识到的处境），不在于预测。</p>
+  </div>
+
+  <!-- ========== 全书的链条 ========== -->
+  <div class="section-title">全书是一条链，不是一个清单</div>
+  <div class="section-sub">从"人的生存处境"推到"必须改变社会"，中间没有断点</div>
+
+  <div class="chain">
+    <div class="step a">
+      <div class="n">起点 · 第二章</div>
+      <h4>人的处境：分离，以及由此产生的孤独</h4>
+      <p>人超越了自然、脱离了本能的适应，<strong>却永远无法回到与自然合一的状态</strong>。人有理智，所以意识到自己、他人、死亡、以及<em>"面对社会和自然的威力自己的无能为力"</em>。这一切使他的存在成为"无法忍受的监禁"。</p>
+      <p><strong>结论：人最大的需要是克服孤独感。</strong>弗洛姆的原话——<em>"孤寂感是每种恐惧的根源。"</em></p>
+    </div>
+    <div class="step a">
+      <div class="n">诊断 · 第二章（一）</div>
+      <h4>三种失败的解法</h4>
+      <p><strong>① 纵欲</strong>（酒、毒品、性、集体仪式）：强烈、需全身投入、<em>但必须不断重复</em>——效果只持续很短时间。<br>
+         <strong>② 同一化</strong>（与一群人保持一致）：平静、持久，<em>但只是"假统一"</em>，而且参加者必须交出大部分个性。<br>
+         <strong>③ 创造性劳动</strong>：人与物合一，<em>但不是人与人之间的统一</em>。</p>
+      <p><strong>三者都不够。</strong>唯一的"真正的和全面的回答"是爱。</p>
+    </div>
+    <div class="step b">
+      <div class="n">核心 · 第二章（一）</div>
+      <h4>但"爱"有两种，必须分开</h4>
+      <p><strong>共生性结合</strong>（不成熟）：被虐形式是<em>服从</em>，施虐形式是<em>控制</em>。两者的共同点是——<strong>在结合的过程中双方都失去其独立性和完整性</strong>。弗洛姆的判据很干净："区别只在于——施虐淫者命令、利用、损害和欺压对方，而对方则乐于被他左右。"</p>
+      <p><strong>成熟的爱</strong>：<em>"在保留自己完整性和独立性的条件下，也就是保持自己个性的条件下与他人合二为一。"</em>——<strong>"在爱情中出现了两个生命合为一体，却依然保持两体的怪现象。"</strong></p>
+    </div>
+    <div class="step b">
+      <div class="n">展开 · 第二章（一）</div>
+      <h4>爱是"给"，不是"得"</h4>
+      <p>这是全书最容易被误读的一节。<strong>"给"不是牺牲、不是被夺走、不是自我牺牲的美德。</strong>对生产性性格的人来说——<em>"'给'是力量的最高表现，恰恰是通过'给'，我才能体验我的力量，我的'富裕'，我的'活力'。"</em></p>
+      <p>而且<strong>"给"必然包含"得"</strong>：因为"给"会在对方身上唤起某种有生命力的东西，于是接受者也成为一个给的人。</p>
+    </div>
+    <div class="step c">
+      <div class="n">诊断 · 第三章</div>
+      <h4>为什么现代社会里爱很罕见</h4>
+      <p>资本主义把人变成商品，<strong>人的生命力成了一笔要在市场上求最大利润的资本</strong>。于是<em>"人与人之间的关系从本质上来看是互为陌生的，是自动机器之间的关系"</em>，而安全感的来源是"想方设法靠拢一群人，在思想、感情和行动中同这一群人保持一致"。</p>
+      <p><strong>爱情因此在结构上被扭曲</strong>——变成交易、变成避风港、变成两个人对抗世界的同盟。</p>
+    </div>
+    <div class="step d">
+      <div class="n">出路 · 第四章</div>
+      <h4>爱的实践：先决条件，不是秘诀</h4>
+      <p>弗洛姆明确拒绝给"秘诀"：<em>"爱情是一种个人的体验，每个人只能通过自己并为自己得到这种体验。"</em>他能给的是<strong>先决条件</strong>。</p>
+      <p><strong>关键条件是克服自恋</strong>——从自恋走向客观性，从客观性产生理智，以理智为基础的感情是<strong>谦恭</strong>。</p>
+    </div>
+    <div class="step c">
+      <div class="n">终点 · 第四章末</div>
+      <h4>结论：这不只是个人问题</h4>
+      <p><em>"如果爱意味着是对每一个人有一种关爱的态度，如果爱是一种性格特点，那么爱必须不仅仅出现在我们对自己家庭和朋友的关系中。"</em></p>
+      <p><strong>而"公正"（你给我多少我就给多少）与爱是两回事</strong>——"公正的道德"是资本主义在伦理上的特殊贡献，它"不意味着要负责并同他人一致，而是要把自己同他人分开"。</p>
+      <p>所以他给出的最终结论是<strong>社会性的</strong>：<em>"要对现存的社会结构进行重大和激烈变革，只有到那时爱情才会成为一种社会现象，而不是零星出现的个别现象。"</em></p>
+    </div>
+  </div>
+
+  <!-- ========== 爱的四要素 ========== -->
+  <div class="section-title">成熟的爱有四个要素</div>
+  <div class="section-sub">这四个不是"技巧"，是四个可以检查的维度</div>
+
+  <div class="four">
+    <div class="it"><div class="cn">关心</div><div class="en">care</div><p>对生命以及我们所爱之物<strong>生长的积极的关心</strong>。判据很硬：说她爱花，却忘记浇花——"我们就不会相信她说的话"</p></div>
+    <div class="it"><div class="cn">责任心</div><div class="en">responsibility</div><p>不是义务、不是外部强加的东西，而是<strong>"我对另一个生命表达出来或尚未表达出来的愿望的答复"</strong></p></div>
+    <div class="it"><div class="cn">尊重</div><div class="en">respect</div><p>词源义是<strong>"有能力实事求是地正视对方和认识他独有的个性"</strong>。所以：我希望被我爱的人"以他自己的方式和为了自己去成长、发展，<em>而不是服务于我</em>"</p></div>
+    <div class="it"><div class="cn">了解</div><div class="en">knowledge</div><p>深入内部而非满足于一知半解；<strong>"我只有用他人的眼光看待他人，而把对自己的兴趣退居二位，我才能了解对方"</strong></p></div>
+  </div>
+
+  <div class="card">
+    <h3>这四个是<em>相互依赖</em>的，而且各有一个失效模式</h3>
+    <table>
+      <tr><th>要素</th><th>缺了它会变成什么</th></tr>
+      <tr><td><strong>关心</strong>缺了</td><td>只剩下情绪，而不是爱情</td></tr>
+      <tr><td><strong>尊重</strong>缺了</td><td><em>责任心变成控制和奴役别人。</em>"如果爱情没有第三个要素：尊重，那责任心就很容易变成控制别人和奴役别人。"</td></tr>
+      <tr><td><strong>了解</strong>缺了</td><td><em>关心和责任心都会是盲目的。</em>而"如果不是从关怀的角度出发去了解对方，这种了解也是无益的"</td></tr>
+    </table>
+    <p style="margin-top:10px;">弗洛姆点出了<strong>两条通往"了解"的路</strong>，这是全书最黑暗也最有力的一段：</p>
+    <p><strong>一条是毁灭。</strong>"要求发现人的秘密是恣意暴行和破坏狂的基本动机。"——他引了一个刚把旧主人踩死的军官的话：<em>"用一颗子弹只能把这个家伙干掉……开枪是永远不能深入他的灵魂……但我毫无顾忌，我已经不止一次踩死敌人，每次都超过一个小时。你知道吗——我想知道，生命到底是什么。"</em> 还有孩子折断蝴蝶的翅膀："他要认识蝴蝶，迫使它交出自己的秘密。"</p>
+    <p><strong>另一条是爱。</strong>"只有爱情才能带给我知识……在爱情中，在献身中，在深入对方中，我找到了自己，发现了自己，发现了我们双方，发现了人。"</p>
+  </div>
+
+  <!-- ========== 几个容易漏掉的核心区分 ========== -->
+  <div class="section-title">这本书的价值集中在几个<em>区分</em>上</div>
+  <div class="section-sub">弗洛姆做的事情不是发现新事实，而是把混在一起的东西分开</div>
+
+  <table>
+    <tr><th style="width:30%">区分</th><th>内容</th></tr>
+    <tr><td><strong>"堕入情网" vs "持久的爱"</strong></td><td>前者是两个人之间所有隔阂<strong>突然</strong>消失的爆炸式经历，"按其本质这种突如其来的强烈感受是注定短命的"。弗洛姆的锋利判断：<em>"人们往往把这种如痴如醉的入迷，疯狂的爱恋看作是强烈爱情的表现，而实际上这只是证明了这些男女过去是多么地寂寞。"</em></td></tr>
+    <tr><td><strong>"被人爱" vs "有能力爱"</strong></td><td>大多数人认为爱情首先是"自己能否被人爱"。而弗洛姆的命题是：<strong>爱是一种能力，不是一种运气。</strong>所以"值得被人爱"的方式（求名利、保持身段、"赢得朋友和对他人施加影响"）与在社会上获得成功的方法雷同</td></tr>
+    <tr><td><strong>对象问题 vs 能力问题</strong></td><td>"他们认为爱本身十分简单，困难在于找到爱的对象。"弗洛姆用一个类比驳掉它：想画画的人不去学绘画，而是强调"首先要找到他愿意画的合适的对象"</td></tr>
+    <tr><td><strong>自爱 vs 利己</strong></td><td>这是全书最有冲击力的一处逆转：<em>"利己的人不是太爱自己，而是太不爱自己。缺乏对自己的爱和关心表明了这个人内心缺少生命力。"</em>——传统的二分（爱自己=不爱别人）是错的：<strong>"一切有能力爱别人的人必定也爱自己。"</strong></td></tr>
+    <tr><td><strong>忘我 vs 美德</strong></td><td>第二处逆转：<em>"'忘我'是神经病的一种症兆。"</em>弗洛姆说"忘我"的人没有能力爱也没有能力使自己快活，"在他的忘我后面隐藏着一种很强的常常是自己意识不到的自私性"</td></tr>
+    <tr><td><strong>合理的信仰 vs 非合理的信仰</strong></td><td>非合理的信仰 = <strong>服从一种非理性权威</strong>（信仰一个人或一种思想）；合理的信仰 = <strong>"扎根于自己思想或感情体验的一种坚定的信念"</strong>。"信仰是全部人格的一个性格特点，而不是同某些被看作为对的思想内容有关的东西。"</td></tr>
+    <tr><td><strong>公正 vs 爱</strong></td><td>"你给我多少，我就给多少"是<strong>公正</strong>，不是爱。而"'己所不欲，勿施于人'的准则被解释为是'要公正地同别人做生意'"。弗洛姆的判据：公正"不意味着要负责并同他人一致，而是要把自己同他人分开"</td></tr>
+    <tr><td><strong>教育 vs 影响</strong></td><td>"是否有着信念就构成了'教育'和'影响'之间的区别。"教育=帮助孩子实现他发展的可能性；影响=缺乏信念，"相信只有成人在孩子身上灌输他认为合适的东西以及扼杀他认为不合适的东西"</td></tr>
+  </table>
+
+  <div class="quote">
+    <p>"心理学的最终结论就是爱。"</p>
+    <div class="src">—— 第二章，紧接在"神学的逻辑结论是神秘主义"之后</div>
+  </div>
+
+  <!-- ========== 实践的四个先决条件 ========== -->
+  <div class="section-title">爱的实践：通用条件 + 特殊条件</div>
+
+  <div class="card">
+    <h3>掌握任何一门艺术的通用条件（他套用木匠、医学、音乐）</h3>
+    <table>
+      <tr><th>条件</th><th>弗洛姆的观察</th></tr>
+      <tr><td><strong>纪律</strong></td><td>不是"每天练几小时"，而是<strong>贯穿一生的纪律</strong>。他戳破了现代人的一个矛盾："在工作之外人很少能表现出一点自我纪律来"</td></tr>
+      <tr><td><strong>集中</strong></td><td><strong>"在我们这个社会集中比自我纪律还要罕见。"</strong>他的症状清单很具体：人们同时看书、听收音机、谈话、抽烟、吃饭、喝酒；<em>"抽烟就是缺乏集中的一个症状"</em>；<strong>"大多数人已经不会一个人安静地坐着"</strong></td></tr>
+      <tr><td><strong>耐心</strong></td><td>"我们整个工业系统提倡的恰恰是耐心的反面，那就是要快。"</td></tr>
+      <tr><td><strong>极大的兴趣</strong></td><td>"如果一门艺术没有最高意义的话，那没有一个学徒会学这门艺术"</td></tr>
+      <tr><td><strong>间接地学</strong></td><td>"木匠学徒要先学会刨木头，学钢琴的人要先练习音阶，而学习禅宗射箭艺术的人则要先练习呼吸。"</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>爱的特殊条件：<span style="color:var(--practice);">克服自恋 → 客观性 → 理智 → 谦恭</span></h3>
+    <p><strong>自恋</strong>：体验到的现实"只是内心活动，主要是他们自己的贪婪和恐惧"，外部世界的现象本身不现实，只有"对他们有利或者威胁他们的食物才有意义"。</p>
+    <p><strong>客观性</strong>："对人和事物抱有开放的态度，能实事求是地看待事物。"</p>
+    <p>他的判据不是"有没有自恋"，而是<strong>程度</strong>：<em>"客观性是例外，而不同程度的自恋是常规。"</em> 他给的例子从轻到重：一位妇女打电话给医生说"我住的地方离您那儿才五分钟的路"（不理解她住得近并不能节省医生的时间）→ 父母关心的是"孩子是否听话、是否使他们高兴"而不是"孩子自己经历了些什么" → 民族之间的相互妖魔化。</p>
+    <p style="margin-top:10px;"><strong>而客观性不能只用在所爱之人身上</strong>：<em>"如果我们只对所爱之人保持客观，而对其他人就不需要有客观性，那我们很快就能发现我们既不能处理好自己同所爱之人的关系，也处理不好同其他人的关系。"</em></p>
+    <p style="margin-top:10px;">他还给了<strong>两个可操作的注意力模式</strong>：一是开车的人对路况的警觉（"他并没有去思考这些现象，他只是处在一种清醒状态之中"）；二是<strong>母亲对婴儿的清醒关注</strong>——"在婴儿还没有表达以前，母亲就能感觉到婴儿体内的一些变化"。</p>
+  </div>
+
+  <!-- ========== 边界 ========== -->
+  <div class="section-title">这本书不承诺什么</div>
+
+  <div class="pit">
+    <span class="lbl">边界一 · 它不是操作手册，而且作者拒绝把它写成操作手册</span>
+    第四章开头："今天大多数人——包括这本书的许多读者——都希望从别人那里得到如何行动的秘诀……<strong>我担心那些希望得到秘诀的人在打开这本书最后一章时，会大失所望。</strong>"
+  </div>
+
+  <div class="pit">
+    <span class="lbl">边界二 · 它没有实证证据，而且作者主动放弃了引用</span>
+    《前言》："我努力在这本书里避免使用专业词汇，同时也尽量不援引别的资料。"——所以书中<strong>任何一条论断都不应作为"研究表明"来引用</strong>。要引用经验事实，请回到米勒那一本。
+  </div>
+
+  <div class="pit">
+    <span class="lbl">边界三 · 有一些论断已被后来的证据证伪</span>
+    最明确的一处是<strong>关于同性恋</strong>：他写道"同性恋爱的变异是达不到两极结合所造成的，因此同性恋爱者永远不会脱离孤独的折磨"。<strong>这是 1956 年的时代性论断，且与后来的实证研究相反。</strong>（米勒那一本里有直接的反证：男同和女同的性经历主观质量实际上<em>好于</em>异性恋者，主要原因是<strong>沟通</strong>。）<br>
+    另外他关于性别角色的表述（"阳性的特点是渗透、指导、积极……阴性则具有接受、保护、求实、忍耐和母性"）也带有强烈的时代色彩。
+  </div>
+
+  <div class="pit">
+    <span class="lbl">边界四 · 他最后要的是社会变革，这超出了个人能做的范围</span>
+    全书的终点不是"你该怎么做"，而是<em>"要对现存的社会结构进行重大和激烈变革"</em>。所以如果你想从这本书得到个人行动指南，你只能拿到<strong>第四章的那些先决条件</strong>——弗洛姆自己承认"达到目的的最终步骤都得由每个人自己去做出"。
+  </div>
+
+  <div class="quote">
+    <p>"爱情不是一种与人的成熟程度无关，只需要投入身心的感情……<strong>如果不努力发展自己的全部人格并以此达到一种创造倾向性，那么每种爱的试图都会失败。</strong>"</p>
+    <div class="src">—— 前言</div>
+  </div>
+
+  <!-- ========== 位置 ========== -->
+  <div class="section-title">这本书在这个区里的位置</div>
+
+  <div class="card">
+    <h3>它是本区唯一的<em>规范性</em>著作——而这既是它的价值，也是它的风险</h3>
+    <p>这个区里其他书都在回答"<strong>实际上是怎么运作的</strong>"：米勒给数据，公共领域那几本给历史材料。而《爱的艺术》回答的是<strong>"应该怎么活"</strong>——书单第 7 层。</p>
+    <p><strong>价值</strong>：描述性发现推不出规范性建议，所以这一层不能由描述性著作替代。"怎么运作"不回答"该怎么活"。</p>
+    <p><strong>风险</strong>：规范性主张没有"数据"可以检验，所以它最容易被当成<em>道德训诫</em>来接收——而弗洛姆本人明确反对这一点：<em>"我们谈爱情，不是在'说教'。"</em></p>
+  </div>
+
+  <div class="card">
+    <h3>与米勒《亲密关系》形成的对照——这个对照本身很有价值</h3>
+    <table>
+      <tr><th></th><th>米勒（2007 前后）</th><th>弗洛姆（1956）</th></tr>
+      <tr><td><strong>体裁</strong></td><td>教材 / 实证综述</td><td>规范哲学 / 社会批判</td></tr>
+      <tr><td><strong>证据</strong></td><td>研究、效应量、样本</td><td>概念分析、历史、临床经验</td></tr>
+      <tr><td><strong>对"爱是什么"</strong></td><td>分类学（激情之爱/相伴之爱/同情之爱），可测量</td><td>一个规范性定义（成熟的爱 = 保留完整性的结合）</td></tr>
+      <tr><td><strong>对"为什么难"</strong></td><td>依恋类型、沟通技能、CL/CLalt、冲突模式</td><td>人的生存处境 + 资本主义的社会结构</td></tr>
+      <tr><td><strong>出路</strong></td><td>可训练的技能 + 关系的维持机制</td><td>人格的成熟 + 社会变革</td></tr>
+      <tr><td><strong>对"性"</strong></td><td>大量实证数据</td><td>几乎不谈具体行为，只作为"克服孤独的一种方式"来谈</td></tr>
+    </table>
+    <p style="margin-top:10px;"><strong>两本书有一处罕见的直接接合点</strong>：米勒第 9 章报告 Masters &amp; Johnson 的发现——同性伴侣的性经历主观质量更好，原因是<strong>沟通</strong>。而弗洛姆说同性恋"永远脱离不了孤独"。<em>同一件事，实证材料与规范论断给出了相反的判断——这个冲突本身值得记录，而不是抹平。</em></p>
+  </div>
+
+  <div class="footer">
+    《爱的艺术》整体架构 · 埃里希·弗洛姆 · 1956<br>
+    一个诊断 · 一个能力 · 四个要素 · 四个先决条件<br>
+    <em>"爱情是自由之子，永远不会是控制的产物"</em>
+  </div>
+
+</div>
+</body>
+</html>

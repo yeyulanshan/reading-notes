@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>《操作系统导论》整体架构 —— 一张图看懂操作系统在干什么</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: #0f172a;
+    color: #e2e8f0;
+    padding: 32px 20px;
+    line-height: 1.75;
+  }
+  .container { max-width: 960px; margin: 0 auto; }
+
+  /* 顶部 */
+  .header {
+    text-align: center;
+    margin-bottom: 36px;
+    padding: 42px 20px;
+    background: linear-gradient(135deg, #1e3a5f 0%, #0f172a 100%);
+    border-radius: 16px;
+    border: 1px solid #334155;
+  }
+  .header h1 { font-size: 28px; margin-bottom: 12px; color: #f8fafc; }
+  .header .subtitle { font-size: 16px; color: #94a3b8; }
+  .header .author { margin-top: 16px; font-size: 13px; color: #64748b; }
+
+  /* 阅读指南 */
+  .guide {
+    background: #1e293b;
+    border-radius: 12px;
+    padding: 20px 24px;
+    border: 1px solid #334155;
+    border-left: 4px solid #f59e0b;
+    margin-bottom: 32px;
+    color: #cbd5e1;
+    font-size: 14px;
+  }
+  .guide .g-title { color: #f59e0b; font-weight: 600; margin-bottom: 10px; font-size: 13px; letter-spacing: 1px; }
+  .guide ol { margin-left: 20px; }
+  .guide li { margin-bottom: 5px; }
+
+  /* 章节标题 */
+  .section-title {
+    font-size: 21px;
+    font-weight: 700;
+    color: #f8fafc;
+    margin: 46px 0 18px;
+    padding-left: 12px;
+    border-left: 4px solid #3b82f6;
+  }
+  .section-sub {
+    color: #94a3b8;
+    font-size: 14px;
+    margin: -10px 0 20px 16px;
+  }
+
+  /* 卡片 */
+  .card {
+    background: #1e293b;
+    border-radius: 12px;
+    padding: 22px 24px;
+    border: 1px solid #334155;
+    margin-bottom: 16px;
+  }
+  .card h3 { color: #3b82f6; margin-bottom: 10px; font-size: 17px; }
+  .card p { color: #cbd5e1; font-size: 14.5px; }
+  .card p + p { margin-top: 9px; }
+  .card strong { color: #f8fafc; }
+  .card em { color: #6ee7b7; font-style: normal; }
+
+  /* 三支柱 */
+  .pillars {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  .pillar {
+    background: #1e293b;
+    border-radius: 12px;
+    padding: 24px;
+    border: 1px solid #334155;
+    border-top: 4px solid;
+    transition: transform 0.2s;
+  }
+  .pillar:hover { transform: translateY(-3px); }
+  .pillar:nth-child(1) { border-top-color: #3b82f6; }
+  .pillar:nth-child(2) { border-top-color: #8b5cf6; }
+  .pillar:nth-child(3) { border-top-color: #10b981; }
+  .pillar .en { font-size: 11px; color: #64748b; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px; }
+  .pillar h3 { font-size: 19px; color: #f8fafc; margin-bottom: 10px; }
+  .pillar .q { color: #93c5fd; font-size: 13.5px; font-style: italic; margin-bottom: 10px; }
+  .pillar .desc { color: #cbd5e1; font-size: 13.5px; }
+
+  /* 统一套路 三步 */
+  .pattern {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  @media (max-width: 700px) { .pattern { grid-template-columns: 1fr; } }
+  .step {
+    background: #1e293b;
+    border-radius: 10px;
+    padding: 18px;
+    border: 1px solid #334155;
+    border-top: 3px solid #3b82f6;
+    text-align: center;
+  }
+  .step .num {
+    display: inline-block;
+    width: 26px; height: 26px; line-height: 26px;
+    border-radius: 50%;
+    background: #3b82f6;
+    color: #fff;
+    font-size: 13px; font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .step h4 { color: #f8fafc; font-size: 15px; margin-bottom: 6px; }
+  .step p { color: #94a3b8; font-size: 13px; }
+
+  /* 机制与策略 */
+  .mp { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 18px; }
+  @media (max-width: 620px) { .mp { grid-template-columns: 1fr; } }
+  .mp-card { background: #1e293b; border-radius: 12px; padding: 20px; border: 1px solid #334155; }
+  .mp-card.mechanism { border-left: 4px solid #3b82f6; }
+  .mp-card.policy { border-left: 4px solid #f59e0b; }
+  .mp-card .tag { font-size: 11.5px; letter-spacing: 1px; font-weight: 600; margin-bottom: 7px; }
+  .mp-card.mechanism .tag { color: #3b82f6; }
+  .mp-card.policy .tag { color: #f59e0b; }
+  .mp-card h4 { font-size: 15.5px; color: #f8fafc; margin-bottom: 7px; }
+  .mp-card p { color: #cbd5e1; font-size: 13.5px; }
+
+  /* 对照表 */
+  table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 13.5px; }
+  th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #334155; vertical-align: top; }
+  th { color: #93c5fd; font-weight: 600; background: #1e293b; font-size: 13px; }
+  td { color: #cbd5e1; }
+  tr:last-child td { border-bottom: none; }
+  .tbl-wrap { background: #1e293b; border-radius: 12px; border: 1px solid #334155; overflow: hidden; margin-bottom: 20px; }
+  .tbl-wrap table { margin-bottom: 0; }
+  td strong { color: #f8fafc; }
+
+  /* 学习路线 */
+  .route { margin-bottom: 20px; }
+  .route-item {
+    display: flex;
+    gap: 14px;
+    background: #1e293b;
+    border-radius: 10px;
+    padding: 15px 18px;
+    margin-bottom: 10px;
+    border-left: 3px solid;
+    align-items: flex-start;
+  }
+  .route-item.must { border-left-color: #ef4444; }
+  .route-item.skim { border-left-color: #f59e0b; }
+  .route-item.skip { border-left-color: #475569; }
+  .route-badge {
+    flex-shrink: 0;
+    font-size: 11px;
+    padding: 3px 9px;
+    border-radius: 20px;
+    font-weight: 600;
+    margin-top: 2px;
+    white-space: nowrap;
+  }
+  .must .route-badge { background: rgba(239,68,68,.15); color: #fca5a5; }
+  .skim .route-badge { background: rgba(245,158,11,.15); color: #fcd34d; }
+  .skip .route-badge { background: rgba(71,85,105,.3); color: #94a3b8; }
+  .route-body strong { color: #f8fafc; display: block; margin-bottom: 3px; font-size: 14.5px; }
+  .route-body span { color: #94a3b8; font-size: 13px; }
+
+  /* 金句 */
+  .quote {
+    background: linear-gradient(135deg, #1e3a5f 0%, #1e293b 100%);
+    border-radius: 12px;
+    padding: 22px 24px;
+    border-left: 4px solid #f59e0b;
+    margin: 26px 0;
+  }
+  .quote p { font-size: 15.5px; color: #fbbf24; font-style: italic; }
+  .quote .author { margin-top: 10px; font-size: 12.5px; color: #94a3b8; text-align: right; }
+
+  .footer { text-align: center; margin-top: 42px; padding: 20px; color: #64748b; font-size: 13px; }
+
+  @media (max-width: 620px) {
+    .header h1 { font-size: 21px; }
+    .section-title { font-size: 18px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- 顶部 -->
+  <div class="header">
+    <h1>操作系统在干什么？</h1>
+    <div class="subtitle">《操作系统导论》(OSTEP) 全书认知地图 —— 虚拟化 · 并发 · 持久性</div>
+    <div class="author">Remzi H. Arpaci-Dusseau &amp; Andrea C. Arpaci-Dusseau · 威斯康星大学</div>
+  </div>
+
+  <!-- 阅读指南 -->
+  <div class="guide">
+    <div class="g-title">📖 怎么用这张图</div>
+    <ol>
+      <li><strong>先记一句话</strong>（下面的"全书总纲"）——后面所有内容都挂在它上面。</li>
+      <li><strong>再记三个套路</strong>（抽象 → 机制 → 策略）——三大部分用的是同一个套路。</li>
+      <li><strong>然后记住每部分的"关键问题 + 核心机制 + 代价"</strong>——这就是 80% 的内容。</li>
+      <li><strong>最后按"学习路线"决定哪些精读、哪些略读</strong>——时间有限时这是最重要的判断。</li>
+    </ol>
+  </div>
+
+  <!-- ================= 全书总纲 ================= -->
+  <div class="section-title">全书总纲：一句话记住这本书</div>
+  <div class="card">
+    <h3>操作系统是一个"幻觉制造商"，而且它必须为幻觉付出代价</h3>
+    <p>你只有 8 个 CPU 核、16 GB 内存、一块磁盘。但你同时开着浏览器、音乐、编辑器、几十个后台进程——<strong>每一个都以为自己独占着 CPU 和内存，每一个都以为自己有一大片连续内存，每一个都以为文件"保存好了"就永远不会丢。</strong></p>
+    <p>这些全是假象。操作系统的全部工作，就是<strong>在丑陋的物理事实之上，造出一层干净、稳定、可预测的假象</strong>，让你可以在上面盖楼。</p>
+    <p>但假象不是免费的。这本书真正的主题其实是<em>代价</em>：虚拟化 CPU 要付上下文切换的开销，虚拟化内存要付两次访存的代价，并发要付同步的代价，持久性要付写入放大和恢复的代价。<strong>理解了"每个假象的代价是什么"，你才算真的读懂了这本书。</strong></p>
+  </div>
+
+  <div class="card">
+    <h3>全书只有一个关键问题：操作系统如何将资源虚拟化？</h3>
+    <p>作者在正文里专门用灰色文本框把这个问题单独立出来，并特意区分两件事：<strong>"为什么"要虚拟化不是主要问题</strong>（答案显而易见：让系统更易用）；真正的问题是<strong>"如何"虚拟化</strong>——用哪些机制和策略？如何做到高效？需要哪些硬件支持？</p>
+    <p>这个提问方式本身就值得学：<strong>把"要不要做"和"怎么做"分开，然后集中火力在后者上。</strong></p>
+  </div>
+
+  <!-- ================= 三大支柱 ================= -->
+  <div class="section-title">三大支柱：这三件事撑起了整本书</div>
+  <div class="pillars">
+    <div class="pillar">
+      <div class="en">Virtualization</div>
+      <h3>虚拟化</h3>
+      <div class="q">"怎么让 1 个 CPU 变成无数个？<br>怎么让每个进程都以为自己独占内存？"</div>
+      <div class="desc">全书篇幅最大的一部分（约一半），又分<strong>CPU 虚拟化</strong>和<strong>内存虚拟化</strong>两大块。核心手法是<strong>时分共享</strong>（CPU）与<strong>空分共享</strong>（内存）。</div>
+    </div>
+    <div class="pillar">
+      <div class="en">Concurrency</div>
+      <h3>并发</h3>
+      <div class="q">"同一块内存，两个线程同时改，会怎样？"</div>
+      <div class="desc">一个程序内部同时做多件事。麻烦在于<strong>调度时机不可控</strong>，于是需要锁、条件变量、信号量，把"不可控"变回"可控"。<strong>全书最烧脑的部分。</strong></div>
+    </div>
+    <div class="pillar">
+      <div class="en">Persistence</div>
+      <h3>持久性</h3>
+      <div class="q">"断电的那一刻，数据还在吗？"</div>
+      <div class="desc">内存一断电就没了，数据必须落到磁盘。但磁盘慢、会坏、写入还会被崩溃打断——文件系统就是为了在这种设备上做出"永不丢失"的错觉。</div>
+    </div>
+  </div>
+
+  <div class="quote">
+    <p>"虚拟化（virtualization）、并发（concurrency）和持久性（persistence）。这是我们要学习的 3 个关键概念……这很合适，因为操作系统的难度差不多是物理学的一半。"</p>
+    <div class="author">—— 第1章 关于本书的对话</div>
+  </div>
+
+  <!-- ================= 统一套路 ================= -->
+  <div class="section-title">最重要的发现：三大部分用的是同一个套路</div>
+  <div class="section-sub">看懂这个套路，你就不需要死记硬背了——每一章都是在重复它</div>
+
+  <div class="pattern">
+    <div class="step">
+      <div class="num">1</div>
+      <h4>抽象</h4>
+      <p>先定义"要给用户看到什么假象"<br>（进程 / 地址空间 / 文件）</p>
+    </div>
+    <div class="step">
+      <div class="num">2</div>
+      <h4>机制</h4>
+      <p>再解决"物理上怎么做到"<br>（陷阱 / 地址转换 / 日志）</p>
+    </div>
+    <div class="step">
+      <div class="num">3</div>
+      <h4>策略</h4>
+      <p>最后决定"有多个选择时选哪个"<br>（调度 / 替换 / 恢复）</p>
+    </div>
+  </div>
+
+  <div class="mp">
+    <div class="mp-card mechanism">
+      <div class="tag">机制 · MECHANISM</div>
+      <h4>回答"如何做（how）"</h4>
+      <p>提供功能的低级方法或协议。它关心"能不能做到"，不关心"要不要做"。</p>
+      <p style="margin-top:8px;color:#94a3b8;font-size:13px;">例：上下文切换怎么实现？地址怎么翻译？</p>
+    </div>
+    <div class="mp-card policy">
+      <div class="tag">策略 · POLICY</div>
+      <h4>回答"做哪个（which）"</h4>
+      <p>在多个选项中做决定的算法。它依赖负载知识与性能指标。</p>
+      <p style="margin-top:8px;color:#94a3b8;font-size:13px;">例：现在该运行哪个进程？该换出哪一页？</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>为什么"机制与策略分离"这么重要</h3>
+    <p>把两者分开，就能<strong>只改策略而不必重新设计机制</strong>。这是模块化原则的实例，也是操作系统几十年演进能持续的底层原因：调度策略换了一代又一代，但"时钟中断 + 上下文切换"这套机制几乎没变——因为它被正确隔离在了策略之外。</p>
+  </div>
+
+  <!-- ================= 套路的验证表 ================= -->
+  <div class="section-title">套路的验证：三大主题的抽象 / 机制 / 策略</div>
+  <div class="tbl-wrap">
+    <table>
+      <tr>
+        <th style="width:16%">主题</th>
+        <th style="width:22%">抽象（假象）</th>
+        <th style="width:30%">机制（how）</th>
+        <th style="width:32%">策略（which）</th>
+      </tr>
+      <tr>
+        <td><strong>CPU 虚拟化</strong></td>
+        <td>进程<br><span style="color:#94a3b8;font-size:12.5px;">"运行中的程序"</span></td>
+        <td>受限直接执行<br>陷阱 / 系统调用<br>时钟中断 / 上下文切换</td>
+        <td>调度：FIFO → SJF → STCF → RR → MLFQ → 彩票 / 步长</td>
+      </tr>
+      <tr>
+        <td><strong>内存虚拟化</strong></td>
+        <td>地址空间<br><span style="color:#94a3b8;font-size:12.5px;">"私有的一大片连续内存"</span></td>
+        <td>基址/界限 → 分段 → 分页<br>页表 / TLB / 交换空间</td>
+        <td>替换策略：OPT / FIFO / 随机 / LRU / 近似 LRU（时钟）</td>
+      </tr>
+      <tr>
+        <td><strong>并发</strong></td>
+        <td>线程<br><span style="color:#94a3b8;font-size:12.5px;">"共享内存的独立执行流"</span></td>
+        <td>原子指令：测试并设置 / 比较并交换 / LL-SC<br>锁 / 条件变量 / 信号量</td>
+        <td>锁的粒度、自旋 vs 休眠、避免死锁的规则</td>
+      </tr>
+      <tr>
+        <td><strong>持久性</strong></td>
+        <td>文件与目录<br><span style="color:#94a3b8;font-size:12.5px;">"存进去就永远在"</span></td>
+        <td>I/O + 中断 + DMA<br>inode / 位图 / 块<br>日志（预写日志）</td>
+        <td>磁盘调度：SSTF / 电梯<br>块分配：FFS 局部性<br>RAID 级别选择</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ================= 第一幕 ================= -->
+  <div class="section-title">第一幕 · 虚拟化（上）：让每个进程都以为自己独占 CPU</div>
+
+  <div class="card">
+    <h3>关键问题与答案链条</h3>
+    <p><strong>问题：</strong>只有少量物理 CPU，怎么提供"有无数个 CPU"的假象？</p>
+    <p><strong>答案：</strong>让每个进程只运行一个<em>时间片</em>，然后切换到其他进程。这就是<strong>时分共享（time sharing）</strong>。潜在开销就是性能损失——CPU 必须共享，每个进程都慢一点。</p>
+  </div>
+
+  <div class="card">
+    <h3>机制：受限直接执行（LDE）—— 全书最漂亮的设计之一</h3>
+    <p>矛盾在于：要<strong>快</strong>，就得让程序直接在 CPU 上跑；要<strong>控制</strong>，就不能让程序为所欲为。</p>
+    <p><strong>解法就是把两件事分开做：</strong>"直接执行"——让程序直接在硬件上跑，速度和预期一样快；"受限"——在启动时先设好硬件限制（陷阱表、时钟中断），等于给 CPU 做 <em>"宝宝防护"</em>：锁好危险柜子、盖住电源插座，然后让宝宝自由行动。</p>
+    <p><strong>三个必须记住的部件：</strong></p>
+    <p>① <strong>用户模式 / 内核模式</strong>：用户模式下代码受限（发 I/O 会引发异常）；内核模式下操作系统可做特权操作。</p>
+    <p>② <strong>陷阱 / 系统调用</strong>：程序执行陷阱指令，<em>同时跳入内核并提升特权级别</em>；完成后由"从陷阱返回"降回用户模式。系统调用看起来像普通函数调用，是因为 C 库把它包成了过程调用，里面藏着陷阱指令。</p>
+    <p>③ <strong>陷阱表</strong>：发起调用的程序<strong>不能</strong>指定要跳转的地址（否则它就能跳到内核任意位置，比如"跳过权限检查"），所以内核在启动时用特权指令告诉硬件各种事件该运行哪段代码。这是整个保护机制的根基。</p>
+  </div>
+
+  <div class="card">
+    <h3>控制权怎么拿回来？—— 从"协作"到"强制"</h3>
+    <p><strong>协作方式</strong>（早期 Macintosh、旧 Xerox Alto）：操作系统相信进程会合理运行，运行太久就主动通过系统调用（如 <code style="color:#6ee7b7">yield</code>）放弃 CPU。</p>
+    <p><strong>致命缺陷：</strong>如果某个进程进入无限循环、从不系统调用，操作系统<em>什么都做不了，唯一办法就是重新启动计算机</em>。</p>
+    <p><strong>非协作方式：时钟中断。</strong>时钟设备每隔几毫秒产生一次中断，当前进程停止，操作系统预先配置的中断处理程序运行——操作系统由此强制拿回控制权。这是现代操作系统的基础。</p>
+    <p><strong>上下文切换</strong>要保存/恢复的寄存器分两类：<em>硬件隐式保存</em>的用户寄存器（存在该进程的内核栈上）和<em>操作系统显式保存</em>的内核寄存器（存在该进程的进程结构里）。后一步让系统"从好像刚刚由 A 陷入内核，变成好像刚刚由 B 陷入内核"。</p>
+  </div>
+
+  <div class="card">
+    <h3>策略：调度算法的演进，就是"发现问题 → 打补丁"的过程</h3>
+    <p><strong>两个指标（务必分清）：</strong></p>
+    <p>• <strong>周转时间</strong> = 完成时间 − 到达时间（衡量"多快做完"）<br>
+       • <strong>响应时间</strong> = 首次运行时间 − 到达时间（衡量"多久有反应"）</p>
+    <p><strong>核心张力：这两者本质矛盾。</strong>想周转时间好，就得先跑短任务（对长任务不公平）；想响应时间好，就得频繁切换（周转时间变差）。<em>你不能既拥有蛋糕又吃掉它。</em></p>
+  </div>
+
+  <div class="tbl-wrap">
+    <table>
+      <tr><th style="width:20%">算法</th><th style="width:44%">规则与优点</th><th style="width:36%">致命反例</th></tr>
+      <tr>
+        <td><strong>FIFO</strong><br><span style="font-size:12px;color:#94a3b8;">先进先出</span></td>
+        <td>按到达顺序跑完。简单。</td>
+        <td><strong>护航效应</strong>：A=100s 排在 B、C=10s 前面，平均周转 110s</td>
+      </tr>
+      <tr>
+        <td><strong>SJF</strong><br><span style="font-size:12px;color:#94a3b8;">最短任务优先</span></td>
+        <td>先跑最短的。同时到达时<strong>可证明最优</strong>：同样负载平均周转降到 50s</td>
+        <td>任务可随时到达时失效（晚到的小任务仍要等）；且需要预知运行时间</td>
+      </tr>
+      <tr>
+        <td><strong>STCF</strong><br><span style="font-size:12px;color:#94a3b8;">最短完成时间优先</span></td>
+        <td>SJF + <strong>抢占</strong>：新任务到达就比剩余时间。同样负载平均周转 50s</td>
+        <td>响应时间差：第三个任务必须等前两个全跑完</td>
+      </tr>
+      <tr>
+        <td><strong>RR</strong><br><span style="font-size:12px;color:#94a3b8;">轮转</span></td>
+        <td>一个时间片后换人。响应时间极好：平均响应 1（SJF 是 5）</td>
+        <td>周转时间最差之一：平均周转 14，甚至比 FIFO 还差</td>
+      </tr>
+      <tr>
+        <td><strong>MLFQ</strong><br><span style="font-size:12px;color:#94a3b8;">多级反馈队列</span></td>
+        <td><strong>不需要预知任何信息</strong>，靠观察历史行为动态调优先级，同时近似 SJF 又照顾交互</td>
+        <td>早期版本会被"愚弄"：每跑 99% 时间片就主动放弃 CPU 可近乎独占 CPU</td>
+      </tr>
+      <tr>
+        <td><strong>彩票 / 步长</strong><br><span style="font-size:12px;color:#94a3b8;">比例份额</span></td>
+        <td>用"彩票"表示份额。彩票是<strong>概率性</strong>的；步长是<strong>确定性</strong>的，每轮都精确按比例</td>
+        <td>彩票需要很多轮才收敛；步长需要全局状态，新进程加入会独占 CPU</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>MLFQ 的五条规则（这是本节最该背下来的东西）</h3>
+    <p><strong>规则 1：</strong>如果 A 的优先级 &gt; B 的优先级，运行 A（不运行 B）。</p>
+    <p><strong>规则 2：</strong>如果 A 的优先级 = B 的优先级，轮转运行 A 和 B。</p>
+    <p><strong>规则 3：</strong>工作进入系统时，放在最高优先级（最上层队列）。</p>
+    <p><strong>规则 4：</strong>一旦工作用完了其在某一层中的时间配额（<em>无论中间主动放弃了多少次 CPU</em>），就降低其优先级（移入低一级队列）。</p>
+    <p><strong>规则 5：</strong>经过一段时间 S，就将系统中所有工作重新加入最高优先级队列。</p>
+    <p style="margin-top:10px;color:#94a3b8;font-size:13.5px;">理解要点：规则 3+4 让它<strong>近似 SJF</strong>（先假定是短任务，不是就慢慢降级）；规则 5 防<strong>饥饿</strong>并适应行为变化；规则 4 里"无论中间放弃多少次"这个细节，是为了封堵"愚弄调度程序"的攻击——这正是本书"发现问题→打补丁"风格的典型样本。</p>
+  </div>
+
+  <!-- ================= 第二幕 ================= -->
+  <div class="section-title">第一幕 · 虚拟化（下）：让每个进程都以为自己独占内存</div>
+
+  <div class="card">
+    <h3>关键问题与答案链条</h3>
+    <p><strong>问题：</strong>物理内存只有一份，怎么给每个进程一个独立、连续、互不可见的地址空间？</p>
+    <p><strong>答案：地址转换（address translation）。</strong>程序里看到的<em>全是虚拟地址</em>，由硬件（MMU）在每次访存时翻译成物理地址。</p>
+    <p><strong>为什么值得这么麻烦？</strong>三个理由：<strong>易用</strong>（程序员不用操心变量放哪）、<strong>隔离与保护</strong>（一个错误的程序不能读写别人的内存）、<strong>灵活性</strong>（程序可以按任何方式使用自己的地址空间）。</p>
+  </div>
+
+  <div class="card">
+    <h3>机制的演进：三代的"问题 → 方案"</h3>
+    <p><strong>第一代：基址/界限（base and bound）。</strong>一对寄存器记录进程的起始位置和大小。简单，但整个地址空间必须连续放在内存里——<em>栈和堆之间那一大片空洞也得占着物理内存</em>。</p>
+    <p><strong>第二代：分段（segmentation）。</strong>给地址空间里的每个逻辑段（代码、栈、堆）各配一对基址/界限寄存器。只有用到的部分才占物理内存，于是能装下"稀疏地址空间"。代价是<strong>外部碎片</strong>：段与段之间的空隙难以利用。</p>
+    <p><strong>第三代：分页（paging）。</strong>把空间切成<strong>固定大小</strong>的页，物理内存切成同样大小的页帧，用<strong>页表</strong>记录映射。彻底消灭外部碎片，而且不假设堆和栈往哪长——灵活性最高。</p>
+    <p style="margin-top:10px;color:#94a3b8;font-size:13.5px;">一句话总结这个演进：<strong>把"变长的东西"换成"定长的东西"，是解决空间管理问题的通用套路。</strong></p>
+  </div>
+
+  <div class="card">
+    <h3>分页的三个连带问题（这一节最容易考计算题）</h3>
+    <p><strong>问题①：页表太大。</strong>32 位地址空间 + 4KB 页 → 20 位 VPN ≈ 100 万个页表项 × 4 字节 = <em>每个进程 4 MB 页表</em>！100 个进程就要 400 MB 只为存地址转换。</p>
+    <p style="padding-left:16px;color:#93c5fd;">→ 解法：<strong>多级页表</strong>（像树一样，只为真正用到的部分建表，几乎不浪费）、更大的页、反向页表、把页表本身也交换出去。</p>
+    <p style="margin-top:10px;"><strong>问题②：每次访存变两次。</strong>要先读页表拿到物理地址，再读数据。这慢得无法接受。</p>
+    <p style="padding-left:16px;color:#93c5fd;">→ 解法：<strong>TLB</strong>（地址转换缓存）。绝大多数访存都命中 TLB，几乎不花额外时间。<em>可以说没有 TLB，虚拟内存就不可能实用。</em></p>
+    <p style="margin-top:10px;"><strong>问题③：地址空间可以比物理内存大。</strong>怎么做到？</p>
+    <p style="padding-left:16px;color:#93c5fd;">→ 解法：<strong>交换空间</strong>（把不用的页挪到磁盘）+ <strong>存在位 / 页错误处理</strong>（访问不在内存的页就触发页错误，操作系统把它取回来）。</p>
+  </div>
+
+  <div class="card">
+    <h3>一定要记住的一个小算例（考试和面试都爱考）</h3>
+    <p>地址空间 64 字节，页大小 16 字节 → 共 4 页，虚拟地址需要 6 位：<strong>前 2 位是 VPN，后 4 位是偏移量</strong>。</p>
+    <p>假设虚拟地址是 <strong>21</strong>，二进制 <code style="color:#6ee7b7">010101</code> → VPN = <code style="color:#6ee7b7">01</code>（第 1 页），偏移量 = <code style="color:#6ee7b7">0101</code>（第 5 个字节）。查页表得物理帧号 7（二进制 <code style="color:#6ee7b7">111</code>）→ 物理地址 = <code style="color:#6ee7b7">111 0101</code> = <strong>117</strong>。</p>
+    <p><strong>关键点：偏移量保持不变。</strong>因为偏移量只是告诉你"这是页内的第几个字节"，页内位置不因搬家而改变。VPN 换成 PFN、偏移量原样保留——这就是地址转换的全部秘密。</p>
+  </div>
+
+  <div class="card">
+    <h3>策略：换出哪一页？</h3>
+    <p><strong>核心视角：把内存看成"所有虚拟页的缓存"。</strong>那么目标就是让缓存未命中最少，即从磁盘取页的次数最少。衡量指标是 <strong>AMAT = (P<sub>Hit</sub> × T<sub>M</sub>) + (P<sub>Miss</sub> × T<sub>D</sub>)</strong>（内存访问成本与磁盘访问成本的加权和）。</p>
+    <p><strong>策略谱系：</strong>最优（OPT，理论下界，不可实现）→ FIFO（简单但差）→ 随机（简单且没有最差情况）→ LRU（用历史预测未来，接近最优但难实现）→ <strong>近似 LRU：时钟算法</strong>（实用）。</p>
+    <p><strong>必须知道的反直觉结论——Belady 异常：</strong>对某些访问序列，FIFO 在内存更大时，页错误反而<em>更多</em>。因为它完全不考虑"这页还会不会被用到"。<strong>一个策略如果不基于正确的信息，增加资源不保证改善结果，甚至可能更糟。</strong></p>
+  </div>
+
+  <!-- ================= 第三幕 ================= -->
+  <div class="section-title">第二幕 · 并发：当"不可控"成为常态</div>
+
+  <div class="card">
+    <h3>先看那个著名的例子（第 26 章）</h3>
+    <p>两个线程，各自把同一个共享计数器加 1，各循环 <strong>1000 万次</strong>。预期结果：<strong>2000 万</strong>。</p>
+    <p>有时候确实得到 20000000。但多数时候你得到别的数字——而且<strong>每次运行都不一样</strong>。</p>
+    <p><strong>为什么？</strong>因为 <code style="color:#6ee7b7">counter = counter + 1</code> 在机器层面不是一步，而是三步：从内存读到寄存器、寄存器加一、写回内存。而调度器可以在<strong>任意两条指令之间</strong>切换线程。如果切换正好发生在"读完还没写回"的间隙，另一个线程也读到了同样的旧值——一次加法就凭空消失了。</p>
+    <p><strong>结论（这句话要背下来）：</strong>程序逻辑没错，是<em>你对执行顺序的隐含假设错了</em>。并发 Bug 的本质是：程序实际可能出现的执行顺序，比你假设的要多得多。</p>
+  </div>
+
+  <div class="card">
+    <h3>机制：先造原子操作，再用它构建一切</h3>
+    <p><strong>锁的四个评价标准：</strong>① 是否提供<strong>互斥</strong>（能阻止多个线程进入临界区）？② 是否<strong>公平</strong>（有没有线程会饿死）？③ <strong>性能</strong>（无竞争时开销多少）？④ 多 CPU 多线程竞争时性能如何？</p>
+    <p><strong>锁的实现演进：</strong>控制中断（只适用单处理器，且要求信任用户程序）→ <strong>测试并设置</strong>（test-and-set，自旋锁）→ <strong>比较并交换</strong>（compare-and-swap）→ <strong>链接的加载与条件式存储</strong>（LL/SC）→ <strong>获取并增加</strong>（fetch-and-add）。</p>
+    <p><strong>自旋的问题与解法：</strong>自旋锁简单但空耗 CPU。改进路线：<em>让出 CPU（yield）</em> → <em>用队列 + 休眠替代自旋（park/unpark）</em>，避免无谓的自旋和饥饿。</p>
+    <p><strong>在这之上构建的一切：</strong>并发计数器、并发链表、并发队列、并发散列表——都要考虑锁的粒度和正确性。</p>
+  </div>
+
+  <div class="card">
+    <h3>条件变量：为什么必须用 while 而不是 if</h3>
+    <p>线程经常需要"等某个条件成立"。简单的方案是自旋检查，但极其低效。<strong>条件变量</strong>提供了一个显式队列：条件不满足时线程把自己加入队列等待，另一线程改变状态后发信号唤醒。</p>
+    <p>书里的标准写法是：</p>
+    <p style="font-family:Consolas,Monaco,monospace;font-size:13.5px;color:#6ee7b7;background:#0f172a;padding:12px 16px;border-radius:8px;margin-top:8px;">Pthread_mutex_lock(&amp;m);<br>&nbsp;&nbsp;while (done == 0)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// ← 是 while，不是 if！<br>&nbsp;&nbsp;&nbsp;&nbsp;Pthread_cond_wait(&amp;c, &amp;m);<br>Pthread_mutex_unlock(&amp;m);</p>
+    <p style="margin-top:10px;"><strong>为什么不能换成 if？</strong>因为被唤醒不等于条件一定成立——可能被"虚假唤醒"，也可能在你醒来之前条件又被别人改回去了。<strong>醒来之后必须重新检查条件。</strong>这是并发编程里最经典的一个坑。</p>
+  </div>
+
+  <div class="card">
+    <h3>信号量：一个原语表达两种语义</h3>
+    <p>信号量是 Dijkstra 提出的同步原语，<code style="color:#6ee7b7">sem_wait()</code> 把值减一（若为负则等待），<code style="color:#6ee7b7">sem_post()</code> 把值加一（并唤醒等待者）。它<strong>同时能表达锁和条件同步</strong>：</p>
+    <p>• 值设为 <strong>1</strong> → 就是一把锁（二值信号量）<br>
+       • 值设为 <strong>0</strong> → 用作条件变量（等待某事件发生）<br>
+       • 值设为 <strong>N</strong> → 控制同时访问某资源的线程数</p>
+    <p><strong>用它能解决的经典问题：</strong>生产者/消费者（有界缓冲区）、读者—写者锁、哲学家就餐。</p>
+    <p style="margin-top:8px;color:#94a3b8;font-size:13.5px;">注意：不理解 P/V（wait/post）的顺序，几乎必然写出死锁。这是初学者最高频的翻车点。</p>
+  </div>
+
+  <div class="card">
+    <h3>常见并发缺陷：两大类</h3>
+    <p><strong>非死锁缺陷：</strong>① <strong>违反原子性</strong>（该原子的操作没保护，如 <code style="color:#6ee7b7">counter++</code>）；② <strong>违反顺序</strong>（该先做 A 再做 B，实际反了）。</p>
+    <p><strong>死锁缺陷——四个必要条件（缺一不可）：</strong></p>
+    <p>① <strong>互斥</strong>：资源同一时间只能被一个人占用；<br>
+       ② <strong>持有并等待</strong>：拿着一个，还在等另一个；<br>
+       ③ <strong>不可抢占</strong>：别人不能从你手里抢走；<br>
+       ④ <strong>循环等待</strong>：A 等 B，B 等 A。</p>
+    <p><strong>这四条同时成立才死锁——所以预防的思路极其清晰：打掉任意一条即可。</strong>最常用的做法是规定所有人按同一顺序申请资源，直接打破循环等待。</p>
+  </div>
+
+  <div class="card">
+    <h3>基于事件的并发（进阶）：换一条路</h3>
+    <p>既然并发的麻烦几乎全来自锁，能不能根本不用锁？<strong>可以：用一个事件循环，不用多线程。</strong>程序守着一个队列等待事件，一个一个处理。没有并发，就没有锁，也没有死锁。</p>
+    <p><strong>代价立刻出现：</strong>任何<strong>阻塞的系统调用</strong>都会把整个事件循环卡住——你不能一边等磁盘 I/O 一边处理其他事件。于是必须引入异步 I/O；接着状态管理变得极其复杂，因为一次逻辑操作被拆成多个事件，中间状态得手动保存。<em>你消灭了锁的问题，换来了状态管理的问题。</em></p>
+  </div>
+
+  <!-- ================= 第四幕 ================= -->
+  <div class="section-title">第三幕 · 持久性：在一台会坏的机器上保住数据</div>
+
+  <div class="card">
+    <h3>先把物理事实搞清楚：磁盘为什么慢</h3>
+    <p>磁盘 I/O 时间 = <strong>寻道时间</strong>（磁头移动到正确磁道）+ <strong>旋转延迟</strong>（等正确的扇区转到磁头下）+ <strong>传输时间</strong>（真正读写数据）。</p>
+    <p><strong>顺序访问和随机访问的性能差上百倍</strong>——因为随机访问意味着磁头要来回寻道，而机械寻道是毫秒级的，比传输数据本身慢几个数量级。</p>
+    <p><strong>这个物理事实支配了整个存储软件的设计：</strong>磁盘调度（SSTF、电梯算法）想把随机变成顺序；FFS 讲究"磁盘意识"、把相关数据放在同一个柱面组；日志结构文件系统（LFS）干脆走极端——把整个磁盘当成一条只追加的日志，永远只顺序写。<br>
+    <em>很多看起来精巧的系统设计，追根究底只是在绕开一个物理限制。</em></p>
+  </div>
+
+  <div class="card">
+    <h3>RAID：用一堆廉价磁盘换性能、容量、可靠性</h3>
+    <p>RAID 对上层<strong>透明</strong>——操作系统和应用程序看到的就是一个大磁盘，不用改一行代码。这种"透明可部署性"是它成功的关键。</p>
+    <p>• <strong>RAID 0（条带化）</strong>：把数据分散到多块盘，容量和吞吐都提升，但<em>完全没有冗余</em>，坏一块就全完。<br>
+       • <strong>RAID 1（镜像）</strong>：每份数据写两块盘，能容忍一块盘坏，代价是容量利用率只有 50%。<br>
+       • <strong>RAID 4</strong>：用一块专门的校验盘存奇偶校验，能容忍一块盘坏，但<em>每次小写入都要读写校验盘</em>，校验盘成为瓶颈。<br>
+       • <strong>RAID 5（旋转奇偶校验）</strong>：把校验块轮流分散到所有盘上，解决了 RAID 4 的校验盘瓶颈，能容忍一块盘坏。</p>
+  </div>
+
+  <div class="card">
+    <h3>文件系统：inode 是理解一切的关键</h3>
+    <p>磁盘上的一块区域被组织成：<strong>超级块</strong>（文件系统的元信息）+ <strong>inode 位图</strong>（哪些 inode 被占用）+ <strong>数据位图</strong>（哪些数据块被占用）+ <strong>inode 表</strong> + <strong>数据块区</strong>。</p>
+    <p><strong>inode 是什么？</strong>它是"一个文件的全部元信息"，但不含文件名。里面有：文件大小、所有者、权限、时间戳，以及最重要的——<em>指向数据块的指针</em>。指针分直接指针、间接指针、双重间接指针，用这种多级结构让一个小 inode 能描述一个很大的文件。</p>
+    <p><strong>那文件名存在哪？</strong>存在<strong>目录</strong>里。目录本质上是"文件名 → inode 号"的映射表。这解释了<strong>硬链接</strong>：多个文件名指向同一个 inode，删掉一个文件名，数据仍在（只要还有别的名字指向它）。而<strong>符号链接</strong>是一个独立的小文件，内容就是另一个文件的路径——它指向的是"名字"，不是 inode。</p>
+  </div>
+
+  <div class="card">
+    <h3>崩溃一致性：本书的智力高潮</h3>
+    <p><strong>问题：</strong>系统可能在任何两次写入之间崩溃。磁盘上的状态可能只更新了一半。怎么保证文件系统还能处于合理状态？</p>
+    <p><strong>先看一个具体例子（第 42 章）：</strong>往一个文件追加数据，需要更新<strong>三个</strong>磁盘结构——① inode（指向新块、大小变大）、② 数据位图（标记新块已分配）、③ 数据块本身。如果崩溃只完成了其中一两个，文件系统就处于"有趣的状态"：比如 inode 指向了一个还没写入的块，读出来就是垃圾数据。</p>
+    <p><strong>三种解法，思路层次完全不同：</strong></p>
+    <p><strong>① FSCK（事后救火）</strong>：让系统先坏着，重启后派检查程序把整个磁盘扫一遍，把不一致的地方修好。缺点：慢，而且它<em>不知道本来应该是什么样</em>，只能猜。</p>
+    <p><strong>② 日志 / 预写日志（事前记账）——最漂亮的解法。</strong>在真正动手之前，先把"我打算做什么"写到一个日志区；确认日志落盘后，再去做实际修改。<em>崩溃后重放日志，就能恢复到一致状态。</em>它没有让磁盘变快或变可靠，只是改变了<strong>记账的顺序</strong>。</p>
+    <p><strong>③ 写时复制 / 软更新（换思路）</strong>：永远不覆盖正在使用的数据，只写新位置，最后用一个原子操作切换指针。让"不一致的中间状态"根本不存在。</p>
+    <p style="margin-top:10px;">顺着思路②走到底，就是<strong>日志结构文件系统（LFS）</strong>：干脆把整个磁盘当成一条只追加的日志，顺序写到底，用检查点区域和 inode 映射来定位数据。</p>
+  </div>
+
+  <div class="card">
+    <h3>数据完整性：磁盘也会默默出错</h3>
+    <p>除了"整块盘坏掉"，还有一种更隐蔽的故障：<strong>潜在扇区错误</strong>——盘还能用，但某个扇区的内容悄悄变了。</p>
+    <p>解法是<strong>校验和（checksum）</strong>：为每个块计算一个校验值并存起来，读的时候重新计算并比对，不一致就知道数据坏了。还要处理两种更麻烦的错误：<strong>错误的写入</strong>（写到了错误的块）和<strong>丢失的写入</strong>（以为写成功了其实没写）。另外要有<strong>擦净（scrubbing）</strong>——定期主动扫描所有块，尽早发现坏块。</p>
+  </div>
+
+  <!-- ================= 跨越三部分的工程智慧 ================= -->
+  <div class="section-title">跨越三部分的工程智慧：这些"提示"才是全书精髓</div>
+  <div class="card">
+    <h3>① 抽象不是"简化"，而是"制造一个可控的假象"</h3>
+    <p>进程、地址空间、文件、目录、RPC——每一个都是假象。真实世界是寄存器、物理页、扇区、丢包的网线。<strong>理解这一点，你就不只是在学操作系统，你是在学"如何构造可靠系统"这件更普遍的事。</strong></p>
+  </div>
+  <div class="card">
+    <h3>② 最优雅的方案，往往来自换个"记账方式"</h3>
+    <p>日志（预写日志）没有让磁盘更快或更可靠，它只是换了一种记账顺序：先写下"我打算做什么"，再去做。LFS 把这条思路走到极致：把整个磁盘当成一条只追加的日志。<strong>问题的解法常常不在"更强的能力"，而在"更聪明的顺序"。</strong></p>
+  </div>
+  <div class="card">
+    <h3>③ 一个策略如果不基于正确的信息，增加资源反而可能更糟</h3>
+    <p>Belady 异常是最好的例子：FIFO 只看"到达顺序"，完全不看"这页还会不会被用到"，所以给它更多内存，它反而可能淘汰掉马上要用的页。<strong>在优化任何东西之前，先问：我的决策依据和我的目标真的相关吗？</strong></p>
+  </div>
+  <div class="card">
+    <h3>④ 尽可能简单；只在需要的时候才并发</h3>
+    <p>作者在并发部分的收尾建议非常直接：<em>尽可能简单，避免复杂的线程交互，优先使用已被证实的交互方式（锁、生产者—消费者队列）；只在需要的时候才并发，尽可能不用它——过早地优化是最糟糕的。</em>如果确实需要并行，用 Map-Reduce 这类简单形式，就不必操心锁和条件变量。</p>
+  </div>
+  <div class="card">
+    <h3>⑤ 也许目标不是找到最好的方案，而是避免灾难</h3>
+    <p>调度策略的争论可能永远不会有结论，因为连度量指标本身都是互相矛盾的（周转时间好，响应时间就差）。所以作者引了 Lampson 的这句话作收束——<strong>把"追求最优"的执念，换成"避免最坏"的务实。</strong></p>
+  </div>
+
+  <div class="quote">
+    <p>"也许目标不是找到最好的解决方案，而是为了避免灾难。"</p>
+    <div class="author">—— Lampson，被引于第11章 关于 CPU 虚拟化的总结对话</div>
+  </div>
+
+  <div class="quote">
+    <p>"似乎操作系统相当偏执。它希望确保控制机器。虽然它希望程序能够尽可能高效地运行，但操作系统也希望能够对错误或恶意的程序说：'啊！别那么快，我的朋友。'"</p>
+    <div class="author">—— 第11章，学生总结"操作系统的哲学"</div>
+  </div>
+
+  <!-- ================= 学习路线 ================= -->
+  <div class="section-title">时间有限怎么读：80% 掌握度的学习路线</div>
+  <div class="section-sub">按重要性分三档。核心原则：<strong>精读"机制"和"关键问题"，略读具体参数，跳过与主线无关的实现细节</strong></div>
+
+  <div class="card">
+    <h3>先看一组数据：这本书的"脚手架"到底有多少</h3>
+    <p>我把全书 500 页统计了一遍，结果很能说明这本书该怎么读：</p>
+    <p>• <strong>63 个"关键问题"灰框</strong>（crux）——这是全书<strong>唯一自带"考点"标记</strong>的东西。分布极不均匀：讨论机制的章节最多（第 6 章受限直接执行有 4 个、第 36 章 I/O 有 5 个、第 44 章数据完整性有 5 个），而 11 个纯对话章节<strong>一个都没有</strong>。</p>
+    <p>• <strong>64 条"提示"（TIP）</strong>——这是全书最浓缩的<em>工程智慧</em>，跟具体技术无关，却能迁移到任何系统设计上。比如"分离策略和机制""避免巫毒常量""对复杂性表示怀疑""简单的笨办法可能更好"。</p>
+    <p>• <strong>55 条"补充"（ASIDE）</strong>——历史背景、趣闻、延伸阅读。</p>
+    <p>• <strong>约 60 张时间线表格</strong>——作者说"时间线是理解的本质"。这些表格是<em>天然的练习材料</em>：遮住右列，自己填一遍。</p>
+    <p>• <strong>21 章带作业，其中 16 章配了 Python 模拟器</strong>——每个模拟器都支持随机种子、<code style="color:#6ee7b7">-c</code> 自查答案，换种子就是无限道新题。</p>
+    <p><strong>所以"掌握 80%"的验收标准可以操作化为：能用自己的话回答那 63 个关键问题。</strong></p>
+  </div>
+
+  <div class="route">
+    <div class="route-item must">
+      <div class="route-badge">必读核心</div>
+      <div class="route-body">
+        <strong>全部 11 个"对话"章节（第 1、3、11、12、24、25、34、35、45、46、50 章）</strong>
+        <span>一共只有约 15 页，是全书性价比最高的部分。每一部分都被一对对话首尾括住（第 1 部分有两对：3↔11 管 CPU、12↔24 管内存）。开篇对话预告该部分的抽象与问题，结尾对话让学生复述要点——那是<em>不承担知识负载的"学习目标说明书 + 复习卡"</em>。</span>
+      </div>
+    </div>
+    <div class="route-item must">
+      <div class="route-badge">必读核心</div>
+      <div class="route-body">
+        <strong>附录 E《实验室：指南》</strong>
+        <span>gcc / gdb / make / -g -Wall / 库链接 / 手册页的极简教程。对"只有一点计算机基础"的读者价值极高，建议强制读。</span>
+      </div>
+    </div>
+    <div class="route-item must">
+      <div class="route-badge">必读核心</div>
+      <div class="route-body">
+        <strong>第 2 章 操作系统介绍</strong>
+        <span>全书总纲，含"如何将资源虚拟化"这个关键问题。必须读。</span>
+      </div>
+    </div>
+    <div class="route-item must">
+      <div class="route-badge">必读核心</div>
+      <div class="route-body">
+        <strong>第 4、6 章：进程抽象 + 受限直接执行</strong>
+        <span>虚拟化的机制地基。理解"用户态/内核态、陷阱、时钟中断、上下文切换"是一切的前提。</span>
+      </div>
+    </div>
+    <div class="route-item must">
+      <div class="route-badge">必读核心</div>
+      <div class="route-body">
+        <strong>第 7、8 章：调度基础 + MLFQ</strong>
+        <span>调度是理解"机制 vs 策略"这一主线的最佳样本。MLFQ 的五条规则要能默写。</span>
+      </div>
+    </div>
+    <div class="route-item must">
+      <div class="route-badge">必读核心</div>
+      <div class="route-body">
+        <strong>第 13、15、18、19 章：地址空间 + 地址转换 + 分页 + TLB</strong>
+        <span>内存虚拟化的主干。地址转换的计算题、页表大小的计算、TLB 的作用，都必须掌握。</span>
+      </div>
+    </div>
+    <div class="route-item must">
+      <div class="route-badge">必读核心</div>
+      <div class="route-body">
+        <strong>第 21、22 章：超越物理内存（机制 + 策略）</strong>
+        <span>交换空间、页错误、替换策略、Belady 异常、AMAT。这部分是"机制/策略"分离的又一个范例。</span>
+      </div>
+    </div>
+    <div class="route-item must">
+      <div class="route-badge">必读核心</div>
+      <div class="route-body">
+        <strong>第 26、28 章：并发介绍 + 锁</strong>
+        <span>那个 1000 万次的计数器例子必须亲手跑一遍。锁的四个评价标准和实现演进要掌握。</span>
+      </div>
+    </div>
+    <div class="route-item must">
+      <div class="route-badge">必读核心</div>
+      <div class="route-body">
+        <strong>第 30、31 章：条件变量 + 信号量</strong>
+        <span>并发编程的两大主力工具。"为什么用 while 不用 if"和生产者/消费者是必考内容。</span>
+      </div>
+    </div>
+    <div class="route-item must">
+      <div class="route-badge">必读核心</div>
+      <div class="route-body">
+        <strong>第 32 章：常见并发问题</strong>
+        <span>死锁四条件必须记住。这是把前面所有并发知识串起来的一章。</span>
+      </div>
+    </div>
+    <div class="route-item must">
+      <div class="route-badge">必读核心</div>
+      <div class="route-body">
+        <strong>第 39、40 章：文件和目录 + 文件系统实现</strong>
+        <span>inode、目录、位图、多级指针、读写路径。不理解 inode 就无法理解后面所有文件系统内容。</span>
+      </div>
+    </div>
+    <div class="route-item must">
+      <div class="route-badge">必读核心</div>
+      <div class="route-body">
+        <strong>第 42 章 崩溃一致性：FSCK 和日志</strong>
+        <span>全书智力含量最高的一章。"先记账再动手"这个思路的价值远超操作系统本身。</span>
+      </div>
+    </div>
+
+    <div class="route-item skim">
+      <div class="route-badge">可以略读</div>
+      <div class="route-body">
+        <strong>第 5、14、27、39（API 部分）章：各种 API 插叙</strong>
+        <span>进程 API（fork/exec/wait）、内存 API（malloc/free）、线程 API（pthread）。读一遍了解接口即可，不必背细节。</span>
+      </div>
+    </div>
+    <div class="route-item skim">
+      <div class="route-badge">可以略读</div>
+      <div class="route-body">
+        <strong>第 9、10 章：比例份额 + 多处理器调度</strong>
+        <span>知道彩票/步长的基本思想、以及多处理器带来"缓存亲和度"和"负载不均"两个新问题就够了。</span>
+      </div>
+    </div>
+    <div class="route-item skim">
+      <div class="route-badge">可以略读</div>
+      <div class="route-body">
+        <strong>第 16、17、20 章：分段、空闲空间管理、较小的表</strong>
+        <span>分段是分页的前身，知道它解决什么、留下什么遗留问题即可。多级页表的计算可以掌握，具体位宽细节不必死记。</span>
+      </div>
+    </div>
+    <div class="route-item skim">
+      <div class="route-badge">可以略读</div>
+      <div class="route-body">
+        <strong>第 29、33 章：基于锁的数据结构、基于事件的并发</strong>
+        <span>前者是应用练习，后者是进阶话题。了解思路即可。</span>
+      </div>
+    </div>
+    <div class="route-item skim">
+      <div class="route-badge">可以略读</div>
+      <div class="route-body">
+        <strong>第 36、37、38 章：I/O 设备、磁盘驱动器、RAID</strong>
+        <span>记住"顺序远快于随机"这个核心事实，以及 RAID 0/1/4/5 的取舍。具体的寻道时间计算可以跳过。</span>
+      </div>
+    </div>
+    <div class="route-item skim">
+      <div class="route-badge">可以略读</div>
+      <div class="route-body">
+        <strong>第 41、43、44 章：FFS、LFS、数据完整性</strong>
+        <span>FFS 的"局部性"、LFS 的"顺序写入"、校验和的基本思想要懂，实现细节可略读。</span>
+      </div>
+    </div>
+
+    <div class="route-item skip">
+      <div class="route-badge">可以跳过</div>
+      <div class="route-body">
+        <strong>第 23 章 VAX/VMS 虚拟内存系统</strong>
+        <span>一个完整的历史案例研究。不影响主线理解，有兴趣再看。</span>
+      </div>
+    </div>
+    <div class="route-item skip">
+      <div class="route-badge">可以跳过</div>
+      <div class="route-body">
+        <strong>第 46–50 章：分布式系统、NFS、AFS</strong>
+        <span>作者自己说这"不属于本书的范围"，只是插入的介绍。只需记住一个结论：<em>一切都会失败，用大量组件和重试来隐藏失败。</em></span>
+      </div>
+    </div>
+    <div class="route-item skip">
+      <div class="route-badge">可以跳过</div>
+      <div class="route-body">
+        <strong>附录 A–G：虚拟机监视器、实验室指南、项目</strong>
+        <span>虚拟机监视器是进阶话题；实验室和项目是动手材料，想做项目时再回来。</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>如果只给你 20 小时</h3>
+    <p>按这个顺序读：<strong>11 个对话章节（1h）→ 第 2 章（0.5h）→ 第 4、6 章（2h）→ 第 7、8 章（2.5h）→ 第 13、15、18、19 章（4.5h）→ 第 21、22 章（2h）→ 第 26、28 章（2.5h）→ 第 30、31、32 章（3h）→ 第 39、40、42 章（3h）</strong>，约 21 小时。</p>
+    <p>读的时候手上一定要有纸和笔，<strong>把每条时间线画出来</strong>——页错误发生时发生了什么、上下文切换时保存了什么、日志写入的顺序是什么。作者说过：<em>"时间线是理解的本质。如果你知道会发生什么，你就可以真正了解虚拟内存的运行方式。"</em></p>
+  </div>
+
+  <div class="card">
+    <h3>再加 8～10 小时，把知识变成能力</h3>
+    <p>只读书是不够的。作者在总结对话里说得非常直接：<strong>"我认为没有办法可以替代动手。仅阅读这些内容并不能给你正确的理解。"</strong></p>
+    <p>建议按顺序跑通这 10 个模拟器（每个 30～60 分钟）：</p>
+    <p><code style="color:#6ee7b7">process-run.py</code>（进程与状态）→ <code style="color:#6ee7b7">scheduler.py</code>（FIFO/SJF/RR）→ <code style="color:#6ee7b7">mlfq.py</code>（MLFQ）→ <code style="color:#6ee7b7">lottery.py</code>（彩票调度）→ <code style="color:#6ee7b7">relocation.py</code>（基址/界限）→ <code style="color:#6ee7b7">segmentation.py</code>（分段）→ <code style="color:#6ee7b7">paging-linear-translate.py</code>（地址转换）→ <code style="color:#6ee7b7">paging-policy.py</code>（替换策略）→ <code style="color:#6ee7b7">x86.py</code>（并发与锁）→ <code style="color:#6ee7b7">vsfs.py</code>（文件系统）。</p>
+    <p>跑完这些，你就从"看懂了"变成了"会做了"——这正是荀子那句"知之不若行之"的意思。</p>
+  </div>
+
+  <div class="quote">
+    <p>"不闻不若闻之，闻之不若见之，见之不若知之，知之不若行之。"（荀子）<br>听到了不如见到了，见到了不如知道了，知道了不如<strong>做到了</strong>。</p>
+    <div class="author">—— 第1章 关于本书的对话</div>
+  </div>
+
+  <div class="footer">
+    《操作系统导论》整体架构（认知地图版） · OSTEP · Arpaci-Dusseau 夫妇<br>
+    虚拟化 · 并发 · 持久性 —— 三件容易的事<br>
+    优先读"机制"与"关键问题"，略读参数，跳过支线
+  </div>
+
+</div>
+</body>
+</html>

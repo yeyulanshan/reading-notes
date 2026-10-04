@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>一个量，和它的两种用法</title>
+<style>
+  :root{
+    --paper:#f7f4ed;
+    --card:#fffdf8;
+    --edge:#ded6c8;
+    --ink:#2b2721;
+    --ink-mid:#5c5449;
+    --ink-soft:#8c8175;
+    --teal:#166060;
+    --teal-soft:#e6efee;
+    --rust:#b1442a;
+    --rust-soft:#f7e9e4;
+    --gold:#9a7420;
+    --gold-soft:#f5eeda;
+    --sage:#55703c;
+    --sage-soft:#ecf0e2;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--paper);color:var(--ink);padding:36px 20px 48px;line-height:1.88;
+    -webkit-font-smoothing:antialiased;
+  }
+  .container{max-width:920px;margin:0 auto;}
+
+  .header{
+    text-align:center;margin-bottom:30px;padding:44px 24px 40px;
+    background:var(--card);border:1px solid var(--edge);border-top:5px solid var(--teal);
+    border-radius:4px;
+  }
+  .header h1{font-size:27px;color:var(--ink);margin-bottom:12px;letter-spacing:.5px;}
+  .header .subtitle{font-size:14.5px;color:var(--ink-mid);}
+  .header .author{margin-top:16px;font-size:12.5px;color:var(--ink-soft);letter-spacing:.5px;}
+
+  main{
+    background:var(--card);border:1px solid var(--edge);border-radius:4px;
+    padding:34px 38px;
+  }
+
+  h1{font-size:23px;color:var(--ink);margin:8px 0 18px;}
+  h2{
+    font-size:20px;color:var(--ink);margin:40px 0 16px;
+    padding-left:13px;border-left:4px solid var(--teal);letter-spacing:.3px;
+  }
+  h2:first-child{margin-top:0;}
+  h3{font-size:16.5px;color:var(--teal);margin:28px 0 12px;font-weight:700;}
+  h4{font-size:15px;color:var(--ink-mid);margin:18px 0 8px;}
+
+  p{color:var(--ink-mid);font-size:14.5px;margin-bottom:12px;}
+  strong{color:var(--ink);}
+  em{color:var(--rust);font-style:normal;font-weight:600;}
+
+  ul,ol{margin:8px 0 14px 24px;}
+  li{color:var(--ink-mid);font-size:14.5px;margin-bottom:6px;}
+
+  hr{border:none;border-top:1px solid var(--edge);margin:26px 0;}
+
+  table{width:100%;border-collapse:collapse;margin:14px 0 18px;font-size:13.5px;}
+  th,td{padding:10px 12px;border:1px solid var(--edge);text-align:left;vertical-align:top;}
+  th{background:var(--teal-soft);color:var(--teal);font-weight:700;}
+  td{color:var(--ink-mid);}
+
+  blockquote{
+    background:var(--gold-soft);border:1px solid #e6dcc0;border-left:4px solid var(--gold);
+    border-radius:0 3px 3px 0;padding:16px 20px;margin:14px 0;
+  }
+  blockquote p{color:#6d5011;font-size:14px;font-style:italic;margin-bottom:8px;}
+  blockquote p:last-child{margin-bottom:0;}
+  blockquote strong{color:#5a420d;}
+
+  code{
+    background:var(--paper);padding:1.5px 6px;border-radius:3px;
+    font-family:Consolas,Monaco,monospace;font-size:13px;color:var(--teal);
+  }
+  pre{
+    background:var(--paper);border:1px solid var(--edge);border-radius:3px;
+    padding:14px 16px;overflow-x:auto;margin:12px 0 16px;
+  }
+  pre code{background:none;padding:0;line-height:1.65;}
+
+  /* 专业问题标题 */
+  .q-title{
+    background:var(--teal-soft);border-left:4px solid var(--teal);
+    border-radius:0 3px 3px 0;padding:13px 18px;margin:28px 0 12px;
+    color:var(--ink);font-size:15.5px;font-weight:700;line-height:1.7;
+  }
+
+  .footer{
+    text-align:center;margin-top:38px;padding:20px;color:var(--ink-soft);font-size:12.5px;line-height:1.9;
+  }
+
+  @media(max-width:640px){
+    .header h1{font-size:20px;}
+    h2{font-size:17.5px;}
+    body{padding:20px 14px 32px;}
+    main{padding:22px 18px;}
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <h1>一个量，和它的两种用法</h1>
+    <div class="subtitle">MacKay 信息论精华笔记与专业问题 · 20 个专业问题 + 通俗解释</div>
+    <div class="author">David J.C. MacKay · 剑桥大学出版社 2003 · 640 页</div>
+  </div>
+
+  <main>
+<blockquote>
+<p>这份文档是 MacKay 那本书的学习伴随材料，属于「底层认知」项目的 03_自然与数学 域。第一部分把全书压成一条主线；第二部分用 20 个专业问题检验你是否真的读懂了。</p>
+<p></p>
+<p>使用方法：<strong>先自己回答，再看解答。</strong> 每题的"通俗解释"是给你检查自己是否真懂用的——如果你能把专业回答讲成通俗解释那个样子，说明你是真的理解了。</p>
+<p></p>
+<p>⚠️ 一个前提：这本书是<strong>形式系统</strong>，它的结论几乎全都带条件。所以下面的笔记会尽量标出每个结论的<strong>适用前提</strong>，并在末尾附一节<strong>文本考订</strong>，记录精读中校准出的几处易误挂之处。</p>
+</blockquote>
+<hr>
+<h2>第一部分：精读笔记</h2>
+<h3>一、全书的心跳：两个极限</h3>
+<p>50 章只服务于两个对偶的问题：</p>
+<table><thead><tr><th></th><th>内容</th><th>极限</th><th>在哪部分</th></tr></thead><tbody>
+<tr><td><strong>数据压缩</strong></td><td>给定数据源，最短能用多少比特表示它</td><td><strong>熵 H(X)</strong>（下界）</td><td>Part I（第 4–7 章）</td></tr>
+<tr><td><strong>噪声中的通信</strong></td><td>给定会出错的信道，多快能可靠传信息</td><td><strong>容量 C</strong>（上界）</td><td>Part II–III（第 8–19 章）</td></tr>
+</tbody></table>
+<p>压缩是<strong>去掉</strong>冗余，通信是<strong>加入</strong>冗余——看起来相反，但它们是同一个量的两面：<strong>C 的定义本身就是互信息的最大值</strong>，而互信息由熵构成。</p>
+<p>所以这本书可以概括成：<strong>一个量（熵），和它的两种用法。</strong></p>
+<p>第 1 章开篇引的是香农 1948 年那句话，注意"exactly <strong>or approximately</strong>"这几个字：</p>
+<blockquote>
+<p>"The fundamental problem of communication is that of reproducing at one point either exactly or approximately a message selected at another point."</p>
+</blockquote>
+<p>——后半句就是"允许错误"那一半定理（R(p_b)）的伏笔。</p>
+<h3>二、全书最反直觉的结果：香农的登场</h3>
+<p><strong>香农之前的共识</strong>是"没有付出就没有收获"：可达到与不可达到的分界是一条<strong>穿过原点</strong>的曲线——要让错误率趋零，速率也必须趋零。</p>
+<p><strong>香农证明的是：这个分界线在 R 轴上交于一个非零点 C。</strong></p>
+<p>对二进制对称信道（噪声水平 f）：<strong>C(f) = 1 − H₂(f)</strong>。f = 0.1 时 <strong>C ≈ 0.53</strong>。</p>
+<p>MacKay 用磁盘把这个结果讲得极有力。设 f = 0.1：</p>
+<table><thead><tr><th>方法</th><th>达到的错误率</th><th>需要几个噪声盘</th></tr></thead><tbody>
+<tr><td>重复码 R3</td><td>p_b = 0.03</td><td>3 个</td></tr>
+<tr><td>重复码 R60</td><td>p_b ≈ 10⁻¹⁵</td><td><strong>60 个</strong></td></tr>
+<tr><td><strong>香农极限</strong></td><td>任意小，10⁻¹⁸、10⁻²⁴ 都行</td><td><strong>2 个</strong>（因为 1/2 &lt; 0.53）</td></tr>
+</tbody></table>
+<p>然后是那段著名的香农"路过"的对话：<em>"你要 10⁻¹⁵？你不需要六十个盘——两个盘就够了。"</em></p>
+<p><strong>而他立刻自己踩了刹车——这是全书诚实性的样板。</strong> 他加了一个方括号说明：严格说来上面的话可能不完全对，因为<strong>香农是靠块长不断增大的块码序列证明定理的</strong>，而所需块长可能比一个 GB 还大。那时香农大概会说："好吧，那些小盘做不到，但如果你有两个噪声 TB 盘，你就能造一个高质量 TB 盘。"</p>
+<p><strong>定理的两面（MacKay 的原话）</strong>：</p>
+<blockquote>
+<p>"The noisy-channel coding theorem ... asserts both that reliable communication at any rate beyond the capacity is impossible, and that reliable communication at all rates up to capacity is possible."</p>
+</blockquote>
+<p><strong>它既是悲观的上界，也是乐观的下界。</strong> 很多人只记住"不可能"那一半。</p>
+<p>定理的完整陈述分三部分：</p>
+<table><thead><tr><th>部分</th><th>内容</th></tr></thead><tbody>
+<tr><td><strong>正面一</strong></td><td>对任意 DMC，C = max I(X;Y)。对任意 ε &gt; 0、R &lt; C，只要 N 足够大，就存在长度 N、速率 ≥ R 的码和译码算法，使<strong>最大块错误概率 &lt; ε</strong></td></tr>
+<tr><td><strong>正面二</strong></td><td>若允许比特错误率 p_b，速率可达 <strong>R(p_b) = C / (1 − H₂(p_b))</strong></td></tr>
+<tr><td><strong>负面</strong></td><td>任何大于 R(p_b) 的速率都<strong>不可达</strong></td></tr>
+</tbody></table>
+<h3>三、三个核心量，层层递进</h3>
+<p><strong>第一层 · 一个事件携带多少信息</strong></p>
+<p>h(x) = log₂ (1 / P(x))，单位比特。<strong>概率越小，信息量越大。</strong></p>
+<p>MacKay 给了三个同义名，而他在第 18 章把这件事说得最清楚：</p>
+<blockquote>
+<p>"'Information content', 'surprise value', and log likelihood or log evidence are the same thing."</p>
+</blockquote>
+<p><strong>信息量 = 意外程度 = 对数似然 = 对数证据。四个名字，一个东西。</strong></p>
+<p>英语字母分布的具体数字（第 2 章 table 2.9）：</p>
+<table><thead><tr><th>字母</th><th>概率</th><th>信息量</th></tr></thead><tbody>
+<tr><td>z</td><td>0.0007</td><td>10.4 bits</td></tr>
+<tr><td>e</td><td>0.0913</td><td>3.5 bits</td></tr>
+<tr><td><strong>–（空格）</strong></td><td><strong>0.1928</strong></td><td><strong>2.4 bits</strong></td></tr>
+</tbody></table>
+<p><strong>空格是最高频字符，所以它信息量最低</strong>——这一条很反直觉。</p>
+<p><strong>第二层 · 一个信源平均有多少不确定性</strong></p>
+<p>H(X) = Σ P(x) log₂ (1 / P(x))。它是信息量的<strong>平均值</strong>。MacKay 给它的第二个名字更少歧义：<strong>"X 的不确定性"（the uncertainty of X）</strong>。</p>
+<p>两条性质：H(X) ≥ 0（等号 iff 某个 pᵢ = 1）；H(X) ≤ log₂|A_X|（等号 iff <strong>均匀分布</strong>）。</p>
+<p>英语文献中随机取一个字母，熵约 <strong>4.11 比特</strong>。</p>
+<p>还有一个很实用的递归性质（<strong>熵的可分解性</strong>）：把结果分阶段揭示，各阶段的熵按概率加权相加就得到总熵。例如 H(1/2, 1/4, 1/4) = 1.5 也可以写成 H(1/2, 1/2) + ½·H(1/2, 1/2) = 1 + 0.5 = 1.5。</p>
+<p><strong>第三层 · 用错分布要多付多少代价</strong></p>
+<p>D_KL(P‖Q) = Σ P(x) log( P(x) / Q(x) ) ≥ 0（<strong>Gibbs 不等式</strong>），等号 iff P = Q。</p>
+<p>操作性的读法：<strong>用为 Q 优化的编码去编 P 的数据，平均要多付多少比特。</strong> 这个读法有一个干净的恒等式（式 5.23）：若真实分布是 p、用的完备码隐含分布是 qᵢ = 2^(−lᵢ)，则</p>
+<p><strong>L(C, X) = H(X) + D_KL(p‖q)</strong></p>
+<p>——<strong>超出熵的部分恰好就是相对熵。</strong></p>
+<p>MacKay 对它的评价极高：<strong>"Gibbs' inequality is probably the most important inequality in this book."</strong></p>
+<p>他还特意提醒一件常被忽略的事：<strong>KL 散度不对称</strong>——一般 D_KL(P‖Q) ≠ D_KL(Q‖P)，所以虽然有人叫它"KL 距离"，它<strong>严格来说不是距离</strong>。</p>
+<p>证明它的工具是 <strong>Jensen 不等式</strong>：对凸函数 f，E[f(x)] ≥ f(E[x])。MacKay 给了个好记的读法：凸函数念"convex-smile"（⌣），凹函数念"concave-frown"（⌢）——<em>"虽然你可能忘记 convex 和 concave 朝哪边，但把微笑和皱眉搞混要难得多。"</em></p>
+<p><strong>互信息就是 KL 散度</strong>（式 8.11）：I(X;Y) = D_KL( P(x,y) ‖ P(x)P(y) )——所以"互信息非负"直接来自 Gibbs 不等式。</p>
+<h3>四、那一个前提：你不能不做假设</h3>
+<p>MacKay 在书里用三种措辞说同一件事：</p>
+<table><thead><tr><th>场合</th><th>原话</th></tr></thead><tbody>
+<tr><td>推断</td><td>"you cannot do inference without making assumptions."</td></tr>
+<tr><td>压缩</td><td>"you can't do inference – <strong>or data compression</strong> – without making assumptions."</td></tr>
+<tr><td>反问</td><td>"How can one perform inference without making assumptions?"</td></tr>
+</tbody></table>
+<p><strong>两条理由</strong>：</p>
+<blockquote>
+<p><strong>①</strong> "once assumptions are made, the inferences are <strong>objective and unique</strong>, reproducible with complete agreement by anyone who has the same information and makes the same assumptions."</p>
+<p></p>
+<p><strong>②</strong> "when the assumptions are explicit, they are <strong>easier to criticize, and easier to modify</strong> – indeed, we can quantify the sensitivity of our inferences to the details of the assumptions."</p>
+</blockquote>
+<p>对"先验从哪来"这个经典质疑，他的回应只有一句：<em>"I don't see how it could be otherwise."</em>（我看不出还能怎么样。）而他对这个立场的价值判断是：<strong>贝叶斯方法迫使你把这些隐含假设说出来，这是极大的价值。</strong></p>
+<p><strong>他也不为随便挑先验开脱</strong>：明确说"我不会声称均匀先验有任何根本性"，后面还专门给出非均匀先验的例子。</p>
+<p><strong>而他主动警告读者</strong>：<em>"the reader is warned that <strong>this is not yet a globally held view</strong> – the field of statistics was dominated for most of the 20th century by non-Bayesian methods."</em>（读者要被告知，这还不是全球共识。）<strong>他自己是贝叶斯派，而且他知道这一点。</strong></p>
+<h3>五、把函数反过来看：Steve Gull 的一课</h3>
+<p>MacKay 讲了他做本科生时的一件事。他对着一个 Tripos 考题发愁：不稳定粒子以特征长度 λ 做指数衰减，但只能在 x = 1cm 到 20cm 的窗口里观测到 N 个衰变位置，问 λ 是多少？</p>
+<p>他试了<strong>构造估计量</strong>（λ̂ = x̄⁻¹ 对 λ ≪ 20cm 合适，但截断显著时失效；他能造出 λ ≫ 20cm 的估计量，但<strong>没有任何一个在所有情形下都管用</strong>），也试了<strong>拟合直方图</strong>，都卡住了。他的困境正是标准统计学的困境：<em>"是不是每次遇到新问题都得在黑暗中摸索合适的'估计量'？"</em></p>
+<p>他的导师 <strong>Steve Gull</strong> 拿过纸，写下三行：</p>
+<ol>
+<li>写出给定 λ 时一个数据点的概率 P(x | λ)（含归一化因子 Z(λ)，因为有 1–20 的截断）——这很平常</li>
+<li>写出 <strong>Bayes 定理</strong></li>
+<li>然后<strong>把同一个函数反过来，看成 λ 的函数</strong></li>
+</ol>
+<blockquote>
+<p>"A simple figure showed the probability of a single data point P(x|λ) as a familiar function of x ... <strong>Plotting the same function as a function of λ for a fixed value of x, something remarkable happens: a peak emerges.</strong>"</p>
+</blockquote>
+<p>——每条曲线本来都是"一条无辜的指数曲线"；但当你固定 x、把它画成 λ 的函数时，<strong>一个峰出现了</strong>。</p>
+<p>Gull 对定理的总结是全书最好的一句概括：</p>
+<blockquote>
+<p>"what you know about λ after the data arrive is what you knew before [P(λ)], and what the data told you [P({x}|λ)]."</p>
+</blockquote>
+<p><strong>MacKay 由此得出的结论非常强硬</strong>：后验分布"就是这个问题的唯一且完整的解"——不需要发明"估计量"，也不需要发明比较估计量的标准。</p>
+<blockquote>
+<p>"While orthodox statisticians offer twenty ways of solving a problem, and another twenty different criteria for deciding which of these solutions is the best, <strong>Bayesian statistics only offers one answer to a well-posed problem</strong>."</p>
+</blockquote>
+<p><strong>他也澄清了一个常见误解</strong>：<strong>λ 不是一个随机变量</strong>。用概率分布 P(λ) 不代表他认为世界在不同假设之间随机变来变去；他只是在用概率记号表达<strong>信念</strong>，而这些备选假设中只有一个是真的。</p>
+<h3>六、血型证据：最漂亮的一个反直觉结果</h3>
+<p><strong>案情</strong>：犯罪现场留下两个人的血，一为 <strong>O 型</strong>（当地频率 <strong>60%</strong>），一为 <strong>AB 型</strong>（频率 <strong>1%</strong>）。嫌疑人 <strong>Oliver 是 O 型</strong>。这些数据支持"Oliver 在场"吗？</p>
+<p>粗心律师会说"现场有 O 型血，所以支持"。<strong>MacKay 说：不成立。</strong></p>
+<p>设 S = "Oliver 与一个未知的人在场"，S̄ = "两个未知的人在场"：</p>
+<ul>
+<li>P(D | S) = p_AB</li>
+<li>P(D | S̄) = 2 · p_O · p_AB</li>
+</ul>
+<p>似然比：<strong>P(D|S) / P(D|S̄) = 1 / (2 p_O) = 1/(2×0.6) ≈ 0.83</strong></p>
+<p><strong>小于 1</strong>——这些数据其实是<strong>反对</strong> Oliver 在场的<em>弱</em>证据。</p>
+<p>但如果嫌疑人是 <strong>AB 型</strong>（假想人物 Alberto），似然比变成 <strong>1/(2p_AB) = 50</strong>——<strong>强证据</strong>。</p>
+<p><strong>一般公式</strong>（式 3.30）：设现场共 N 处血迹，其中 n_O 处为 O 型、n_AB 处为 AB 型：</p>
+<p><strong>似然比 = (n_O / N) ÷ p_O</strong></p>
+<blockquote>
+<p>"The likelihood ratio ... depends simply on <strong>a comparison of the frequency of his blood type in the observed data with the background frequency in the population</strong>. There is no dependence on the counts of the other types found at the scene, or their frequencies in the population."</p>
+</blockquote>
+<p><strong>两个直觉说明</strong>：</p>
+<p><strong>逻辑上的</strong>：如果现场有 O 型血就支持"每一个 O 型的人都在场"，那<strong>所有人都会变得更可疑</strong>——这显然荒谬。所以"如果数据支持某些假设，它们必然也反对另一些假设"。</p>
+<p><strong>换成数字的</strong>：设想现场有 10 处血迹，当地 100 个嫌疑人中 90 个是 O 型、10 个是 AB 型。</p>
+<table><thead><tr><th>时点</th><th>Oliver 在场的概率</th></tr></thead><tbody>
+<tr><td>血检之前（已知 10 人曾到场）</td><td>1/10</td></tr>
+<tr><td>血检之后：10 处血迹中 9 处 AB、1 处 O</td><td><strong>1/90</strong></td></tr>
+</tbody></table>
+<p>证据让他的嫌疑<strong>下降了</strong>——因为现场只有一个 O 型的人。</p>
+<p><strong>一个制度性的观察</strong>：MacKay 认为陪审团的任务应该是把每项独立证据的似然比与审慎推理出的先验概率相乘。但他补了一句：<em>"这一观点得到许多统计学家的认同，但<strong>博学的英国上诉法官最近不同意</strong>，并且实际上因为陪审员被教导用 Bayes 定理处理复杂的 DNA 证据而推翻了一次判决。"</em></p>
+<h3>七、奥卡姆剃刀不是原则，是数学结果</h3>
+<p>这是全书方法论的顶点（第 3 章埋线，第 28 章展开）。</p>
+<p><strong>MacKay 要立的命题</strong>：</p>
+<blockquote>
+<p>"<strong>Coherent inference (as embodied by Bayesian probability) automatically embodies Occam's razor, quantitatively.</strong>"</p>
+</blockquote>
+<p>他还列出另外两种常见的"理由"：<strong>审美理由</strong>（Dirac：数学上美的理论更可能正确）和<strong>历史经验理由</strong>（过去管用）。他要立的是第三种。</p>
+<p><strong>机制不在"参数少"，而在预测的弥散程度</strong>：</p>
+<blockquote>
+<p>"<strong>Simple models tend to make precise predictions. Complex models, by their nature, are capable of making a greater variety of predictions.</strong> So if H₂ is a more complex model, it must <strong>spread its predictive probability P(D|H₂) more thinly over the data space</strong> than H₁."</p>
+</blockquote>
+<p>而先验只需要<strong>等概率</strong>就够：<em>"Our subjective prior just needs to assign equal prior probabilities to the possibilities of simplicity and complexity. <strong>Probability theory then allows the observed data to express their opinion.</strong>"</em></p>
+<p><strong>Occam 因子的推导</strong>：证据是似然对先验的积分 P(D|H_i) = ∫ P(D|w,H_i)P(w|H_i)dw。由于后验在峰值处有强峰，积分近似为"峰高 × 峰宽"：</p>
+<p><strong>证据 ≃ 最佳拟合似然 × Occam 因子</strong></p>
+<p>若先验在宽度 σ_w 上均匀，则 <strong>Occam 因子 = σ_{w|D} / σ_w</strong>。</p>
+<blockquote>
+<p>"i.e., the Occam factor is equal to <strong>the ratio of the posterior accessible volume of H_i's parameter space to the prior accessible volume</strong>, or <strong>the factor by which H_i's hypothesis space collapses when the data arrive</strong>... <strong>The Occam factor is the inverse of that number.</strong> <strong>The logarithm of the Occam factor is a measure of the amount of information we gain about the model's parameters when the data arrive.</strong>"</p>
+</blockquote>
+<p>所以 Occam 因子就是<strong>"数据到来时假设空间坍缩的倍数"</strong>，而它的对数<strong>等于我们从数据中获得的关于该模型参数的信息量</strong>。</p>
+<p><strong>为什么"数参数个数"不是好度量</strong>（这条很反直觉）：</p>
+<blockquote>
+<p>"The Occam factor also penalizes models that have to be finely tuned to fit the data, <strong>favouring models for which the required precision of the parameters σ_{w|D} is coarse</strong>... <strong>This depends not only on the number of parameters in the model, but also on the prior probability that the model assigns to them.</strong>"</p>
+</blockquote>
+<p>——<strong>一个参数很多但先验范围极窄的模型，可能比一个参数很少但先验范围极宽的模型受到更轻的惩罚。</strong></p>
+<p><strong>"巧合让我们起疑"是定量的</strong>：箱子谜题里，复杂模型必须为"两箱高度完全一致"付一个 1/20 的因子，为"两箱颜色完全一致"付一个 1/16 的因子——<strong>这就是"可疑的巧合"的价格。</strong></p>
+<p><strong>一个重要的计算成本结论</strong>：<em>"Bayesian model comparison is a simple extension of maximum likelihood model selection: the evidence is obtained by multiplying the best-fit likelihood by the Occam factor. To evaluate the Occam factor we need only the Hessian A... <strong>no more computationally demanding than the task of finding for each model the best-fit parameters and their error bars</strong>."</em>（只多一个 Hessian，而算误差棒本来就要它。）</p>
+<p><strong>模型比较 ≠ 模型选择</strong>：</p>
+<blockquote>
+<p>"<strong>When we discuss model comparison, this should not be construed as implying model choice. Ideal Bayesian predictions do not involve choice between models; rather, predictions are made by summing over all the alternative models, weighted by their probabilities.</strong>"</p>
+</blockquote>
+<p><strong>以及那个"流行神话"</strong>：</p>
+<blockquote>
+<p>"There is a popular myth that states that <strong>Bayesian methods differ from orthodox statistical methods only by the inclusion of subjective priors</strong>... It is true that, at the first level of inference, a Bayesian's results will often differ little from the outcome of an orthodox attack. <strong>What is not widely appreciated is how a Bayesian performs the second level of inference</strong>."</p>
+</blockquote>
+<p>——"第一层"是在给定模型内拟合参数；"第二层"是模型比较。<strong>真正有区别的是第二层。</strong></p>
+<p><strong>顺带一个前提</strong>：<em>"If we want to do model comparison, it is essential to use <strong>proper priors</strong> – otherwise the evidences and the Occam factors are meaningless."</em></p>
+<h3>八、三个推断陷阱</h3>
+<p><strong>陷阱一：最大似然（ML）</strong></p>
+<p>拟声词原话：</p>
+<blockquote>
+<p>"<strong>KABOOM!</strong> ... Put one cluster exactly on one data point and let its variance go to zero – you can obtain an arbitrarily large likelihood!"</p>
+</blockquote>
+<p><strong>他的诊断很精确</strong>：</p>
+<blockquote>
+<p>"sure, these parameter-settings may have enormous posterior probability <strong>density</strong>, but <strong>the density is large over only a very small volume of parameter space</strong>. So the probability <strong>mass</strong> associated with these likelihood spikes is usually tiny."</p>
+</blockquote>
+<p>——<strong>密度大 ≠ 质量大。</strong></p>
+<p>即使没有无穷尖峰：<em>"<strong>Maxima are atypical.</strong>"</em>（最大值不是典型值。）</p>
+<p>而它在模型选择上是灾难：<em>"more complex models can always fit the data better, so the maximum likelihood model choice would lead us inevitably to implausible, over-parameterized models."</em></p>
+<p><strong>陷阱二：MAP（最大后验）</strong></p>
+<p><strong>三宗罪</strong>：</p>
+<table><thead><tr><th>问题</th><th>说明</th></tr></thead><tbody>
+<tr><td><strong>① 尖峰未必被压住</strong></td><td>后验密度也常有无限尖峰</td></tr>
+<tr><td><strong>② 最大值不代表性</strong></td><td>高维下质量集中在典型集</td></tr>
+<tr><td><strong>③ 依赖基</strong></td><td>P(u) = P(θ)\</td><td>∂θ/∂u\</td><td>；非线性换基后最大值位置通常改变</td></tr>
+</tbody></table>
+<p>第三条他讲得最重：<em>"It seems undesirable to use a method whose answers change when we change representation."</em></p>
+<p><strong>灾难性的例子</strong>（习题 22.16）：数据 {2.2, −2.2, 2.8, −2.8}，噪声 σ = 1，MAP 给出 w ≈ {1.8, −1.8, 2.2, −2.2}（<strong>合理的</strong>）。再<strong>加入四个用 σ' = 100 测的"空洞"数据</strong> {100, −100, 100, −100}（几乎不含信息），结果 MAP 把原本良测的参数<strong>从 1.8/2.2 拖到 0.03/0.04</strong>。</p>
+<p><strong>正确做法是把 nuisance 参数边缘化掉</strong>（积分掉），而不是与它们一起取最大。</p>
+<p><strong>陷阱三：变分方法的偏向</strong></p>
+<p>变分目标 βF̃ = D_KL(Q‖P) + βF 的方向会<strong>惩罚"P 大而 Q 小"的地方</strong>，所以结果系统性地偏窄：</p>
+<blockquote>
+<p>"The approximations given by variational free energy minimization <strong>always tend to be more compact than the true distribution</strong>."</p>
+</blockquote>
+<p>习题 33.5 把它量化得很清楚。用球形高斯近似各向异性高斯（σ₁ = 10、σ₂ = 1）：</p>
+<table><thead><tr><th>目标</th><th>结果</th><th>数值</th></tr></thead><tbody>
+<tr><td><strong>最小化变分自由能</strong>（D_KL(Q‖P) 方向）</td><td>1/σ_Q² = ½(1/σ₁² + 1/σ₂²)（<strong>逆方差平均</strong>）</td><td>σ_Q ≈ √2</td></tr>
+<tr><td><strong>最小化 G = E_P ln(P/Q)</strong>（反方向）</td><td>σ_Q² = ½(σ₁² + σ₂²)（<strong>方差平均</strong>）</td><td>σ_Q ≈ 10/√2</td></tr>
+</tbody></table>
+<p>注意变分解给出的 σ_Q ≈ √2 <strong>几乎不理会那个大的方向</strong>——它把近似分布缩到了最窄的方向上。</p>
+<p><strong>两种角色要求相反</strong>：<em>"a good variational approximation is <strong>more compact</strong> than the true distribution. In contrast, <strong>a good sampler is more heavy tailed</strong> than the true distribution."</em></p>
+<p>所以<strong>绝不要</strong>把变分后验直接当提议分布喂给重要性采样。</p>
+<h3>九、两个"同一算法的多个名字"</h3>
+<p><strong>和-积算法的四个名字</strong>（MacKay 原话）：</p>
+<blockquote>
+<p>"<strong>Other names for the sum–product algorithm presented here are 'the forward–backward algorithm', 'the BCJR algorithm', and 'belief propagation'.</strong>"</p>
+</blockquote>
+<p>加上"和-积算法"本身，共四个：<strong>和-积 / 前向-后向 / BCJR / 信念传播</strong>。这四个名字来自四个不同领域（编码理论、隐马尔可夫模型、卷积码、图模型）——这是它们看起来像不同东西的原因。</p>
+<p><strong>与 min-sum 的差别</strong>：和-积用 Σ 与 Π，回答"每个变量的<strong>边际</strong>"；min-sum 把 Σ 换成 min、Π 换成代价的加法，回答"<strong>最可能路径</strong>"，别名 Viterbi。</p>
+<p><strong>两者不能互换</strong>：习题 25.4 中，最可能码字是 0000000，而逐位解码给出 <strong>0010000——它根本不是一个合法码字</strong>。两者服务于不同的目标函数。</p>
+<p><strong>在什么图上保证正确</strong>：<strong>只有在树上（无环）</strong>。有环图上 MacKay 的诚实陈述是"不一定收敛，且肯定一般不会算出正确的边际函数"。</p>
+<p><strong>有环图上他的建议</strong>（这段很典型）：</p>
+<blockquote>
+<p>"However, the most amusing way of handling factor graphs to which the sum–product algorithm may not be applied is, as we already mentioned, <strong>to apply the sum–product algorithm!</strong> We simply compute the messages for each node in the graph, as if the graph were a tree, iterate, and <strong>cross our fingers</strong>."</p>
+</blockquote>
+<p>——这就是 <strong>loopy message passing</strong>。而它之所以重要：它"仍然是一个具有巨大实际重要性的算法，特别是在稀疏图码的解码中"——Part VI 的 LDPC 与 Turbo 码都靠它。</p>
+<p>有环图的<strong>精确</strong>解法是<strong>联结树算法</strong>：把变量聚合成块直到无环，代价随被聚合的变量数<strong>指数增长</strong>。</p>
+<h3>十、"性为什么存在"：第 19 章的完整论证</h3>
+<p>这是全书最出乎意料的一章——它用信息论的框架讨论演化生物学。</p>
+<p><strong>第一步：教师信号极窄。</strong> 自然选择是"教师"，但它的教学信号每个个体只有几个比特（后代多少），信息量<strong>至多每个后代 1 比特</strong>。而且信号<strong>不告诉生态系统是哪些缺陷导致后代少</strong>，且高度冗余。</p>
+<p><strong>第二步：大数字的欺骗性。</strong> 人猿分歧约 400 万年前、每代 10 年 ⟹ 约 400 000 代。种群 10⁹ × 几个比特 ⟹ 约 8×10¹⁴ 比特。但 MacKay 引 John Maynard Smith 指出自然选择<strong>不擅汇总</strong>：</p>
+<blockquote>
+<p>"<strong>If the population size were twice as great, would it evolve twice as fast? No, because natural selection will simply be correcting the same defects twice as often.</strong>"</p>
+</blockquote>
+<p>于是无性繁殖的信息获取速率与种群规模无关，约<strong>每代 1 比特</strong>——而人类基因组有 6×10⁹ 比特。</p>
+<p><strong>第三步：两个核心结论。</strong></p>
+<table><thead><tr><th>繁殖方式</th><th>信息获取速率</th><th>可容忍突变率</th><th>允许的基因组大小</th></tr></thead><tbody>
+<tr><td><strong>无性</strong></td><td>约 <strong>1 比特/代</strong>（与种群规模无关）</td><td>约 1/G</td><td>约 1/m</td></tr>
+<tr><td><strong>有性</strong></td><td>可达 <strong>√G 比特/代</strong></td><td>约 1/√G（高 <strong>√G</strong> 倍）</td><td>约 1/m²</td></tr>
+</tbody></table>
+<p><strong>机制的关键</strong>：两个适应度均为 fG 的亲本交配，<strong>孩子适应度的均值 = 亲本的适应度</strong>。双亲皆良的位约 f²G 个；仅一方良的位约 2f(1−f)G 个（孩子以公平硬币从父母中取）。所以孩子适应度服从均值 fG、方差 f(1−f)G 的高斯。</p>
+<p><strong>而突变产生的变异必然伴随平均适应度下降。</strong>——<strong>这就是性相对于突变的关键优势：它以不损失均值的方式提供变异。</strong></p>
+<p>模拟（G = 1000、N = 1000）：仅靠性约 <strong>80 代</strong>达到满适应度；靠突变需要 350–1600 代。</p>
+<p><strong>"雄性成本"与性的稳定性。</strong> 每两个经性产生的后代平均一个是不能生育的雄性，而孤雌母亲可以生两个克隆。MacKay 的模拟结果：</p>
+<ul>
+<li><strong>学习阶段</strong>孤雌群体短暂出现，<strong>两三代内消失</strong></li>
+<li>已达最高适应度后：<strong>若突变率低（mG = 1），孤雌可以接管</strong>；<strong>若 mG = 4，则永远无法接管</strong></li>
+</ul>
+<p>原因很漂亮：有性种群的适应度"宽度"约 √G，略高于平均的突变孤雌群体在约 1/(m√G) 代后跌到有性同胞之下——只要种群足够大、能有部分有性个体存活这么久，性就不会消亡。</p>
+<p><strong>他的总结句</strong>：</p>
+<blockquote>
+<p>"In summary: <strong>Why have sex? Because sex is good for your bits!</strong>"</p>
+</blockquote>
+<p><strong>不成立的条件</strong>：① 种群太小（&lt; √G）时搭便车者使齐性假设失效；② 依赖加性适应度假设；③ "8×10¹⁴ 比特"是总选择信号量（含巨大冗余），不是净信息量。</p>
+<h3>十一、贝叶斯 vs 抽样理论：全书对两派之争的正面处理</h3>
+<p><strong>开篇定义</strong>：</p>
+<blockquote>
+<p>"统计学有两个学派。<strong>抽样理论家专注于拥有在最小假设下、大多数时候都能奏效的方法。贝叶斯派则努力做出考虑了全部可用信息的推断，并针对特定数据集回答我们真正关心的问题。</strong>正如你可能已经察觉的，我强烈推荐使用贝叶斯方法。"</p>
+</blockquote>
+<p><strong>他的免责声明</strong>（很能说明他的态度）：<em>"If you find any of this chapter tough to understand, please skip it. There is no point trying to understand the debate. <strong>Just use Bayesian methods – they are much easier to understand than the debate itself!</strong>"</em></p>
+<p><strong>三类反例</strong>：</p>
+<p><strong>① 显著性检验回答的不是你问的问题。</strong> 医疗例子（40 名被试，30 人打 A 有 1 人患病、10 人打 B 有 3 人患病）：抽样理论只能比较"效果不同"与"效果完全相同"，而且<em>"一旦两个假设定义好，第一个假设几乎不再被提及——注意力完全集中在零假设上。<strong>写到这里我笑了，但这是真的！</strong>"</em> 零假设被接受或拒绝，<strong>完全取决于数据对 H₀ 而言有多意外，而不取决于 H₁ 对数据的预测有多好</strong>。</p>
+<p>算得 χ² = 5.93 &gt; 3.84，报"在 0.05 水平拒绝零假设"；但加上 <strong>Yates 校正</strong>后 χ² = 3.33，于是<strong>接受</strong>。而 p = 0.07 的真实含义是"如果你把这个实验做很多次，而两种处理效果相同，那么 7% 的时候你会得到比这次更极端的 χ²"——<em>"<strong>这几乎与我们所要知道的事情无关</strong>"</em>。</p>
+<p><strong>"让我过去，我是贝叶斯"</strong>：直接抛弃那个我们根本不信的假设，设两个未知参数，取均匀先验，对区域 p_A &lt; p_B 积分得 <strong>P(p_A &lt; p_B | Data) = 0.990</strong>——"数据给出了非常强的证据——大约 99 比 1。"</p>
+<p><strong>② p 值依赖于无关信息。</strong> Dr. Bloggs 掷币 12 次得 9 个 a、3 个 b。按"固定 n = 12，随机变量是 r"算得 P = 0.07，"在 5% 水平没有显著偏倚"。但 Bloggs 说"<strong>不对，我在实验前就决定一直掷到看见 3 个 b 为止，所以随机变量是 n</strong>"——按负二项算得 P = <strong>0.03</strong>，"<strong>毕竟还是存在显著偏倚！</strong>"</p>
+<p>同一个数据集，换一个停止规则，结论从"不显著"变成"显著"。MacKay 的裁决：<em>"抽样理论的 p 值确实依赖停止规则……<strong>在我看来这是与 p 值彻底断绝关系的压倒性论据</strong>。"</em>（这就是<strong>似然原理</strong>。）</p>
+<p><strong>③ 置信水平不是后验概率。</strong> 反例：θ 是整数，x₁、x₂ 独立取自 P(x = θ) = 1/2、P(x = θ+1) = 1/2；取区间 [min(x₁,x₂), min(x₁,x₂)]，其置信水平按定义是 <strong>75%</strong>。</p>
+<ul>
+<li>若数据是 (29,29)，区间是 [29,29]，规则上应报"75% 置信区间"——但由常识，θ 只能是 29 或 28 且<strong>各 50%</strong></li>
+<li>若数据是 (29,30)，区间仍是 [29,29]、水平仍是 75%，但我们<strong>百分之百确定</strong> θ = 29</li>
+</ul>
+<p><em>"In neither case is the probability that θ lies in the '75% confidence interval' equal to 75%!"</em></p>
+<p><strong>他给出的和解立场</strong>（这部分常被忽略）：许多抽样理论家是务实的，愿意从各种方法中挑"长期性质最好"的那个。所以我们<strong>可以把贝叶斯估计量和贝叶斯置信区间提供给他们，请他们评估这些方法的抽样理论性质——不必提这些方法来自贝叶斯视角</strong>。</p>
+<p><em>"如果抽样性质好，务实的抽样理论家就会选择使用贝叶斯方法。事实上许多贝叶斯方法确实有很好的抽样理论性质。<strong>一个对每个具体个案都给出最优答案的方法在长期看来也很好，这或许并不奇怪！</strong>"</em></p>
+<p><strong>他也承认一块可以让步的地盘</strong>：<strong>模型批评</strong>——寻找当前模型缺陷时，零假设（"当前模型正确"）是良定义的而备择模型未指定，此时 p 值之类指标可以引导我们去找最需要审视的模型侧面。</p>
+<hr>
+<h2>第二部分：20个专业问题（附通俗解释）</h2>
+<hr>
+<div class="q-title">1. 这本书的 50 章服务于哪两个问题？它们的极限量是什么？为什么说它们是"一体两面"？</div>
+<p><strong>专业回答</strong></p>
+<table><thead><tr><th>问题</th><th>做什么</th><th>极限</th></tr></thead><tbody>
+<tr><td><strong>数据压缩</strong></td><td>给定数据源，最短能用多少比特表示它</td><td><strong>熵 H(X)</strong>（下界）</td></tr>
+<tr><td><strong>噪声中的通信</strong></td><td>给定会出错的信道，多快能可靠传信息</td><td><strong>容量 C</strong>（上界）</td></tr>
+</tbody></table>
+<p><strong>一体两面</strong>：压缩是去掉冗余，通信是加入冗余——看起来相反，但 <strong>C 的定义本身就是互信息对输入分布的最大值</strong>，而互信息由熵构成。所以这本书是"一个量（熵），和它的两种用法"。</p>
+<p>这一点在第 14 章得到了最强的印证：<strong>一个计算同时证明了噪声信道编码定理与源编码定理</strong>——它们不是两个巧合，而是同一件事的两个方向。</p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p>一边问"最少用多少比特才能说清楚"，一边问"在这个会出错的通道上最多能传多快"。<strong>两边都由同一个量（熵）控制</strong>——这就是为什么它们是一本书。</p>
+</blockquote>
+<hr>
+<div class="q-title">2. 写出信息量与熵的定义。MacKay 给"信息量"起的别名是什么？</div>
+<p><strong>专业回答</strong></p>
+<ul>
+<li>信息量：h(x) = log₂ (1 / P(x))，单位比特</li>
+<li>熵：H(X) = Σ P(x) log₂ (1 / P(x))，即信息量的<strong>平均值</strong></li>
+</ul>
+<p><strong>别名（第 18 章原话）</strong>：</p>
+<blockquote>
+<p>"'Information content', 'surprise value', and log likelihood or log evidence are the same thing."</p>
+</blockquote>
+<p><strong>信息量 = 意外程度 = 对数似然 = 对数证据。四个名字，一个东西。</strong></p>
+<p>具体数字（英语字母分布）：z 是 10.4 比特、e 是 3.5 比特、<strong>空格是 2.4 比特</strong>（因为空格概率最高 0.1928）。整个分布的熵约 <strong>4.11 比特</strong>。</p>
+<p>性质：H(X) ≥ 0（等号 iff 某个 pᵢ = 1）；H(X) ≤ log₂|A_X|（等号 iff 均匀分布）。</p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p>"信息"在这里的意思是<strong>意外程度</strong>：越不可能发生的事，一旦发生信息量越大。<strong>所以最常见的字符（空格）信息量最低。</strong>——这与日常语言里"信息 = 内容"完全不同。</p>
+</blockquote>
+<hr>
+<div class="q-title">3. 叙述源编码定理。为什么它的结论是"不多也不少"？</div>
+<p><strong>专业回答</strong></p>
+<blockquote>
+<p>"N i.i.d. random variables each with entropy H(X) can be compressed into more than NH(X) bits with negligible risk of information loss, as N → ∞; conversely if they are compressed into fewer than NH(X) bits it is virtually certain that information will be lost."</p>
+</blockquote>
+<p>定理分两部分，作用相反：</p>
+<table><thead><tr><th>部分</th><th>内容</th><th>含义</th></tr></thead><tbody>
+<tr><td>Part 1</td><td>(1/N)·H_δ(X^N) &lt; H + ε</td><td>即使 δ 极小，所需比特数也大幅降到 H + ε</td></tr>
+<tr><td>Part 2</td><td>(1/N)·H_δ(X^N) &gt; H − ε</td><td>即使 δ <strong>接近 1</strong>（错误成为常态），也<strong>必须</strong>至少 H − ε</td></tr>
+</tbody></table>
+<p><em>"These two extremes tell us that regardless of our specific allowance for error, the number of bits per symbol needed to specify x is H bits; <strong>no more and no less</strong>."</em></p>
+<p><strong>证明的关键工具是典型集</strong>：路线是 大数定律 → Chebyshev 不等式 → 典型集 T_Nβ → 渐近等分 → 上下界夹逼。</p>
+<p><strong>一个必须知道的细节</strong>：块压缩的最佳子集（按定义）是<strong>最小 δ-充分子集 S_δ</strong>，而不是典型集。那为什么还要引入典型集？<em>"<strong>we can count the typical set.</strong>"</em>（因为典型集可以数得清。）——已知它的元素概率几乎都是 2^(−NH)、且总概率几乎为 1，所以它必有约 2^(NH) 个元素。不借助典型集，根本数不清 S_δ 有多少元素。</p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p><strong>熵就是压缩的极限，而且这个极限两边都封死了</strong>：比它少一定丢信息，比它多没必要。所以"熵"不只是一个下界，它是一个精确的刻度。</p>
+</blockquote>
+<hr>
+<div class="q-title">4. 叙述噪声信道编码定理。为什么它反直觉？</div>
+<p><strong>专业回答</strong></p>
+<p><strong>香农之前的共识</strong>是"没有付出就没有收获"：分界线是一条穿过原点的曲线——要让错误率趋零，速率也必须趋零。</p>
+<p><strong>香农证明的</strong>：分界线在 R 轴上交于非零点 <strong>C</strong>。</p>
+<p>定理三部分：</p>
+<table><thead><tr><th>部分</th><th>内容</th></tr></thead><tbody>
+<tr><td>正面一</td><td>C = max I(X;Y)。对任意 ε &gt; 0、R &lt; C，N 足够大时存在速率 ≥ R、<strong>最大块错误概率 &lt; ε</strong> 的码</td></tr>
+<tr><td>正面二</td><td>允许比特错误率 p_b 时，速率可达 <strong>R(p_b) = C / (1 − H₂(p_b))</strong></td></tr>
+<tr><td>负面</td><td>大于 R(p_b) 的速率<strong>不可达</strong></td></tr>
+</tbody></table>
+<p><strong>反对称的地方</strong>：它既是悲观的上界，也是乐观的下界。<em>"asserts both that reliable communication at any rate beyond the capacity is impossible, and that reliable communication at all rates up to capacity is possible."</em></p>
+<p>BSC 的容量：<strong>C(f) = 1 − H₂(f)</strong>。f = 0.1 时 <strong>C ≈ 0.53</strong>。</p>
+<p><strong>磁盘比喻</strong>：R3 达到 p_b = 0.03 需 3 个盘；R60 达到 10⁻¹⁵ 需 <strong>60 个</strong>；而<strong>香农极限说两个盘就够</strong>（因为 1/2 &lt; 0.53）。</p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p>直觉是"越可靠就越慢"，两者必须一起牺牲。<strong>香农说不用</strong>——只要码够聪明，你可以同时要"很快"和"几乎不出错"。<strong>这是信息论最惊人的一件事。</strong></p>
+</blockquote>
+<hr>
+<div class="q-title">5. "熵 = 混乱程度"这个说法错在哪？请给一个可以立刻用的检验方法。</div>
+<p><strong>专业回答</strong></p>
+<p>熵的准确含义是<strong>不确定性</strong>，操作性地说是"平均每个结果需要多少比特来描述"。</p>
+<p><strong>两个反例</strong>：</p>
+<p>① <strong>与"看得见的乱"无关</strong>：一串完全随机的比特熵最大——但它只是<strong>没有结构</strong>，不是"乱得有程度"。</p>
+<p>② <strong>熵是相对于模型的</strong>：同一段英文，按单字母算 4.11 比特/字母，按好的上下文模型算约 <strong>1 比特/字母</strong>。<strong>换模型，熵就变</strong>——所以熵不是事物的属性，是<strong>你对该事物的模型</strong>的属性。</p>
+<p><strong>检验方法</strong>：把"熵"换成 <strong>"平均需要多少比特"</strong> 再读一遍。如果句子变得荒谬（"这个房间的平均比特数在增加"），原句也是荒谬的。</p>
+<p>再加一个：问<strong>"这个熵是相对于哪个概率分布算的？"</strong>——答不出来，就是误用。</p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p>熵不是一个东西的"混乱度"，而是<strong>你对它的无知程度</strong>。同一件事，你掌握的信息不同，它的熵就不同。<strong>所以"社会熵增"这类说法是把一个认识论的量当成了本体论的量。</strong></p>
+</blockquote>
+<hr>
+<div class="q-title">6. "信息越多越好"错在哪？请用那个潜艇例子说明。</div>
+<p><strong>专业回答</strong></p>
+<p>信息量 h(x) = log₂(1/P(x))：<strong>概率越小，信息量越大</strong>。所以"信息"在这里是<strong>意外程度</strong>，与"有用""有意义"无关。</p>
+<p><strong>潜艇游戏（第 4 章）</strong>：潜艇藏在 64 格中。</p>
+<table><thead><tr><th>事件</th><th>信息量</th></tr></thead><tbody>
+<tr><td>第一发就打中</td><td>log₂ 64 = <strong>6 bits</strong></td></tr>
+<tr><td>第一发未中</td><td>log₂(64/63) ≈ <strong>0.0227 bits</strong></td></tr>
+</tbody></table>
+<p><strong>一次二元结果可以携带 6 比特的信息</strong>——因为信息量取决于结果有多不可几，不取决于用了几个二元符号。</p>
+<p>MacKay 的原话：<em>"it might seem a little strange that one binary outcome can convey six bits. But we have learnt the hiding place, which could have been any of 64 squares; so we have, by one lucky binary question, indeed learnt six bits."</em></p>
+<p><strong>检验方法</strong>：把"信息"换成 <strong>"意外程度"</strong> 再读一遍。不通，则不是这本书的"信息"。</p>
+<p>还有一个连带的重要区分：<strong>"bit"这个词在书里有两个含义</strong>（一个取两个值的符号；信息量的单位），MacKay 在定义处主动提醒了。混起来就会得出"一个 bit 只能携带一个 bit 的信息"这种循环而无用的结论。</p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p>"信息"= "意外"，不是"有用"。<strong>一串完全随机的字符信息量最大化，但它什么也没告诉你。</strong> 所以"信息越多越好"没有意义——得先问是哪种信息、对谁有用。</p>
+</blockquote>
+<hr>
+<div class="q-title">7. 什么是 KL 散度？它的操作性解读是什么？</div>
+<p><strong>专业回答</strong></p>
+<p>D_KL(P‖Q) = Σ P(x) log( P(x) / Q(x) )，满足 <strong>Gibbs 不等式</strong> D_KL(P‖Q) ≥ 0（等号 iff P = Q）。</p>
+<p><strong>操作性解读</strong>：<strong>用为 Q 优化的编码去编 P 的数据，平均要多付多少比特。</strong> 有一个干净的恒等式（式 5.23）：若真实分布是 p、用的完备码隐含分布是 qᵢ = 2^(−lᵢ)，则</p>
+<p><strong>L(C, X) = H(X) + D_KL(p‖q)</strong></p>
+<p>——<strong>超出熵的部分恰好就是相对熵。</strong></p>
+<p><strong>MacKay 的评价</strong>：<em>"Gibbs' inequality is probably <strong>the most important inequality in this book</strong>."</em> 证明工具是 <strong>Jensen 不等式</strong>（对凸函数 f，E[f(x)] ≥ f(E[x])）。</p>
+<p><strong>一个常被忽略的性质</strong>：<strong>它不对称</strong>——一般 D_KL(P‖Q) ≠ D_KL(Q‖P)。所以虽然有人叫它"KL 距离"，它<strong>严格来说不是距离</strong>。</p>
+<p><strong>一条更深的用途</strong>：互信息就是 KL 散度（式 8.11）：<strong>I(X;Y) = D_KL( P(x,y) ‖ P(x)P(y) )</strong>——所以"互信息非负"直接来自 Gibbs 不等式。这个形式还很直观：它度量"联合分布与独立分布有多远"。</p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p>它衡量"<strong>用错的模型会多花多少代价</strong>"。这个读法很实用：<strong>模型错得不重要，代价就小；错得关键，代价就大。</strong> 但注意它不对称——"用 A 编 B"和"用 B 编 A"的代价不一样。</p>
+</blockquote>
+<hr>
+<div class="q-title">8. Steve Gull 那一课的症结在哪？他做了什么？</div>
+<p><strong>专业回答</strong></p>
+<p><strong>问题</strong>：不稳定粒子以特征长度 λ 做指数衰减，但只能在 x = 1cm 到 20cm 的窗口里观测到 N 个衰变位置。问 λ 是多少？</p>
+<p><strong>症结：标准工具全部失效。</strong> MacKay 试了①构造估计量（λ̂ = x̄⁻¹ 对 λ ≪ 20cm 合适，截断显著时失效；他能造出 λ ≫ 20cm 的估计量，但<strong>没有任何一个在所有情形下都管用</strong>）；②拟合直方图。都卡住了。</p>
+<p><strong>他的困境正是标准统计学的困境</strong>：<em>"是不是每次遇到新问题都得在黑暗中摸索合适的估计量，还得操心哪个是'最好'的？"</em></p>
+<p><strong>Gull 做的三件事</strong>：</p>
+<ol>
+<li>写出 P(x | λ)（含归一化因子 Z(λ)，因为有 1–20 的截断）——这很平常</li>
+<li>写出 <strong>Bayes 定理</strong></li>
+<li><strong>把同一个函数反过来，看成 λ 的函数</strong></li>
+</ol>
+<blockquote>
+<p>"Each curve was an innocent exponential, normalized to have area 1. <strong>Plotting the same function as a function of λ for a fixed value of x, something remarkable happens: a peak emerges.</strong>"</p>
+</blockquote>
+<p><strong>Gull 的总结（全书最好的一句概括）</strong>：</p>
+<blockquote>
+<p>"what you know about λ after the data arrive is what you knew before [P(λ)], and what the data told you [P({x}|λ)]."</p>
+</blockquote>
+<p><strong>MacKay 由此得出的结论</strong>：后验分布"就是这个问题的唯一且完整的解"——不需要发明估计量，也不需要发明比较估计量的标准。<em>"While orthodox statisticians offer twenty ways of solving a problem, and another twenty different criteria for deciding which of these solutions is the best, <strong>Bayesian statistics only offers one answer to a well-posed problem</strong>."</em></p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p>关键是<strong>视角的翻转</strong>：P(x|λ) 和 P(λ|x) 是同一个函数的两种看法——前者是"给定模型看数据"，后者是"给定数据看模型"。<strong>这个翻转就是整个推断理论。</strong></p>
+</blockquote>
+<hr>
+<div class="q-title">9. 叙述血型证据的例子。一般公式是什么？</div>
+<p><strong>专业回答</strong></p>
+<p><strong>案情</strong>：现场留下两个人的血，一为 O 型（当地频率 60%），一为 AB 型（频率 1%）。嫌疑人 Oliver 是 O 型。</p>
+<p>设 S = "Oliver 与一个未知的人在场"，S̄ = "两个未知的人在场"：</p>
+<ul>
+<li>P(D | S) = p_AB</li>
+<li>P(D | S̄) = 2 · p_O · p_AB</li>
+</ul>
+<p>似然比 = <strong>1 / (2 p_O) = 1/(2×0.6) ≈ 0.83</strong> —— <strong>小于 1，其实是反对的弱证据。</strong></p>
+<p>若嫌疑人是 AB 型，似然比 = <strong>1/(2p_AB) = 50</strong> —— <strong>强证据。</strong></p>
+<p><strong>一般公式</strong>（式 3.30）：<strong>似然比 = (n_O / N) ÷ p_O</strong></p>
+<blockquote>
+<p>"depends simply on <strong>a comparison of the frequency of his blood type in the observed data with the background frequency in the population</strong>."</p>
+</blockquote>
+<p><strong>两个直觉说明</strong>：</p>
+<p><strong>逻辑上的</strong>：如果现场有 O 型血就支持"每一个 O 型的人都在场"，那<strong>所有人都会变得更可疑</strong>——荒谬。所以"如果数据支持某些假设，它们必然也反对另一些假设"。</p>
+<p><strong>换成数字的</strong>：现场 10 处血迹、当地 100 个嫌疑人中 90 个 O 型 10 个 AB 型。Oliver 在场的概率从<strong>血检前的 1/10</strong> 变成<strong>血检后的 1/90</strong>——<strong>下降了</strong>。</p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p>"数据与假设相容"和"数据支持假设"是两件完全不同的事。<strong>决定支持与否的是：这个特征在现场的频率 vs 它在人群中的频率。</strong> 现场有 O 型血（60% 的人都有）几乎不说明什么；现场有 AB 型血（1%）才是强证据。</p>
+</blockquote>
+<hr>
+<div class="q-title">10. MacKay 说"你不能不做假设"。请给出三种措辞和两条理由。</div>
+<p><strong>专业回答</strong></p>
+<p><strong>三种措辞</strong>：</p>
+<table><thead><tr><th>场合</th><th>原话</th></tr></thead><tbody>
+<tr><td>推断</td><td>"you cannot do inference without making assumptions."</td></tr>
+<tr><td>压缩</td><td>"you can't do inference – <strong>or data compression</strong> – without making assumptions."</td></tr>
+<tr><td>反问</td><td>"How can one perform inference without making assumptions?"</td></tr>
+</tbody></table>
+<p><strong>两条理由</strong>：</p>
+<p>① <em>"once assumptions are made, the inferences are <strong>objective and unique</strong>, reproducible with complete agreement by anyone who has the same information and makes the same assumptions."</em></p>
+<p>② <em>"when the assumptions are explicit, they are <strong>easier to criticize, and easier to modify</strong> – indeed, we can quantify the sensitivity of our inferences to the details of the assumptions."</em></p>
+<p><strong>对"先验从哪来"的回应</strong>：<em>"I don't see how it could be otherwise."</em>（我看不出还能怎么样。）</p>
+<p><strong>他也不为随便挑先验开脱</strong>：明确说不会声称均匀先验有任何根本性。</p>
+<p><strong>而他主动警告</strong>：<em>"this is not yet a globally held view – the field of statistics was dominated for most of the 20th century by non-Bayesian methods."</em></p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p>既然假设躲不掉，<strong>那就把它写出来</strong>——写出来之后，推理过程反而是客观的（同样的假设 + 同样的数据 ⟹ 同样的结论），而且别人能批评你的假设。<strong>藏起来的假设才是真正的主观。</strong></p>
+</blockquote>
+<hr>
+<div class="q-title">11. 为什么奥卡姆剃刀不是一条需要额外施加的原则？</div>
+<p><strong>专业回答</strong></p>
+<p>MacKay 要立的命题：</p>
+<blockquote>
+<p>"<strong>Coherent inference (as embodied by Bayesian probability) automatically embodies Occam's razor, quantitatively.</strong>"</p>
+</blockquote>
+<p><strong>机制不在"参数少"，而在预测的弥散程度</strong>：</p>
+<blockquote>
+<p>"<strong>Simple models tend to make precise predictions. Complex models, by their nature, are capable of making a greater variety of predictions.</strong> So if H₂ is a more complex model, it must <strong>spread its predictive probability P(D|H₂) more thinly over the data space</strong> than H₁."</p>
+</blockquote>
+<p><strong>先验只需等概率就够</strong>：<em>"Our subjective prior just needs to assign equal prior probabilities to the possibilities of simplicity and complexity. <strong>Probability theory then allows the observed data to express their opinion.</strong>"</em></p>
+<p><strong>证据的分解</strong>：</p>
+<p><strong>证据 ≃ 最佳拟合似然 × Occam 因子</strong>，其中 <strong>Occam 因子 = σ_{w|D} / σ_w</strong></p>
+<blockquote>
+<p>"<strong>the ratio of the posterior accessible volume of H_i's parameter space to the prior accessible volume</strong>, or <strong>the factor by which H_i's hypothesis space collapses when the data arrive</strong>... <strong>The Occam factor is the inverse of that number.</strong>"</p>
+</blockquote>
+<p>他还列出另外两种常见的"理由"：<strong>审美理由</strong>（Dirac）和<strong>历史经验理由</strong>（过去管用）——而他要立的是第三种。</p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p>简单模型不是因为我们<strong>偏爱</strong>它才占优，而是因为<strong>它能预测的东西少</strong>——所以它一旦预测对了，那个"对"就更有分量。复杂模型能预测的东西多，所以它的每一次预测都不值钱。<strong>这是概率论自动算出来的，不需要额外加一条规则。</strong></p>
+</blockquote>
+<hr>
+<div class="q-title">12. 为什么"数参数个数"不是好的复杂度度量？</div>
+<p><strong>专业回答</strong></p>
+<p>MacKay 明确写了这一条，而且它很反直觉：</p>
+<blockquote>
+<p>"The Occam factor also penalizes models that have to be finely tuned to fit the data, <strong>favouring models for which the required precision of the parameters σ_{w|D} is coarse</strong>... <strong>This depends not only on the number of parameters in the model, but also on the prior probability that the model assigns to them.</strong>"</p>
+</blockquote>
+<p>也就是说：<strong>一个参数很多但先验范围极窄的模型，可能比一个参数很少但先验范围极宽的模型受到更轻的惩罚。</strong></p>
+<p>Occam 因子的几何意义是<strong>体积比</strong>（后验可达体积 / 先验可达体积），而它的<strong>对数等于我们从数据中获得的关于该模型参数的信息量</strong>。</p>
+<p><strong>"巧合让我们起疑"是定量的</strong>：箱子谜题里，复杂模型必须为"两箱高度完全一致"付一个 1/20 的因子，为"两箱颜色完全一致"付一个 1/16 的因子——<strong>这就是"可疑的巧合"的价格。</strong></p>
+<p><strong>一个重要的计算成本结论</strong>：<em>"the evidence is obtained by multiplying the best-fit likelihood by the Occam factor. To evaluate the Occam factor we need only the Hessian A... <strong>no more computationally demanding than the task of finding for each model the best-fit parameters and their error bars</strong>."</em></p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p>复杂度不是"有多少个旋钮"，而是"<strong>需要把旋钮拧得多准</strong>"。一个有 100 个旋钮但每个只能在很窄范围内动的模型，可能比一个有 3 个旋钮但每个能随便转的模型更"简单"。<strong>而且"巧合"在这里有了价格：两件事恰好一样，是要付代价的。</strong></p>
+</blockquote>
+<hr>
+<div class="q-title">13. 最大似然有什么致命缺陷？那个拟声词是什么？</div>
+<p><strong>专业回答</strong></p>
+<p>拟声词原话：</p>
+<blockquote>
+<p>"<strong>KABOOM!</strong> ... Put one cluster exactly on one data point and let its variance go to zero – you can obtain an arbitrarily large likelihood!"</p>
+</blockquote>
+<p><strong>他的诊断很精确</strong>：</p>
+<blockquote>
+<p>"sure, these parameter-settings may have enormous posterior probability <strong>density</strong>, but <strong>the density is large over only a very small volume of parameter space</strong>. So the probability <strong>mass</strong> associated with these likelihood spikes is usually tiny."</p>
+</blockquote>
+<p>——<strong>密度大 ≠ 质量大。</strong></p>
+<p>即使没有无穷尖峰：<em>"<strong>Maxima are atypical.</strong>"</em></p>
+<p><strong>它在模型选择上是灾难</strong>：<em>"more complex models can always fit the data better, so the maximum likelihood model choice would lead us inevitably to implausible, over-parameterized models."</em></p>
+<p><strong>一个很好的症状</strong>（习题 22.8，光子计数）：带背景 b 时 ML 给出 λ̂ = max(0, r − b)，而抽样理论的"无偏估计量"给出 r − b = −4——<strong>一个负的光子率</strong>。</p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p>让模型"完美拟合一部分数据"总能提高似然——比如把每个数据点都配一个自己的参数。<strong>但这些解只在一小块区域里"密"，总体概率质量反而很小。</strong> 所以"拟合最好"不等于"最可能"。</p>
+</blockquote>
+<hr>
+<div class="q-title">14. MAP 能补救最大似然吗？三宗罪是什么？</div>
+<p><strong>专业回答</strong></p>
+<p><strong>三宗罪</strong>：</p>
+<table><thead><tr><th>问题</th><th>说明</th></tr></thead><tbody>
+<tr><td>① 尖峰未必被压住</td><td>后验密度也常有无限尖峰</td></tr>
+<tr><td>② 最大值不代表性</td><td>高维下质量集中在典型集——"Maxima are atypical"</td></tr>
+<tr><td>③ <strong>依赖基</strong></td><td>P(u) = P(θ)\</td><td>∂θ/∂u\</td><td>；非线性换基后最大值位置通常改变</td></tr>
+</tbody></table>
+<p>第三条他讲得最重：<em>"It seems undesirable to use a method whose answers change when we change representation."</em></p>
+<p><strong>灾难性的例子</strong>（习题 22.16）：数据 {2.2, −2.2, 2.8, −2.8}，噪声 σ = 1，MAP 给出 w ≈ {1.8, −1.8, 2.2, −2.2}（合理的）。再<strong>加入四个用 σ' = 100 测的"空洞"数据</strong>（几乎不含信息），MAP 把良测参数<strong>从 1.8/2.2 拖到 0.03/0.04</strong>——<strong>毫无信息的测量摧毁了有效推断。</strong></p>
+<p><strong>正确做法是把 nuisance 参数边缘化掉</strong>（积分掉），而不是与它们一起取最大。</p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p>"乘个先验再取最大"不是解法。<strong>最要命的是第三条</strong>：换一种参数写法，答案就变了——<strong>一个换坐标就变的方法，本身就说明它抓的不是问题的实质。</strong></p>
+</blockquote>
+<hr>
+<div class="q-title">15. 为什么说变分方法的近似总是"偏窄"？</div>
+<p><strong>专业回答</strong></p>
+<p>变分目标是最小化 <strong>βF̃ = D_KL(Q‖P) + βF</strong>。这个方向会<strong>惩罚"P 大而 Q 小"的地方</strong>（含 Q log(Q/P)，当 Q 小而 P 大时惩罚极重），所以近似分布会<strong>挤进 P 的某一个峰</strong>，系统性偏窄：</p>
+<blockquote>
+<p>"The approximations given by variational free energy minimization <strong>always tend to be more compact than the true distribution</strong>."</p>
+</blockquote>
+<p><strong>习题 33.5 的量化</strong>（球形高斯近似各向异性高斯，σ₁ = 10、σ₂ = 1）：</p>
+<table><thead><tr><th>目标</th><th>结果</th><th>数值</th></tr></thead><tbody>
+<tr><td>最小化变分自由能（D_KL(Q‖P) 方向）</td><td>1/σ_Q² = ½(1/σ₁² + 1/σ₂²)（<strong>逆方差平均</strong>）</td><td>σ_Q ≈ √2</td></tr>
+<tr><td>最小化 G = E_P ln(P/Q)（反方向）</td><td>σ_Q² = ½(σ₁² + σ₂²)（<strong>方差平均</strong>）</td><td>σ_Q ≈ 10/√2</td></tr>
+</tbody></table>
+<p><strong>两种角色要求相反</strong>：<em>"a good variational approximation is <strong>more compact</strong> than the true distribution. In contrast, <strong>a good sampler is more heavy tailed</strong> than the true distribution."</em></p>
+<p><strong>其他易误读处</strong>：变分自由能给出的是 <strong>Z 的下界</strong>，不是答案；<strong>平均场的分岔不是相变</strong>（T_c^mft = 4 vs 真值 2.27，且在 d=1 也预测出分岔而一维真实系统无相变）；变分的相对优势是<strong>与参数化无关</strong>（避开 MAP/Laplace 的基依赖），不是"更准"。</p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p>KL 散度有方向。变分选的那个方向<strong>特别害怕"真分布有质量而模型说不可能"</strong>，所以它会宁可覆盖一个峰、放弃其他峰。<strong>用之前先问：我这次需要"窄"还是需要"重尾"？</strong></p>
+</blockquote>
+<hr>
+<div class="q-title">16. 和-积算法有哪四个名字？它与 min-sum 有什么差别？</div>
+<p><strong>专业回答</strong></p>
+<p><strong>四个名字</strong>（MacKay 原话）：</p>
+<blockquote>
+<p>"<strong>Other names for the sum–product algorithm presented here are 'the forward–backward algorithm', 'the BCJR algorithm', and 'belief propagation'.</strong>"</p>
+</blockquote>
+<p>加上"和-积算法"本身，共四个：<strong>和-积 / 前向-后向 / BCJR / 信念传播</strong>。它们来自四个不同领域（编码理论、隐马尔可夫模型、卷积码、图模型）。</p>
+<p><strong>与 min-sum 的差别</strong>：</p>
+<table><thead><tr><th>算法</th><th>做法</th><th>回答什么</th><th>别名</th></tr></thead><tbody>
+<tr><td><strong>和-积</strong></td><td>用 Σ 与 Π</td><td>每个变量的<strong>边际</strong>（逐位解码）</td><td>前向-后向 / BCJR / 信念传播</td></tr>
+<tr><td><strong>min-sum</strong></td><td>Σ 换成 min、Π 换成代价加法</td><td><strong>最可能路径</strong>（最可能码字）</td><td>Viterbi</td></tr>
+</tbody></table>
+<p><strong>两者不能互换</strong>：习题 25.4 中，最可能码字是 0000000，而逐位解码给出 <strong>0010000——它根本不是一个合法码字</strong>。它们服务于不同的目标函数。</p>
+<p><strong>在什么图上保证正确</strong>：<strong>只有在树上（无环）</strong>。有环图上"不一定收敛，且肯定一般不会算出正确的边际函数"。</p>
+<p><strong>有环图上他的建议</strong>：<em>"...the most amusing way of handling factor graphs to which the sum–product algorithm may not be applied is, as we already mentioned, <strong>to apply the sum–product algorithm!</strong> ... iterate, and <strong>cross our fingers</strong>."</em> ——这就是 loopy message passing。</p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p>同一套消息传递有四个名字，因为它被四个领域分别发明过。<strong>和-积算"每个位置分别是什么"，min-sum 算"整条最可能是什么"——两个问题，两个答案。</strong> 而在有环图上它没有正确性保证，只有"实践中很管用"。</p>
+</blockquote>
+<hr>
+<div class="q-title">17. "性为什么存在"？MacKay 用信息论给出的答案是什么？</div>
+<p><strong>专业回答</strong></p>
+<p><strong>教师信号极窄</strong>：自然选择的信号每个个体只有几个比特（后代多少），<strong>至多每个后代 1 比特</strong>，而且不告诉生态系统是哪些缺陷导致后代少。</p>
+<p><strong>大数字的欺骗性</strong>：人猿分歧约 400 万年前、每代 10 年 ⟹ 约 400 000 代；种群 10⁹ × 几个比特 ⟹ 8×10¹⁴ 比特。但 John Maynard Smith 指出自然选择不擅汇总：<em>"<strong>If the population size were twice as great, would it evolve twice as fast? No, because natural selection will simply be correcting the same defects twice as often.</strong>"</em> 所以无性的信息获取速率与种群规模无关，约<strong>每代 1 比特</strong>。</p>
+<table><thead><tr><th>繁殖方式</th><th>信息获取速率</th><th>可容忍突变率</th><th>允许的基因组大小</th></tr></thead><tbody>
+<tr><td><strong>无性</strong></td><td>约 <strong>1 比特/代</strong></td><td>约 1/G</td><td>约 1/m</td></tr>
+<tr><td><strong>有性</strong></td><td>可达 <strong>√G 比特/代</strong></td><td>约 1/√G（高 <strong>√G</strong> 倍）</td><td>约 1/m²</td></tr>
+</tbody></table>
+<p><strong>机制的关键</strong>：两个适应度均为 fG 的亲本交配，<strong>孩子适应度的均值 = 亲本的适应度</strong>（双亲皆良的位约 f²G，仅一方良的位约 2f(1−f)G，孩子以公平硬币从父母中取）。而<strong>突变产生的变异必然伴随平均适应度下降</strong>。</p>
+<p><strong>这就是性相对于突变的关键优势：它以不损失均值的方式提供变异。</strong></p>
+<p><strong>他的总结句</strong>：<em>"In summary: <strong>Why have sex? Because sex is good for your bits!</strong>"</em></p>
+<p><strong>不成立的条件</strong>：① 种群太小（&lt; √G）时搭便车者使齐性假设失效；② 依赖加性适应度假设；③ 8×10¹⁴ 比特是总选择信号量（含巨大冗余），不是净信息量。</p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p>无性繁殖每代只能"学到"大约 1 比特，而且<strong>不管种群多大都一样</strong>（因为同样的错误会被重复纠正）。有性繁殖通过重组，能每代产生 √G 量级的变异<strong>而不降低平均适应度</strong>——所以它的学习速度快 √G 倍。<strong>性不是为了让个体更适应，是为了让种群学得更快。</strong></p>
+</blockquote>
+<hr>
+<div class="q-title">18. 抽样理论的 p 值有什么问题？MacKay 的核心指控是什么？</div>
+<p><strong>专业回答</strong></p>
+<p>p 值的定义是"在零假设下，结果与观测结果一样极端或更极端的概率"。而 MacKay 指出<strong>未受训练的读者——以及许多论文的作者——通常把它当成贝叶斯概率（如零假设的后验概率）来解读，而这种解读是抽样理论家和贝叶斯派都会同意为错误的</strong>。</p>
+<p><strong>三类反例</strong>：</p>
+<p><strong>① 显著性检验回答的不是你问的问题。</strong> 医疗例子里，检验只比较"效果不同"与"效果完全相同"，而且<em>"一旦两个假设定义好，第一个假设几乎不再被提及——注意力完全集中在零假设上。<strong>写到这里我笑了，但这是真的！</strong>"</em> 零假设被接受或拒绝，<strong>完全取决于数据对 H₀ 而言有多意外，而不取决于 H₁ 对数据的预测有多好</strong>。而 p = 0.07 的真实含义"几乎与我们所要知道的事情无关"。</p>
+<p>同一个例子用贝叶斯做，直接给出 <strong>P(p_A &lt; p_B | Data) = 0.990</strong>——"大约 99 比 1"。</p>
+<p><strong>② p 值依赖于无关信息（核心指控）。</strong> Dr. Bloggs 掷币 12 次得 9 个 a、3 个 b：</p>
+<ul>
+<li>按"固定 n = 12，随机变量是 r"算：P = <strong>0.07</strong>，"没有显著偏倚"</li>
+<li>按"一直掷到看见 3 个 b 为止，随机变量是 n"算：P = <strong>0.03</strong>，"<strong>毕竟还是存在显著偏倚！</strong>"</li>
+</ul>
+<p><strong>同一个数据集，换个停止规则，结论就反了。</strong> MacKay 的裁决：<em>"抽样理论的 p 值确实依赖停止规则……<strong>在我看来这是与 p 值彻底断绝关系的压倒性论据</strong>。"</em>（这就是<strong>似然原理</strong>。）</p>
+<p><strong>③ 置信水平不是后验概率。</strong> θ 是整数，x₁、x₂ 独立取自 P(x = θ) = 1/2、P(x = θ+1) = 1/2；区间 [min, min] 的置信水平是 <strong>75%</strong>。数据 (29,29) 时该区间里真值的概率是 <strong>50%</strong>；数据 (29,30) 时是 <strong>100%</strong>。<em>"In neither case is the probability that θ lies in the '75% confidence interval' equal to 75%!"</em></p>
+<p><strong>他也承认可以让步的地盘</strong>：<strong>模型批评</strong>——备择模型未指定时，p 值之类指标可以引导我们去找最需要审视的模型侧面。</p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p>最致命的一点是：<strong>同一批数据，你"打算什么时候停手"这个跟数据本身无关的决定，会改变 p 值、改变结论。</strong> 这不是技术细节，这是说 p 值在度量一件与你关心的问题无关的东西。</p>
+</blockquote>
+<hr>
+<div class="q-title">19. MacKay 对"贝叶斯 vs 频率学派"之争的总结立场是什么？</div>
+<p><strong>专业回答</strong></p>
+<p><strong>他的框架是"目标不同"，不是"数学对错"</strong>：</p>
+<blockquote>
+<p>"<strong>抽样理论家专注于拥有在最小假设下、大多数时候都能奏效的方法。贝叶斯派则努力做出考虑了全部可用信息的推断，并针对特定数据集回答我们真正关心的问题。</strong>"</p>
+</blockquote>
+<p><strong>他的免责声明很能说明态度</strong>：<em>"If you find any of this chapter tough to understand, please skip it. There is no point trying to understand the debate. <strong>Just use Bayesian methods – they are much easier to understand than the debate itself!</strong>"</em></p>
+<p><strong>他的和解立场（这部分常被忽略）</strong>：<em>"如果抽样性质好，务实的抽样理论家就会选择使用贝叶斯方法。事实上许多贝叶斯方法确实有很好的抽样理论性质。<strong>一个对每个具体个案都给出最优答案的方法在长期看来也很好，这或许并不奇怪！</strong>"</em> ——他甚至建议<strong>不必提这些方法来自贝叶斯视角</strong>。</p>
+<p><strong>他也不主张"贝叶斯 = 客观"</strong>：在第 35 章他明确说，用哪些先验是<strong>描述你的假设</strong>的问题。而他批评那个"先验必须等价"的正统做法：<em>"<strong>In my view it is a philosophical error to use only those priors such that causation cannot be inferred.</strong> Priors should be set to describe one's assumptions; when this is done, it's likely that interesting inferences about causation can be made from data."</em>（在我看来，只用那些使因果无法被推断的先验，是一个哲学错误。）</p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p>他不说频率学派"算错了"。他说的是：<strong>两派在回答不同的问题</strong>——一派追求"多数时候都还行"的通用方法，一派追求"针对这个问题用上全部信息"。而他建议你直接用后者，<strong>因为争论本身比方法难懂得多</strong>。</p>
+</blockquote>
+<hr>
+<div class="q-title">20. 这本书对 03 域（自然与数学）的意义是什么？</div>
+<p><strong>专业回答</strong></p>
+<p>这一域有两个功能：</p>
+<table><thead><tr><th></th><th>内容</th><th>提供什么</th></tr></thead><tbody>
+<tr><td><strong>形式系统</strong></td><td>概率、信息、数学</td><td><strong>严格性</strong>——什么叫"证明确实成立"</td></tr>
+<tr><td><strong>经验科学</strong></td><td>物理、演化</td><td><strong>实在性</strong>——什么叫"世界确实如此"</td></tr>
+</tbody></table>
+<p>《盲眼钟表匠》提供的是后者；<strong>MacKay 这本提供的是前者</strong>。</p>
+<p>它教的是这样一件事：<strong>给定假设，什么叫"证明确实成立"，以及一个结论的成立范围可以被精确地划出来。</strong></p>
+<p>具体地说，它给出三个可迁移的判断工具：</p>
+<p><strong>① 精确的极限。</strong> "容量是 0.53，超过它不可能"——这就是"确凿"的样子。它比"大致不可能"强得多。</p>
+<p><strong>② 极限的条件性。</strong> 容量是 0.53 <strong>前提是</strong>信道模型正确、块长可以很长。所以这本书同时教你：<strong>听到"定理说"的时候，立刻去问它的前提。</strong></p>
+<p><strong>③ 一个概率的统一用法。</strong> 推断、压缩、通信在这本书里是同一件事的三个名字。这意味着<strong>处理不确定性不需要三套工具，只需要一套</strong>。</p>
+<p><strong>它在本项目里的位置</strong>：03 域此前只有《盲眼钟表匠》（经验科学），缺的就是形式系统这一半。<strong>现在这一半补上了。</strong></p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p>道金斯那本教你"世界确实是这样"；MacKay 这本教你"<strong>在给定前提下，什么能被证明</strong>"。两者合起来，才是这一域需要的两种确定感。</p>
+</blockquote>
+<hr>
+<h2>第三部分：文本考订</h2>
+<p>这一节记录精读中校准出的几处易误挂之处。<strong>这本书的章节分工很细，命名有历史包袱，所以误挂比误读更容易发生。</strong></p>
+<h3>一、章次与命名</h3>
+<table><thead><tr><th>内容</th><th>常被挂到</th><th>实际在</th></tr></thead><tbody>
+<tr><td><strong>"belief propagation" 这个名称</strong></td><td>第 16 章</td><td><strong>第 25 章</strong>（作为 sum-product 的别名出现）</td></tr>
+<tr><td><strong>"factor graph" 的定义</strong></td><td>第 16 章</td><td><strong>第 26 章</strong>（第 16 章只有 message passing / sum-product / min-sum）</td></tr>
+<tr><td><strong>奥卡姆因子的首次现身</strong></td><td>第 28 章</td><td><strong>第 24 章</strong>已有（从高斯积分里出来，式 24.13）；第 28 章是完整展开</td></tr>
+<tr><td><strong>"单步 vs 累积"式的对照实验</strong></td><td>无（这是《盲眼钟表匠》的内容）</td><td>—</td></tr>
+</tbody></table>
+<p><strong>所以第 16 章不是"信度传播那一章"</strong>——它讲的是 message passing 的一般框架，而"信念传播"这个名字要到第 25 章才出现。做全书术语索引时应注意这一点。</p>
+<h3>二、公式抽取失真（引用前务必核原页）</h3>
+<p>这本 PDF 由 Ghostscript 生成、公式排版在文本抽取中普遍变形。精读中<strong>明确标注为失真、未作猜测</strong>的位置包括：</p>
+<ul>
+<li><strong>式 4.21</strong>（源编码定理的绝对值与分式位置丢失）</li>
+<li><strong>式 4.27 / 4.29 / 4.33</strong>（典型集定义的内层结构散成碎片）</li>
+<li><strong>式 5.14–5.16</strong>（期望长度下界证明的代数链）</li>
+<li><strong>式 5.33</strong>（0.086 那个表达式的分子分母形式不确定，只有数值 0.086 可靠——习题 5.27 独立确认了数值）</li>
+<li><strong>第 11 章习题 11.5(b)</strong> 的 C′（解答里把 C′ 印成了 C″，无法确证）</li>
+<li><strong>式 11.5(c) 的 f = Φ(√v/σ)</strong>：按 Φ 的定义与阈值规则，真值应为 <strong>f = Φ(−√v/σ)</strong>，抽取中很可能掉了负号（书中式 9.53 正是写成 p_b = Φ(−xα/σ)）</li>
+<li><strong>表 18.2</strong>（A 型/B 型填字的 f_w、f₁ 两列数值与表头严重错位）</li>
+<li><strong>第 18 章 "state space of 263 permutations"</strong>：失去上标，无法确定是 26³ 还是其他</li>
+<li><strong>式 19.15 / 19.16</strong>（根号覆盖范围与 1/√G 位置混乱，只可确定"有性可容忍突变率约为无性 √G 倍"这一结论）</li>
+<li><strong>式 36.11</strong> 的 s²（µ′_n 的方差）：OCR 作 "s² ≡ σ_n² … (σ² + σ_n²)"，按高斯共轭应为 σ_n⁴/(σ² + σ_n²)</li>
+<li><strong>式 37.26</strong> 的证据比 1.5：OCR 把它拆成了 "1/4 … 0.6 … 1/6 … 0.4"，实为 1/4 ÷ 1/6 = 1.5 = 0.6/0.4（与后文"后验 60:40 支持 H₁"一致）</li>
+<li><strong>各行号定位</strong>：Part V 的真正起点在<strong>行 27333</strong>（PDF 页 479 / 印刷页 467），而不是行 26586（那里落在第 36 章中间）</li>
+</ul>
+<h3>三、页码换算</h3>
+<p><strong>印刷页码 + 12 = PDF 物理页</strong>（已逐章核对一致）。源文件的 <code>===== page N =====</code> 标记中 N 是 <strong>PDF 物理页</strong>，不是印刷页。</p>
+<h3>四、容易混淆的两组公式</h3>
+<table><thead><tr><th>公式</th><th>含义</th><th>变量是什么</th></tr></thead><tbody>
+<tr><td>C = 1 − H₂(<strong>f</strong>)</td><td><strong>信道容量</strong>（BSC）</td><td>f 是<strong>信道噪声</strong></td></tr>
+<tr><td>R(p_b) = C / (1 − H₂(p_b))</td><td><strong>允许译码错误时的可达速率</strong></td><td>p_b 是<strong>你容忍的译码错误率</strong></td></tr>
+</tbody></table>
+<p>两者形式相似（1 − H₂ 出现在不同位置），<strong>含义毫不相干</strong>。而且注意：<strong>R(p_b) &gt; C</strong>（p_b &gt; 0 时），所以"R ≤ C"这条常见口号<strong>只对定理第一部分成立</strong>。</p>
+<hr>
+<p><em>本笔记基于 MacKay《Information Theory, Inference, and Learning Algorithms》剑桥大学出版社 2003 年第四刷（640 页）逐章精读整理。六个读者分段读完全书 50 章与三篇序，引文与数字均可回溯至原书对应章节。这本书是形式系统，<strong>它的结论几乎全都带条件</strong>——引用时请连同前提一起引用。</em></p>
+  </main>
+
+  <div class="footer">
+    MacKay《信息论、推理与学习算法》精华笔记与专业问题 · David J.C. MacKay<br>
+    先自己回答，再看解答 —— 能讲成"通俗解释"那个样子，才算真的懂了
+  </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>《枪炮、病菌与钢铁》整体架构 —— 亚力的问题与一条因果链</title>
+<style>
+  :root{
+    --paper:#f6f3ea;        /* 羊皮纸底 */
+    --card:#fffef9;         /* 石灰白卡片 */
+    --edge:#ddd6c4;         /* 分隔线 */
+    --ink:#2a2b26;          /* 炭黑正文 */
+    --ink-mid:#565448;      /* 次要文字 */
+    --ink-soft:#8a8571;     /* 弱化文字 */
+    --earth:#7a5c2e;        /* 谷物土黄：食物生产 */
+    --earth-soft:#f2e9d8;
+    --bio:#3f5c46;          /* 生物墨绿：病菌 */
+    --bio-soft:#e6ece5;
+    --steel:#3d5a6c;        /* 钢铁冷灰蓝：技术 */
+    --steel-soft:#e3eaee;
+    --blood:#8c3a2b;        /* 氧化血红：征服与冲突 */
+    --blood-soft:#f4e4df;
+    --gold:#9c7a24;         /* 暗金：轴线与时间 */
+    --gold-soft:#f5edd6;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--paper);color:var(--ink);padding:36px 20px 48px;line-height:1.88;
+    -webkit-font-smoothing:antialiased;
+  }
+  .container{max-width:980px;margin:0 auto;}
+
+  /* ---------- 页头 ---------- */
+  .header{
+    text-align:center;margin-bottom:34px;padding:48px 24px 42px;
+    background:var(--card);border:1px solid var(--edge);border-top:5px solid var(--earth);
+    border-radius:4px;
+  }
+  .header h1{font-size:29px;color:var(--ink);margin-bottom:14px;letter-spacing:.5px;}
+  .header .subtitle{font-size:15px;color:var(--ink-mid);}
+  .header .author{margin-top:16px;font-size:13px;color:var(--ink-soft);letter-spacing:.5px;}
+
+  .guide{
+    background:var(--earth-soft);border:1px solid #e3d5ba;border-left:4px solid var(--earth);
+    border-radius:3px;padding:20px 24px;margin-bottom:34px;font-size:14.5px;color:var(--ink-mid);
+  }
+  .guide .g-title{color:var(--earth);font-weight:700;margin-bottom:10px;font-size:13.5px;letter-spacing:.6px;}
+  .guide ol{margin-left:20px;}
+  .guide li{margin-bottom:6px;}
+  .guide strong{color:var(--ink);}
+
+  .section-title{
+    font-size:21px;font-weight:700;color:var(--ink);margin:48px 0 8px;
+    padding-left:13px;border-left:4px solid var(--earth);letter-spacing:.3px;
+  }
+  .section-sub{color:var(--ink-soft);font-size:13.5px;margin:0 0 20px 17px;}
+
+  .card{
+    background:var(--card);border:1px solid var(--edge);border-radius:3px;
+    padding:22px 26px;margin-bottom:16px;
+  }
+  .card h3{color:var(--earth);margin-bottom:10px;font-size:17px;font-weight:700;}
+  .card p{color:var(--ink-mid);font-size:14.5px;}
+  .card p+p{margin-top:9px;}
+  .card strong{color:var(--ink);}
+  .card em{color:var(--blood);font-style:normal;font-weight:600;}
+
+  /* ---------- 亚力的问题 ---------- */
+  .yali{
+    background:var(--card);border:1px solid var(--edge);border-left:5px solid var(--blood);
+    border-radius:3px;padding:28px 30px;margin-bottom:18px;
+  }
+  .yali h3{font-size:19px;color:var(--blood);margin-bottom:12px;}
+  .yali p{color:var(--ink-mid);font-size:15px;}
+  .yali .big{
+    font-size:20px;color:var(--ink);font-weight:700;line-height:1.7;
+    margin:16px 0;padding-left:16px;border-left:3px solid var(--gold);
+  }
+  .yali .scene{
+    background:var(--paper);border-radius:3px;padding:15px 18px;margin:14px 0;
+    font-size:14px;color:var(--ink-mid);border-left:3px solid var(--edge);
+  }
+
+  /* ---------- 一句话答案 ---------- */
+  .credo{
+    background:var(--earth-soft);border:1px solid #e3d5ba;border-radius:4px;
+    padding:30px;margin:26px 0;text-align:center;
+  }
+  .credo .lead{font-size:13px;color:var(--earth);letter-spacing:1.5px;margin-bottom:14px;font-weight:700;}
+  .credo .answer{font-size:22px;color:var(--ink);font-weight:700;line-height:1.75;}
+  .credo .src{margin-top:14px;font-size:12.5px;color:var(--ink-soft);}
+
+  /* ---------- 因果链 ---------- */
+  .chain{display:flex;flex-direction:column;gap:0;margin-bottom:18px;}
+  .link{
+    background:var(--card);border:1px solid var(--edge);border-left:4px solid var(--earth);
+    border-radius:3px;padding:17px 22px;margin-bottom:9px;position:relative;
+  }
+  .link .step{font-size:11.5px;color:var(--gold);letter-spacing:1px;font-weight:700;margin-bottom:5px;}
+  .link h4{font-size:16px;color:var(--ink);margin-bottom:6px;}
+  .link p{color:var(--ink-mid);font-size:14px;}
+  .link .lvl{
+    position:absolute;right:18px;top:16px;font-size:10.5px;padding:2px 9px;border-radius:2px;
+    letter-spacing:.5px;font-weight:700;
+  }
+  .link.ultimate{border-left-color:var(--earth);}
+  .link.ultimate .lvl{background:var(--earth-soft);color:var(--earth);}
+  .link.mid{border-left-color:var(--steel);}
+  .link.mid .lvl{background:var(--steel-soft);color:var(--steel);}
+  .link.prox{border-left-color:var(--blood);}
+  .link.prox .lvl{background:var(--blood-soft);color:var(--blood);}
+  .arrow{text-align:center;color:var(--edge);font-size:17px;margin:-3px 0 3px;}
+
+  /* ---------- 四个直接因素 ---------- */
+  .four{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:15px;margin-bottom:18px;}
+  .f-card{
+    background:var(--card);border:1px solid var(--edge);border-top:4px solid;
+    border-radius:3px;padding:20px;
+  }
+  .f-card:nth-child(1){border-top-color:var(--bio);}
+  .f-card:nth-child(2){border-top-color:var(--steel);}
+  .f-card:nth-child(3){border-top-color:var(--earth);}
+  .f-card:nth-child(4){border-top-color:var(--gold);}
+  .f-card .n{font-size:11.5px;letter-spacing:1px;color:var(--ink-soft);font-weight:700;margin-bottom:6px;}
+  .f-card h3{font-size:16.5px;color:var(--ink);margin-bottom:9px;}
+  .f-card .q{font-size:13px;color:var(--ink-mid);font-style:italic;margin-bottom:10px;padding-bottom:10px;border-bottom:1px dashed var(--edge);}
+  .f-card p{color:var(--ink-mid);font-size:13.5px;}
+
+  /* ---------- 表格 ---------- */
+  .tbl-wrap{background:var(--card);border:1px solid var(--edge);border-radius:3px;overflow:hidden;margin-bottom:20px;}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;}
+  th,td{padding:11px 13px;text-align:left;border-bottom:1px solid var(--edge);vertical-align:top;}
+  th{background:var(--earth-soft);color:var(--earth);font-weight:700;font-size:13px;}
+  td{color:var(--ink-mid);}
+  tr:last-child td{border-bottom:none;}
+  td strong{color:var(--ink);}
+  td.num{text-align:right;font-family:Consolas,Monaco,monospace;color:var(--ink);}
+
+  /* ---------- 卡哈马卡 ---------- */
+  .caja{
+    background:var(--card);border:1px solid var(--edge);border-left:5px solid var(--blood);
+    border-radius:3px;padding:26px 30px;margin-bottom:18px;
+  }
+  .caja h3{font-size:18px;color:var(--blood);margin-bottom:14px;}
+  .caja .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:13px;margin:16px 0;}
+  .caja .stat{background:var(--paper);border-radius:3px;padding:14px;text-align:center;border:1px solid var(--edge);}
+  .caja .stat .num{font-size:20px;color:var(--blood);font-weight:700;line-height:1.3;}
+  .caja .stat .lbl{font-size:12px;color:var(--ink-soft);margin-top:4px;}
+  .caja p{color:var(--ink-mid);font-size:14.5px;}
+  .caja p+p{margin-top:9px;}
+
+  /* ---------- 引文 ---------- */
+  .quote{
+    background:var(--gold-soft);border:1px solid #e6dcbe;border-left:4px solid var(--gold);
+    border-radius:3px;padding:22px 26px;margin:26px 0;
+  }
+  .quote p{font-size:16px;color:#6a5216;font-style:italic;line-height:1.8;}
+  .quote .author{margin-top:10px;font-size:12.5px;color:var(--ink-soft);text-align:right;font-style:normal;}
+
+  /* ---------- 误读 ---------- */
+  .pit{
+    background:var(--blood-soft);border-left:4px solid var(--blood);border-radius:0 3px 3px 0;
+    padding:15px 20px;margin-bottom:12px;font-size:14px;color:#7a3020;
+  }
+  .pit .lbl{color:var(--blood);font-weight:700;display:block;margin-bottom:6px;font-size:12.5px;letter-spacing:.5px;}
+  .pit strong{color:#6a2818;}
+
+  /* ---------- 学习路线 ---------- */
+  .route-item{
+    display:flex;gap:14px;align-items:flex-start;
+    background:var(--card);border:1px solid var(--edge);border-left:4px solid;
+    border-radius:3px;padding:15px 20px;margin-bottom:10px;
+  }
+  .route-item.must{border-left-color:var(--blood);}
+  .route-item.skim{border-left-color:var(--gold);}
+  .route-item.skip{border-left-color:#c6bfae;}
+  .route-badge{
+    flex-shrink:0;font-size:11.5px;padding:3px 10px;border-radius:2px;
+    font-weight:700;margin-top:3px;white-space:nowrap;letter-spacing:.5px;
+  }
+  .must .route-badge{background:var(--blood-soft);color:var(--blood);}
+  .skim .route-badge{background:var(--gold-soft);color:var(--gold);}
+  .skip .route-badge{background:#eeeae0;color:var(--ink-soft);}
+  .route-body strong{color:var(--ink);display:block;margin-bottom:3px;font-size:14.5px;}
+  .route-body span{color:var(--ink-mid);font-size:13px;}
+
+  .footer{text-align:center;margin-top:46px;padding:22px;color:var(--ink-soft);font-size:12.5px;line-height:1.9;}
+
+  @media(max-width:640px){
+    .header h1{font-size:21px;}
+    .section-title{font-size:18px;}
+    body{padding:20px 14px 32px;}
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- ================= 页头 ================= -->
+  <div class="header">
+    <h1>为什么是欧亚大陆的人征服了别人</h1>
+    <div class="subtitle">《枪炮、病菌与钢铁》全书认知地图 · 一个问题、一条因果链、一万三千年</div>
+    <div class="author">贾雷德·戴蒙德 · 中信出版社</div>
+  </div>
+
+  <!-- ================= 阅读指南 ================= -->
+  <div class="guide">
+    <div class="g-title">📖 怎么用这张图</div>
+    <ol>
+      <li><strong>先看"亚力的问题"</strong>——全书 20 章都是为了回答一个新几内亚政治家在沙滩上随口问的一句话。</li>
+      <li><strong>再看"一句话答案"</strong>——戴蒙德把整本厚书压缩成了一句话，先记住它。</li>
+      <li><strong>重点看"终极因 vs 近因"</strong>——这是全书的方法论骨架。看懂了这个区分，20 章就各归其位了。</li>
+      <li><strong>然后看那条因果链</strong>——从大陆轴线到枪炮病菌，每一环都有实证支撑。</li>
+      <li><strong>最后看三个"容易读错的地方"</strong>——这本书被贴错标签的次数，比被读懂的次数多。</li>
+    </ol>
+  </div>
+
+  <!-- ================= 亚力的问题 ================= -->
+  <div class="section-title">亚力的问题：全书的起点</div>
+  <div class="section-sub">1972 年 7 月，新几内亚的一片沙滩上</div>
+
+  <div class="yali">
+    <h3>那个问题</h3>
+    <div class="scene">
+      1972 年 7 月，戴蒙德在热带岛屿新几内亚研究鸟类演化。他听说当地大名鼎鼎的政治人物<strong>亚力（Yali）</strong>也在这一带活动，那天两人碰巧走了同一条路，同行了大约一个小时。<br><br>
+      亚力从未离开过新几内亚，教育程度仅止于中学，却有一颗无法满足的好奇心。他先问了戴蒙德的鸟类研究能得多少酬劳，接着问：在过去的几万年中，他的祖先如何在新几内亚落地生根？近 200 年来，欧洲白人又如何使新几内亚沦为他们的殖民地？
+    </div>
+    <p>然后他问了那个问题——戴蒙德说，它"直指亚力生活经验的核心"：</p>
+    <div class="big">"为什么是白人制造出这么多货物，再运来这里？为什么我们黑人没搞出过什么名堂？"</div>
+    <p>戴蒙德当时的回答是：<strong>他没有答案。</strong>历史学者也莫衷一是，"大多数人甚至连这样的问题都不再问了"。</p>
+    <p>25 年后，他写下了这本书，正是为了回答亚力的问题。</p>
+    <p style="margin-top:14px;color:#8a8571;font-size:13.5px;">补充一个背景：两人都清楚，新几内亚人<strong>至少和欧洲人一样聪明</strong>——戴蒙德说得很直白，他"打从一开始就发现，比起一般的欧洲人或美国人，这些新几内亚人通常更加聪明、机警、善于表达"。所以这个问题不是关于智力的，而是关于<em>历史为什么这样展开</em>。</p>
+  </div>
+
+  <div class="card">
+    <h3>把问题放大到全世界</h3>
+    <p>亚力问的只是新几内亚人和欧洲白人的差异，但同样的问题可以问现代世界的一切不均等：</p>
+    <p style="color:#2a2b26;font-weight:600;margin:12px 0;">"为什么越过大洋进行杀戮、征服和灭绝的，不是美洲、非洲或澳大利亚的土著，而是欧洲人和亚洲人？"</p>
+    <p>戴蒙德指出这个结果是<strong>一面倒的</strong>：不是欧亚大陆的族群征服了 51% 的美洲、澳大利亚、非洲，而土著征服了 49% 的欧洲——不是的，是一边完全压倒另一边。这种一面倒现象"肯定得有一些确凿的解释，而且原因要比几千年前谁碰巧打赢了一场仗、偶然发明了个什么东西更为根本"。</p>
+    <p>于是问题最终被重述为：<strong>为何不同大洲上人类发展的速度如此不同？</strong>——"各大洲迥异的发展速度构成了人类历史最普遍的模式，而这也是本书的主题。"</p>
+  </div>
+
+  <!-- ================= 一句话答案 ================= -->
+  <div class="credo">
+    <div class="lead">全 书 一 句 话</div>
+    <div class="answer">"各族群的历史循着不同的轨迹开展，<br>那是环境而非生物差异造成的。"</div>
+    <div class="src">—— 戴蒙德，第 1 章前的开场白</div>
+  </div>
+
+  <div class="card">
+    <h3>为什么这个答案值得写一本书</h3>
+    <p>戴蒙德自己说，"环境地理和生物地理影响社会的发展，这当然不是新观念"。真正的问题是：<strong>影响的程度如何，以及地理是否可以解释历史的普遍模式。</strong></p>
+    <p>而他写作的最大动力其实是一个<strong>道德缺口</strong>。他写得很坦率：</p>
+    <p style="margin:12px 0;padding-left:16px;border-left:3px solid #8c3a2b;color:#565448;">"我们需要为历史的普遍模式提出可信、详细、有共识的解释，不然大多数人还是会继续觉得，说不定种族主义者的主张是正确的。"</p>
+    <p>换句话说：<strong>光说"种族主义是错的"不够，必须给出一个更好的解释。</strong>这本书就是那个更好的解释。</p>
+  </div>
+
+  <!-- ================= 终极因 vs 近因 ================= -->
+  <div class="section-title">全书的方法论骨架：终极因 vs 近因</div>
+  <div class="section-sub">看懂这个区分，20 章就各归其位了</div>
+
+  <div class="card">
+    <h3>近因（proximate cause）：直接帮欧洲人取胜的东西</h3>
+    <p>答案的第一层很直白：<em>枪炮、传染病、钢铁工具和工业产品。</em>戴蒙德承认"这个路数无疑是正确的，因为可以证明那些因素的确直接协助了欧洲人的征服"。</p>
+    <p><strong>然而这个假说并不完整</strong>——"因为它只是近因（第一层级）的解释，仅仅指出了直接原因"。</p>
+  </div>
+
+  <div class="card">
+    <h3>终极因（ultimate cause）：真正需要回答的问题</h3>
+    <p>找出近因之后，自然引出真正的问题：</p>
+    <p style="color:#7a5c2e;font-weight:600;margin:12px 0;font-size:15.5px;">"为什么枪炮、病菌、钢铁站在欧洲人这一边，而不是非洲人或美洲土著那一边？"</p>
+    <p>这就是终极因的问题。而戴蒙德的答案是：<strong>地理与生物区系</strong>——具体说，是各大洲在<em>可驯化动植物、大陆轴线走向、面积与生态多样性</em>上的差异。</p>
+  </div>
+
+  <div class="quote">
+    <p>"大陆轴线的方向可能是某个族群得以征服其他族群的终极因，由这个终极因引发的一连串因果的连锁，最后会产生某个族群得以征服其他族群的直接原因，亦即枪炮、病菌与钢铁。"</p>
+    <div class="author">—— 图 4.1 注释</div>
+  </div>
+
+  <!-- ================= 因果链 ================= -->
+  <div class="section-title">那条因果链</div>
+  <div class="section-sub">从大陆的走向，到印加皇帝的死亡</div>
+
+  <div class="chain">
+    <div class="link ultimate">
+      <span class="lvl">终极因</span>
+      <div class="step">第一环</div>
+      <h4>地理与生物区系</h4>
+      <p>各大陆在<strong>可驯化的野生动植物</strong>、<strong>大陆轴线走向</strong>（欧亚东西向、非洲与美洲南北向）、<strong>面积与生态多样性</strong>上的先天差异。这些差异在人类到达之前就已经存在了。</p>
+    </div>
+    <div class="arrow">↓</div>
+    <div class="link ultimate">
+      <span class="lvl">终极因</span>
+      <div class="step">第二环</div>
+      <h4>食物生产的有无与早晚</h4>
+      <p>只有少数几个地区<strong>独立</strong>发展出农业与畜牧业（西南亚、中国、中美洲、安第斯山脉、美国东部等），其余地区靠采借或从未发展。这是全书理论的核心，占了整个第二部分（第 4–10 章）。</p>
+    </div>
+    <div class="arrow">↓</div>
+    <div class="link mid">
+      <span class="lvl">中间机制</span>
+      <div class="step">第三环</div>
+      <h4>人口密度、定居与可储存的盈余</h4>
+      <p>食物生产带来四个连锁后果：① 单位土地能养活的人口多出 10–100 倍；② 定居使生育间隔从约 4 年缩到约 2 年；③ 出现<strong>可储存的盈余</strong>；④ 盈余供养了不必务农的人——国王、官僚、职业士兵、神职人员、工匠、文士。</p>
+    </div>
+    <div class="arrow">↓</div>
+    <div class="link prox">
+      <span class="lvl">近因</span>
+      <div class="step">第四环</div>
+      <h4>病菌、文字、技术、中央政治组织</h4>
+      <p>稠密人口与家畜共同演化出传染病；盈余供养了文士与发明家；政治组织能调动财力打造船只与军队。这四项就是第 11–14 章的主题，也是直接杀死、征服、取代他人的力量。</p>
+    </div>
+    <div class="arrow">↓</div>
+    <div class="link prox">
+      <span class="lvl">结果</span>
+      <div class="step">第五环</div>
+      <h4>卡哈马卡：168 人俘获一个帝国的皇帝</h4>
+      <p>1532 年 11 月 16 日，皮萨罗以 168 人擒获拥有数百万臣民、8 万大军的印加皇帝阿塔瓦尔帕。这不是意外，而是上述因果链在具体一天的具体兑现。</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>⚠️ 一个必须记住的限定</h3>
+    <p>戴蒙德特别强调："<strong>食物生产不是近因，而是远因。假如农民和猎人一对一赤身搏斗，农民未必会赢。</strong>"</p>
+    <p>食物生产本身不构成优势——它是<em>间接的前提条件</em>。真正取胜的是那条从食物生产里长出来的东西：病菌、钢铁、马匹、文字和组织能力。</p>
+  </div>
+
+  <!-- ================= 四个近因 ================= -->
+  <div class="section-title">四个近因各自的位置</div>
+  <div class="section-sub">第 11–14 章一章一个，都从食物生产推导出来</div>
+
+  <div class="four">
+    <div class="f-card">
+      <div class="n">第 11 章 · 近因之一</div>
+      <h3>病菌</h3>
+      <div class="q">"比起欧亚的枪炮或钢铁武器，欧亚的病菌杀死了更多美洲土著。"</div>
+      <p>病原体来自<strong>家畜</strong>。人畜长期共处，使动物的传染病突变成人的传染病。因此有家畜的社会才有"人群免疫"，而<strong>前哥伦布时代约 95% 的美洲土著因传染病丧生</strong>。</p>
+      <p style="margin-top:8px;color:#8a8571;font-size:13px;">关键的因果细节：天花先于西班牙人抵达印加帝国，杀死了皇帝和指定的继承人，才引发了阿塔瓦尔帕与兄弟的内战。</p>
+    </div>
+    <div class="f-card">
+      <div class="n">第 12 章 · 近因之二</div>
+      <h3>文字</h3>
+      <div class="q">对阿塔瓦尔帕来说，文字为什么是致命的？</div>
+      <p>文字"可以把信息传递得更远、更准确、更详尽"。人类历史上文字只独立发明过<strong>几次</strong>，且都在最早发展出食物生产的地区。</p>
+      <p style="margin-top:8px;color:#8a8571;font-size:13px;">致命之处：阿塔瓦尔帕对西班牙人的兵力和意图<strong>几乎一无所知</strong>，唯一的消息来源是一个使者的片面之词。而皮萨罗的征战在事发 9 个月后就已成书畅销欧洲，引来更多援军。</p>
+    </div>
+    <div class="f-card">
+      <div class="n">第 13 章 · 近因之三</div>
+      <h3>技术</h3>
+      <div class="q">"发明为需求之母"——作者为什么把这句话反过来？</div>
+      <p>戴蒙德主张技术发展有其共通模式，而且<strong>发明往往先于需求出现</strong>，需求只是决定一项既有发明是否被采纳。</p>
+      <p style="margin-top:8px;color:#8a8571;font-size:13px;">食物生产让农民产出盈余，因此农业社会能供养<strong>全职的技术专家</strong>——他们不用亲自耕作，只要专注发展技术。</p>
+    </div>
+    <div class="f-card">
+      <div class="n">第 14 章 · 近因之四</div>
+      <h3>中央政治组织</h3>
+      <div class="q">为什么"盗贼统治"反而是一种优势？</div>
+      <p>食物生产供养了"政治人"。狩猎—采集游群相当平等；人口稠密的农牧社会则出现了首领、国王和官僚。</p>
+      <p style="margin-top:8px;color:#8a8571;font-size:13px;">这种层级体制"不但是治理广土众民所需，也是维持常备军队、派遣探险舰队和发动征服战争的前提"。</p>
+    </div>
+  </div>
+
+  <!-- ================= 卡哈马卡 ================= -->
+  <div class="section-title">卡哈马卡：因果链的一次完整兑现</div>
+  <div class="section-sub">1532 年 11 月 16 日，秘鲁高原</div>
+
+  <div class="caja">
+    <h3>那一天的数字</h3>
+    <div class="stats">
+      <div class="stat"><div class="num">168</div><div class="lbl">西班牙人总数</div></div>
+      <div class="stat"><div class="num">62 + 106</div><div class="lbl">其中骑兵 + 步兵</div></div>
+      <div class="stat"><div class="num">8 万</div><div class="lbl">阿塔瓦尔帕的军队</div></div>
+      <div class="stat"><div class="num">500 倍</div><div class="lbl">双方人数差距</div></div>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="num">6 000–7 000</div><div class="lbl">当天被杀的美洲土著</div></div>
+      <div class="stat"><div class="num">0</div><div class="lbl">西班牙人的阵亡</div></div>
+      <div class="stat"><div class="num">8 个月</div><div class="lbl">阿塔瓦尔帕被囚时间</div></div>
+      <div class="stat"><div class="num">22×17×8 英尺</div><div class="lbl">赎金房间（堆满黄金）</div></div>
+    </div>
+    <p>阿塔瓦尔帕是印加帝国末代皇帝，统御的帝国"不但在新大陆中版图最大，也是最先进的"，臣民数百万；皮萨罗率领的却是一支 168 人的涣散军队，人生地不熟，最近的西班牙队伍在巴拿马以北 <strong>1000 英里</strong>之外。</p>
+    <p>而结果是：<strong>几分钟之内，阿塔瓦尔帕成了皮萨罗的阶下囚。</strong>赎金是"史上最大的一笔"——必须在长 22 英尺、宽 17 英尺、高 8 英尺的房间里堆满黄金。黄金到手后，皮萨罗随即处决了他。</p>
+    <p>这不是孤例。阿塔瓦尔帕死后，皮萨罗从卡哈马卡前往印加首都库斯科，沿途又打了 4 场类似战役，西班牙骑兵分别只有 <strong>80 人、30 人、110 人和 40 人</strong>，却击败了成千上万的印第安人。整个卡哈马卡之役，"168 名西班牙人竟可力克 500 倍以上的美洲印第安人，杀死了数千名土著，却未折损一兵一卒"。</p>
+  </div>
+
+  <div class="card">
+    <h3>为什么能这样？—— 作者逐条排除了流行解释</h3>
+    <p>戴蒙德明确说，西班牙人的大胜<strong>不能</strong>归因于：</p>
+    <p>• 其他美洲土著之助（那些人只是看清了大势已去）<br>
+       • 武器马匹对敌人的威吓作用（印加人见识过武器和马匹后"即抵死不从"，6 年内还发动了两次大规模叛乱）<br>
+       • "印加人误把西班牙人当作神明维拉科恰再世"这个常被提到的说法</p>
+    <p>那真正的原因是什么？他拆成了几项：</p>
+    <p><strong>① 钢铁与马匹。</strong>但他的分析比通常的版本细致——在征服印加的过程中，<strong>枪支的作用其实并不大</strong>。皮萨罗只有十来支火绳枪，"子弹不好装，也很难发射"，主要是虚张声势。"比起枪支，刀剑、长矛等坚韧锐利的武器要来得重要。"而马匹给予的优势"显然"是决定性的。</p>
+    <p><strong>② 病菌（天花）。</strong>这是最容易被忽略的一环。阿塔瓦尔帕之所以会在卡哈马卡，是因为他是<strong>内战获胜的一方</strong>——而内战的远因正是天花。约 1526 年天花蹂躏印加帝国，皇帝瓦伊纳·卡帕克和他指定的继承人都因此丧命，"种下日后阿塔瓦尔帕与同父异母的兄弟瓦斯卡尔相争之因"。<em>若不是天花，西班牙人面对的将是一个团结的帝国。</em></p>
+    <p><strong>③ 文字。</strong>阿塔瓦尔帕对西班牙人"几乎一无所知"，全听信使者的片面之词："一群没有战斗力的乌合之众，只消 200 个印第安勇士就可摆平。"而西班牙一方，皮萨罗的征战首见于同伴 1534 年 4 月在塞维利亚印行的书，<strong>离阿塔瓦尔帕被杀不过 9 个月</strong>，这本书马上成为畅销书、译成多种欧洲语言，让许多西班牙人心生向往、前往秘鲁助阵。</p>
+    <p><strong>④ 政治组织。</strong>西班牙有中央集权的组织，才有财力打造和装备船只。而印加帝国"虽有类似的组织，但反倒对帝国本身造成伤害"——因为它的官僚体系已经和神格化的绝对君主合而为一，<strong>阿塔瓦尔帕一死，整个体系随之瓦解</strong>。这是一个残酷的对照：同样的组织能力，在一边是力量，在另一边是脆弱性。</p>
+    <p><strong>⑤ 海事技术。</strong>皮萨罗能出现在卡哈马卡，靠的是欧洲的船只。而阿塔瓦尔帕没有这样的技术可用，"因此不可能离开南美洲向海外扩张"。</p>
+    <p style="margin-top:12px;color:#7a5c2e;">所以那个反问才有意义：<strong>为什么不是阿塔瓦尔帕率大军到马德里掳获卡洛斯一世？</strong></p>
+  </div>
+
+  <!-- ================= 三个易读错 ================= -->
+  <div class="section-title">三个最容易读错的地方</div>
+  <div class="section-sub">这本书被贴错标签的次数，比被读懂的次数多</div>
+
+  <div class="pit">
+    <span class="lbl">误读一：这是"地理决定论"</span>
+    戴蒙德自己承认地理影响历史，但他明确把问题定为"<strong>影响的程度如何，以及地理是否可以解释历史的普遍模式</strong>"。他在收场白里专门列出<strong>尚未解答</strong>的部分：欧亚大陆<em>内部</em>各地的差异、与环境无关的<strong>文化因素</strong>、以及<strong>个人的角色</strong>。也就是说，他自己给出了这本书的边界。<br>
+    <span style="display:block;margin-top:8px;">更要注意：他的"地理"不是宿命论，而是<em>初始条件的差异</em>——初始条件通过一条可追溯的因果链，放大了成巨大的结果差异。</span>
+  </div>
+
+  <div class="pit">
+    <span class="lbl">误读二：这是为殖民征服辩护</span>
+    戴蒙德预见到了这个指责，并且直接反驳：<strong>"这个反对理由混淆了原因解释与辩护，是常见的谬误。对历史提出解释是一回事，怎么用这种解释是另一回事。"</strong><br>
+    <span style="display:block;margin-top:8px;">他的类比是：心理学家研究杀人犯的心理、医生研究疾病的原因，都不是为了给谋杀和疾病辩护——<strong>"厘清导致这些惨剧与悲剧的因果链之后，才能设法打断这个链条。"</strong></span>
+  </div>
+
+  <div class="pit">
+    <span class="lbl">误读三：这本书说农业/文明是"进步"</span>
+    戴蒙德明确否认：<strong>"我并不认为工业化的国家必然比狩猎—采集部落'高明'，也不认为离开狩猎—采集的生活方式，进入使用铁器的国度，就代表'进步'，更不觉得这样就是增进了人类的福祉。"</strong><br>
+    <span style="display:block;margin-top:8px;">他给的对比很实在：现代工业国家的公民"享有较佳的医疗照顾，遭到谋杀的风险低，寿命较长，但获得的来自朋友和亲族的社会支持少得多"。他说"文明是福是祸实在难说"。<br>
+    他自己的动机是"<strong>只是单纯地想知道：历史上，到底发生过什么事？</strong>"</span>
+  </div>
+
+  <div class="card">
+    <h3>他还主动挡掉了另外两个反对意见（这很能说明他的立场）</h3>
+    <p><strong>不是欧洲本位。</strong>有人担心认真回答亚力的问题就是吹捧西欧人的业绩。他的回应是："本书主要讨论的是欧洲人以外的族群"，而且"<strong>西欧文明最基本的要素，其实是由其他地区的族群发展出来后传入西欧的</strong>"。</p>
+    <p><strong>不是种族差异。</strong>他花了很长篇幅拆解种族主义解释，包括指出智商测验"往往测量的是文化学习能力，而不是先天智力"。他甚至把种族主义的论调颠倒过来问：<em>"为什么先天不足、（在现代社会中）后天失调的欧洲人能生产出那么多的货物？"</em></p>
+    <p>他给出的两个"新几内亚人可能更聪明"的理由也值得看：① 在人口稀疏的新几内亚社会，死亡主因是谋杀、部落战争、意外和食物不足——<strong>聪明的人比较有机会逃出鬼门关、传递基因</strong>；而在人口稠密的欧洲社会，传染病是主要死因，"筛出的不是智力，而是与遗传抗性有关的身体化学"。② 新几内亚的孩子没有电视这类被动娱乐，"只要不睡觉，就会主动做一些事"。</p>
+    <p style="color:#8a8571;font-size:13px;margin-top:8px;">（注：这两个理由是戴蒙德的推理，属于他的<em>个人观点</em>，并非学界共识。读的时候要分清哪部分是实证、哪部分是思辨。）</p>
+  </div>
+
+  <!-- ================= 全书结构 ================= -->
+  <div class="section-title">全书四部分的分工</div>
+  <div class="section-sub">戴蒙德自己在前言里给的结构说明</div>
+
+  <div class="tbl-wrap">
+    <table>
+      <tr><th style="width:22%">部分</th><th style="width:16%">章节</th><th>任务</th></tr>
+      <tr>
+        <td><strong>第一部分<br>从伊甸园到卡哈马卡</strong></td>
+        <td>第 1–3 章</td>
+        <td>人类演化的旋风之旅（700 万年前到 1.3 万年前）；用波利尼西亚群岛做"<strong>历史的自然实验</strong>"当热身；然后直接抛出卡哈马卡这个最戏剧化的案例。<br><span style="color:#8a8571;">结果：各大洲的族群，<strong>起步的时间不同</strong>。</span></td>
+      </tr>
+      <tr>
+        <td><strong>第二部分<br>食物生产的兴起与扩散</strong></td>
+        <td>第 4–10 章</td>
+        <td>全书理论核心。证明食物生产如何导向近因；确定它<strong>何时何地</strong>独立发生；解释它<strong>为何</strong>会发生；证明<strong>植物</strong>与<strong>动物</strong>可驯化性的地理差异；最后用<strong>大陆轴线</strong>解释传播速度。</td>
+      </tr>
+      <tr>
+        <td><strong>第三部分<br>从食物到枪炮、病菌与钢铁</strong></td>
+        <td>第 11–14 章</td>
+        <td>把终极因和近因之间的因果关联讲透：病菌 → 文字 → 技术 → 政治组织。<br><span style="color:#8a8571;">四项都从食物生产的盈余里长出来。</span></td>
+      </tr>
+      <tr>
+        <td><strong>第四部分<br>环游世界</strong></td>
+        <td>第 15–20 章</td>
+        <td>把前两部分归纳的道理应用到各大洲和重要岛屿：澳大利亚与新几内亚、中国与东亚、波利尼西亚、两个半球的碰撞、非洲、日本。<br><span style="color:#8a8571;">这是"检验理论"的部分。</span></td>
+      </tr>
+      <tr>
+        <td><strong>收场白<br>人类史这门科学的未来</strong></td>
+        <td>—</td>
+        <td>从尚无解答的部分提出提醒：欧亚大陆内部的差异、与环境无关的文化因素、个人的角色。并讨论能否把人类史建成一门<strong>历史科学</strong>。</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ================= 第二部分核心数据 ================= -->
+  <div class="section-title">理论核心：几组决定命运的数字</div>
+  <div class="section-sub">第二部分的全部论证都建立在这些实证数据上</div>
+
+  <div class="tbl-wrap">
+    <table>
+      <tr><th style="width:34%">比较项</th><th>数据</th></tr>
+      <tr>
+        <td><strong>可驯化大型哺乳动物</strong></td>
+        <td>20 世纪以前，只有 <strong>14 种</strong> 100 磅以上的大型陆栖哺乳动物被驯化。各大洲的"候选—成功"对比：<br>
+        欧亚大陆：<span class="num">72 → 13（18%）</span><br>
+        撒哈拉以南非洲：<span class="num">51 → 0（0%）</span><br>
+        美洲：<span class="num">24 → 1（4%）</span><br>
+        澳大利亚：<span class="num">1 → 0（0%）</span></td>
+      </tr>
+      <tr>
+        <td><strong>可驯化大种子禾草</strong></td>
+        <td>布卢姆勒列出的 56 种"大地精华"（种子重量为一般草籽 10 倍以上）中：<br>
+        欧亚大陆西部地中海气候区 <span class="num">32 种</span>；智利 <span class="num">2</span>；加利福尼亚 <span class="num">1</span>；非洲南部 <span class="num">1</span>；<strong>澳大利亚西南 0</strong></td>
+      </tr>
+      <tr>
+        <td><strong>植物驯化的集中度</strong></td>
+        <td>20 万种开花野生植物 → 几千种可食 → 几百种被驯化 → 其中<strong>十几种提供了世界年产量 80%</strong>。谷物提供全世界所需卡路里的一半。</td>
+      </tr>
+      <tr>
+        <td><strong>食物生产的土地效率</strong></td>
+        <td>每 1 英亩土地可供人类食用的生物量：狩猎采集 <span class="num">0.1%</span> → 食物生产 <span class="num">90%</span>，可养活的人口相差 <strong>10–100 倍</strong>。</td>
+      </tr>
+      <tr>
+        <td><strong>生育间隔</strong></td>
+        <td>狩猎采集约 <span class="num">4 年</span> → 定居农民约 <span class="num">2 年</span>。</td>
+      </tr>
+      <tr>
+        <td><strong>大陆轴线与传播速度</strong></td>
+        <td>欧亚（东西向）：约 <span class="num">每年 0.7 英里</span>（西南亚→欧洲、埃及、印度河流域），最快达 3.2 英里（菲律宾→波利尼西亚）<br>
+        美洲、非洲（南北向）：不到 <span class="num">每年 0.5 英里</span>，最慢 <span class="num">0.2–0.3 英里</span><br>
+        结果：公元元年时肥沃新月地带的谷物已传播 <strong>8000 英里</strong>（从爱尔兰大西洋岸到日本太平洋岸）。</td>
+      </tr>
+      <tr>
+        <td><strong>美洲的地理约束</strong></td>
+        <td>美洲南北长 <span class="num">9000 英里</span>、东西最宽 <span class="num">3000 英里</span>，而巴拿马地峡仅 <span class="num">40 英里</span>宽。骆马驯养 5000 年后，奥尔梅克、玛雅、阿兹特克仍无驮畜。</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>为什么"大陆轴线"这一条最有说服力</h3>
+    <p>戴蒙德的论证之所以强，在于它<strong>不是关于人的，而是关于纬度的物理后果</strong>：</p>
+    <p>同一纬度的东西两地，<strong>昼长、季节、温度、降雨、疾病、生境都相似</strong>。因此一批作物从西南亚往东传到中国、往西传到欧洲，"早就在气候上适应了传入区"——它们<strong>不需要重新演化</strong>。</p>
+    <p>而南北向传播必须跨越纬度，也就必须跨越气候带。他的结论因此极为凝练：</p>
+    <p style="color:#7a5c2e;font-weight:600;margin:12px 0;">"只有在欧亚大陆的天空下，麦田才是绵延不断的，美洲不是。"</p>
+    <p>这条论证同时解释了为什么<strong>牲畜、轮子、文字</strong>也都被困在原地——"大陆轴线的走向早为人类历史的命运埋下了伏笔"。</p>
+  </div>
+
+  <!-- ================= 一条补充：安娜·卡列尼娜原则 ================= -->
+  <div class="section-title">两个必须精确理解的概念</div>
+
+  <div class="card">
+    <h3>安娜·卡列尼娜原则（Anna Karenina principle）</h3>
+    <p>戴蒙德借用托尔斯泰《安娜·卡列尼娜》的开场白，改写为：<strong>"能驯化的动物都是相似的，驯化不成的动物各有各的原因。"</strong></p>
+    <p>它的逻辑结构是：<strong>成功需要同时满足所有条件，失败只需要一项不满足。</strong>所以他给出的六条标准里，任何一条不过关，这个物种就永远驯化不了：</p>
+    <p>① <strong>饮食习性</strong>（食物链能量转化率约 10%，偏食者淘汰）<br>
+       ② <strong>生长速度</strong>（大猩猩、大象需 15 年长成）<br>
+       ③ <strong>人工环境中繁殖的困难</strong>（猎豹、野生骆马）<br>
+       ④ <strong>性情凶残</strong>（灰熊、非洲水牛、河马、斑马、中亚野驴）<br>
+       ⑤ <strong>容易恐慌的性情</strong>（瞪羚、鹿与羚羊）<br>
+       ⑥ <strong>社群结构</strong>（需群居且有明确层级统制）</p>
+    <p style="margin-top:10px;"><strong>斑马</strong>是最好用的例子：它被驯服过（19 世纪南非当役畜，罗思柴尔德甚至驾斑马车行于伦敦），但驯化不了——咬人造成的动物园伤害超过老虎、套索套不住、成年后极危险。而它的候选资格其实很好，问题在<strong>第④条</strong>。</p>
+    <p style="color:#8a8571;font-size:13px;margin-top:8px;">这个原则的用处在于：它把问题从"人为什么不行"换成了"这个物种哪一条不过关"——<em>又一次把责任从人身上移到了环境上</em>。</p>
+  </div>
+
+  <div class="card">
+    <h3>驯化（domestication）≠ 驯服（taming）</h3>
+    <p><strong>驯化</strong>的定义是"栽种/豢养并使物种发生<em>遗传变化</em>，以对人类更有用"；动物版的"家畜"要求<strong>进食、繁殖都由人类控制</strong>。</p>
+    <p><strong>驯服</strong>只是把野生个体养乖——物种没变，也不能在人工环境繁殖。</p>
+    <p>戴蒙德的例子极清楚：<strong>大象"可以被驯服，但无法被驯化"</strong>——汉尼拔的非洲象与亚洲工作象都只是被捉来的野象，不能在人工环境下繁殖。同理，猎豹被莫卧儿皇帝养过上千头，但直到 <strong>1960 年才有第一头在动物园出生的个体</strong>。</p>
+    <p style="color:#8a8571;font-size:13px;margin-top:8px;">这个区分很重要，因为它在第 4 章之后被反复用来解释一件事：<strong>欧亚大陆的优势不是"人会驯化"，而是"那里有能被驯化的物种"</strong>。各大洲"候选—成功"的数字对比（72→13、51→0、24→1、1→0）就是这条论证的全部力量。</p>
+  </div>
+
+  <!-- ================= 阅读路线 ================= -->
+  <div class="section-title">怎么读这本书：三条路线</div>
+  <div class="section-sub">这本书将近 40 万字，但核心论证集中在少数几章</div>
+
+  <div class="route-item must">
+    <div class="route-badge">必读核心</div>
+    <div class="route-body">
+      <strong>开场白 亚力的问题</strong>
+      <span>全书纲领。戴蒙德在这里提出问题、给出那个"一句话答案"、说明终极因与近因的区别，并逐条回应三个反对意见。<strong>读透这一篇，后面 20 章都是在填它的血肉。</strong></span>
+    </div>
+  </div>
+  <div class="route-item must">
+    <div class="route-badge">必读核心</div>
+    <div class="route-body">
+      <strong>第 3 章 卡哈马卡的冲突</strong>
+      <span>全书最著名的叙事，也是最好的入门。168 人对 8 万人，一个帝国在几分钟内失去皇帝。戴蒙德用这个案例展示了一整条因果链如何在同一时刻起作用——<strong>如果只读一章，就读这一章</strong>。</span>
+    </div>
+  </div>
+  <div class="route-item must">
+    <div class="route-badge">必读核心</div>
+    <div class="route-body">
+      <strong>第 4 章 农民的力量</strong>
+      <span>全书最短、最关键的论证章：食物生产到底<em>如何</em>转化为军事优势。他把机制列成了一张清单（生物量、生育间隔、可储存盈余、供养专业人员）。<strong>这一章是整本书的逻辑枢纽。</strong></span>
+    </div>
+  </div>
+  <div class="route-item must">
+    <div class="route-badge">必读核心</div>
+    <div class="route-body">
+      <strong>第 9 章 斑马、不幸福的婚姻与安娜·卡列尼娜原则</strong>
+      <span>全书最有说服力、也最有趣的一章。用大型哺乳动物的驯化成败，证明"不是人不行，是物种不行"。数字对比（72→13、51→0）干脆利落。</span>
+    </div>
+  </div>
+  <div class="route-item must">
+    <div class="route-badge">必读核心</div>
+    <div class="route-body">
+      <strong>第 10 章 大陆轴线——历史的伏笔</strong>
+      <span>理论收口。用纯粹的地理与纬度差异，解释传播速度的差异。这一章的论证最"硬"，因为它完全不涉及人。</span>
+    </div>
+  </div>
+  <div class="route-item must">
+    <div class="route-badge">必读核心</div>
+    <div class="route-body">
+      <strong>第 11 章 牲畜的致命礼物</strong>
+      <span>病菌那一章。它解释了为什么在欧洲人到达之前，美洲人口就已经崩塌——也是全书最让人不适、但最重要的一章。</span>
+    </div>
+  </div>
+
+  <div class="route-item skim">
+    <div class="route-badge">可以略读</div>
+    <div class="route-body">
+      <strong>第 1 章 人类社会的起跑线</strong>
+      <span>人类演化与扩散的"旋风之旅"，信息量大但多为背景知识。只需抓住一个结论：<strong>各大洲的族群起步时间不同</strong>（例如美洲直到 1.3 万年前才有人）。</span>
+    </div>
+  </div>
+  <div class="route-item skim">
+    <div class="route-badge">可以略读</div>
+    <div class="route-body">
+      <strong>第 2 章 历史的自然实验</strong>
+      <span>波利尼西亚群岛的对比（莫里奥里人 vs 毛利人）是很好的热身，但结论在第 15 章会再讲一次。时间紧可以只读结论。</span>
+    </div>
+  </div>
+  <div class="route-item skim">
+    <div class="route-badge">可以略读</div>
+    <div class="route-body">
+      <strong>第 5 章 历史上的有与无</strong>
+      <span>考古年代学的技术讨论（碳 14 测年、加速器质谱法）。对方法论感兴趣值得细读，否则记住"<strong>5 个确定的独立发源地</strong>"就够了。</span>
+    </div>
+  </div>
+  <div class="route-item skim">
+    <div class="route-badge">可以略读</div>
+    <div class="route-body">
+      <strong>第四部分（第 15–20 章）</strong>
+      <span>把理论应用到各大洲，是"检验"而非"提出"。其中<strong>第 16 章（中国）</strong>对中国读者最有价值，<strong>第 18 章（两个半球的碰撞）</strong>是第 3 章的完整展开——这两章值得细读，其余可快读。</span>
+    </div>
+  </div>
+
+  <div class="route-item skip">
+    <div class="route-badge">可以跳过</div>
+    <div class="route-body">
+      <strong>延伸阅读、图片来源（p.302 起）</strong>
+      <span>纯学术附录。但如果你要验证戴蒙德的某个具体论断，这里的引文出处是最有用的部分——他的每条数据都有出处。</span>
+    </div>
+  </div>
+
+  <!-- ================= 阅读提醒 ================= -->
+  <div class="section-title">读这本书前，请先接受三件事</div>
+
+  <div class="card">
+    <h3>① 它的答案是"消极"的，这是刻意的</h3>
+    <p>戴蒙德给出的答案里没有英雄、没有天才、没有哪个民族的优越性。历史的走向取决于<em>各大洲有哪些野草、哪些野兽、朝哪个方向躺着</em>。这对喜欢"人定胜天"叙事的读者会很不舒服，但这正是他的论点：<strong>如果不是环境，那就只能是人种，而他拒绝后者。</strong></p>
+  </div>
+
+  <div class="card">
+    <h3>② 他有一处明显的张力，值得你自己判断</h3>
+    <p>他一方面说地理塑造了历史，另一方面在收场白里承认"<strong>与环境无关的文化因素</strong>"和"<strong>个人的角色</strong>"他还无法纳入解释。这不是他的疏忽，而是他自己标注的<em>未解之处</em>。</p>
+    <p>读的时候不妨一直带着这个问题：<strong>哪些结论是数据推出来的，哪些是他从数据往前多走了一步？</strong>（例如他关于"新几内亚人可能更聪明"的两个理由，就是推理而非实证。）</p>
+  </div>
+
+  <div class="card">
+    <h3>③ 这本书的写作动机是道德性的，不只是学术性的</h3>
+    <p>他在开场白里说得非常直接：他写这本书最大的动力，是因为"<strong>不然大多数人还是会继续觉得，说不定种族主义者的主张是正确的</strong>"。</p>
+    <p>所以这本书是一场<strong>论证性的反驳</strong>——它要证明：人类历史的不均等有一个完全不需要诉诸种族差异的解释，而且这个解释有大量实证支撑。理解了这一点，你就能理解他为什么花那么多篇幅在数字和考据上。</p>
+  </div>
+
+  <div class="quote">
+    <p>"无论如何，我希望能说服读者：历史绝对不像某个怀疑者说的那样，是'没完没了的事实'。历史的确有普遍的模式，解释那些模式，不仅能生产慧见，也是个令人着迷的事业。"</p>
+    <div class="author">—— 戴蒙德，开场白结尾</div>
+  </div>
+
+  <div class="footer">
+    《枪炮、病菌与钢铁》整体架构 · 贾雷德·戴蒙德<br>
+    亚力的问题 · 终极因与近因 · 食物生产 · 大陆轴线 · 安娜·卡列尼娜原则<br>
+    各族群的历史循着不同的轨迹开展，那是环境而非生物差异造成的
+  </div>
+
+</div>
+</body>
+</html>

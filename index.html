@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>读书笔记知识库 · 底层</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg-primary: #0a0e1a;
+    --bg-secondary: #111827;
+    --bg-card: #1a2236;
+    --bg-card-hover: #1f2a42;
+    --text-primary: #f1f5f9;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    --border: #1e293b;
+    --accent: #3b82f6;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* Hero区域 */
+  .hero {
+    position: relative;
+    padding: 80px 24px 60px;
+    text-align: center;
+    background: radial-gradient(ellipse at top, #1e3a5f 0%, transparent 60%),
+                radial-gradient(ellipse at bottom right, #3b0764 0%, transparent 50%),
+                var(--bg-primary);
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image:
+      radial-gradient(circle at 20% 30%, rgba(59,130,246,0.08) 0%, transparent 50%),
+      radial-gradient(circle at 80% 70%, rgba(168,85,247,0.08) 0%, transparent 50%);
+    pointer-events: none;
+  }
+  .hero-content { position: relative; z-index: 1; max-width: 800px; margin: 0 auto; }
+  .hero h1 {
+    font-size: 42px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 50%, #f472b6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 16px;
+    letter-spacing: -0.5px;
+  }
+  .hero .subtitle {
+    font-size: 17px;
+    color: var(--text-secondary);
+    margin-bottom: 32px;
+  }
+  .hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+  .stat { text-align: center; }
+  .stat-num {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+  .stat-label {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  /* 导航锚点 */
+  .nav-bar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(10, 14, 26, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 24px;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
+  .nav-bar::-webkit-scrollbar { height: 0; }
+  .nav-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    gap: 8px;
+  }
+  .nav-link {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: all 0.2s;
+    border: 1px solid transparent;
+  }
+  .nav-link:hover {
+    color: var(--text-primary);
+    background: var(--bg-card);
+    border-color: var(--border);
+  }
+
+  /* 主内容 */
+  .main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  /* 分类区块 */
+  .category {
+    margin-bottom: 48px;
+    scroll-margin-top: 70px;
+  }
+  .category-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 24px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .category-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+  .category-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+  .category-count {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-left: auto;
+    background: var(--bg-card);
+    padding: 4px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+  }
+
+  /* 书籍网格 */
+  .books-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 20px;
+  }
+
+  /* 书籍卡片 */
+  .book-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 22px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+  }
+  .book-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: 14px 14px 0 0;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .book-card:hover {
+    background: var(--bg-card-hover);
+    border-color: #334155;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+  }
+  .book-card:hover::before { opacity: 1; }
+
+  .book-title {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+    line-height: 1.4;
+  }
+  .book-author {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+  }
+  .book-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .book-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 7px 13px;
+    border-radius: 8px;
+    font-size: 12.5px;
+    text-decoration: none;
+    transition: all 0.2s;
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    background: rgba(255,255,255,0.02);
+  }
+  .book-link:hover {
+    color: var(--text-primary);
+    background: rgba(255,255,255,0.06);
+    border-color: #475569;
+    transform: translateY(-1px);
+  }
+  .book-link .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* 分类颜色 */
+  .cat-01 .category-icon { background: rgba(139,92,246,0.15); }
+  .cat-01 .book-card::before { background: linear-gradient(90deg, #8b5cf6, #a78bfa); }
+  .cat-01 .dot { background: #8b5cf6; }
+
+  .cat-02 .category-icon { background: rgba(59,130,246,0.15); }
+  .cat-02 .book-card::before { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
+  .cat-02 .dot { background: #3b82f6; }
+
+  .cat-03 .category-icon { background: rgba(16,185,129,0.15); }
+  .cat-03 .book-card::before { background: linear-gradient(90deg, #10b981, #34d399); }
+  .cat-03 .dot { background: #10b981; }
+
+  .cat-04 .category-icon { background: rgba(249,115,22,0.15); }
+  .cat-04 .book-card::before { background: linear-gradient(90deg, #f97316, #fb923c); }
+  .cat-04 .dot { background: #f97316; }
+
+  .cat-05 .category-icon { background: rgba(234,179,8,0.15); }
+  .cat-05 .book-card::before { background: linear-gradient(90deg, #eab308, #facc15); }
+  .cat-05 .dot { background: #eab308; }
+
+  .cat-06 .category-icon { background: rgba(236,72,153,0.15); }
+  .cat-06 .book-card::before { background: linear-gradient(90deg, #ec4899, #f472b6); }
+  .cat-06 .dot { background: #ec4899; }
+
+  .cat-07 .category-icon { background: rgba(6,182,212,0.15); }
+  .cat-07 .book-card::before { background: linear-gradient(90deg, #06b6d4, #22d3ee); }
+  .cat-07 .dot { background: #06b6d4; }
+
+  .cat-08 .category-icon { background: rgba(244,63,94,0.15); }
+  .cat-08 .book-card::before { background: linear-gradient(90deg, #f43f5e, #fb7185); }
+  .cat-08 .dot { background: #f43f5e; }
+
+  .cat-09 .category-icon { background: rgba(100,116,139,0.15); }
+  .cat-09 .book-card::before { background: linear-gradient(90deg, #64748b, #94a3b8); }
+  .cat-09 .dot { background: #64748b; }
+
+  /* 页脚 */
+  .footer {
+    text-align: center;
+    padding: 40px 24px;
+    border-top: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 13px;
+  }
+  .footer a { color: var(--accent); text-decoration: none; }
+
+  /* 响应式 */
+  @media (max-width: 640px) {
+    .hero { padding: 50px 20px 40px; }
+    .hero h1 { font-size: 30px; }
+    .hero .subtitle { font-size: 15px; }
+    .hero-stats { gap: 24px; }
+    .stat-num { font-size: 24px; }
+    .books-grid { grid-template-columns: 1fr; }
+    .category-title { font-size: 18px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Hero -->
+<header class="hero">
+  <div class="hero-content">
+    <h1>读书笔记知识库</h1>
+    <p class="subtitle">整体架构 · 问题手册 · 助人手册 · 精读笔记 · 专业问题</p>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num">15</div><div class="stat-label">本精读书籍</div></div>
+      <div class="stat"><div class="stat-num">9</div><div class="stat-label">个知识领域</div></div>
+      <div class="stat"><div class="stat-num">50+</div><div class="stat-label">份读书笔记</div></div>
+    </div>
+  </div>
+</header>
+
+<!-- 导航 -->
+<nav class="nav-bar">
+  <div class="nav-inner">
+    <a class="nav-link" href="#cat-01">哲学与思维</a>
+    <a class="nav-link" href="#cat-02">心智与认知</a>
+    <a class="nav-link" href="#cat-03">自然与数学</a>
+    <a class="nav-link" href="#cat-04">社会与制度</a>
+    <a class="nav-link" href="#cat-05">历史与地理</a>
+    <a class="nav-link" href="#cat-06">文学与生命</a>
+    <a class="nav-link" href="#cat-07">技术</a>
+    <a class="nav-link" href="#cat-08">性与亲密关系</a>
+  </div>
+</nav>
+
+<main class="main">
+
+  <!-- 01 哲学与思维地基 -->
+  <section class="category cat-01" id="cat-01">
+    <div class="category-header">
+      <div class="category-icon">🧠</div>
+      <h2 class="category-title">哲学与思维地基</h2>
+      <span class="category-count">2 本书</span>
+    </div>
+    <div class="books-grid">
+
+      <div class="book-card">
+        <div class="book-title">科技想要什么</div>
+        <div class="book-author">凯文·凯利 · What Technology Wants</div>
+        <div class="book-links">
+          <a class="book-link" href="01_%E5%93%B2%E5%AD%A6%E4%B8%8E%E6%80%9D%E7%BB%B4%E5%9C%B0%E5%9F%BA/technium-wants-what-architecture.html"><span class="dot"></span>整体架构</a>
+          <a class="book-link" href="01_%E5%93%B2%E5%AD%A6%E4%B8%8E%E6%80%9D%E7%BB%B4%E5%9C%B0%E5%9F%BA/technium-wants-what-questions.html"><span class="dot"></span>问题手册</a>
+          <a class="book-link" href="01_%E5%93%B2%E5%AD%A6%E4%B8%8E%E6%80%9D%E7%BB%B4%E5%9C%B0%E5%9F%BA/technium-wants-wath-helping.html"><span class="dot"></span>助人手册</a>
+        </div>
+      </div>
+
+      <div class="book-card">
+        <div class="book-title">非对称风险</div>
+        <div class="book-author">纳西姆·塔勒布 · Skin in the Game</div>
+        <div class="book-links">
+          <a class="book-link" href="01_%E5%93%B2%E5%AD%A6%E4%B8%8E%E6%80%9D%E7%BB%B4%E5%9C%B0%E5%9F%BA/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E9%A3%8E%E9%99%A9-%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84.html"><span class="dot"></span>整体架构</a>
+          <a class="book-link" href="01_%E5%93%B2%E5%AD%A6%E4%B8%8E%E6%80%9D%E7%BB%B4%E5%9C%B0%E5%9F%BA/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E9%A3%8E%E9%99%A9-%E9%97%AE%E9%A2%98%E6%89%8B%E5%86%8C.html"><span class="dot"></span>问题手册</a>
+          <a class="book-link" href="01_%E5%93%B2%E5%AD%A6%E4%B8%8E%E6%80%9D%E7%BB%B4%E5%9C%B0%E5%9F%BA/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E9%A3%8E%E9%99%A9-%E5%8A%A9%E4%BA%BA%E6%89%8B%E5%86%8C.html"><span class="dot"></span>助人手册</a>
+          <a class="book-link" href="01_%E5%93%B2%E5%AD%A6%E4%B8%8E%E6%80%9D%E7%BB%B4%E5%9C%B0%E5%9F%BA/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E9%A3%8E%E9%99%A9-%E7%B2%BE%E5%8D%8E%E7%AC%94%E8%AE%B0%E4%B8%8E%E4%B8%93%E4%B8%9A%E9%97%AE%E9%A2%98.html"><span class="dot"></span>精读笔记</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 02 心智与认知 -->
+  <section class="category cat-02" id="cat-02">
+    <div class="category-header">
+      <div class="category-icon">💭</div>
+      <h2 class="category-title">心智与认知</h2>
+      <span class="category-count">2 本书</span>
+    </div>
+    <div class="books-grid">
+
+      <div class="book-card">
+        <div class="book-title">思考，快与慢</div>
+        <div class="book-author">丹尼尔·卡尼曼 · Thinking, Fast and Slow</div>
+        <div class="book-links">
+          <a class="book-link" href="02_%E5%BF%83%E6%99%BA%E4%B8%8E%E8%AE%A4%E7%9F%A5/thinking-fast-slow-diagram.html"><span class="dot"></span>整体架构</a>
+          <a class="book-link" href="02_%E5%BF%83%E6%99%BA%E4%B8%8E%E8%AE%A4%E7%9F%A5/thinking-fast-slow-reflection.html"><span class="dot"></span>认知反思手册</a>
+          <a class="book-link" href="02_%E5%BF%83%E6%99%BA%E4%B8%8E%E8%AE%A4%E7%9F%A5/thinking-fast-slow-helping.html"><span class="dot"></span>助人手册</a>
+        </div>
+      </div>
+
+      <div class="book-card">
+        <div class="book-title">当呼吸化为空气</div>
+        <div class="book-author">保罗·卡拉尼什 · When Breath Becomes Air</div>
+        <div class="book-links">
+          <a class="book-link" href="02_%E5%BF%83%E6%99%BA%E4%B8%8E%E8%AE%A4%E7%9F%A5/when-breath-becomes-air-architecture.html"><span class="dot"></span>整体架构</a>
+          <a class="book-link" href="02_%E5%BF%83%E6%99%BA%E4%B8%8E%E8%AE%A4%E7%9F%A5/when-breath-becomes-air-questions.html"><span class="dot"></span>问题手册</a>
+          <a class="book-link" href="02_%E5%BF%83%E6%99%BA%E4%B8%8E%E8%AE%A4%E7%9F%A5/when-breath-becomes-air-helping.html"><span class="dot"></span>助人手册</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 03 自然与数学 -->
+  <section class="category cat-03" id="cat-03">
+    <div class="category-header">
+      <div class="category-icon">🔬</div>
+      <h2 class="category-title">自然与数学</h2>
+      <span class="category-count">2 本书</span>
+    </div>
+    <div class="books-grid">
+
+      <div class="book-card">
+        <div class="book-title">盲眼钟表匠</div>
+        <div class="book-author">理查德·道金斯 · The Blind Watchmaker</div>
+        <div class="book-links">
+          <a class="book-link" href="03_%E8%87%AA%E7%84%B6%E4%B8%8E%E6%95%B0%E5%AD%A6/Dawkins_%E7%9B%B2%E7%9C%BC%E9%92%9F%E8%A1%A8%E5%8C%A0-%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84.html"><span class="dot"></span>整体架构</a>
+          <a class="book-link" href="03_%E8%87%AA%E7%84%B6%E4%B8%8E%E6%95%B0%E5%AD%A6/Dawkins_%E7%9B%B2%E7%9C%BC%E9%92%9F%E8%A1%A8%E5%8C%A0-%E9%97%AE%E9%A2%98%E6%89%8B%E5%86%8C.html"><span class="dot"></span>问题手册</a>
+          <a class="book-link" href="03_%E8%87%AA%E7%84%B6%E4%B8%8E%E6%95%B0%E5%AD%A6/Dawkins_%E7%9B%B2%E7%9C%BC%E9%92%9F%E8%A1%A8%E5%8C%A0-%E6%A6%82%E5%BF%B5%E8%AF%AF%E7%94%A8%E4%B8%8E%E5%A4%B1%E6%95%88%E8%BE%B9%E7%95%8C%E6%89%8B%E5%86%8C.html"><span class="dot"></span>概念误用手册</a>
+          <a class="book-link" href="03_%E8%87%AA%E7%84%B6%E4%B8%8E%E6%95%B0%E5%AD%A6/Dawkins_%E7%9B%B2%E7%9C%BC%E9%92%9F%E8%A1%A8%E5%8C%A0-%E7%B2%BE%E5%8D%8E%E7%AC%94%E8%AE%B0%E4%B8%8E%E4%B8%93%E4%B8%9A%E9%97%AE%E9%A2%98.html"><span class="dot"></span>精读笔记</a>
+        </div>
+      </div>
+
+      <div class="book-card">
+        <div class="book-title">信息论</div>
+        <div class="book-author">大卫·麦凯 · Information Theory, Inference, and Learning Algorithms</div>
+        <div class="book-links">
+          <a class="book-link" href="03_%E8%87%AA%E7%84%B6%E4%B8%8E%E6%95%B0%E5%AD%A6/MacKay_%E4%BF%A1%E6%81%AF%E8%AE%BA-%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84.html"><span class="dot"></span>整体架构</a>
+          <a class="book-link" href="03_%E8%87%AA%E7%84%B6%E4%B8%8E%E6%95%B0%E5%AD%A6/MacKay_%E4%BF%A1%E6%81%AF%E8%AE%BA-%E9%97%AE%E9%A2%98%E6%89%8B%E5%86%8C.html"><span class="dot"></span>问题手册</a>
+          <a class="book-link" href="03_%E8%87%AA%E7%84%B6%E4%B8%8E%E6%95%B0%E5%AD%A6/MacKay_%E4%BF%A1%E6%81%AF%E8%AE%BA-%E6%A6%82%E5%BF%B5%E8%AF%AF%E7%94%A8%E4%B8%8E%E5%A4%B1%E6%95%88%E8%BE%B9%E7%95%8C%E6%89%8B%E5%86%8C.html"><span class="dot"></span>概念误用手册</a>
+          <a class="book-link" href="03_%E8%87%AA%E7%84%B6%E4%B8%8E%E6%95%B0%E5%AD%A6/MacKay_%E4%BF%A1%E6%81%AF%E8%AE%BA-%E7%B2%BE%E5%8D%8E%E7%AC%94%E8%AE%B0%E4%B8%8E%E4%B8%93%E4%B8%9A%E9%97%AE%E9%A2%98.html"><span class="dot"></span>精读笔记</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 04 社会与制度 -->
+  <section class="category cat-04" id="cat-04">
+    <div class="category-header">
+      <div class="category-icon">🏛️</div>
+      <h2 class="category-title">社会与制度</h2>
+      <span class="category-count">1 本书</span>
+    </div>
+    <div class="books-grid">
+
+      <div class="book-card">
+        <div class="book-title">置身事内：中国政府与经济发展</div>
+        <div class="book-author">兰小欢</div>
+        <div class="book-links">
+          <a class="book-link" href="04_%E7%A4%BE%E4%BC%9A%E4%B8%8E%E5%88%B6%E5%BA%A6/%E7%BD%AE%E8%BA%AB%E4%BA%8B%E5%86%85-%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84.html"><span class="dot"></span>整体架构</a>
+          <a class="book-link" href="04_%E7%A4%BE%E4%BC%9A%E4%B8%8E%E5%88%B6%E5%BA%A6/%E7%BD%AE%E8%BA%AB%E4%BA%8B%E5%86%85-%E9%97%AE%E9%A2%98%E6%89%8B%E5%86%8C.html"><span class="dot"></span>问题手册</a>
+          <a class="book-link" href="04_%E7%A4%BE%E4%BC%9A%E4%B8%8E%E5%88%B6%E5%BA%A6/%E7%BD%AE%E8%BA%AB%E4%BA%8B%E5%86%85-%E5%8A%A9%E4%BA%BA%E6%89%8B%E5%86%8C.html"><span class="dot"></span>助人手册</a>
+          <a class="book-link" href="04_%E7%A4%BE%E4%BC%9A%E4%B8%8E%E5%88%B6%E5%BA%A6/%E7%BD%AE%E8%BA%AB%E4%BA%8B%E5%86%85-%E7%B2%BE%E8%AF%BB%E7%AC%94%E8%AE%B0%E4%B8%8E%E4%B8%93%E4%B8%9A%E9%97%AE%E9%A2%98.html"><span class="dot"></span>精读笔记</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 05 历史与地理 -->
+  <section class="category cat-05" id="cat-05">
+    <div class="category-header">
+      <div class="category-icon">🌍</div>
+      <h2 class="category-title">历史与地理</h2>
+      <span class="category-count">1 本书</span>
+    </div>
+    <div class="books-grid">
+
+      <div class="book-card">
+        <div class="book-title">枪炮、病菌与钢铁</div>
+        <div class="book-author">贾雷德·戴蒙德 · Guns, Germs, and Steel</div>
+        <div class="book-links">
+          <a class="book-link" href="05_%E5%8E%86%E5%8F%B2%E4%B8%8E%E5%9C%B0%E7%90%86/%E6%9E%AA%E7%82%AE%E7%97%85%E8%8F%8C%E4%B8%8E%E9%92%A2%E9%93%81-%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84.html"><span class="dot"></span>整体架构</a>
+          <a class="book-link" href="05_%E5%8E%86%E5%8F%B2%E4%B8%8E%E5%9C%B0%E7%90%86/%E6%9E%AA%E7%82%AE%E7%97%85%E8%8F%8C%E4%B8%8E%E9%92%A2%E9%93%81-%E9%97%AE%E9%A2%98%E6%89%8B%E5%86%8C.html"><span class="dot"></span>问题手册</a>
+          <a class="book-link" href="05_%E5%8E%86%E5%8F%B2%E4%B8%8E%E5%9C%B0%E7%90%86/%E6%9E%AA%E7%82%AE%E7%97%85%E8%8F%8C%E4%B8%8E%E9%92%A2%E9%93%81-%E5%8A%A9%E4%BA%BA%E6%89%8B%E5%86%8C.html"><span class="dot"></span>助人手册</a>
+          <a class="book-link" href="05_%E5%8E%86%E5%8F%B2%E4%B8%8E%E5%9C%B0%E7%90%86/%E6%9E%AA%E7%82%AE%E7%97%85%E8%8F%8C%E4%B8%8E%E9%92%A2%E9%93%81-%E7%B2%BE%E5%8D%8E%E7%AC%94%E8%AE%B0%E4%B8%8E%E4%B8%93%E4%B8%9A%E9%97%AE%E9%A2%98.html"><span class="dot"></span>精读笔记</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 06 文学与生命书写 -->
+  <section class="category cat-06" id="cat-06">
+    <div class="category-header">
+      <div class="category-icon">📖</div>
+      <h2 class="category-title">文学与生命书写</h2>
+      <span class="category-count">1 本书</span>
+    </div>
+    <div class="books-grid">
+
+      <div class="book-card">
+        <div class="book-title">视觉</div>
+        <div class="book-author">大卫·马尔 · Vision (David Marr)</div>
+        <div class="book-links">
+          <a class="book-link" href="06_%E6%96%87%E5%AD%A6%E4%B8%8E%E7%94%9F%E5%91%BD%E4%B9%A6%E5%86%99/%E8%A7%86%E8%A7%89-%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84.html"><span class="dot"></span>整体架构</a>
+          <a class="book-link" href="06_%E6%96%87%E5%AD%A6%E4%B8%8E%E7%94%9F%E5%91%BD%E4%B9%A6%E5%86%99/%E8%A7%86%E8%A7%89-%E9%97%AE%E9%A2%98%E6%89%8B%E5%86%8C.html"><span class="dot"></span>问题手册</a>
+          <a class="book-link" href="06_%E6%96%87%E5%AD%A6%E4%B8%8E%E7%94%9F%E5%91%BD%E4%B9%A6%E5%86%99/%E8%A7%86%E8%A7%89-%E5%8A%A9%E4%BA%BA%E6%89%8B%E5%86%8C.html"><span class="dot"></span>助人手册</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 07 技术 -->
+  <section class="category cat-07" id="cat-07">
+    <div class="category-header">
+      <div class="category-icon">💻</div>
+      <h2 class="category-title">技术</h2>
+      <span class="category-count">2 本书</span>
+    </div>
+    <div class="books-grid">
+
+      <div class="book-card">
+        <div class="book-title">操作系统导论</div>
+        <div class="book-author">Remzi & Andrea Arpaci-Dusseau · OSTEP</div>
+        <div class="book-links">
+          <a class="book-link" href="07_%E6%8A%80%E6%9C%AF/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%AF%BC%E8%AE%BA-%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84.html"><span class="dot"></span>整体架构</a>
+          <a class="book-link" href="07_%E6%8A%80%E6%9C%AF/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%AF%BC%E8%AE%BA-%E9%97%AE%E9%A2%98%E6%89%8B%E5%86%8C.html"><span class="dot"></span>问题手册</a>
+          <a class="book-link" href="07_%E6%8A%80%E6%9C%AF/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%AF%BC%E8%AE%BA-%E5%8A%A9%E4%BA%BA%E6%89%8B%E5%86%8C.html"><span class="dot"></span>助人手册</a>
+          <a class="book-link" href="07_%E6%8A%80%E6%9C%AF/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%AF%BC%E8%AE%BA-%E7%B2%BE%E5%8D%8E%E7%AC%94%E8%AE%B0%E4%B8%8E%E4%B8%93%E4%B8%9A%E9%97%AE%E9%A2%98.html"><span class="dot"></span>精读笔记</a>
+        </div>
+      </div>
+
+      <div class="book-card">
+        <div class="book-title">数字图像处理</div>
+        <div class="book-author">Gonzalez & Woods · Digital Image Processing (4th Ed.)</div>
+        <div class="book-links">
+          <a class="book-link" href="07_%E6%8A%80%E6%9C%AF/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86-%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84.html"><span class="dot"></span>整体架构</a>
+          <a class="book-link" href="07_%E6%8A%80%E6%9C%AF/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86-%E9%97%AE%E9%A2%98%E6%89%8B%E5%86%8C.html"><span class="dot"></span>问题手册</a>
+          <a class="book-link" href="07_%E6%8A%80%E6%9C%AF/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86-%E5%8A%A9%E4%BA%BA%E6%89%8B%E5%86%8C.html"><span class="dot"></span>助人手册</a>
+          <a class="book-link" href="07_%E6%8A%80%E6%9C%AF/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86-%E7%B2%BE%E5%8D%8E%E7%AC%94%E8%AE%B0%E4%B8%8E%E4%B8%93%E4%B8%9A%E9%97%AE%E9%A2%98.html"><span class="dot"></span>精读笔记</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 08 性与亲密关系 -->
+  <section class="category cat-08" id="cat-08">
+    <div class="category-header">
+      <div class="category-icon">❤️</div>
+      <h2 class="category-title">性与亲密关系</h2>
+      <span class="category-count">2 本书</span>
+    </div>
+    <div class="books-grid">
+
+      <div class="book-card">
+        <div class="book-title">爱的艺术</div>
+        <div class="book-author">艾里希·弗洛姆 · The Art of Loving</div>
+        <div class="book-links">
+          <a class="book-link" href="08_%E6%80%A7%E4%B8%8E%E4%BA%B2%E5%AF%86%E5%85%B3%E7%B3%BB/Fromm_%E7%88%B1%E7%9A%84%E8%89%BA%E6%9C%AF-%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84.html"><span class="dot"></span>整体架构</a>
+          <a class="book-link" href="08_%E6%80%A7%E4%B8%8E%E4%BA%B2%E5%AF%86%E5%85%B3%E7%B3%BB/Fromm_%E7%88%B1%E7%9A%84%E8%89%BA%E6%9C%AF-%E9%97%AE%E9%A2%98%E6%89%8B%E5%86%8C.html"><span class="dot"></span>问题手册</a>
+          <a class="book-link" href="08_%E6%80%A7%E4%B8%8E%E4%BA%B2%E5%AF%86%E5%85%B3%E7%B3%BB/Fromm_%E7%88%B1%E7%9A%84%E8%89%BA%E6%9C%AF-%E8%A7%84%E8%8C%83%E6%80%A7%E4%B8%BB%E5%BC%A0%E6%89%8B%E5%86%8C.html"><span class="dot"></span>规范性主张手册</a>
+          <a class="book-link" href="08_%E6%80%A7%E4%B8%8E%E4%BA%B2%E5%AF%86%E5%85%B3%E7%B3%BB/Fromm_%E7%88%B1%E7%9A%84%E8%89%BA%E6%9C%AF-%E7%B2%BE%E5%8D%8E%E7%AC%94%E8%AE%B0%E4%B8%8E%E4%B8%93%E4%B8%9A%E9%97%AE%E9%A2%98.html"><span class="dot"></span>精读笔记</a>
+        </div>
+      </div>
+
+      <div class="book-card">
+        <div class="book-title">亲密关系</div>
+        <div class="book-author">罗兰·米勒 · Intimate Relationships (6th Ed.)</div>
+        <div class="book-links">
+          <a class="book-link" href="08_%E6%80%A7%E4%B8%8E%E4%BA%B2%E5%AF%86%E5%85%B3%E7%B3%BB/Miller_%E4%BA%B2%E5%AF%86%E5%85%B3%E7%B3%BB-%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84.html"><span class="dot"></span>整体架构</a>
+          <a class="book-link" href="08_%E6%80%A7%E4%B8%8E%E4%BA%B2%E5%AF%86%E5%85%B3%E7%B3%BB/Miller_%E4%BA%B2%E5%AF%86%E5%85%B3%E7%B3%BB-%E9%97%AE%E9%A2%98%E6%89%8B%E5%86%8C.html"><span class="dot"></span>问题手册</a>
+          <a class="book-link" href="08_%E6%80%A7%E4%B8%8E%E4%BA%B2%E5%AF%86%E5%85%B3%E7%B3%BB/Miller_%E4%BA%B2%E5%AF%86%E5%85%B3%E7%B3%BB-%E6%A6%82%E5%BF%B5%E8%AF%AF%E7%94%A8%E4%B8%8E%E8%AF%81%E6%8D%AE%E7%AD%89%E7%BA%A7%E6%89%8B%E5%86%8C.html"><span class="dot"></span>概念误用手册</a>
+          <a class="book-link" href="08_%E6%80%A7%E4%B8%8E%E4%BA%B2%E5%AF%86%E5%85%B3%E7%B3%BB/Miller_%E4%BA%B2%E5%AF%86%E5%85%B3%E7%B3%BB-%E8%87%AA%E6%88%91%E8%AF%8A%E6%96%AD%E6%89%8B%E5%86%8C.html"><span class="dot"></span>自我诊断手册</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <p>读书笔记知识库 · 持续更新中</p>
+  <p style="margin-top:8px;">整体架构 · 问题手册 · 助人手册 · 精读笔记 · 专业问题</p>
+</footer>
+
+</body>
+</html>

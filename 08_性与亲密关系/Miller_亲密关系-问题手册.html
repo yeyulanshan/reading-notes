@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>《亲密关系》问题手册 —— 24 题，练到能自己判断</title>
+<style>
+  :root{
+    --paper:#faf6f2; --card:#fffdfb; --edge:#e0d5cc;
+    --ink:#2a211c; --ink-mid:#5c4f47; --ink-soft:#92847a;
+    --core:#8c4a5c; --core-soft:#f7e8ec;
+    --struct:#7a5a3a; --struct-soft:#f4ece0;
+    --self:#4a6b7a; --self-soft:#e5eef2;
+    --inter:#5a7a4a; --inter-soft:#eaf0e3;
+    --warn:#a8442f; --warn-soft:#f9e7e2;
+    --key:#96702a; --key-soft:#f6efdc;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--paper);color:var(--ink);padding:36px 20px 48px;line-height:1.85;
+    -webkit-font-smoothing:antialiased;
+  }
+  .container{max-width:940px;margin:0 auto;}
+
+  .header{text-align:center;margin-bottom:26px;padding:46px 24px 40px;background:var(--card);border:1px solid var(--edge);border-top:5px solid var(--inter);border-radius:4px;}
+  .header .kicker{font-size:11.5px;letter-spacing:2.5px;color:var(--ink-soft);margin-bottom:14px;}
+  .header h1{font-size:26px;color:var(--ink);margin-bottom:14px;letter-spacing:.5px;line-height:1.5;}
+  .header .subtitle{font-size:14.5px;color:var(--ink-mid);}
+  .header .author{margin-top:16px;font-size:12.5px;color:var(--ink-soft);}
+
+  .guide{background:var(--inter-soft);border:1px solid #d3e0c6;border-left:4px solid var(--inter);border-radius:3px;padding:20px 24px;margin-bottom:26px;font-size:14.5px;color:var(--ink-mid);}
+  .guide .g-title{color:var(--inter);font-weight:700;margin-bottom:10px;font-size:13.5px;letter-spacing:.6px;}
+  .guide ol{margin-left:20px;} .guide li{margin-bottom:6px;} .guide strong{color:var(--ink);}
+
+  /* 层级标记 */
+  .level-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:30px;}
+  .level-bar .lv{flex:1;min-width:180px;background:var(--card);border:1px solid var(--edge);border-top:4px solid;border-radius:3px;padding:14px 16px;}
+  .level-bar .lv.l1{border-top-color:#7aa05c;} .level-bar .lv.l2{border-top-color:#c9a227;}
+  .level-bar .lv.l3{border-top-color:#b87333;} .level-bar .lv.l4{border-top-color:var(--warn);}
+  .level-bar .lv .n{font-size:11.5px;font-weight:700;letter-spacing:1px;margin-bottom:5px;}
+  .level-bar .lv.l1 .n{color:#5c8043;} .level-bar .lv.l2 .n{color:#96702a;}
+  .level-bar .lv.l3 .n{color:#a8601f;} .level-bar .lv.l4 .n{color:var(--warn);}
+  .level-bar .lv p{font-size:12.5px;color:var(--ink-mid);line-height:1.6;}
+
+  .section-title{font-size:20px;font-weight:700;color:var(--ink);margin:48px 0 8px;padding-left:13px;border-left:4px solid var(--inter);letter-spacing:.3px;}
+  .section-sub{color:var(--ink-soft);font-size:13.5px;margin:0 0 18px 17px;}
+
+  /* 题目 */
+  .q{background:var(--card);border:1px solid var(--edge);border-radius:3px;margin-bottom:16px;overflow:hidden;}
+  .q-head{padding:16px 22px;display:flex;gap:13px;align-items:flex-start;border-bottom:1px solid var(--edge);}
+  .q-head .num{font-size:13px;font-weight:700;color:#fff;background:var(--inter);padding:3px 10px;border-radius:2px;flex-shrink:0;margin-top:2px;}
+  .q-head .txt{font-size:15.5px;color:var(--ink);font-weight:600;line-height:1.7;}
+  .q-head .lvtag{font-size:10.5px;padding:2px 8px;border-radius:20px;font-weight:700;white-space:nowrap;margin-left:auto;flex-shrink:0;margin-top:3px;}
+  .lvtag.l1{background:#e6f0dd;color:#5c8043;} .lvtag.l2{background:var(--key-soft);color:#96702a;}
+  .lvtag.l3{background:#f7e8d8;color:#a8601f;} .lvtag.l4{background:var(--warn-soft);color:var(--warn);}
+  .q-body{padding:18px 22px;font-size:14px;color:var(--ink-mid);}
+  .q-body p+p{margin-top:8px;}
+  .q-body strong{color:var(--ink);} .q-body em{color:var(--warn);font-style:normal;font-weight:600;}
+
+  details{margin-top:12px;border:1px solid var(--edge);border-radius:3px;background:#fdfbf8;}
+  summary{cursor:pointer;padding:11px 16px;font-size:13.5px;font-weight:700;color:var(--inter);background:var(--inter-soft);border-radius:3px 3px 0 0;list-style:none;}
+  summary::-webkit-details-marker{display:none;}
+  summary::before{content:"▸ ";font-size:12px;}
+  details[open] summary::before{content:"▾ ";}
+  details[open] summary{border-bottom:1px solid var(--edge);}
+  .ans{padding:16px 18px;font-size:14px;color:var(--ink-mid);line-height:1.85;}
+  .ans p+p{margin-top:9px;} .ans strong{color:var(--ink);}
+  .ans ol,.ans ul{margin:9px 0 0 20px;} .ans li{margin-bottom:6px;}
+
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13px;}
+  th,td{padding:8px 10px;border:1px solid var(--edge);text-align:left;vertical-align:top;}
+  th{background:var(--core-soft);color:var(--core);font-weight:700;font-size:12.5px;}
+  td{color:var(--ink-mid);} td strong{color:var(--ink);}
+
+  .pit{background:var(--warn-soft);border-left:4px solid var(--warn);border-radius:0 3px 3px 0;padding:13px 17px;margin-top:12px;font-size:13.5px;color:#7d3221;}
+  .pit .lbl{color:var(--warn);font-weight:700;display:block;margin-bottom:5px;font-size:12px;letter-spacing:.4px;}
+  .pit strong{color:#6a1a10;}
+
+  .checklist{background:var(--card);border:1px solid var(--edge);border-radius:3px;padding:26px;}
+  .checklist h3{color:var(--inter);font-size:16.5px;margin-bottom:16px;}
+  .checklist .cat{color:var(--key);font-size:13.5px;font-weight:700;margin:16px 0 8px;}
+  .checklist ul{list-style:none;}
+  .checklist li{padding:5px 0 5px 28px;position:relative;color:var(--ink-mid);font-size:13.5px;}
+  .checklist li::before{content:"☐";position:absolute;left:4px;color:#cfc4ba;font-size:15px;}
+
+  .footer{text-align:center;margin-top:44px;padding:22px;color:var(--ink-soft);font-size:12.5px;line-height:1.9;}
+
+  @media(max-width:640px){
+    .header h1{font-size:20px;} .section-title{font-size:17.5px;}
+    .q-head{flex-wrap:wrap;} .q-head .lvtag{margin-left:0;}
+    body{padding:20px 14px 32px;}
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="kicker">PROBLEM MANUAL</div>
+    <h1>24 题，练到能自己判断</h1>
+    <div class="subtitle">《亲密关系》问题手册 · 罗兰·米勒 · 第 6 版</div>
+    <div class="author">L1 基础 4 题 · L2 理解 5 题 · L3 应用 8 题 · L4 批判 7 题 · 44 项自测</div>
+  </div>
+
+  <div class="guide">
+    <div class="g-title">📖 怎么用这本手册</div>
+    <ol>
+      <li><strong>先自己回答，再展开答案。</strong>答案默认折叠——这是刻意的，因为"看一眼觉得懂了"和"自己能说出来"是两件事。</li>
+      <li><strong>每题的「常见误读」是重点。</strong>这一域的知识极易被想当然地读，那些误读比无知更常见。</li>
+      <li><strong>看证据等级。</strong><span style="color:#3f6b32;font-weight:700;">A</span> = 可复现的实证 · <span style="color:#96702a;font-weight:700;">B</span> = 有支持但有边界 · <span style="color:#a8442f;font-weight:700;">C</span> = 争议未决 / 作者标为"猜测"</li>
+      <li><strong>最后做 44 项自测。</strong>答不出来的回去查对应题号。</li>
+    </ol>
+  </div>
+
+  <div class="level-bar">
+    <div class="lv l1"><div class="n">L1 · 基础</div><p>能准确复述概念与数字。这是"读过"的最低标准。</p></div>
+    <div class="lv l2"><div class="n">L2 · 理解</div><p>能解释为什么，能说出机制。这是"读懂"。</p></div>
+    <div class="lv l3"><div class="n">L3 · 应用</div><p>能在具体情境里用出来。这是"会用"。</p></div>
+    <div class="lv l4"><div class="n">L4 · 批判</div><p>能指出证据边界、替代解释、常见误用。这是"不会被忽悠"。</p></div>
+  </div>
+
+  <!-- ============ L1 ============ -->
+  <div class="section-title">L1 · 基础（4 题）</div>
+  <div class="section-sub">能准确说出来，就算过关</div>
+
+  <div class="q">
+    <div class="q-head"><span class="num">1</span><span class="txt">亲密关系与泛泛之交在哪些方面存在程度差异？</span><span class="lvtag l1">L1</span></div>
+    <div class="q-body">
+      <p>说出全部六项，并各用一句话解释。</p>
+      <details><summary>展开答案</summary><div class="ans">
+        <p><strong>六项</strong>：了解（knowledge）、关心（care）、相互依赖（interdependence）、相互一致性（mutuality）、信任（trust）、承诺（commitment）。</p>
+        <table>
+          <tr><th>维度</th><th>含义</th></tr>
+          <tr><td><strong>了解</strong></td><td>广泛而私密的了解：经历、爱好、情感、心愿，且一般不透露给他人</td></tr>
+          <tr><td><strong>关心</strong></td><td>彼此能从对方身上感受到更多关爱</td></tr>
+          <tr><td><strong>相互依赖</strong></td><td>频繁、强烈、多样、持久——一方的行为会影响另一方的目标与行动能力</td></tr>
+          <tr><td><strong>相互一致性</strong></td><td>认同双方在生活上的融合，自称"我们"而不是"我"和"他/她"</td></tr>
+          <tr><td><strong>信任</strong></td><td>期望对方会善待和尊重自己</td></tr>
+          <tr><td><strong>承诺</strong></td><td>希望关系持续，并为此投入时间、人力、物力</td></tr>
+        </table>
+        <p><strong>两个要点</strong>：① 六项<strong>可以单独出现</strong>——米勒的例子是"一对单调乏味、缺少情趣的夫妻可能相互依赖程度很高，在日常琐事上紧密合作，但却生活在缺少关爱、坦诚或信任的心理荒漠中"；② 最满意、最有意义的关系包含全部六项。</p>
+        <div class="pit"><span class="lbl">⚠️ 常见误读</span>这六项测的是<strong>程度差异，不是有或无</strong>。米勒的结论是"<strong>并不存在单一的亲密关系模式</strong>"——不要拿它当及格线去评判任何一段关系。</div>
+      </div></details>
+    </div>
+  </div>
+
+  <div class="q">
+    <div class="q-head"><span class="num">2</span><span class="txt">什么是归属需要？米勒用什么证据支持它？</span><span class="lvtag l1">L1</span></div>
+    <div class="q-body">
+      <p>给出定义，并列出至少四条生理学证据。</p>
+      <details><summary>展开答案</summary><div class="ans">
+        <p><strong>归属需要（need to belong）</strong>：与他人建立亲密关系的普遍而强烈的内驱力，"或许是我们人类的一种本性"（Baumeister &amp; Leary 1995）。</p>
+        <p>米勒用一组<strong>生理指标</strong>支撑它，而不是靠抒情：</p>
+        <table>
+          <tr><th>发现</th><th>来源</th></tr>
+          <tr><td>握住爱人的手就能<strong>减弱面对威胁情境时的脑反应</strong></td><td>Coan et al. 2006</td></tr>
+          <tr><td>看看爱侣的照片，<strong>疼痛就不那么强烈</strong></td><td>Master et al. 2009</td></tr>
+          <tr><td>有人接纳和支持时，<strong>伤口愈合更快</strong></td><td>Gouin et al. 2010</td></tr>
+          <tr><td>孤独无伴时<strong>免疫反应变弱</strong>，更易患感冒或流感</td><td>Pressman et al. 2005</td></tr>
+          <tr><td><strong>9 年纵向研究</strong>：缺乏亲密关系者的死亡率是正常人的 <strong>2~3 倍</strong></td><td>Berkman &amp; Glass 2000</td></tr>
+          <tr><td>老年人在丧偶最初几个月内<strong>更可能死亡</strong></td><td>Elwert &amp; Christakis 2008</td></tr>
+        </table>
+        <p>还有一个重要限定：<strong>质量比数量重要</strong>——"个体需要的亲密关系无需太多，几个便可"。</p>
+        <div class="pit"><span class="lbl">⚠️ 常见误读</span>这些都是<strong>相关研究</strong>。也可能是健康的人本来就更容易建立关系。<strong>"关系值得重视"能成立，"有了关系就会更健康"不成立。</strong></div>
+      </div></details>
+    </div>
+  </div>
+
+  <div class="q">
+    <div class="q-head"><span class="num">3</span><span class="txt">依恋的两个连续维度是什么？四个类型为什么只是"便利标签"？</span><span class="lvtag l1">L1</span></div>
+    <div class="q-body">
+      <p>给出维度名称，并说明四类型与两维度的关系。</p>
+      <details><summary>展开答案</summary><div class="ans">
+        <p><strong>两个维度</strong>：<strong>回避亲密（avoidance of intimacy）</strong>与<strong>忧虑被弃（anxiety about abandonment）</strong>。</p>
+        <p><strong>四个类型</strong>（Bartholomew 1990）：安全型（低回避+低忧虑）、痴迷型（低回避+高忧虑）、恐惧型（高回避+高忧虑）、疏离型（高回避+低忧虑）。</p>
+        <p><strong>为什么只是标签</strong>——米勒的原话：</p>
+        <p style="padding:11px 15px;background:var(--key-soft);border-left:3px solid var(--key);border-radius:0 3px 3px 0;color:#6d5011;font-style:italic;">"回避亲密和忧虑被弃这两个依恋维度能<strong>由低到高连续变化</strong>……虽然我们能很方便地讨论依恋类型的差异，好像它们不会重叠，是分离、纯粹的类别，<strong>但实际上并非如此</strong>。"</p>
+        <p>他还点破了一个分类困境：<strong>在两个维度上都处于中等水平的人，"套用上述四种依恋类型的任何一种都是不适合的"。</strong>现在的研究"不再简单地把人们分为四种类型，而是给出人们在忧虑和回避两个维度中的<strong>相对位置</strong>"。</p>
+        <p><strong>关键数字</strong>：<strong>在两年之内，足有三分之一的依恋类型可以发生实质性变化</strong>（Davila &amp; Cobb 2004）。米勒：<em>"一次悲痛欲绝的分手会让原本安全型的人不再安全，一段如胶似漆的恋情也能慢慢让回避亲密的人不再怀疑和戒备亲密感情。"</em></p>
+        <div class="pit"><span class="lbl">⚠️ 常见误读</span><strong>这不是我的提醒，是米勒自己写的</strong>：他明确说四类型只是"称呼不同忧虑和回避分数组合的便利标签"，并说"不要绝对化地理解"。<strong>用它做自我诊断可以，用它给对方定性不行。</strong></div>
+      </div></details>
+    </div>
+  </div>
+
+  <div class="q">
+    <div class="q-head"><span class="num">4</span><span class="txt">相互依赖理论的三个量是什么？分别回答什么问题？</span><span class="lvtag l1">L1</span></div>
+    <div class="q-body">
+      <p>写出名称、定义，以及它们各自决定的量。</p>
+      <details><summary>展开答案</summary><div class="ans">
+        <table>
+          <tr><th>量</th><th>定义</th><th>决定</th></tr>
+          <tr><td><strong>结果</strong>（outcome）</td><td>奖赏 − 代价</td><td>关系的净盈亏</td></tr>
+          <tr><td><strong>比较水平</strong>（CL）</td><td>认为自己"<em>应当得到</em>"的结果值（来自过去经验）</td><td><strong>满意度</strong> = 结果 − CL</td></tr>
+          <tr><td><strong>替代性比较水平</strong>（CLalt）</td><td>离开后能得到的更好结果</td><td><strong>依赖度</strong> = 结果 − CLalt</td></tr>
+        </table>
+        <p><strong>CL 会自己升高</strong>：米勒的例子是伴侣每晚按摩加美食成为例行后，某天没了就失望。<em>"即使没有任何改变（除了我们的期望），具有奖赏意义的亲密关系也会逐渐变得越来越不满意。"</em></p>
+        <p><strong>CLalt 是主观的</strong>：受自尊、习得性无助、信息渠道、注意方向影响。低自尊者会怀疑自己的吸引力从而低估替代前景。</p>
+        <p><strong>投入</strong>（有形：家具餐具；无形：姻亲朋友的关爱与尊重）会抬高离开的代价、降低 CLalt，<strong>从而锁住一段不满意的关系</strong>。</p>
+        <div class="pit"><span class="lbl">⚠️ 常见误读</span>CL 不是"<strong>想要</strong>的水平"，是"<strong>应当得到</strong>"的参照点。所以 CL 低的人更容易满足——这不是好事或坏事，只是机制。</div>
+      </div></details>
+    </div>
+  </div>
+
+  <!-- ============ L2 ============ -->
+  <div class="section-title">L2 · 理解（5 题）</div>
+  <div class="section-sub">能说出为什么，才算真懂</div>
+
+  <div class="q">
+    <div class="q-head"><span class="num">5</span><span class="txt">为什么满意度不是决定去留的主要因素？"不幸福但稳定"是什么状态？</span><span class="lvtag l2">L2</span></div>
+    <div class="q-body">
+      <p>解释这个反直觉结论，并给出四种关系类型的完整表。</p>
+      <details><summary>展开答案</summary><div class="ans">
+        <p>因为<strong>满意度和依赖度是两个不同的量</strong>：满意度由 CL 决定，依赖度由 CLalt 决定。米勒把它称为"相互依赖理论最有趣最深刻的发现之一"，原话是：</p>
+        <p style="padding:11px 15px;background:var(--key-soft);border-left:3px solid var(--key);border-radius:0 3px 3px 0;color:#6d5011;font-style:italic;">"人们不幸福时并不会去离婚；但如果在别处的前景最终看来更加光明，不管怎样他们都会离婚。"</p>
+        <table>
+          <tr><th>类型</th><th>状态</th><th>现实例子</th></tr>
+          <tr><td>结果 &gt; CL 且 &gt; CLalt</td><td><strong>幸福且稳定</strong></td><td>—</td></tr>
+          <tr><td>结果 &lt; CL 但 &gt; CLalt</td><td><strong>不幸福但稳定</strong></td><td>讨厌却辞不掉的工作</td></tr>
+          <tr><td>结果 &gt; CL 但 &lt; CLalt</td><td><strong>幸福但不稳定</strong></td><td>喜欢现有工作，但有更好去处</td></tr>
+          <tr><td>结果 &lt; CL 且 &lt; CLalt</td><td><strong>不幸福不稳定</strong></td><td>—</td></tr>
+        </table>
+        <p><strong>离开的代价是具体的</strong>。米勒的例子：不幸福的妻子不起诉离婚，<em>不是没有好男人可选，而是不想承担烦恼的子女、愤恨的前夫、失望的父母、不解的朋友这些代价。</em></p>
+        <p><strong>投资模型</strong>（Rusbult）：承诺 = 满意度 +（−替代选择质量）+ 投入。这与上面的判断一致。</p>
+        <div class="pit"><span class="lbl">⚠️ 常见误读</span>有人以为这是"把爱情庸俗化成算计"。米勒自己先问了这个问题：<em>"亲密关系的成败真能庸俗化地贬低为仅仅是人际交往数据表上的盈亏吗？答案当然是否定的。"</em>他给的是<strong>"有保留的肯定"</strong>，并且指出：<strong>自私动机反而会导出宽容大度，因为让伴侣快乐符合自己的利益。</strong></div>
+      </div></details>
+    </div>
+  </div>
+
+  <div class="q">
+    <div class="q-head"><span class="num">6</span><span class="txt">为什么性别比率能解释性道德的历史变迁？米勒自己给这个假设标了什么？</span><span class="lvtag l2">L2</span></div>
+    <div class="q-body">
+      <p>解释机制，给出历史对照，并说明它的证据等级。</p>
+      <details><summary>展开答案</summary><div class="ans">
+        <p><strong>性别比率（sex ratio）</strong>：每 100 位女性对应多少位男性。</p>
+        <table>
+          <tr><th>性别比率</th><th>社会特征</th></tr>
+          <tr><td><strong>高</strong>（女少男多）</td><td>支持传统性别角色与性保守：理想新娘应是处女、未婚先孕蒙羞、公开同居几乎绝迹、妇女更早结婚、离婚不受欢迎</td></tr>
+          <tr><td><strong>低</strong>（男少女多）</td><td>更宽容：鼓励妇女外出工作以自立、默许婚外性关系、未婚妈妈也无可厚非</td></tr>
+        </table>
+        <p><strong>历史对照</strong>：古罗马时代比率低，以骄奢淫逸闻名；维多利亚时期英格兰比率高，以贞洁守礼著称；美国喧嚣的 20 世纪 20 年代比率低。<strong>而 1960 年代末——"性解放"和女权运动出现的年代——比率是非常低的。</strong></p>
+        <p><strong>机制</strong>：规范演变总是朝着有利于掌握经济政治权力的强势群体（此处是男性）的方向。比率高时女性稀缺 → 男性想长期占有她 → 鼓励她做家庭主妇、反对离婚；比率低时女性过剩 → 男性不想被拴住 → 妇女得工作、推迟结婚、不满意可以离婚。</p>
+        <p><strong>证据等级：C 级（米勒自己标的）</strong>：</p>
+        <p style="padding:11px 15px;background:var(--warn-soft);border-left:3px solid var(--warn);border-radius:0 3px 3px 0;color:#7d3221;font-style:italic;">"必须指出，性别比率影响过程（即人际关系规范的变化偏利于男性）的假设<strong>只是一种猜想</strong>。然而，社会文化中的两性比例和人际关系规范的确存在粗糙却真实的关联。"</p>
+        <div class="pit"><span class="lbl">⚠️ 常见误读</span>可确定的是"<strong>规范随时代大幅变化</strong>"（这是 A 级，有一组硬数字）；<strong>不能</strong>确定的是"性别比率是原因"。不要把 C 级当 A 级用。</div>
+      </div></details>
+    </div>
+  </div>
+
+  <div class="q">
+    <div class="q-head"><span class="num">7</span><span class="txt">自我实现的预言是怎么运作的？为什么"心想事成"是误读？</span><span class="lvtag l2">L2</span></div>
+    <div class="q-body">
+      <p>说出五步机制，并用那个电话实验说明。</p>
+      <details><summary>展开答案</summary><div class="ans">
+        <p><strong>五步机制</strong>：</p>
+        <ol>
+          <li><strong>知觉者形成对目标的期望</strong>（年龄、性别、长相、阶层等信息在意识不到的情形下影响判断）；</li>
+          <li><strong>知觉者按期望行事</strong>——持赞许期望者与持否定期望者相比，交往时间更长更频繁、更多眼光接触、坐得更近、更多微笑、问更多问题；</li>
+          <li><strong>目标注意到并解释这些行为</strong>——对热情报以兴趣，敌意还以反击；</li>
+          <li><strong>目标以与知觉者行为类似的方式回应</strong>——"知觉者往往从目标身上引出他们所期望的行为"；</li>
+          <li><strong>知觉者解释目标的反应时，意识不到自己的作用</strong>——把目标行为归因于目标自己的性格。</li>
+        </ol>
+        <p><strong>电话实验</strong>（Snyder et al. 1977，明尼苏达大学）：让男生相信电话另一端的女生有的非常漂亮、有的非常丑陋（给假照片）。以为在与美女聊天的男生更热切投入；<strong>而女生并不知道自己被贴了标签</strong>，只是回应男生的热情或冷漠——被认为美丽的女生听起来更吸引人；被淡漠对待的女生听起来相当乏味。</p>
+        <p><strong>米勒的结论</strong>：<em>"无论男生的期望是否正确，他们都从女生那里看到了自己所期望的行为。"</em></p>
+        <p><strong>为什么不是"心想事成"</strong>：机制是<strong>行为链条</strong>，不是意念。而且<strong>知觉者完全意识不到自己的作用</strong>；预言也会被熟悉性消解——"当人们日渐变得熟悉彼此，某些最初还站得住脚的预言会消失"，只有<strong>持续按旧期望行事</strong>时才会延续多年。</p>
+        <div class="pit"><span class="lbl">⚠️ 常见误读</span>把它读成"吸引力法则"就完全丢了重点。它是一个<strong>可被实验操纵的社会认知机制</strong>，而且它可以指向坏的方向：<em>"经常忧虑被他人拒绝的人，其行为方式往往更可能遭人拒绝。"</em></div>
+      </div></details>
+    </div>
+  </div>
+
+  <div class="q">
+    <div class="q-head"><span class="num">8</span><span class="txt">为什么"吵架伤感情"与证据不符？关键变量是什么？</span><span class="lvtag l2">L2</span></div>
+    <div class="q-body">
+      <p>解释为什么冲突频率不是关键，并说出那个关键比率。</p>
+      <details><summary>展开答案</summary><div class="ans">
+        <p><strong>关键变量不是冲突频率，而是奖赏-代价比率</strong>：满意的亲密关系<strong>最低是 5:1</strong>（正面交流 : 负面交流）。</p>
+        <p>戈特曼区分四类夫妻，<strong>前三类都能稳定</strong>：</p>
+        <table>
+          <tr><th>类型</th><th>特征</th><th>为什么能稳定</th></tr>
+          <tr><td><strong>多变型</strong></td><td>频繁、激烈的争论</td><td>用智慧与真诚缓和愤怒，大量负面情感但用更多关爱和幽默平衡</td></tr>
+          <tr><td><strong>确认型</strong></td><td>更有礼貌地争斗</td><td>表达同理心、确认对方观点</td></tr>
+          <tr><td><strong>逃避型</strong></td><td>很少争吵，回避正面对抗</td><td>不特别感情洋溢，但也没有太多需要克服的负面情绪</td></tr>
+          <tr><td><strong>敌对型</strong></td><td>充斥批评、蔑视、防卫、退避</td><td><em>不能维持 5:1，因此有害</em></td></tr>
+        </table>
+        <p><strong>支持数据</strong>（约 <strong>2 000 对</strong>已婚夫妻调查）：<strong>24%</strong> 的夫妻至少一方属敌对型；<strong>最普遍的婚姻模式（25%）是双方都是确认型，他们最满意</strong>；双方都为逃避者仅 2%、都为多变者仅 5%。</p>
+        <p><strong>反向证据也很有力</strong>：<em>"从冲突中退避的新婚夫妇没有解决分歧，今后岁月里往往更不快乐。"</em> 以及——<strong>受到婚姻困扰却不能畅言的中年妇女，比起直言不讳的邻居，在未来 10 年里死亡的可能性高达 4 倍</strong>（Eaker et al. 2007）。</p>
+        <p>戈特曼的忠告因此是"<strong>不要试图回避冲突</strong>"。</p>
+        <div class="pit"><span class="lbl">⚠️ 常见误读（双向）</span>① 不能说"多吵架有益"——书中说的是冲突是<strong>暴露问题、促进亲密的手段</strong>，且<strong>只有当处理得娴熟有技巧时</strong>关系才更可能发展。<br>② 也不能忘记：<strong>"冲突只要变得恶毒和刻薄就具有腐蚀性。"</strong></div>
+      </div></details>
+    </div>
+  </div>
+
+  <div class="q">
+    <div class="q-head"><span class="num">9</span><span class="txt">要求/退避模式的性别分布，真正的解释是什么？</span><span class="lvtag l2">L2</span></div>
+    <div class="q-body">
+      <p>解释为什么"女人爱唠叨、男人天生逃避"是误读，并说出实验证据。</p>
+      <details><summary>展开答案</summary><div class="ans">
+        <p><strong>现象是真的</strong>：<em>"在全世界，多数情况下女性是要求者而男性是退避者"</em>（Christensen et al. 2006）。</p>
+        <p><strong>但机制不是性别本质</strong>。关键实验：研究者要求夫妻参与两次讨论，一次妻子想改变、一次丈夫要改变。结果——</p>
+        <p style="padding:11px 15px;background:var(--key-soft);border-left:3px solid var(--key);border-radius:0 3px 3px 0;color:#6d5011;font-style:italic;"><strong>"当丈夫或妻子有自己想讨论的议题时，他们都倾向于要求；当伴侣提出关心的问题时，丈夫和妻子都倾向于退避。"</strong>（Caughlin &amp; Scott 2010）</p>
+        <p>所以这个模式在某种程度上<strong>仅仅取决于哪一方提出问题</strong>。同性恋伴侣中同样发生（Baucom et al. 2010）。</p>
+        <p>那为什么统计上女性更多是要求者？两种解释<strong>大体都正确</strong>：</p>
+        <ul>
+          <li><strong>性认同差异</strong>：社会鼓励女性表达、男性独立自主；</li>
+          <li><strong>社会结构假设</strong>：源于权力差异。米勒引的原话很直白——<em>"如果你能随心所欲、为所欲为，你可能就会抵抗改变。"</em></li>
+        </ul>
+        <p>数据同时支持两者：<strong>妻子一般较丈夫更迫切地提出问题，丈夫退避得更彻底。</strong></p>
+        <div class="pit"><span class="lbl">⚠️ 常见误读</span>把"女性是要求者"读成"女性天生爱唠叨"。正确读法是：<strong>谁提出议题谁就要求</strong>——这是一个位置效应，不是人格效应。</div>
+      </div></details>
+    </div>
+  </div>
+
+  <!-- ============ L3 ============ -->
+  <div class="section-title">L3 · 应用（8 题）</div>
+  <div class="section-sub">能在具体情境里用出来</div>
+
+  <div class="q">
+    <div class="q-head"><span class="num">10</span><span class="txt">一个朋友说"他明明说爱我，可他就是不肯告诉我他每天在干什么"。你怎么用六要素分析？</span><span class="lvtag l3">L3</span></div>
+    <div class="q-body">
+      <p>指出问题出在六要素中的哪一项，并说明为什么不能只用"够不够爱"来判断。</p>
+      <details><summary>展开答案</summary><div class="ans">
+        <p><strong>问题在"了解"这一维度，而不是"承诺"。</strong>六要素是相互独立的，所以"说爱我"（承诺的外显表达）和"肯告诉我每天在干什么"（了解的深度）可以是两件事。</p>
+        <p><strong>分析步骤</strong>：</p>
+        <ol>
+          <li><strong>先别合并成一个总分</strong>。让她分别给六项打分——这本身就是把模糊的"不如从前"拆成可检查的东西。</li>
+          <li><strong>找出是哪一项在变</strong>。如果是"了解"低而其他五项高，那这对关系的性质是特定的一种；米勒的"单调夫妻"例子正是这种结构——高依赖、低关爱/坦诚/信任。</li>
+          <li><strong>检查这是不是"了解"的两种损失之一</strong>：自我表露减少（他不说），或者她的知觉准确性下降（她不再能读懂他）。前者是行为问题，后者是关系问题——米勒指出<strong>结婚时间较短的配偶在推测伴侣心思方面反而比婚龄更长的配偶更准确</strong>。</li>
+        </ol>
+        <p><strong>为什么不能只用"够不够爱"</strong>：因为六项可以单独出现，所以"他爱我"和"这段关系在某一维度上很薄"可以同时为真。用一个总分判断会掩盖具体是哪一块在缺。</p>
+        <div class="pit"><span class="lbl">⚠️ 常见误读</span>把六要素当"及格线"去审判对方。它的用途是<strong>定位</strong>，不是<strong>宣判</strong>。</div>
+      </div></details>
+    </div>
+  </div>
+
+  <div class="q">
+    <div class="q-head"><span class="num">11</span><span class="txt">一个人说"我不开心但我不想走"。用 CL 和 CLalt 拆开他这段话。</span><span class="lvtag l3">L3</span></div>
+    <div class="q-body">
+      <p>指出他其实在说哪两件不同的事，并列出应当追问的问题。</p>
+      <details><summary>展开答案</summary><div class="ans">
+        <p>他在同一句话里说了两个不同的量：</p>
+        <ul>
+          <li>"<strong>我不开心</strong>"→ <strong>结果 &lt; CL</strong>（满意度低）；</li>
+          <li>"<strong>我不想走</strong>"→ <strong>结果 &gt; CLalt</strong>（依赖度高，或投入抬高离开代价）。</li>
+        </ul>
+        <p>这就是"<strong>不幸福但稳定</strong>"那一格。米勒给的现实类比是"讨厌却辞不掉的工作"。</p>
+        <p><strong>应当追问的四个问题</strong>：</p>
+        <ol>
+          <li><em>我的 CL 是怎么升上来的？</em>——CL 会随所得升高。如果曾经对方做得更多、现在没了，那么"结果"没变但满意度掉了。这一条最容易被误当成"感情淡了"。</li>
+          <li><em>我是不是低估了自己的 CLalt？</em>——它是主观的，受自尊、习得性无助、信息渠道影响。低自尊者会系统性低估替代前景。</li>
+          <li><em>反过来：我是不是因为没认真找过才以为 CLalt 很低？</em>——注意米勒引的一项研究：关注替代恋人的大学生<strong>更频繁更换恋人</strong>。注意方向会反过来塑造 CLalt 的估计。</li>
+          <li><em>我留下是因为结果真的高于替代，还是因为投入太大？</em>——投入（有形的家具餐具、无形的姻亲朋友的关爱与尊重）抬高离开代价、降低 CLalt，从而<strong>锁住关系</strong>。这两者的区别很重要：前者是"这里确实好"，后者是"走了损失太大"。</li>
+        </ol>
+        <div class="pit"><span class="lbl">⚠️ 常见误读</span>把"留下"直接解读为"爱"。相互依赖理论说：留下可能只是 CLalt 低或投入高——<strong>而这三者的区别决定了他该怎么行动。</strong></div>
+      </div></details>
+    </div>
+  </div>
+
+  <div class="q">
+    <div class="q-head"><span class="num">12</span><span class="txt">伴侣说"你总是这样！从来不把我的话当回事"。用第 5 章的技能改写这句话。</span><span class="lvtag l3">L3</span></div>
+    <div class="q-body">
+      <p>给出改写后的句子，并说出每一步在解决什么问题。</p>
+      <details><summary>展开答案</summary><div class="ans">
+        <p>原句有两个毛病：<strong>攻击人格</strong>（"你总是这样"）和<strong>用"总是/从不"</strong>——米勒明确说这不是正确的行为描述。</p>
+        <p><strong>改写为 XYZ 陈述</strong>：</p>
+        <p style="padding:12px 16px;background:var(--key-soft);border-left:3px solid var(--key);border-radius:0 3px 3px 0;color:#6d5011;font-weight:600;">"你刚刚打断我讲话的时候，我感到很生气。"</p>
+        <table>
+          <tr><th>成分</th><th>原句</th><th>改写后</th><th>解决什么</th></tr>
+          <tr><td><strong>X · 行为描述</strong></td><td>"你总是这样"</td><td>"你刚刚打断我讲话"</td><td>具体、可核对、<strong>行为比人格更容易改变</strong></td></tr>
+          <tr><td><strong>Y · 情境</strong></td><td>（无）</td><td>"刚刚…的时候"</td><td>限定时间，去掉"总是/从不"</td></tr>
+          <tr><td><strong>Z · 第一人称陈述</strong></td><td>"不把我的话当回事"（揣测对方意图）</td><td>"我感到很生气"</td><td>只说自己清楚明白的情感反应</td></tr>
+        </table>
+        <p><strong>还该搭配一个积极倾听动作</strong>：如果对方说了抱怨，先<strong>复述</strong>（"你是说你觉得我不听你讲话？"）再回应。<strong>知觉检验</strong>（"你好像对我说的话感到很不安，对吗？"）与读心术恰恰相反。</p>
+        <p>米勒的教科书级对照案例：妻子叹气说"我感到很高兴，婆婆决定下周不来我们家住了"——</p>
+        <ul>
+          <li><strong>失败版</strong>：丈夫发怒"我妈怎么了？你总是拿她说事，你真是个忘恩负义的贱人。"</li>
+          <li><strong>成功版</strong>：丈夫先复述"你是说你不喜欢她来咱们家？"→ 妻子解释（论文要交，下周没多少时间待在家）→ 丈夫松了口气"哦！"</li>
+        </ul>
+        <div class="pit"><span class="lbl">⚠️ 常见误读</span>以为有技巧就能随时用。米勒指出难点：一旦开始愤怒，<em>"头脑里根本想不到运用这些技巧"</em>。所以关键是<strong>事先允诺以礼相待 + 恶性循环时喊停</strong>（"给我 10 分钟让我冷静一下"，独自时每分钟最多 6 个深长呼吸）。</div>
+      </div></details>
+    </div>
+  </div>
+
+  <div class="q">
+    <div class="q-head"><span class="num">13</span><span class="txt">"三分钟预测离婚"是真的吗？那个 83% 指的是什么？</span><span class="lvtag l3">L3</span></div>
+    <div class="q-body">
+      <p>说出准确表述，并指出一个常被误引的数字。</p>
+      <details><summary>展开答案</summary><div class="ans">
+        <p><strong>准确表述</strong>：<em>"只要观看婚姻冲突录像的开头 3 分钟，就能以高达 <strong>83%</strong> 的正确率预测哪对夫妻会在 <strong>6 年后</strong>离婚。"</em>（Carrère &amp; Gottman 1999）</p>
+        <p>三个数字必须一起说：<strong>3 分钟</strong>（观察时长）、<strong>83%</strong>（准确率）、<strong>6 年</strong>（预测跨度）。缺任何一个都会变形。</p>
+        <p><strong>另一个相关的准确数字</strong>（第 6 章）：Gottman &amp; Levenson（1992）把夫妻回忆上次争执的言行编码（热情/合作/和解 +1，愤怒/防卫/批评/蔑视 −1）——<strong>正面:负面 ≥ 5:1 者低离婚风险</strong>；4 年后<strong>高风险组 56% 离婚或分居，低风险组不到 24%</strong>。</p>
+        <div class="pit"><span class="lbl">⚠️ 常见误引</span><strong>书中并未给出"Gottman 预测离婚准确率 91%"这类数字。</strong>这个说法在中文互联网流传很广，但第 10–11 章里没有出现。可引用的是上面两组。另外要注意：<strong>83% 是"区分哪些夫妻会离婚"，不是"预测某对夫妻会不会离婚"</strong>——群体统计不能直接用在个体身上。</div>
+      </div></details>
+    </div>
+  </div>
+
+  <div class="q">
+    <div class="q-head"><span class="num">14</span><span class="txt">性满足和关系满意度是什么关系？那个 89% / 32% 该怎么读？</span><span class="lvtag l3">L3</span></div>
+    <div class="q-body">
+      <p>说出相关方向，并指出这个数字的正确读法与陷阱。</p>
+      <details><summary>展开答案</summary><div class="ans">
+        <p><strong>双向关系</strong>，不是单向因果。米勒的原话：<em>"有着美好性生活的亲密关系往往更令人满意，因为充实快乐的性生活使得伴侣关系更让人感到满足，反过来，对伴侣的爱意也使得性生活更加具有奖赏价值。"</em> —— <strong>"因而性满足能增加关系满意度，反之亦然。"</strong></p>
+        <p><strong>那个数字的完整表述</strong>：<em>"在一项经典的研究中，每周有 3 次或者更多次数性行为的夫妻中有 <strong>89%</strong> 的人报告对他们的性生活感到满足，而一个月仅有一次性行为的夫妻中只有 <strong>32%</strong> 的人感到性满足。"</em>（Blumstein &amp; Schwartz 1983）</p>
+        <p><strong>作者自己立刻加了限定</strong>：① <strong>"这类相关现象的影响因素很多"</strong>；② <strong>性生活的频率对男性比女性更重要</strong>；③ 更频繁的性行为<strong>的确能增加新婚男士</strong>在性生活中体验到的满足感。</p>
+        <p><strong>正确读法</strong>：89% vs 32% 是<strong>相关</strong>。可能是频率高导致满意，也可能是满意的夫妻本来就更想要、更能做，还可能是第三变量（健康、年轻、关系质量）同时造成两者。</p>
+        <p><strong>三个不应该被这段掩盖的发现</strong>：</p>
+        <ul>
+          <li><strong>单一伴侣悖论</strong>：<em>"在美国只有单一爱人的人比起那些有着两个或更多性伙伴的人，更普遍地体验到高度满足的性生活。"</em> 且在德国、西班牙、巴西、日本和美国，<strong>性伴侣越少的男子性生活更满意</strong>。</li>
+          <li><strong>自我决定理论的应用</strong>：<em>"无论性行为的频率怎样，只要它能实现人类对自主（autonomy）、能力（competence）和交往（relatedness）的基本需要，性的互动就最有奖赏价值。"</em></li>
+          <li><strong>传统性别角色损害双方</strong>：它"把女性置于被动的地位……剥夺女性的主动权和控制权会削弱她们的性欲望，降低她们的性唤醒"；反过来，<em>"当女性能发起性行为并且自信地表现自我而非消极被动时，他们（男性）也会感到很兴奋"</em>。</li>
+        </ul>
+        <div class="pit"><span class="lbl">⚠️ 常见误读</span>把 89%/32% 当成"每周三次就能幸福"。米勒自己的收束是：<strong>"性行为并不是自动使亲密关系变得美满的灵丹妙药。"</strong> 它还依赖：个体性欲望得到伴侣理解和尊重 · 重视伴侣并致力维护关系 · <strong>愉快地彼此相处，不论是在床上还是床下</strong>。</div>
+      </div></details>
+    </div>
+  </div>
+
+  <div class="q">
+    <div class="q-head"><span class="num">15</span><span class="txt">为什么"明智的人"也会发生不安全性行为？列出七条原因。</span><span class="lvtag l3">L3</span></div>
+    <div class="q-body">
+      <p>完整列出七条，并各用一句话说清机制。</p>
+      <details><summary>展开答案</summary><div class="ans">
+        <table>
+          <tr><th>#</th><th>原因</th><th>机制</th></tr>
+          <tr><td>1</td><td><strong>低估风险</strong></td><td>"很多人的数学非常糟糕"——单次风险低（一次未保护性接触感染 HIV 约 <strong>0.2%</strong>）但累积起来很高。还有<strong>特殊安全错觉</strong>：认为不幸更可能发生在别人身上</td></tr>
+          <tr><td>2</td><td><strong>错误决策（性唤醒）</strong></td><td>性兴奋时"花样变化的性行为看起来更有诱惑力，存在道德问题的行为看起来更能接受，避孕套则不怎么令人愉快"。米勒：<em>"男性一旦变得性兴奋，真的会'失去自制力'。"</em></td></tr>
+          <tr><td>3</td><td><strong>酒精近视</strong></td><td>醉酒后处理信息能力降低，只能注意最直接的环境线索——"完全忘记了之前要使用避孕套的意图，<em>尽管避孕套就装在他们的口袋或者钱包里</em>"</td></tr>
+          <tr><td>4</td><td><strong>人众无知</strong></td><td>大多数人以为别人都赞同随意性行为，于是感到社会压力。而实际上<strong>"男女两性从自己的随意性行为中体验到的乐趣并不如他们认为得那般美妙"</strong></td></tr>
+          <tr><td>5</td><td><strong>权力不等</strong></td><td>强势一方反对使用避孕套时就不太会用。<strong>女方权力越大、越诚实直率，越可能使用避孕套</strong></td></tr>
+          <tr><td>6</td><td><strong>禁欲教育</strong></td><td>一些项目宣称避孕套没用（"这当然是无稽之谈"）；<strong>适得其反</strong>——这些青少年发生性行为时比其他青少年更不可能使用避孕套</td></tr>
+          <tr><td>7</td><td><strong>亲密感和愉悦度减少</strong></td><td>"最重要的阻碍"：不用避孕套通常能更好地享受性生活，且让人感觉<strong>更亲密</strong>。因此 <strong>30% 的男性和 41% 的女性</strong>的性伙伴试图说服他们不要使用</td></tr>
+        </table>
+        <p><strong>一个反直觉的细节</strong>：<strong>长相越俊美，我们认识到的风险就越低</strong>，发生性行为就越不可能使用避孕套。</p>
+        <p><strong>米勒的两条建议</strong>：① 把避孕套当作前戏的一部分，"不太可能会大煞风景"；② <em>"当你的确使用避孕套时，在今天，比不使用避孕套能给伴侣双方传递出更多的尊重、关心和关注。说服你进行不安全性行为的新伴侣，很可能不如乐于尊重你意愿的伴侣珍视你和你们的亲密关系。"</em></p>
+        <div class="pit"><span class="lbl">⚠️ 常见误读</span>以为这是"自制力问题"。七条里至少四条是<strong>认知偏差</strong>（1、2、3、4），一条是<strong>结构问题</strong>（5），一条是<strong>教育反效果</strong>（6）——把七条简化成"意志薄弱"就完全错过了可干预的点。</div>
+      </div></details>
+    </div>
+  </div>
+
+  <div class="q">
+    <div class="q-head"><span class="num">16</span><span class="txt">一个男生抱怨"她说'不'其实是想让我继续追"。怎么用第 9 章的材料回应？</span><span class="lvtag l3">L3</span></div>
+    <div class="q-body">
+      <p>指出这个想法在证据上意味着什么，并给出书中的建议。</p>
+      <details><summary>展开答案</summary><div class="ans">
+        <p>米勒直接讨论了这个社会脚本，并明确否定它。他先描述脚本：<em>"许多人仍认为性行为是一场男女互为对手的角逐——女性持有性奖品，而男性则通过欺骗、坚持和强权来赢得这种奖励。"</em></p>
+        <p><strong>然后他给出与这个想法直接相关的实证联结</strong>：</p>
+        <p style="padding:12px 16px;background:var(--warn-soft);border-left:3px solid var(--warn);border-radius:0 3px 3px 0;color:#7d3221;"><em>"如果男性这样侵犯他们的女伴，他们就非常有可能暗中对女性持有敌视态度，<strong>认为所有的女性在私下里都喜欢被人强奸</strong>。"</em>（Hoyt &amp; Yeater 2011）</p>
+        <p>——也就是说：<strong>"不"其实意味着"是"这个信念，与对女性的敌视态度是同一个簇里的东西。</strong></p>
+        <p><strong>他还指出这个想法与"误解"的联结</strong>：<strong>大多数男性（54%）至少有一次误解了女性的性意图</strong>（Jacques-Tiura et al. 2007）；<em>"并且，拒绝传统性别角色和珍视男女平等的男性不太可能犯这些错误"</em>；而<strong>"正是这些男性最有可能实施性胁迫，而对女性性兴趣的错误知觉通常是这类不幸事件的前奏"</strong>。</p>
+        <p><strong>米勒的操作建议</strong>：<em>"清楚明确的沟通有时是让这类男性明白过来所必需的——最有效的拒绝是自信果断、前后一致和坚持不懈的。"</em> 而且他给了一条可以提前说的话：</p>
+        <p style="padding:11px 15px;background:var(--key-soft);border-left:3px solid var(--key);border-radius:0 3px 3px 0;color:#6d5011;font-style:italic;">"至少，告诉你的伴侣，'如果我说"不可以"，真的是拒绝你，不是欲迎还拒。'"</p>
+        <p><strong>关于性胁迫的规模</strong>（这不是罕见现象）：<strong>6 位女大学生中每 2 个月就有 1 位</strong>会遭遇某种形式的性胁迫；<strong>大多数女性（56%）在大学生活中</strong>都会受到这类骚扰伤害；<strong>大约 25% 的男性和女性</strong>曾用言语胁迫不情愿的伙伴。</p>
+        <div class="pit"><span class="lbl">⚠️ 常见误读</span>把第 1 象限（言语哄骗、不违法）当成"没什么大不了"。米勒明确说：<em>"因为这些行为违背了伴侣的意愿，所以它们并非无害，这些行为亵渎了伴侣。"</em> 而且"与性的不满足和关系的不满意都有关联"。</div>
+      </div></details>
+    </div>
+  </div>
+
+  <div class="q">
+    <div class="q-head"><span class="num">17</span><span class="txt">伴侣出轨了。米勒会提醒你先分清哪几件事？</span><span class="lvtag l3">L3</span></div>
+    <div class="q-body">
+      <p>给出应当分清的区别，并说明宽恕的条件。</p>
+      <details><summary>展开答案</summary><div class="ans">
+        <p><strong>第一，分清"出轨"具体指什么。</strong>米勒在做数据时限定本节"性行为"都指阴道性交——因为<em>"出轨行为有很多种，从色情短信和网络性爱到接吻、性爱抚、口交和性交，但人们对哪些行为才算'出轨'存在分歧"</em>。所以第一步是双方对定义达成一致，否则争论的是不同的东西。</p>
+        <p><strong>第二，分清规模与分布。</strong>47 项调查、逾 <strong>58 000</strong> 名参与者：<strong>21% 的女性和 32% 的男性</strong>至少有一次出轨；即"约有五分之一的妻子和三分之一的丈夫"。<strong>大部分人没有出轨</strong>——这一点对当事人很重要，因为它说明"所有人都这样"是错的。</p>
+        <p><strong>第三，分清"不满意"和"替代质量"。</strong>米勒给的两条非演化解释：<em>"如果人们对他们当前的伴侣不满意，并且替代伴侣的质量又很高，就更可能会出轨"</em>；以及<strong>"即使婚姻生活大体上还算满意，如果伴侣间的性行为乏味、单调、次数太少，男女双方都更可能会追求伴侣外性行为"</strong>。</p>
+        <p><strong>第四，分清性别差异的实际大小。</strong>女性比男性更可能与原来的伴侣分手、与新配偶建立长期关系——<em>"因此，女性更可能因为婚外情而更换配偶"</em>。但注意<a href="#q19" style="color:var(--inter);">第 19 题</a>讲的：这类性别差异的实际效应量普遍是"较小到中度"。</p>
+        <p><strong>关于宽恕——米勒给了明确的条件</strong>：宽恕通常有益（<strong>打击报复很少使伴侣改邪归正，宽恕可以</strong>；得到宽恕的人一般更悔恨、不太可能重复犯错），<strong>但有三个前提</strong>：</p>
+        <ol>
+          <li><strong>谦卑、真诚的道歉</strong>——承认错误、承担责任、表示羞愧悔恨、真诚赎罪并承诺未来表现更好。编造借口、道歉不真诚则难获宽恕。</li>
+          <li><strong>受害者的同理心</strong>——能站在对方角度，特别是能设想自己也实施背叛的人更可能宽恕。</li>
+          <li><strong>不沉溺于反刍</strong>——耿耿于怀会持续激活愤怒。</li>
+        </ol>
+        <p><strong>而没有这些条件时，宽恕是有害的</strong>：<em>"没有真诚悔悟就宽恕，会被对方认为再犯有理；若伴侣没有悔意，宽恕实际有害——削弱你的自尊，延缓问题的解决。"</em> 米勒的原话是"没有人会建议你一而再地原谅老是欺骗你的不贞伴侣"。</p>
+        <p><strong>他的收束</strong>：<em>"宽恕对我们及亲密关系都有益——当伴侣和亲密关系都值得维系时。<strong>在不能肯定时，请选择宽恕。</strong>"</em></p>
+        <div class="pit"><span class="lbl">⚠️ 常见误读</span>把"宽恕"等同于"赦免"或"忘记"。米勒的定义是：<strong>"双方都确认了有害的行为"</strong>，然后"受害的伴侣给予行为不端的对方以<em>不应得到的</em>宽容"。<strong>确认伤害是宽恕的前提，不是它的反面。</strong></div>
+      </div></details>
+    </div>
+  </div>
+
+  <!-- ============ L4 ============ -->
+  <div class="section-title">L4 · 批判（7 题）</div>
+  <div class="section-sub">能指出证据边界、替代解释、常见误用</div>
+
+  <div class="q">
+    <div class="q-head"><span class="num">18</span><span class="txt">"研究表明 X 和 Y 相关"——你能立刻给出哪三种替代解释？</span><span class="lvtag l4">L4</span></div>
+    <div class="q-body">
+      <p>列出三条，并用亲密关系领域最经典的那个相关举例。</p>
+      <details><summary>展开答案</summary><div class="ans">
+        <p>米勒列的三条竞争解释，他用的例子正是本领域最经典的相关——<strong>相似性与吸引力</strong>：</p>
+        <table>
+          <tr><th>解释</th><th>在"相似—吸引"上</th></tr>
+          <tr><td>X → Y</td><td>知道彼此相似 → 更喜欢对方</td></tr>
+          <tr><td>Y → X</td><td>喜欢上某人 → 认为自己与他有许多共同点</td></tr>
+          <tr><td><strong>第三方变量</strong></td><td><strong>他人的俊美长相</strong>——我们既喜欢好看的人，又认为他们和我们相像</td></tr>
+        </table>
+        <p>第三条是关键：<strong>它足以同时制造"相似—吸引"相关，而相似性实际没有任何因果作用。</strong></p>
+        <p><strong>四类测量的系统偏差（各有方向）</strong>：</p>
+        <ul>
+          <li><strong>自我报告</strong>——<em>50% 的离异者不能准确说出自己哪个月离婚，4% 宣称自己从未离过婚</em>（研究者事先在法院查过判决书）；<strong>理解偏差</strong>：男性回答"和多少人有过性行为"时往往把边缘性行为也计入，女性一般只算真正性交的伴侣——<strong>这本身就是男女报告性伴侣数不一致的原因之一</strong>。</li>
+          <li><strong>社会赞许性偏差</strong>——因怕不被接纳，参与者不敢诚实报告同性恋取向，<strong>这是同性恋普遍性长期存在争议的测量学原因</strong>。</li>
+          <li><strong>自我服务偏差</strong>——操持家务的伴侣认为自己做的家务比实际更多。</li>
+          <li><strong>观察法</strong>——<strong>反应性</strong>：人知道自己被观察就会改变行为。</li>
+        </ul>
+        <div class="pit"><span class="lbl">⚠️ 常见误读（双向的）</span>米勒同时警告两个方向。一边是"把相关当因果"；另一边是<strong>因噎废食</strong>——他在脚注里明确说：如果有很多变量存在许多相关、或测量是在多个不同场合得出的，<strong>"运用高级统计技术却有可能在相关设计的结果上得出一些因果联系的可靠结论"</strong>。<br>正确读法：<strong>"简单相关不能定因果"，不是"相关研究没有价值"。</strong></div>
+      </div></details>
+    </div>
+  </div>
+
+  <div class="q">
+    <div class="q-head"><span class="num">19</span><span class="txt">读者被告知"性驱力上男性高于女性"。这个说法该如何限定？</span><span class="lvtag l4">L4</span></div>
+    <div class="q-body">
+      <p>说出原始数字、效应量约束，以及"不要用它预测个人"的理由。</p>
+      <details><summary>展开答案</summary><div class="ans">
+        <p><strong>原始数字</strong>（第 9 章，Regan &amp; Atkins 2006）：</p>
+        <table>
+          <tr><th>指标</th><th>男性</th><th>女性</th></tr>
+          <tr><td>每周体验到的性欲望次数</td><td><strong>37 次</strong></td><td><strong>9 次</strong></td></tr>
+          <tr><td>每周想到性行为的次数</td><td><strong>约 60 次</strong></td><td><strong>15 次</strong></td></tr>
+          <tr><td>16–44 岁上一个月手淫过（英格兰）</td><td><strong>73%</strong></td><td><strong>37%</strong></td></tr>
+          <tr><td>有固定性伙伴仍每周手淫一次以上</td><td><strong>近一半</strong></td><td><strong>16%</strong></td></tr>
+        </table>
+        <p><strong>米勒自己的限定（必须一起引）</strong>：</p>
+        <p style="padding:11px 15px;background:var(--key-soft);border-left:3px solid var(--key);border-radius:0 3px 3px 0;color:#6d5011;font-style:italic;">"由于你现在已经是明智的关系科学爱好者，请记住<strong>在男性之间和女性之间存在着相当大的个体差异，并且肯定有很多男性长期来看并不如某些女性那样好色</strong>。"</p>
+        <p><strong>效应量约束（这一条在第 1 章，不在第 9 章）</strong>：第 9 章给的是原始频次差异，<strong>没有给 d 值</strong>。d 值框架在第 1 章：</p>
+        <ul>
+          <li>一项跨 <strong>87 个国家、1 419 807 名参与者</strong>的大数据研究："<strong>在男女两性的性态度和行为上并没有发现任何如图 C 所描绘的那么大的差异</strong>"（图 C 是"实际上并不存在、假设的较大性别差别"）。</li>
+          <li><strong>"本书中谈到的两性差异，几乎全部是较小到中度程度的差异。"</strong></li>
+          <li><strong>"两性性别内的行为和观点差异通常远大于两性之间的平均差异。"</strong></li>
+          <li><strong>"在中等程度的性别差异上（d 值为 0.5），仍有三分之一女性的得分高于男性平均水平。"</strong></li>
+        </ul>
+        <p><strong>所以不能用来预测个人</strong>：37 次 vs 9 次是<strong>均值</strong>。在两性分布大幅重合的情况下，一个具体的人在这条上几乎不提供信息。米勒的推论原话是：<em>"假如你要寻找性放任的家伙，不要因为听说'男人比女人在性上更放纵'就只找男性；你应该找性放任的个体，其中许多是女性。"</em></p>
+        <p><strong>还有一条要一起说</strong>：这个差异有<strong>实际后果</strong>——米勒指出典型的性别差异"意味着有些伴侣在性欲望方面会面临不协调"，且"这种不协调随着时间推移只会变得更严重；大多数女性在绝经期之后性欲望都会下降"。<em>所以这条不是"无意义的差异"，而是"不能用来判断个人、但可以用来预判结构性摩擦"的差异。</em></p>
+        <div class="pit"><span class="lbl">⚠️ 常见误读</span>两种极端：① 拿均值去判断或要求具体的人（"你是男的，你怎么会不想"）；② 因为效应量小就说"这个差异不存在"。<strong>正确的读法是第三条路：它对群体预测有用，对个体判断无用。</strong></div>
+      </div></details>
+    </div>
+  </div>
+
+  <div class="q">
+    <div class="q-head"><span class="num">20</span><span class="txt">"男人更在意性不忠，女人更在意情感不忠"——请给出全部限定。</span><span class="lvtag l4">L4</span></div>
+    <div class="q-body">
+      <p>说出原始数据，然后列出至少四条限定。</p>
+      <details><summary>展开答案</summary><div class="ans">
+        <p><strong>原始数据</strong>（Buss et al. 1992，迫选）：<strong>60% 的男性</strong>选择性不贞最令其苦恼，<strong>只有 17% 的女性</strong>这样选；<strong>83% 的女性</strong>认为情感依恋更苦恼。</p>
+        <p><strong>限定一（方法学）</strong>：迫选法只能二选一，会<strong>夸大</strong>本可能很小的差异。如果让参与者充分表达，<strong>大部分人（男性和女性）都会指出这两种不贞都同样让人苦恼</strong>（Lishner et al. 2008）。</p>
+        <p><strong>限定二（多数人的实际答案）</strong>：图 10.3 的 326 份回答显示——男性总比女性更可能认为性不贞威胁更大，<strong>但大部分男人和女人都认为情感不贞更可怕</strong>。而且<strong>只有疏离型依恋的男性</strong>通常认为性不贞比情感不贞更苦恼。</p>
+        <p><strong>限定三（决定性反证）</strong>：在男同和女同的私通中（没有怀孕风险、父系不确定无关紧要），<strong>性别差异消失了</strong>——男性对性不贞的害怕程度与女性一样（Sagarin et al. 2003）。<strong>如果差异随"是否存在怀孕风险"而消失，那它就不是一个固定的性别本质。</strong></p>
+        <p><strong>限定四（让父母来回答）</strong>：要求<strong>父母</strong>想象媳妇/女婿的不贞时，性别差异也消失——母亲和父亲都认为媳妇的性不贞更令人担忧（Shackelford et al. 2004）。</p>
+        <p><strong>限定五（依恋可覆盖性别）</strong>：疏离型依恋的男性在这个问题上与多数女性一致。</p>
+        <p><strong>米勒自己的结论</strong>：<em>"显然，所有这些研究最合理的结论是，每个人都憎恨这两种类型的不贞。……<strong>两性之间彼此的相似性要远多于差异性</strong>。"</em></p>
+        <div class="pit"><span class="lbl">⚠️ 常见误读</span>把它当铁律用来解释或预测伴侣的反应。注意限定三是<strong>结构性的</strong>：一个差异在"去掉了某个生物学前提"之后就消失，这本身就是关于该差异性质的最强证据。</div>
+      </div></details>
+    </div>
+  </div>
+
+  <div class="q">
+    <div class="q-head"><span class="num">21</span><span class="txt">"被冷落只是心理上的，忍一忍就过去"——为什么这是错的？</span><span class="lvtag l4">L4</span></div>
+    <div class="q-body">
+      <p>给出三条独立证据，并说出 Cyberball 实验最惊人的地方。</p>
+      <details><summary>展开答案</summary><div class="ans">
+        <p><strong>证据一：生理系统与身体疼痛相同。</strong>应对感情创伤的生理系统与应对身体疼痛的系统<strong>一样</strong>（DeWall 2009）；而<strong>醋氨酚</strong>（泰诺/扑热息痛的有效成分）实验显示——大学生每天服用醋氨酚，一周半后比服安慰剂的学生<strong>感情创伤更少</strong>（DeWall et al. 2010）。</p>
+        <p><strong>证据二：排斥会改变基本知觉。</strong>感到受排斥时房间都变得更冷、更想吃热食热饮；时间知觉实验（估计 40 秒间隔）——<strong>被接纳者平均估 42 秒（相当精确），被拒绝者认为过去了 64 秒</strong>。</p>
+        <p><strong>证据三：后果严重。</strong>威胁归属需要、摧毁自我价值观、降低控制感；使人情感变迟钝、做出愚笨且自我挫败的选择。而且很多暴力恐怖事件之前，施暴者都有被排斥或示爱被拒的经历（Leary et al. 2006）。</p>
+        <p><strong>Cyberball 最惊人的地方</strong>：<strong>即使事后得知孤立是计算机程序控制的、不涉及任何真实的人际评价，情感仍然受到伤害</strong>（Zadro et al. 2004）；<strong>甚至被自己不屑的团体（如三 K 党）排斥也会感觉受伤</strong>（Gonsalkorale &amp; Williams 2007）。</p>
+        <p><strong>普及程度</strong>：<strong>67% 的美国人承认曾冷眼对待过亲密伴侣，75% 曾遭受过爱人此类对待</strong>（Williams 2001）。</p>
+        <p><strong>一个重要区分</strong>：反应方向取决于哪种需要受威胁——归属需要受威胁时人会更顺从、努力重新获取尊重；但若排斥<strong>不合理、不公平、危及控制感或自我价值</strong>，反应会更敌对，甚至对无辜旁观者如此。</p>
+        <div class="pit"><span class="lbl">⚠️ 常见误读</span>把"冷眼对待"当成比吵架轻的手段。<strong>它的生理代价与身体疼痛同级，而且它常常是隐蔽的</strong>——施予方往往不觉得自己做了什么，这正是它危险的地方。</div>
+      </div></details>
+    </div>
+  </div>
+
+  <div class="q">
+    <div class="q-head"><span class="num">22</span><span class="txt">"伴侣最了解我，所以骗不了他/她"——证据怎么说？</span><span class="lvtag l4">L4</span></div>
+    <div class="q-body">
+      <p>给出数据，并解释为什么亲密度反而降低准确率。</p>
+      <details><summary>展开答案</summary><div class="ans">
+        <p><strong>元分析数据</strong>（Bond &amp; DePaulo 2006，<strong>24 483 名</strong>参与者）：<strong>54% 的次数能正确分辨事实与谎言</strong>。<em>"因 50% 如同掷硬币，此正确率并不理想。"</em></p>
+        <p><strong>专家也不行</strong>：资深海关检查员、FBI/CIA/NSA 探员、精神病医生在侦测陌生人（或毒品走私者）说谎时<strong>并不比外行人做得更好</strong>。</p>
+        <p><strong>亲密度反而有害</strong>：</p>
+        <ul>
+          <li>伴侣因<strong>事实偏见（truth bias）</strong>而默认对方在说真话；<strong>他们的自信与准确性毫无关系</strong>（DePaulo 1997）。</li>
+          <li><em>"随着关系变得更亲密、信任增加，伴侣察觉彼此欺骗的准确性却有减无增。"</em>（McCornack &amp; Parks 1990）</li>
+          <li>对某个人判断准确性的提高<strong>无法迁移</strong>到其他人（Zuckerman et al. 1984）。</li>
+        </ul>
+        <p><strong>语言线索的结论</strong>：<em>"没有单一的线索总能证明一个人在说谎"</em>；<em>"任何单一的言语、非言语或生理线索都不会与欺骗有着特定的关联。"</em></p>
+        <p><strong>说谎的普及度</strong>：大学生每天平均说<strong>两次</strong>谎、<strong>每 3 个交往对象就对其中 1 人</strong>说谎；<strong>92% 的参与者承认曾对爱人说谎</strong>；说谎者自以为 59% 的谎言被接受，只有 19% 感觉被戳穿。</p>
+        <p><strong>一个有意思的细节</strong>：<strong>欺骗者猜疑</strong>——人们对别人说谎时，常认为谎言的接受者也不值得信任。<em>说谎还会损害说谎者对被骗伴侣的信任。</em></p>
+        <div class="pit"><span class="lbl">⚠️ 常见误读</span>把这条读成"所以要多怀疑伴侣"。米勒的发现恰恰是<strong>准确率低是因为信任</strong>，而信任本身是有价值的——所以正确的结论不是"提高警惕"，而是<strong>"不要把自己的识谎自信当成证据"</strong>。</div>
+      </div></details>
+    </div>
+  </div>
+
+  <div class="q">
+    <div class="q-head"><span class="num">23</span><span class="txt">这本书对演化心理学的处理，与道金斯《盲眼钟表匠》相比有什么区别？</span><span class="lvtag l4">L4</span></div>
+    <div class="q-body">
+      <p>指出米勒在讲演化解释时额外做了什么，以及为什么这值得学。</p>
+      <details><summary>展开答案</summary><div class="ans">
+        <p>米勒讲"人类本性的影响"时，用整整一节给出演化心理学的<strong>三个基本假设</strong>（性选择、两性面临不同繁殖困境、文化影响决定哪些演化形成的行为模式仍有适应性），并给出具体预测：<strong>男性比女性更渴望短期性关系、更看重外貌；女性更关注长期伴侣的经济前景与社会地位</strong>。</p>
+        <p><strong>但他比道金斯多做了三件事</strong>：</p>
+        <ol>
+          <li><strong>主动标出基础假设的猜测性</strong>：<em>"对于人类本性起源的原始社会环境的设想必然带有猜测性。此外，对许多有争议现象的解释，演化学模型并非唯一合理的。"</em></li>
+          <li><strong>立刻给出替代解释，而且是最有力的那一个</strong>——社会结构论：<em>"妇女在选择伴侣时必须比男性更谨慎，也的确是因为社会文化通常不允许女性掌握经济资源；可争论的观点是，妇女必须关心配偶的钱袋子，因为她们自己很难赚到男人那么多的钱。"</em></li>
+          <li><strong>给出一个可检验的推论来支持替代解释</strong>：<em>"<strong>如果赋予女性和男性同样的性别角色和社会地位，上述性别差异就可能大大减小了。</strong>"</em> —— 而第 3 章确实给了支持：<strong>在美国，女性越聪明，其寻找有财富和社会地位的爱侣的欲望越低</strong>（Stanik &amp; Ellsworth 2010）。</li>
+        </ol>
+        <p><strong>他还对归属需要这个自己刚讲完的漂亮解释说了同样的话</strong>：<em>"虽然这种观点启发了我们对人类自身的现代行为进行反思……但<strong>必须承认这只是一种猜测</strong>。"</em></p>
+        <p><strong>为什么值得学</strong>：这正好是《盲眼钟表匠》笔记里那条"<strong>描述性发现 ≠ 规范性建议</strong>"警告的实证版。演化解释很容易滑向"所以本来就该这样"；米勒的做法是<strong>在给出解释的同时给出对手解释，并指出自己的解释依赖哪些非演化的条件</strong>。</p>
+        <div class="pit"><span class="lbl">⚠️ 常见误读</span>把"演化解释存在"读成"演化解释成立"。米勒在男女择偶偏好这一节给的是<strong>两种解释并存、原因未定</strong>——他在第 3 章讲"女子以美貌交换男子金钱"时明确说"这种婚姻匹配的原因并不确定"。</div>
+      </div></details>
+    </div>
+  </div>
+
+  <div class="q">
+    <div class="q-head"><span class="num">24</span><span class="txt">为什么这一域要"读框架和问题，而不是读结论"？</span><span class="lvtag l4">L4</span></div>
+    <div class="q-body">
+      <p>给出两条理由，并说明"证据等级标注"为什么在这个域特别必要。</p>
+      <details><summary>展开答案</summary><div class="ans">
+        <p><strong>理由一：证据等级明显低于其他域。</strong>社会心理学正处在复现危机中——2015 年那次 100 项研究的大规模复现，只有约 36% 得到显著结果。米勒自己也在书里反复标注哪些是"有保留的"、哪些是"并非总会发生"（如罗密欧与朱丽叶效应）、哪些是"只是一种猜想"（如性别比率机制）。<strong>而且他自己就指出了这个领域的根本困难</strong>：相关研究不能定因果、自我报告的多种偏差、横断研究混淆年龄与世代。</p>
+        <p><strong>理由二：有一层知识不可对象化。</strong>你为什么爱这个人而不是那个、失去一个人是什么感觉——这些无法变成机制描述。米勒自己在前言就说：<em>"本书并不是一本傻瓜式的操作手册。后面章节的学习需要你的领悟力，更需要<strong>运用你自己的信念、价值观和个人经验</strong>来理解这些内容。"</em></p>
+        <p><strong>为什么必须标证据等级</strong>：因为这一域的结论极易被"想当然"地推广。三个典型误用：</p>
+        <ol>
+          <li><strong>把平均差当个人预测</strong>——"男性平均更倾向 X" 推不出 "你应该做 X"，也推不出 "这是不可改变的"。</li>
+          <li><strong>把描述当规范</strong>——某个现象普遍存在，推不出它是对的。</li>
+          <li><strong>把相关当因果</strong>——尤其危险的是反过来用：把"关系不好"归因于某个被研究的变量，而忽略可能是第三变量。</li>
+        </ol>
+        <p><strong>米勒本人的示范值得抄</strong>——他给读者定位的那段话：</p>
+        <p style="padding:11px 15px;background:var(--key-soft);border-left:3px solid var(--key);border-radius:0 3px 3px 0;color:#6d5011;font-style:italic;">"<strong>勿将科学的谨慎误解为缺陷。</strong>相反，我们希望你持有这样一种信念，恰恰是这种谨慎体现了科学的尊严……那些声称自己一直正确的人，毫无疑问是招摇过市的江湖骗子，谨慎的科学家不会这样做，他们只会努力使自己不断接近真理。"</p>
+        <p>以及他对"简单答案"的判断：<em>"人们喜欢轻松容易的答案，喜欢简单干脆的信息。如果科学事实难于掌握，<strong>很多人实际上更喜欢简单的谬论</strong>，如'男人来自火星、女人来自金星'这样的观点。"</em></p>
+        <div class="pit"><span class="lbl">⚠️ 最关键的一条自我限定</span>这本书读的是<strong>群体规律，而你是一个具体的人</strong>。它的任何一条都不足以替你判断该不该留在一段关系里——那需要的不只是数据。这也是本域用"自我诊断手册"而不是"助人手册"的原因。</div>
+      </div></details>
+    </div>
+  </div>
+
+  <!-- ============ 自测 ============ -->
+  <div class="section-title">收尾自测</div>
+  <div class="section-sub">不看前面，逐条问自己。答不出来就回去查对应题号</div>
+
+  <div class="checklist">
+    <h3>✅ 44 项自测</h3>
+
+    <div class="cat">六要素与归属（题 1–2）</div>
+    <ul>
+      <li>能说出亲密关系的六个维度并各解释一句</li>
+      <li>能举出"六项中只有部分成立"的关系例子</li>
+      <li>知道六要素测的是程度差异而非有或无</li>
+      <li>能说出归属需要的三条生理证据</li>
+      <li>知道"质量比数量重要"</li>
+      <li>能指出归属需要那些证据是相关而非因果</li>
+    </ul>
+
+    <div class="cat">依恋与个体差异（题 3）</div>
+    <ul>
+      <li>能说出依恋的两个连续维度名称</li>
+      <li>知道四类型只是"便利标签"</li>
+      <li>知道依恋类型会变（两年内约三分之一）</li>
+      <li>能区分性别（生理）与性认同（社会）差异</li>
+      <li>能解释工具性与表达性，并说出双性化的比例</li>
+      <li>知道传统性别角色对男人和女人各自的伤害</li>
+    </ul>
+
+    <div class="cat">结构与期望的来源（题 6）</div>
+    <ul>
+      <li>能说出 1960 年代与现在至少四组对比数字</li>
+      <li>能定义性别比率并说出高低比率各自的社会特征</li>
+      <li>知道"性解放"年代对应的是低性别比率</li>
+      <li>能说出米勒给性别比率假设标了什么</li>
+      <li>能说明"试婚"逻辑与数据的冲突</li>
+      <li>知道同居研究里哪个条件会让有害效应变轻微</li>
+      <li>能说出至少两条对同居—离婚相关的替代解释</li>
+    </ul>
+
+    <div class="cat">相互依赖（题 4–5、11）</div>
+    <ul>
+      <li>能写出结果、CL、CLalt 三者的定义</li>
+      <li>知道满意度由什么决定、依赖度由什么决定</li>
+      <li>能说出"不幸福但稳定"这个类型的现实例子</li>
+      <li>能解释 CL 为什么会自己升高</li>
+      <li>知道 CLalt 是主观的，受哪三个因素影响</li>
+      <li>能说出投入如何锁住一段不满意的关系</li>
+      <li>能说出承诺的三种类型（个人/强迫/道德）</li>
+    </ul>
+
+    <div class="cat">社会认知与沟通（题 7、12）</div>
+    <ul>
+      <li>能说出自我实现的预言那五步机制</li>
+      <li>能说出三种归因模式（幸福伴侣 vs 痛苦伴侣）</li>
+      <li>知道记忆会随当前满意度被改写</li>
+      <li>能说出六条有害的关系信念中的至少四条</li>
+      <li>能写出 XYZ 陈述的完整结构</li>
+      <li>知道"复述"和"知觉检验"各解决什么问题</li>
+      <li>知道"石墙"为什么比争辩更伤人</li>
+    </ul>
+
+    <div class="cat">冲突（题 8–9、13）</div>
+    <ul>
+      <li>能说出那个关键比率（5:1）</li>
+      <li>能说出戈特曼四类夫妻，并指出哪三类能稳定</li>
+      <li>知道"三分钟预测"的三个数字必须一起说</li>
+      <li>知道书中并没有"预测离婚 91%"这个数字</li>
+      <li>能说出要求/退避模式的位置效应</li>
+      <li>能说出"冲突可以有好处"的两条证据</li>
+    </ul>
+
+    <div class="cat">性与性态度（题 14–17、19）</div>
+    <ul>
+      <li>能说出初次性交平均年龄与婚前性行为比例</li>
+      <li>能说出出轨率的完整数据（47 项、58000+、21%/32%）</li>
+      <li>能说出性驱力差异的原始数字（37/9、60/15）</li>
+      <li>能说出效应量约束（d = 0.5 时三分之一）</li>
+      <li>能说出性满足与关系满意度是双向关系</li>
+      <li>能说出 89%/32% 的正确读法与陷阱</li>
+      <li>能列出不安全性行为的七条原因</li>
+      <li>能说出性胁迫的三个流行率数字</li>
+      <li>能说出社会性性行为取向的开放者与保守者差异</li>
+    </ul>
+
+    <div class="cat">读数据的方式与元层面（题 18、20–24）</div>
+    <ul>
+      <li>能说出相关≠因果的三条竞争解释</li>
+      <li>能举出"第三方变量同时制造相关"的例子</li>
+      <li>知道自我报告的三类偏差</li>
+      <li>能说出"显著的"这个词的真实含义</li>
+      <li>知道横断研究混淆了哪两件事</li>
+      <li>能说出"I 型/II 型误用"各一个例子</li>
+      <li>能说出宽恕的三个前提条件</li>
+      <li>知道"没有真诚悔悟的宽恕"为什么有害</li>
+      <li>能说出社会排斥的三条独立证据</li>
+      <li>能解释为什么亲密度反而降低识谎准确率</li>
+    </ul>
+  </div>
+
+  <div class="footer">
+    《亲密关系》问题手册 · 罗兰·米勒 · 第 6 版中译本<br>
+    24 题（L1 4 / L2 5 / L3 8 / L4 7）· 44 项自测 · 证据等级 A/B/C 标注<br>
+    <em>读框架和问题，而不是读结论</em>
+  </div>
+
+</div>
+</body>
+</html>

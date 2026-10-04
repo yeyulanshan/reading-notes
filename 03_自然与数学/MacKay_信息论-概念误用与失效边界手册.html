@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MacKay 信息论 · 概念误用与失效边界手册</title>
+<style>
+  :root{
+    --paper:#f2f4f7; --card:#ffffff; --edge:#d2d8e0;
+    --ink:#18202b; --ink-mid:#4a5563; --ink-soft:#828c9a;
+    --it:#2b5c8a; --it-soft:#e3edf6;
+    --bayes:#7a4a86; --bayes-soft:#f0e7f2;
+    --code:#2d6b55; --code-soft:#e2f0ea;
+    --limit:#a05a2c; --limit-soft:#f8ebe0;
+    --warn:#a8324a; --warn-soft:#fbe6ea;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--paper);color:var(--ink);padding:36px 20px 48px;line-height:1.84;
+    -webkit-font-smoothing:antialiased;
+  }
+  .container{max-width:960px;margin:0 auto;}
+
+  .header{
+    text-align:center;margin-bottom:30px;padding:46px 24px 40px;
+    background:var(--card);border:1px solid var(--edge);border-top:5px solid var(--warn);border-radius:3px;
+  }
+  .header .kicker{font-size:11.5px;letter-spacing:2.5px;color:var(--ink-soft);margin-bottom:14px;}
+  .header h1{font-size:26px;color:var(--ink);margin-bottom:14px;letter-spacing:.5px;line-height:1.5;}
+  .header .subtitle{font-size:14.5px;color:var(--ink-mid);}
+  .header .author{margin-top:16px;font-size:12.5px;color:var(--ink-soft);}
+
+  .preface{
+    background:var(--card);border:1px solid var(--edge);border-left:4px solid var(--it);
+    border-radius:3px;padding:22px 26px;margin-bottom:22px;font-size:14.5px;color:var(--ink-mid);
+  }
+  .preface h3{color:var(--it);font-size:15.5px;margin-bottom:10px;}
+  .preface p+p{margin-top:9px;}
+  .preface strong{color:var(--ink);}
+  .preface em{color:var(--warn);font-style:normal;font-weight:600;}
+
+  .howto{background:var(--limit-soft);border:1px solid #ecd9c8;border-left:4px solid var(--limit);border-radius:3px;padding:20px 24px;margin-bottom:30px;}
+  .howto h3{color:var(--limit);font-size:15px;margin-bottom:12px;}
+  .howto ol{margin-left:20px;}
+  .howto li{color:var(--ink-mid);font-size:14px;margin-bottom:7px;}
+  .howto li strong{color:var(--ink);}
+
+  .section-title{
+    font-size:20px;font-weight:700;color:var(--ink);margin:48px 0 8px;
+    padding-left:13px;border-left:4px solid var(--it);letter-spacing:.3px;
+  }
+  .section-sub{color:var(--ink-soft);font-size:13.5px;margin:0 0 20px 17px;}
+
+  /* 概念条目 */
+  .entry{background:var(--card);border:1px solid var(--edge);border-radius:3px;padding:0;margin-bottom:18px;overflow:hidden;}
+  .entry-head{background:var(--it-soft);border-bottom:1px solid var(--edge);padding:14px 22px;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;}
+  .entry-head .cn{font-size:17px;font-weight:700;color:var(--ink);}
+  .entry-head .en{font-size:12.5px;color:var(--it);font-family:Consolas,Monaco,monospace;}
+  .entry-head .risk{margin-left:auto;font-size:11px;padding:2px 10px;border-radius:20px;font-weight:700;letter-spacing:.5px;white-space:nowrap;}
+  .risk.high{background:var(--warn-soft);color:var(--warn);}
+  .risk.mid{background:var(--limit-soft);color:var(--limit);}
+  .risk.low{background:#eceff3;color:var(--ink-soft);}
+
+  .entry-body{padding:20px 22px;}
+  .row{display:grid;grid-template-columns:92px 1fr;gap:14px;padding:11px 0;border-bottom:1px dashed var(--edge);}
+  .row:last-child{border-bottom:none;}
+  .row .lbl{font-size:12.5px;font-weight:700;letter-spacing:.5px;padding-top:2px;}
+  .row.correct .lbl{color:var(--code);}
+  .row.misuse .lbl{color:var(--warn);}
+  .row.why .lbl{color:var(--it);}
+  .row.detect .lbl{color:var(--limit);}
+  .row p{color:var(--ink-mid);font-size:14px;}
+  .row p+p{margin-top:7px;}
+  .row strong{color:var(--ink);}
+  .row em{color:var(--warn);font-style:normal;font-weight:600;}
+  .row .m{font-family:"Cambria Math",Cambria,Georgia,serif;font-size:15px;color:#1d4a39;background:var(--code-soft);padding:1px 6px;border-radius:3px;white-space:nowrap;}
+
+  .quote{background:var(--limit-soft);border-left:3px solid var(--limit);border-radius:0 3px 3px 0;padding:12px 16px;margin:12px 0;color:#7a4320;font-style:italic;font-size:13.5px;}
+
+  table{width:100%;border-collapse:collapse;margin:13px 0;font-size:13.5px;}
+  th,td{padding:10px 12px;border:1px solid var(--edge);text-align:left;vertical-align:top;}
+  th{background:var(--it-soft);color:var(--it);font-weight:700;font-size:13px;}
+  td{color:var(--ink-mid);}
+  td strong{color:var(--ink);}
+  td.num{font-family:Consolas,Monaco,monospace;color:var(--ink);white-space:nowrap;}
+
+  /* 定理边界图 */
+  .theorem{background:var(--card);border:1px solid var(--edge);border-radius:3px;margin-bottom:16px;overflow:hidden;}
+  .th-head{background:var(--bayes-soft);padding:14px 22px;border-bottom:1px solid var(--edge);}
+  .th-head .name{font-size:16px;font-weight:700;color:var(--ink);}
+  .th-head .loc{font-size:12px;color:var(--bayes);margin-top:3px;letter-spacing:.5px;}
+  .th-body{padding:18px 22px;}
+  .th-body .stmt{background:var(--it-soft);border-radius:3px;padding:13px 17px;margin-bottom:14px;font-size:14.5px;color:#1d4260;}
+  .th-body .stmt .m{font-family:"Cambria Math",Cambria,Georgia,serif;font-size:15px;background:var(--card);padding:1px 6px;border-radius:3px;}
+  .th-row{display:grid;grid-template-columns:96px 1fr;gap:14px;padding:9px 0;border-bottom:1px dashed var(--edge);font-size:14px;}
+  .th-row:last-child{border-bottom:none;}
+  .th-row .k{font-size:12.5px;font-weight:700;padding-top:2px;}
+  .th-row.need .k{color:var(--code);}
+  .th-row.breaks .k{color:var(--warn);}
+  .th-row.uses .k{color:var(--it);}
+  .th-row .v{color:var(--ink-mid);}
+  .th-row .v strong{color:var(--ink);}
+
+  /* 自测 */
+  .checklist{background:var(--card);border:1px solid var(--edge);border-radius:3px;padding:26px;margin-bottom:16px;}
+  .checklist h3{color:var(--code);font-size:16.5px;margin-bottom:16px;}
+  .checklist .cat{color:var(--limit);font-size:13.5px;font-weight:700;margin:16px 0 8px;}
+  .checklist ul{list-style:none;}
+  .checklist li{padding:6px 0 6px 28px;position:relative;color:var(--ink-mid);font-size:14px;}
+  .checklist li::before{content:"☐";position:absolute;left:4px;color:#b9c2cc;font-size:15px;}
+
+  .footer{text-align:center;margin-top:44px;padding:22px;color:var(--ink-soft);font-size:12.5px;line-height:1.9;}
+
+  @media(max-width:640px){
+    .header h1{font-size:20px;}
+    .section-title{font-size:17.5px;}
+    .row,.th-row{grid-template-columns:1fr;gap:4px;}
+    body{padding:20px 14px 32px;}
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="kicker">FAILURE BOUNDARIES · HANDBOOK</div>
+    <h1>每个定理都有一个边界，边界由假设决定</h1>
+    <div class="subtitle">MacKay 信息论 · 概念误用与失效边界手册 · 14 个概念 + 8 个定理的边界图</div>
+    <div class="author">David J.C. MacKay · 剑桥大学出版社 2003</div>
+  </div>
+
+  <div class="preface">
+    <h3>为什么这本书需要"双面"手册</h3>
+    <p>《盲眼钟表匠》那本用的是纯"概念误用"格式：一个概念，正确含义 → 常见误用 → 为什么会错 → 怎么识别。</p>
+    <p>但 MacKay 这本是<strong>形式系统</strong>，它有一个别的书没有的性质：<em>它的结论几乎全都带条件。</em>熵是压缩下界——前提是块长可以任意长；容量是可靠通信上界——前提也是渐近；奥卡姆剃刀有效——前提是先验正常（proper）。</p>
+    <p>所以这一册分两面：</p>
+    <p><strong>A 面</strong>（第 1–3 节）沿用概念误用格式——这本书的词汇被日常语言污染得极严重（"熵""信息""随机""最优"）。<br>
+       <strong>B 面</strong>（第 4 节）是<strong>定理边界图</strong>——每个主要定理需要什么前提、前提不满足会怎样、什么场合不能引用它。</p>
+    <p style="margin-top:12px;color:#828c9a;font-size:13.5px;">对形式系统来说，<strong>B 面比 A 面更要紧</strong>。因为误用一个概念，最多是理解错误；误用一个定理——在假设不成立的场合引用它——是<em>论证</em>错误，而且很难被发现。</p>
+  </div>
+
+  <div class="howto">
+    <h3>🔧 怎么用</h3>
+    <ol>
+      <li><strong>概念条目四栏</strong>：正确含义 → 常见误用 → 为什么会错 → <strong>怎么识别</strong>。先看"怎么识别"。</li>
+      <li><strong>定理条目五栏</strong>：陈述 → 需要什么前提 → <strong>前提不满足会怎样</strong> → 什么场合能用 → 什么场合不能用。</li>
+      <li><strong>注意"作者自己先纠正过"的条目</strong>。MacKay 是个很爱在书里直接纠错的作者，凡是标了 <span style="color:#a05a2c;font-weight:700;">✎ 作者已澄清</span> 的，都是他本人写明的，可以直接引用。</li>
+      <li><strong>最后做第 5 节的自测</strong>——那一节的问题全部来自书里真实的判断分歧。</li>
+    </ol>
+  </div>
+
+  <!-- ==================== 一、熵与信息 ==================== -->
+  <div class="section-title">一、两个被污染最严重的词</div>
+  <div class="section-sub">"熵"和"信息"在日常语言里的意思，与这本书里的意思几乎不相干</div>
+
+  <div class="entry">
+    <div class="entry-head">
+      <span class="cn">熵</span>
+      <span class="en">entropy</span>
+      <span class="risk high">极高风险</span>
+    </div>
+    <div class="entry-body">
+      <div class="row correct"><span class="lbl">正确含义</span>
+        <p><span class="m">H(X) = Σₓ P(x) · log₂ (1 / P(x))</span>，单位是比特。</p>
+        <p>它是<strong>平均的 Shannon 信息量</strong>。MacKay 给了它第二个名字，这个更少歧义：<strong>"X 的不确定性"（the uncertainty of X）</strong>。</p>
+        <p>操作性的读法：<em>平均每个结果需要多少比特才能描述出来。</em></p>
+        <p>具体数字：英语文献里随机取一个字母，熵约 <strong>4.11 比特</strong>。</p>
+      </div>
+      <div class="row misuse"><span class="lbl">常见误用</span>
+        <p>① 当成"混乱程度""无序度"——于是有了"社会熵增""关系走向熵增"这类说法。</p>
+        <p>② 当成"复杂度"——一串<strong>完全随机</strong>的比特熵最大，但它一点也不复杂（它只是没有结构）。</p>
+        <p>③ 当成"文件长度"——熵是<strong>下界</strong>，不是实际大小。实际文件通常比熵大。</p>
+        <p>④ 当成一个<b>绝对</b>属性——仿佛一个东西有一个固定的"熵值"。</p>
+      </div>
+      <div class="row why"><span class="lbl">为什么会错</span>
+        <p>因为它在物理里有"热力学熵"的严格定义，两者的数学形式相同是一件深刻的事；但<strong>数学形式相同不等于语义相同</strong>。把"房间变乱"说成"熵增"，是把一个统计量当成了一个道德或审美判断。</p>
+        <p>而第 ④ 条最关键：<strong>熵永远是"相对于某个概率模型"的熵</strong>。同样一段英文，按单字母分布算是 4.11 比特/字母，按好的上下文模型算约 1 比特/字母（Shannon 1948）。<em>换模型，熵就变。</em></p>
+      </div>
+      <div class="row detect"><span class="lbl">怎么识别</span>
+        <p>问一句：<strong>"这个'熵'是相对于哪个概率分布算的？"</strong></p>
+        <p>答不出来，就是误用。因为熵不是事物的属性，是<em>你对该事物的模型</em>的属性。</p>
+        <p>还有一个立刻见效的检验：<strong>把"熵"换成"平均需要多少比特"再读一遍。</strong>如果句子变得荒谬（"这个房间的平均比特数在增加"），原句也是荒谬的。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-head">
+      <span class="cn">信息 / 信息量</span>
+      <span class="en">information / Shannon information content</span>
+      <span class="risk high">极高风险</span>
+    </div>
+    <div class="entry-body">
+      <div class="row correct"><span class="lbl">正确含义</span>
+        <p><span class="m">h(x) = log₂ (1 / P(x))</span>，单位是比特。<strong>概率越小，信息量越大。</strong></p>
+        <p>MacKay 明确给出了它的三个同义名：<span style="color:#2d6b55;font-weight:600;">"Information content"、"surprise value"（意外值）、log likelihood 或 log evidence——它们是同一个东西。</span></p>
+        <p>所以"信息量"的准确直觉是<strong>意外程度</strong>：一个几乎必然发生的事件，发生时信息量接近零。</p>
+      </div>
+      <div class="row misuse"><span class="lbl">常见误用</span>
+        <p>① 当成"内容""资料""消息"——于是有"信息越多越好"。</p>
+        <p>② 当成"知识"——于是把"信息时代"当成"知识增长"。</p>
+        <p>③ 当成"意义"——<em>这是最根本的一条</em>。一串完全随机的字符信息量最大化，但它什么也没告诉你。</p>
+      </div>
+      <div class="row why"><span class="lbl">为什么会错</span>
+        <p>因为日常语言的"信息"已经被"内容"污染了。而这里的定义是纯统计的：<strong>它度量的是"意外"，不是"有用"。</strong></p>
+        <p>有一个反直觉的推论很能说明问题（MacKay 用潜艇游戏演示）：<strong>一次二元结果可以传递 6 比特的信息。</strong>——一艘潜艇藏在 64 格里，第一发就打中，这一次"是/否"的回答携带了 <span class="m">log₂ 64 = 6</span> 比特；而第一发未中只携带 <span class="m">log₂(64/63) ≈ 0.0227</span> 比特。</p>
+        <p>所以信息量取决于<strong>结果有多不可几</strong>，不取决于用了几个二元符号。</p>
+      </div>
+      <div class="row detect"><span class="lbl">怎么识别</span>
+        <p>把"信息"换成"意外程度"再读。如果句子不通（"这个政策提供了更多意外程度"），原句用的就不是这本书的"信息"。</p>
+        <p>另一个检验：问<strong>"这件事的概率是多少？"</strong>——如果这个信息量无法对应到任何概率，它就不是 Shannon 意义上的信息量。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-head">
+      <span class="cn">bit（比特）</span>
+      <span class="en">bit</span>
+      <span class="risk mid">中风险</span>
+    </div>
+    <div class="entry-body">
+      <div class="row correct"><span class="lbl">正确含义</span>
+        <p>这个词在书里有<strong>两个不同含义</strong>，MacKay 在定义处就主动提醒了：</p>
+        <table>
+          <tr><th>含义</th><th>用法</th></tr>
+          <tr><td><strong>一个取两个值的符号</strong></td><td>"a bit"＝一个 0 或 1 的位置</td></tr>
+          <tr><td><strong>信息量的单位</strong></td><td><span class="m">h = 6 bits</span>＝6 个单位的意外程度</td></tr>
+        </table>
+        <p>他的原话是"我希望上下文总能让人分清是哪一个意思"。</p>
+      </div>
+      <div class="row misuse"><span class="lbl">常见误用</span>
+        <p>把两个含义混起来，于是得出"一个 bit 只能携带一个 bit 的信息"这种循环而无用的结论——它恰好掩盖了上面潜艇游戏那个反例。</p>
+      </div>
+      <div class="row why"><span class="lbl">为什么会错</span>
+        <p>因为这两个含义在日常技术语言里都被使用，而且通常不需要区分（一个二元符号恰好携带一比特信息的场合很多）。<strong>但恰恰在最有意思的场合它们不相等。</strong></p>
+      </div>
+      <div class="row detect"><span class="lbl">怎么识别</span>
+        <p>看到"比特"时问：<strong>这是"几个 0/1"，还是"多少意外"？</strong>比如硬盘的容量是前者，一段话的信息量是后者。</p>
+        <p style="margin-top:8px;">还有一个漂亮的推论值得记住（习题 5.31）：<strong>"The output of a perfect compressor is always perfectly random bits."</strong>（完美压缩器的输出总是完全随机的比特。）在最优压缩流里，任何 <span class="m">l</span> 比特的模式概率都是 <span class="m">2⁻ˡ</span>，且 <span class="m">P(bit=1) = 1/2</span>。<em>这是"输出看起来像随机数"的严格含义。</em></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-head">
+      <span class="cn">渐近等分</span>
+      <span class="en">asymptotic equipartition</span>
+      <span class="risk high">高风险</span>
+    </div>
+    <div class="entry-body">
+      <div class="row correct"><span class="lbl">正确含义</span>
+        <p>典型集 <span class="m">T_Nβ</span> 的元素，其 <span class="m">log₂(1/P(x))</span> 彼此相差在 <span class="m">2Nβ</span> 之内；集合约有 <span class="m">2^(NH)</span> 个成员，总概率接近 1。</p>
+      </div>
+      <div class="row misuse"><span class="lbl">常见误用</span>
+        <p>读成"典型集里所有串的概率大致相等"。</p>
+      </div>
+      <div class="row why"><span class="lbl">为什么会错</span>
+        <div class="quote">"I put the words 'asymptotic equipartition' in quotes because it is important not to think that the elements of the typical set really do have roughly the same probability as each other... As β decreases, N increases, and this ratio grows exponentially. <strong>Thus we have 'equipartition' only in a weak sense!"</strong></div>
+        <p>也就是说：典型集里最可能的串与最不可能的串之比可以达到 <span class="m">2^(α√N)</span>，<strong>这个比值随 N 指数增长</strong>。所以"等分"只在很弱的意义上成立。</p>
+        <p><span style="color:#a05a2c;font-weight:700;">✎ 作者已澄清</span>——MacKay 专门加了引号来反对这个读法。</p>
+      </div>
+      <div class="row detect"><span class="lbl">怎么识别</span>
+        <p>听到"典型集里的串概率相等"，就知道错了。<strong>正确的说法是"它们的对数概率彼此接近"</strong>——而对数接近不代表概率接近，因为指数放大了差异。</p>
+        <p style="margin-top:8px;">还有一个容易混的点：<strong>典型集不等于最小 δ-充分子集 <span class="m">S_δ</span>。</strong>典型集反而不包含那些最高概率的串（它们的总概率贡献可忽略）；而 <span class="m">S_δ</span> 恰恰从最高概率的元素开始收集。<br>
+           MacKay 说明为什么还要引入典型集：<strong>"we can count the typical set."</strong>（因为典型集可以数得清。）</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-head">
+      <span class="cn">三个 H 不能混</span>
+      <span class="en">H₀ vs H_δ vs H₂</span>
+      <span class="risk mid">中风险</span>
+    </div>
+    <div class="entry-body">
+      <div class="row correct"><span class="lbl">正确含义</span>
+        <table>
+          <tr><th>记号</th><th>名称</th><th>含义</th><th>含有概率吗</th></tr>
+          <tr><td class="num">H₀(X)</td><td>原始比特含量<br>raw bit content</td><td><span class="m">log₂|A_X|</span>，只数结果个数</td><td><strong>没有</strong></td></tr>
+          <tr><td class="num">H_δ(X)</td><td>本质比特含量<br>essential bit content</td><td><span class="m">log₂|S_δ|</span>，容许概率 δ 的丢失</td><td>有，且依赖 δ</td></tr>
+          <tr><td class="num">H₂(p)</td><td>二元熵函数</td><td><span class="m">H(p, 1−p)</span>，二元集成的熵</td><td>有</td></tr>
+          <tr><td class="num">H(X)</td><td>熵</td><td>整个分布的平均信息量</td><td>有</td></tr>
+        </table>
+      </div>
+      <div class="row misuse"><span class="lbl">常见误用</span>
+        <p>把 <span class="m">H₀</span> 当成"熵"来引用，于是以为"信息量就是结果个数的对数"。</p>
+      </div>
+      <div class="row why"><span class="lbl">为什么会错</span>
+        <p>因为 <span class="m">H₀</span> 也是一种"比特数"（定长编码所需），形式上和熵很像。区别在于它<strong>完全不含概率信息</strong>——不管你信不信某个结果，它都一样。</p>
+      </div>
+      <div class="row detect"><span class="lbl">怎么识别</span>
+        <p><span style="color:#a05a2c;font-weight:700;">✎ 作者已澄清</span>——MacKay 的原话是：<strong>"Caution: do not confuse H₀(X) and H_δ(X) with the function H₂(p)."</strong>（注意不要混淆 H₀、H_δ 与函数 H₂。）他把这条写成了正式警告。</p>
+        <p>一个具体例子（例 4.6）：8 个结果、概率为 {1/4, 1/4, 1/4, 3/16, 1/64, 1/64, 1/64, 1/64}。<span class="m">H₀ = 3</span> 比特（8 个名字）；但前四个结果的总概率是 15/16，所以容许 δ=1/16 时<strong>只需 2 比特</strong>——这就是 <span class="m">H_{1/16} = 2</span> 与 <span class="m">H₀ = 3</span> 的差别。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 二、最优与压缩 ==================== -->
+  <div class="section-title">二、"最优"这个词的陷阱</div>
+  <div class="section-sub">这本书里出现"最优"的地方，几乎每一处都带一个窄条件</div>
+
+  <div class="entry">
+    <div class="entry-head">
+      <span class="cn">Huffman 编码是"最优"的</span>
+      <span class="en">Huffman coding is optimal</span>
+      <span class="risk high">高风险</span>
+    </div>
+    <div class="entry-body">
+      <div class="row correct"><span class="lbl">正确含义</span>
+        <p>它的"最优"只在<strong>三个条件同时成立</strong>时：① 集成固定且已知；② 二元编码字母表；③ 限定为"每符号一个码字"的<strong>符号码</strong>。</p>
+        <p>在这个范围内，它最小化期望码长 <span class="m">L(C, X)</span>。</p>
+      </div>
+      <div class="row misuse"><span class="lbl">常见误用</span>
+        <p>说成"Huffman 是最好的压缩算法"，然后拿它当压缩的上限基准。</p>
+      </div>
+      <div class="row why"><span class="lbl">为什么会错</span>
+        <p>因为条件 ③ 是个极强的限制。符号码被迫<strong>每个符号至少输出 1 比特</strong>，于是有一个 0–1 比特/符号的"额外比特"开销。当熵本身很小时，这个开销是灾难性的。</p>
+        <p>MacKay 举的例子极有说服力：在上下文 <span class="m">strings_of_ch</span> 之后，接下来 9 个符号是 <span class="m">aracters_</span>，每个概率 0.99。传统 Huffman 被迫每字符付 1 比特，<strong>共 9 比特</strong>；而这 9 个字符的实际信息量只有 <strong>0.13 比特</strong>。</p>
+        <p><span style="color:#a05a2c;font-weight:700;">✎ 作者已澄清</span>——他的原话非常直接：<strong>"Huffman codes, therefore, although widely trumpeted as 'optimal', have many defects for practical purposes. They are optimal symbol codes, but for practical purposes we don't want a symbol code."</strong>（Huffman 码虽然被广泛吹捧为"最优"，但实践中有很多缺陷。它们是最优的符号码——但实践中我们并不想要符号码。）</p>
+      </div>
+      <div class="row detect"><span class="lbl">怎么识别</span>
+        <p>听到"Huffman 是最优压缩"，追问：<strong>"相对于什么码类最优？"</strong></p>
+        <p>若答不出"符号码"，就是误用。正确的补救有两条：<strong>块化</strong>（开销摊薄到 <span class="m">1/N</span>，但失去即时解码，且要算海量串的概率）或<strong>算术编码</strong>（开销降到每条消息 ≤2 比特）。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-head">
+      <span class="cn">压缩器可以把任何文件变小</span>
+      <span class="en">universal compression</span>
+      <span class="risk high">高风险</span>
+    </div>
+    <div class="entry-body">
+      <div class="row correct"><span class="lbl">正确含义</span>
+        <p>只有两条路能让"压缩器"真的压缩文件：</p>
+        <div class="quote">"There are only two ways in which a 'compressor' can actually compress files: 1. A lossy compressor ... 2. A lossless compressor maps all files to different encodings; <strong>if it shortens some files, it necessarily makes other files longer.</strong>"</div>
+      </div>
+      <div class="row misuse"><span class="lbl">常见误用</span>
+        <p>声称发明了能压缩所有文件的程序，甚至说"反复压缩压缩过的文件还能继续变小"。</p>
+        <p>MacKay 的评论是全书最刻薄的一句：<strong>"Stranger yet, patents have been granted to these modern-day alchemists."</strong>（更奇怪的是，专利已经授予了这些现代炼金术士。）</p>
+      </div>
+      <div class="row why"><span class="lbl">为什么会错</span>
+        <p>鸽巢原理：若输出长度 <span class="m">l &lt; log₂|A_X|</span>，则只有 <span class="m">2ˡ &lt; |A_X|</span> 个可能输出，必有至少两个输入映到同一输出。所以无损压缩必然是"缩短一些、同时拉长另一些"，设计目标只是<strong>让拉长的概率极小</strong>。</p>
+      </div>
+      <div class="row detect"><span class="lbl">怎么识别</span>
+        <p>听到"这个压缩器能把任何文件变小"，直接判定为假——除非它是有损的。</p>
+        <p>一个更细的检验：问它<strong>在什么输入上会变大</strong>。真压缩器有明确答案（如随机数据），假压缩器会含糊。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-head">
+      <span class="cn">KL 散度是"距离"</span>
+      <span class="en">KL divergence as a distance</span>
+      <span class="risk mid">中风险</span>
+    </div>
+    <div class="entry-body">
+      <div class="row correct"><span class="lbl">正确含义</span>
+        <p><span class="m">D_KL(P‖Q) = Σₓ P(x) log( P(x) / Q(x) ) ≥ 0</span>（Gibbs 不等式），等号当且仅当 <span class="m">P = Q</span>。</p>
+        <p>操作性的读法：<strong>用为 Q 优化的编码去编 P 的数据，平均要多付多少比特。</strong></p>
+        <p>还有一个极有用的恒等式：若真实分布是 <span class="m">p</span> 而用的完备码隐含分布是 <span class="m">q</span>，则 <span class="m">L = H(X) + D_KL(p‖q)</span>——<em>超出熵的部分恰好就是相对熵。</em></p>
+      </div>
+      <div class="row misuse"><span class="lbl">常见误用</span>
+        <p>当成一个度量空间里的距离来用（例如做聚类、算"两个分布的远近"而不注意方向）。</p>
+      </div>
+      <div class="row why"><span class="lbl">为什么会错</span>
+        <p>因为它<strong>不对称</strong>：一般 <span class="m">D_KL(P‖Q) ≠ D_KL(Q‖P)</span>。而距离的定义要求对称，还要求三角不等式。</p>
+        <p><span style="color:#a05a2c;font-weight:700;">✎ 作者已澄清</span>——MacKay 主动说明：虽然它有时被叫作"KL distance"，但它<strong>严格来说不是距离</strong>。</p>
+      </div>
+      <div class="row detect"><span class="lbl">怎么识别</span>
+        <p>看到有人把 KL 当距离用时，问：<strong>"你算的是 D(P‖Q) 还是 D(Q‖P)？两个答案不一样，你为什么要这个方向？"</strong></p>
+        <p>能答出方向理由的（例如"我要用 Q 去编码 P 的数据"）是正确用法；答不出的通常是误用。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-head">
+      <span class="cn">任何完备码都优于别的码</span>
+      <span class="en">a code is "better" than another</span>
+      <span class="risk mid">中风险</span>
+    </div>
+    <div class="entry-body">
+      <div class="row correct"><span class="lbl">正确含义</span>
+        <p><span style="color:#a05a2c;font-weight:700;">✎ 作者已澄清</span>——这是 MacKay 在整数编码那一章给的结论，极其干净：</p>
+        <div class="quote">"<strong>any complete code corresponds to a prior for which it is optimal; you should not say that any other code is superior to it. Other codes are optimal for other priors.</strong> These implicit priors should be thought about so as to achieve the best code for one's application."</div>
+        <p>也就是：<strong>每个完备码都对应一个它自己最优的先验。别的码只是对其他先验最优。</strong></p>
+      </div>
+      <div class="row misuse"><span class="lbl">常见误用</span>
+        <p>问"哪个整数编码更好"——这个问法本身有陷阱，因为它缺少"针对什么分布"这个限定。</p>
+      </div>
+      <div class="row why"><span class="lbl">为什么会错</span>
+        <p>因为任何码长选择都<strong>隐含一个概率分布</strong> <span class="m">qᵢ = 2^(−lᵢ) / z</span>。对这些码长而言，这个分布就是最优分布。所以比较两个码，等于比较两个隐含先验。</p>
+      </div>
+      <div class="row detect"><span class="lbl">怎么识别</span>
+        <p>听到"某个编码方案更好"，追问：<strong>"对什么先验更好？"</strong></p>
+        <p>MacKay 的建议是把问题改成：<strong>"我这个应用隐含的先验是什么？"</strong>——这才是能回答的问题。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 三、推断的陷阱 ==================== -->
+  <div class="section-title">三、推断：三个"看起来更好"的陷阱</div>
+  <div class="section-sub">这一节是全书最实用的部分——三个方法都比它们看起来更糟</div>
+
+  <div class="entry">
+    <div class="entry-head">
+      <span class="cn">最大似然</span>
+      <span class="en">maximum likelihood (ML)</span>
+      <span class="risk high">极高风险</span>
+    </div>
+    <div class="entry-body">
+      <div class="row correct"><span class="lbl">正确含义</span>
+        <p>使 <span class="m">P(Data | θ, H)</span> 最大的参数设置 θ。它是"绕开枚举、直奔一个好假设"的捷径。</p>
+      </div>
+      <div class="row misuse"><span class="lbl">常见误用</span>
+        <p>① 当成"最佳拟合"，因此用它<strong>比较不同复杂度的模型</strong>——复杂模型永远拟合得更好，于是必然选到过参数化的模型。</p>
+        <p>② 以为它给出的是一个"代表性"的参数值。</p>
+      </div>
+      <div class="row why"><span class="lbl">为什么会错</span>
+        <p><strong>它的目标函数可能无上界。</strong>MacKay 的原话是一个拟声词：</p>
+        <div class="quote">"<strong>KABOOM!</strong> ... Put one cluster exactly on one data point and let its variance go to zero – you can obtain an arbitrarily large likelihood!"</div>
+        <p>即使没有无穷尖峰，问题依然存在：</p>
+        <div class="quote">"Even if the likelihood does not have infinitely-large spikes, the maximum of the likelihood is often unrepresentative, in high-dimensional problems... <strong>Maxima are atypical.</strong>"（最大值不是典型值。）</div>
+        <p>他的诊断很精确：这些参数设置的<strong>后验密度确实极大，但只在一小块体积极小的区域上大</strong>，所以它们携带的概率质量通常微不足道。</p>
+      </div>
+      <div class="row detect"><span class="lbl">怎么识别</span>
+        <p>看到有人用似然（或等价地，训练误差）来<strong>选择模型</strong>，就是误用。</p>
+        <p>正确的替代是<strong>证据（evidence）</strong>：<span class="m">P(D|H) = ∫ P(D|w,H) P(w|H) dw</span>。用 MacKay 的分解就是：<strong>证据 ≈ 最佳拟合似然 × 奥卡姆因子</strong>——ML 只是其中一个因子，被奥卡姆因子折价。</p>
+        <p style="margin-top:8px;">有一个很好的症状可以留意（习题 22.8，光子计数）：带背景 b 时 ML 给出 <span class="m">λ̂ = max(0, r − b)</span>，而抽样理论的"无偏估计量"给出 <span class="m">r − b = −4</span>——<strong>一个负的光子率</strong>。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-head">
+      <span class="cn">最大后验（MAP）</span>
+      <span class="en">maximum a posteriori</span>
+      <span class="risk high">极高风险</span>
+    </div>
+    <div class="entry-body">
+      <div class="row correct"><span class="lbl">正确含义</span>
+        <p>最大化后验<strong>密度</strong>的参数设置。乘上一个先验再取最大。</p>
+      </div>
+      <div class="row misuse"><span class="lbl">常见误用</span>
+        <p>以为"ML 有毛病，那乘个先验取最大就好了"。</p>
+      </div>
+      <div class="row why"><span class="lbl">为什么会错</span>
+        <p>MacKay 列出三条，每一条都足以否定它作为通用方法：</p>
+        <table>
+          <tr><th>问题</th><th>说明</th></tr>
+          <tr><td><strong>尖峰未必被压住</strong></td><td>后验密度也常有无限尖峰，乘先验不等于解决</td></tr>
+          <tr><td><strong>最大值不代表性</strong></td><td>高维下概率质量集中在典型集，<em>"Maxima are atypical"</em></td></tr>
+          <tr><td><strong>依赖基</strong></td><td><span class="m">P(u) = P(θ)|∂θ/∂u|</span>；非线性换基后最大值位置通常改变</td></tr>
+        </table>
+        <p>第三条他讲得最重：<strong>"It seems undesirable to use a method whose answers change when we change representation."</strong>（用一个换表示法答案就变的方法，看起来不可取。）</p>
+      </div>
+      <div class="row detect"><span class="lbl">怎么识别</span>
+        <p>有一个灾难性的例子可以直接用（习题 22.16）。Scenario 1 的数据是 {2.2, −2.2, 2.8, −2.8}，MAP 给出 <span class="m">w ≈ {1.8, −1.8, 2.2, −2.2}</span>（合理的）。</p>
+        <p>再<strong>加入四个用 σ=100 测的"空洞"数据</strong> {100, −100, 100, −100}——这些数据几乎不含信息。结果 MAP 把原本良测的参数<strong>从 1.8/2.2 拖到 0.03/0.04</strong>。</p>
+        <p><strong>毫无信息的测量摧毁了有效推断</strong>——这就是 MAP 的症状。正解是<strong>把 nuisance 参数边缘化掉</strong>（积分掉），而不是与它们一起取最大。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-head">
+      <span class="cn">奥卡姆剃刀是一条原则 / 惩罚项</span>
+      <span class="en">Occam's razor as a principle</span>
+      <span class="risk high">高风险</span>
+    </div>
+    <div class="entry-body">
+      <div class="row correct"><span class="lbl">正确含义</span>
+        <p><span style="color:#a05a2c;font-weight:700;">✎ 作者已澄清</span>——这是全书最想纠正的误解：</p>
+        <div class="quote">"However there is a different justification for Occam's razor, namely: <strong>Coherent inference (as embodied by Bayesian probability) automatically embodies Occam's razor, quantitatively.</strong>"</div>
+        <p>也就是说：<strong>它不是一个需要额外施加的偏好，而是概率论的一个自动推论。</strong></p>
+        <p>机制不在"参数少"，而在<strong>预测的弥散程度</strong>：</p>
+        <div class="quote">"<strong>Simple models tend to make precise predictions. Complex models, by their nature, are capable of making a greater variety of predictions.</strong> So if H₂ is a more complex model, it must spread its predictive probability P(D|H₂) more thinly over the data space than H₁."</div>
+        <p>而先验只需<strong>等概率</strong>就够：<em>"Our subjective prior just needs to assign equal prior probabilities to the possibilities of simplicity and complexity. Probability theory then allows the observed data to express their opinion."</em></p>
+      </div>
+      <div class="row misuse"><span class="lbl">常见误用</span>
+        <p>① 当成一条<strong>美学或经验法则</strong>（"简单的理论更可能是对的"）；② 当成一个需要手动加的<strong>惩罚项</strong>（如正则化）；③ 以为必须先验地不喜欢复杂模型。</p>
+      </div>
+      <div class="row why"><span class="lbl">为什么会错</span>
+        <p>因为"简单更好"这个说法在日常里就是这样用的，而且它确实经常管用。但它<strong>管用的原因</strong>被误解了。</p>
+        <p>正确的量化形式是<strong>Occam 因子 = <span class="m">σ_{w|D} / σ_w</span></strong>，也就是：</p>
+        <div class="quote">"the ratio of the posterior accessible volume of H_i's parameter space to the prior accessible volume, or <strong>the factor by which H_i's hypothesis space collapses when the data arrive</strong>... <strong>The Occam factor is the inverse of that number.</strong>"</div>
+        <p>它的对数，<strong>等于我们从数据中获得的关于该模型参数的信息量</strong>。</p>
+      </div>
+      <div class="row detect"><span class="lbl">怎么识别</span>
+        <p>有一个反直觉但正确的推论（MacKay 明确写了）：<strong>惩罚强度不只取决于参数个数，还取决于先验给这些参数分配的概率质量。</strong></p>
+        <div class="quote">"The Occam factor also penalizes models that have to be finely tuned to fit the data, <strong>favouring models for which the required precision of the parameters σ_{w|D} is coarse</strong>."</div>
+        <p>所以：<strong>一个参数很多但先验范围极窄的模型，可能比一个参数很少但先验范围极宽的模型受到更轻的惩罚。</strong>——这一条直接否掉了"数参数个数"式的复杂度度量。</p>
+        <p style="margin-top:8px;">还有一个极好的直观化工具：MacKay 说"<strong>巧合让我们起疑</strong>"这件事是<em>定量的</em>。在箱子谜题里，复杂模型必须为"两箱高度完全一致"付一个 1/20 的因子，为"两箱颜色完全一致"付一个 1/16 的因子——<strong>这就是"可疑的巧合"的价格。</strong></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-head">
+      <span class="cn">模型比较 = 模型选择</span>
+      <span class="en">model comparison vs model choice</span>
+      <span class="risk high">高风险</span>
+    </div>
+    <div class="entry-body">
+      <div class="row correct"><span class="lbl">正确含义</span>
+        <p><span style="color:#a05a2c;font-weight:700;">✎ 作者已澄清</span>——</p>
+        <div class="quote">"<strong>When we discuss model comparison, this should not be construed as implying model choice. Ideal Bayesian predictions do not involve choice between models; rather, predictions are made by summing over all the alternative models, weighted by their probabilities.</strong>"</div>
+        <p>也就是：理想做法不是"挑一个模型"，而是<strong>按概率对所有模型加权求和</strong>。</p>
+      </div>
+      <div class="row misuse"><span class="lbl">常见误用</span>
+        <p>算出证据比之后，直接把低分的模型丢掉，只用最好的那个做预测。</p>
+      </div>
+      <div class="row why"><span class="lbl">为什么会错</span>
+        <p>因为丢掉模型 = 假装它的概率为零，而证据比通常并不支持这么强的结论。而且<strong>比较模型（推断）与决定行动（决策）是两件事</strong>——MacKay 特意说明：<em>"This chapter concerns inference alone and no loss functions are involved."</em></p>
+      </div>
+      <div class="row detect"><span class="lbl">怎么识别</span>
+        <p>MacKay 还指出一个流行的误解值得记住：</p>
+        <div class="quote">"There is a popular myth that states that Bayesian methods differ from orthodox statistical methods only by the inclusion of subjective priors... <strong>What is not widely appreciated is how a Bayesian performs the second level of inference</strong>."</div>
+        <p>所以如果有人把"贝叶斯方法"只理解为"多了个先验"，他漏掉了第二层——<strong>而真正有区别的恰恰是第二层。</strong></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-head">
+      <span class="cn">非正常先验可以随便用</span>
+      <span class="en">improper priors</span>
+      <span class="risk high">高风险</span>
+    </div>
+    <div class="entry-body">
+      <div class="row correct"><span class="lbl">正确含义</span>
+        <p>非正常先验（如平坦先验、<span class="m">1/σ</span> 先验）不可归一化。它们在<strong>第一层推断</strong>（在给定模型内拟合参数、做边缘化）里用得很方便，甚至常常无害。</p>
+      </div>
+      <div class="row misuse"><span class="lbl">常见误用</span>
+        <p>在做<strong>模型比较</strong>时也用它们。</p>
+      </div>
+      <div class="row why"><span class="lbl">为什么会错</span>
+        <p><span style="color:#a05a2c;font-weight:700;">✎ 作者已澄清</span>——</p>
+        <div class="quote">"<strong>If we want to do model comparison (as discussed in this chapter), it is essential to use proper priors – otherwise the evidences and the Occam factors are meaningless.</strong>"</div>
+        <p>理由：证据是<strong>对先验的积分</strong>。先验不可归一化，积分就没有意义，Occam 因子也就没有意义。</p>
+        <p>而他给的实践忠告是：<em>"always use proper priors, tempered by an encouragement to be smart when making calculations, recognizing opportunities for approximation."</em>（总是用正常先验；但同时要聪明地计算，识别可以近似的地方。）</p>
+      </div>
+      <div class="row detect"><span class="lbl">怎么识别</span>
+        <p>问：<strong>"这一步是在同一模型内推断，还是在比较模型？"</strong></p>
+        <p>如果是前者，非正常先验可能没问题；如果是后者（要算证据、算 Occam 因子），<strong>必须换成正常先验</strong>。这是一个需要严格区分两种目的的地方。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 四、定理边界图 ==================== -->
+  <div class="section-title">四、定理边界图</div>
+  <div class="section-sub">B 面。形式系统的核心风险不在误解概念，而在假设不成立的场合引用定理</div>
+
+  <div class="theorem">
+    <div class="th-head">
+      <div class="name">源编码定理</div>
+      <div class="loc">SOURCE CODING THEOREM · 第 4 章</div>
+    </div>
+    <div class="th-body">
+      <div class="stmt">
+        N 个 i.i.d. 随机变量，每个熵为 <span class="m">H(X)</span>，当 <span class="m">N → ∞</span> 时可以被压缩到 <span class="m">NH(X)</span> 比特以上而信息损失可以忽略；反之，压缩到少于 <span class="m">NH(X)</span> 比特则几乎必然丢失信息。
+      </div>
+      <div class="th-row need"><span class="k">需要的前提</span><span class="v">① 概率分布<strong>已知</strong>；② 变量<strong>独立同分布</strong>；③ 块长 N 可以<strong>任意大</strong>；④ 允许极小的失败概率 δ（有损）</span></div>
+      <div class="th-row breaks"><span class="k">前提不满足会怎样</span><span class="v">
+        <strong>分布未知</strong> → 定理给出的下界不再可达；这正是 Lempel–Ziv 存在的原因（通用但只在数据量不可行地大时才兑现）。<br>
+        <strong>不独立</strong> → 需要改用块或上下文模型来算熵；<strong>熵本身变成模型依赖的</strong>。<br>
+        <strong>块长有限</strong> → 实际文件大于熵，差距可能很大（符号码有 0–1 比特/符号的开销）。<br>
+        <strong>不允许任何损失</strong> → 落入鸽巢原理的约束，见"压缩器"那一条。
+      </span></div>
+      <div class="th-row uses"><span class="k">能用在哪</span><span class="v">回答"这个数据源最多能压到多少"——它给的是一个<strong>理论下界</strong>，用来判断一个压缩方案离最优还有多远。</span></div>
+      <div class="th-row"><span class="k" style="color:#a8324a;">不能用在哪</span><span class="v">不能用它说"我应该能得到 NH 比特"。<strong>它证明的是存在性，不是构造方法。</strong>MacKay 也强调"no more and no less"（不多也不少）——它同时排除了"比 H 更少"的幻想和"必须比 H 更多"的悲观。（第 4 章没有给出实用算法；第 5、6 章才补上。）</span></div>
+    </div>
+  </div>
+
+  <div class="theorem">
+    <div class="th-head">
+      <div class="name">符号码的源编码定理</div>
+      <div class="loc">SYMBOL CODE BOUND · 第 5 章</div>
+    </div>
+    <div class="th-body">
+      <div class="stmt">
+        存在前缀码使 <span class="m">H(X) ≤ L(C, X) &lt; H(X) + 1</span>。这 1 比特的余量是符号码的<strong>结构性代价</strong>。
+      </div>
+      <div class="th-row need"><span class="k">需要的前提</span><span class="v">每符号一个码字的限制；Kraft 不等式 <span class="m">Σ 2^(−lᵢ) ≤ 1</span> 是唯一可译的必要条件</span></div>
+      <div class="th-row breaks"><span class="k">前提不满足会怎样</span><span class="v">脱离符号码的限制后这个 <span class="m">+1</span> 就不适用了——算术编码把它降到 <strong>每条消息 ≤2 比特</strong>（不是每符号）。所以把 <span class="m">H+1</span> 当作"压缩极限"会低估能力。</span></div>
+      <div class="th-row uses"><span class="k">能用在哪</span><span class="v">评估符号码方案的最优性；也能用来解释为什么 <span class="m">H</span> 很小时符号码会失效——因为 <span class="m">+1</span> 相对于 <span class="m">H</span> 可能很大。</span></div>
+      <div class="th-row"><span class="k" style="color:#a8324a;">不能用在哪</span><span class="v">不能当作压缩的下界（下界是 <span class="m">H</span>，不是 <span class="m">H+1</span>）。这 1 比特是<em>这种码类</em>的代价，不是信息本身的代价。</span></div>
+    </div>
+  </div>
+
+  <div class="theorem">
+    <div class="th-head">
+      <div class="name">噪声信道编码定理（香农第二定理）</div>
+      <div class="loc">NOISY-CHANNEL CODING THEOREM · 第 1、10 章</div>
+    </div>
+    <div class="th-body">
+      <div class="stmt">
+        对于任何信道，<strong>超过容量的任何速率上可靠通信是不可能的</strong>；而<strong>在容量以下的任何速率上可靠通信是可能的</strong>。对二进制对称信道：<span class="m">C(f) = 1 − H₂(f)</span>，<span class="m">f = 0.1</span> 时 <span class="m">C ≈ 0.53</span>。
+      </div>
+      <div class="th-row need"><span class="k">需要的前提</span><span class="v">① 信道模型<strong>已知且正确</strong>；② <strong>块长可以不断增大</strong>（定理靠块码序列证明）；③ 允许编码与解码有计算代价，但不限制其大小</span></div>
+      <div class="th-row breaks"><span class="k">前提不满足会怎样</span><span class="v">
+        <strong>信道模型错</strong> → <span class="m">C</span> 算错，整个结论失效（这是最危险的一种，因为模型错往往看不出来）。<br>
+        <strong>块长受限于实际设备</strong> → 定理保证的码可能比你的磁盘还大。<em>MacKay 自己在第 1 章就主动加注说明了这个差距</em>：如果两个 GB 的盘不够，香农会说"那些小盘做不到，但如果你有两个噪声 TB 盘，你就能造一个高质量 TB 盘"。<br>
+        <strong>延迟受限</strong>（如实时通话）→ 无法用超长块，实际速率会明显低于 <span class="m">C</span>。
+      </span></div>
+      <div class="th-row uses"><span class="k">能用在哪</span><span class="v">判断一个通信方案是否还有改进空间；设定工程目标的上限（"再优化也不可能超过 0.53"）。Part VI 的 LDPC/Turbo/喷泉码就是来逼近它的。</span></div>
+      <div class="th-row"><span class="k" style="color:#a8324a;">不能用在哪</span><span class="v">不能拿它<strong>承诺工程性能</strong>。它是渐近结果——它说"存在这样的码"，不说"这个码多长、多难解码"。<em>这正是 MacKay 反复强调的诚实之处，也是编码理论这门学科存在的理由。</em></span></div>
+    </div>
+  </div>
+
+  <div class="theorem">
+    <div class="th-head">
+      <div class="name">Kraft 不等式</div>
+      <div class="loc">KRAFT–McMILLAN INEQUALITY · 第 5 章</div>
+    </div>
+    <div class="th-body">
+      <div class="stmt">
+        对任何唯一可译码：<span class="m">Σᵢ 2^(−lᵢ) ≤ 1</span>。反之，任何满足它的码长集合都存在对应的前缀码。
+      </div>
+      <div class="th-row need"><span class="k">需要的前提</span><span class="v">二元字母表（对 q 元字母表，右边换成 1，指数换成 <span class="m">q^(−lᵢ)</span>）；码必须唯一可译</span></div>
+      <div class="th-row breaks"><span class="k">前提不满足会怎样</span><span class="v">若不满足不等式，码<strong>必然不唯一可译</strong>——总有两个不同的串编成同一个比特串。这不是"通常如此"，是必然。</span></div>
+      <div class="th-row uses"><span class="k">能用在哪</span><span class="v">它是符号码一切下界的基础；也是判断"给定一组码长能否实现"的<strong>充要条件</strong>。</span></div>
+      <div class="th-row"><span class="k" style="color:#a8324a;">不能用在哪</span><span class="v">它是<strong>必要条件，不是充分条件</strong>——它是"存在前缀码"的判据，不是"这个具体的码是前缀码"的判据。<br>
+        MacKay 还澄清了命名：<em>"这不等式更准确的名称应是 Kraft–McMillan 不等式：Kraft 证明了若不等式成立则存在具有给定长度的前缀码；McMillan（1956）证明其逆，即唯一可译性蕴含该不等式成立。"</em></span></div>
+    </div>
+  </div>
+
+  <div class="theorem">
+    <div class="th-head">
+      <div class="name">Gibbs 不等式</div>
+      <div class="loc">GIBBS' INEQUALITY · 第 2 章</div>
+    </div>
+    <div class="th-body">
+      <div class="stmt">
+        <span class="m">D_KL(P‖Q) ≥ 0</span>，等号当且仅当 <span class="m">P = Q</span>。
+      </div>
+      <div class="th-row need"><span class="k">需要的前提</span><span class="v">P 与 Q 定义在<strong>同一个字母表</strong>上；两者都是概率分布</span></div>
+      <div class="th-row breaks"><span class="k">前提不满足会怎样</span><span class="v">若 Q(x) = 0 而 P(x) &gt; 0，则 <span class="m">D_KL</span> 发散（<span class="m">+∞</span>）——含义是"用不允许这个结果的编码去编它，代价无限"。</span></div>
+      <div class="th-row uses"><span class="k">能用在哪</span><span class="v"><strong>几乎所有下界证明</strong>。MacKay 说它"probably the most important inequality in this book"（大概是本书最重要的不等式），而它的证明工具是 Jensen 不等式（对凸函数 <span class="m">f</span>，<span class="m">E[f(x)] ≥ f(E[x])</span>）。</span></div>
+      <div class="th-row"><span class="k" style="color:#a8324a;">不能用在哪</span><span class="v">不能用来比较"两个模型谁更对"——它只度量编码代价，不度量真伪。<strong>一个错的分布可以有很小的 KL 散度。</strong></span></div>
+    </div>
+  </div>
+
+  <div class="theorem">
+    <div class="th-head">
+      <div class="name">拉普拉斯方法</div>
+      <div class="loc">LAPLACE'S METHOD · 第 27 章</div>
+    </div>
+    <div class="th-body">
+      <div class="stmt">
+        <span class="m">Z_P ≃ P*(x₀) · (2π)^(K/2) / √det A</span>，其中 A 是 <span class="m">−∇∇ ln P*(x)</span> 在峰处的值。
+      </div>
+      <div class="th-row need"><span class="k">需要的前提</span><span class="v">① 被积函数在 <span class="m">x₀</span> 有<strong>一个明确的峰</strong>；② 该峰可以被二阶（高斯）近似良好描述</span></div>
+      <div class="th-row breaks"><span class="k">前提不满足会怎样</span><span class="v"><strong>多个峰</strong> → 单峰近似会漏掉其他峰的质量（习题 22.16 那种双峰后验是典型危险）。<br>
+        <strong>强偏斜峰</strong> → 高斯近似不佳；高维下真后验常是偏斜的（习题 22.14：1000 维中 90% 质量在半径 31.6、厚 2.8 的壳层上）。</span></div>
+      <div class="th-row uses"><span class="k">能用在哪</span><span class="v">把难算的积分变成"峰值 × 宽度"；也是计算 <strong>Occam 因子</strong>的工具（只需 Hessian，而算误差棒本来就要它）。</span></div>
+      <div class="th-row"><span class="k" style="color:#a8324a;">不能用在哪</span><span class="v"><strong>它依赖基</strong>（<span class="m">basis-dependent</span>）。非线性换基后 <span class="m">Z_Q</span> 一般会变，而真实的 <span class="m">Z_P</span> 是基无关的。<br>
+        MacKay 对这个缺陷给了很漂亮的两面读法：<em>"This can be seen as a defect – since the true Z_P is basis-independent – or as an opportunity, since we can search for a basis in which the Laplace approximation is most accurate."</em>（可以看作缺陷，也可以看作机会——因为我们可以去找一个让近似最准的基。）</span></div>
+    </div>
+  </div>
+
+  <div class="theorem">
+    <div class="th-head">
+      <div class="name">和-积 / 信念传播</div>
+      <div class="loc">SUM–PRODUCT / BELIEF PROPAGATION · 第 26 章</div>
+    </div>
+    <div class="th-body">
+      <div class="stmt">
+        在因子图上迭代两条消息规则：变量→因子 <span class="m">q_{n→m}(x_n) = Π r_{m'→n}(x_n)</span>；因子→变量 <span class="m">r_{m→n}(x_n) = Σ [ f_m(x_m) Π q_{n'→m}(x_{n'}) ]</span>。边际由汇入消息相乘读出。
+      </div>
+      <div class="th-row need"><span class="k">需要的前提</span><span class="v"><strong>图必须是一棵树（无环）</strong>——只有在树上才保证给出正确的边际</span></div>
+      <div class="th-row breaks"><span class="k">前提不满足会怎样</span><span class="v">在<strong>有环图</strong>上：<em>"不一定收敛，且肯定一般不会算出正确的边际函数"</em>。</span></div>
+      <div class="th-row uses"><span class="k">能用在哪</span><span class="v">树状结构上的精确边缘化；有环图上作为近似（<strong>loopy message passing</strong>）——MacKay 说它"仍然是一个具有巨大实际重要性的算法，特别是在稀疏图码的解码中"。<br>
+        他还给了这段幽默但准确的建议：<em>"处理不能用和-积算法的因子图，最有趣的办法就是……照样用和-积算法！就当它是棵树，迭代，然后<strong>交叉手指</strong>。"</em></span></div>
+      <div class="th-row"><span class="k" style="color:#a8324a;">不能用在哪</span><span class="v">不能引用它作为"我的近似是对的"的保证。有环图的<strong>精确</strong>解法是联结树算法，代价随被聚合的变量数指数增长。</span></div>
+    </div>
+  </div>
+
+  <div class="theorem">
+    <div class="th-head">
+      <div class="name">用边际解码 = 用最大后验码字解码</div>
+      <div class="loc">BITWISE vs BLOCK DECODING · 第 25 章</div>
+    </div>
+    <div class="th-body">
+      <div class="stmt">
+        这两个是<strong>不同的问题，答案不同</strong>：逐位解码给出每个比特的后验边际；码字解码给出最可能的整条码字。
+      </div>
+      <div class="th-row need"><span class="k">需要的前提</span><span class="v">必须先明确你要最小化什么损失。逐位解码最小化比特错误率；码字解码最小化块错误率</span></div>
+      <div class="th-row breaks"><span class="k">前提不满足会怎样</span><span class="v"><strong>逐位解码的结果可能根本不是合法码字。</strong>习题 25.4 的例子：似然为 (0.2,0.2,0.9,0.2,0.2,0.2,0.2)，最可能码字是 0000000，而逐位解码给出 <strong>0010000——它不是一个码字</strong>。</span></div>
+      <div class="th-row uses"><span class="k">能用在哪</span><span class="v">两者都有正当用途，取决于你的目标函数。</span></div>
+      <div class="th-row"><span class="k" style="color:#a8324a;">不能用在哪</span><span class="v">不能互换，也不能说"逐位解码更好"。另外记住一个复杂度事实：<strong>MAP 码字解码对一般线性码是 NP-complete 的</strong>——MacKay 的评论很精辟：<em>"限制到 MAP 问题上未必让任务变简单，只是让答案更简短好报。"</em></span></div>
+    </div>
+  </div>
+
+  <!-- ==================== 五、自测 ==================== -->
+  <div class="section-title">五、自测：你能识别这些错误吗</div>
+  <div class="section-sub">下面每条都是书里真实出现过的判断分歧或作者亲自纠正的误读</div>
+
+  <div class="checklist">
+    <h3>✅ 逐条自测（38 项）</h3>
+
+    <div class="cat">概念层面（12 项）</div>
+    <ul>
+      <li>能说明"熵"为什么不是"混乱程度"</li>
+      <li>能说出熵相对于什么而定义（模型/分布）</li>
+      <li>能说出 Shannon 信息量的三个同义名</li>
+      <li>能解释为什么"一次二元结果可以传 6 比特"</li>
+      <li>能区分 "bit" 的两个含义</li>
+      <li>能说出"完美压缩器的输出是完全随机的比特"是什么意思</li>
+      <li>能说出渐近等分"只在弱意义上成立"的含义</li>
+      <li>能说出典型集与最小 δ-充分子集的区别</li>
+      <li>能区分 H₀、H_δ、H₂、H 四个记号</li>
+      <li>能说明引入典型集的理由（"we can count it"）</li>
+      <li>能说明 KL 散度为什么不是距离</li>
+      <li>能说清"KL 散度 = 用错分布编码多付的比特数"</li>
+    </ul>
+
+    <div class="cat">"最优"与压缩（8 项）</div>
+    <ul>
+      <li>能说出 Huffman 最优的三个限定条件</li>
+      <li>能举出 Huffman 失效的具体例子（9 比特 vs 0.13 比特）</li>
+      <li>能说明算术编码的开销上限（每条消息 ≤2 比特）</li>
+      <li>能用鸽巢原理证明"不可能压缩所有文件"</li>
+      <li>能说出无损压缩的必然代价（缩短一些必拉长另一些）</li>
+      <li>能说明"每个完备码对应一个它自己最优的先验"</li>
+      <li>能说出整数编码的比较为什么有陷阱</li>
+      <li>能说明"哪个码更好"这个问法缺什么限定</li>
+    </ul>
+
+    <div class="cat">推断的陷阱（10 项）</div>
+    <ul>
+      <li>能解释 ML 的 "KABOOM" 问题</li>
+      <li>能说明 "Maxima are atypical" 的含义</li>
+      <li>能说出 MAP 的三宗罪</li>
+      <li>能说明 MAP 的基依赖性为什么不可取</li>
+      <li>能复述那个"空洞数据毁掉有效推断"的例子（1.8 → 0.03）</li>
+      <li>能说出正确替代 MAP 的做法（边缘化 nuisance 参数）</li>
+      <li>能说明奥卡姆剃刀"自动"的含义</li>
+      <li>能写出 Occam 因子并解释它的几何意义（体积比）</li>
+      <li>能说明为什么"数参数个数"不是好的复杂度度量</li>
+      <li>能解释"巧合让我们起疑"为什么是定量的</li>
+    </ul>
+
+    <div class="cat">定理边界（8 项）</div>
+    <ul>
+      <li>能说出源编码定理需要的四个前提</li>
+      <li>能说明"存在性 ≠ 构造方法"</li>
+      <li>能说出信道容量定理的两个方向（不可能 + 可能）</li>
+      <li>能说明容量是渐近结果、不承诺工程性能</li>
+      <li>能说出 Kraft 不等式是必要条件而非充分条件</li>
+      <li>能说出和-积算法在什么图上才保证正确</li>
+      <li>能解释"交叉手指"这个建议背后的诚实态度</li>
+      <li>能说明逐位解码与码字解码为什么不能互换</li>
+    </ul>
+  </div>
+
+  <div class="preface" style="margin-top:24px;border-left-color:var(--limit);">
+    <h3 style="color:var(--limit);">🎯 最后：这一册的核心是一句话</h3>
+    <p style="font-size:16px;color:#18202b;font-weight:600;margin:14px 0;padding-left:16px;border-left:3px solid var(--limit);line-height:1.75;">
+      在这本书里，"什么条件下成立"永远比"结论是什么"更重要。
+    </p>
+    <p>原因很简单：一个形式系统的结论可以精确到小数点后两位（容量 0.53），但那份精确<strong>完全寄生在前提上</strong>。前提是社会性的假设（信道模型、先验、i.i.d.），结论是数学性的必然。</p>
+    <p>所以这本书教给你的最有用的技能，不是算熵，而是<strong>在听到一个"定理说"的时候，立刻去问它的前提</strong>。</p>
+    <p style="margin-top:12px;color:#828c9a;font-size:13.5px;">顺带说：MacKay 本人就是这种态度的样板。他在第 1 章抛出那个震撼的"两个盘就够"之后，<em>立刻自己加注说明渐近性的限制</em>；他承认组蛋白式的比较"有点儿诈欺"；他明说"以我之见中性论者是对的"但紧跟着写出限定。这是一本教科书能表现出的最高诚实度。</p>
+  </div>
+
+  <div class="footer">
+    MacKay 信息论 · 概念误用与失效边界手册<br>
+    14 个概念 · 8 个定理的边界图 · 38 项自测<br>
+    <em>"you cannot do inference without making assumptions."</em>
+  </div>
+
+</div>
+</body>
+</html>

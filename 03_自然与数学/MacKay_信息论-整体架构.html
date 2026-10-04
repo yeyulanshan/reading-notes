@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MacKay《信息论、推理与学习算法》整体架构 —— 一个前提、两个极限</title>
+<style>
+  :root{
+    --paper:#f2f4f7; --card:#ffffff; --edge:#d2d8e0;
+    --ink:#18202b; --ink-mid:#4a5563; --ink-soft:#828c9a;
+    --it:#2b5c8a; --it-soft:#e3edf6;        /* 信息论 */
+    --bayes:#7a4a86; --bayes-soft:#f0e7f2;  /* 贝叶斯 / 推断 */
+    --limit:#a05a2c; --limit-soft:#f8ebe0;  /* 极限与边界 */
+    --code:#2d6b55; --code-soft:#e2f0ea;    /* 编码与压缩 */
+    --warn:#a8324a; --warn-soft:#fbe6ea;    /* 误用 */
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--paper);color:var(--ink);padding:36px 20px 48px;line-height:1.84;
+    -webkit-font-smoothing:antialiased;
+  }
+  .container{max-width:970px;margin:0 auto;}
+
+  .header{
+    text-align:center;margin-bottom:30px;padding:48px 24px 42px;
+    background:var(--card);border:1px solid var(--edge);border-top:5px solid var(--it);
+    border-radius:3px;
+  }
+  .header .kicker{font-size:12px;letter-spacing:2.5px;color:var(--ink-soft);margin-bottom:14px;}
+  .header h1{font-size:27px;color:var(--ink);margin-bottom:14px;letter-spacing:.5px;line-height:1.5;}
+  .header .subtitle{font-size:14.5px;color:var(--ink-mid);}
+  .header .author{margin-top:16px;font-size:12.5px;color:var(--ink-soft);letter-spacing:.5px;}
+
+  .guide{
+    background:var(--it-soft);border:1px solid #c8d8e6;border-left:4px solid var(--it);
+    border-radius:3px;padding:20px 24px;margin-bottom:30px;font-size:14.5px;color:var(--ink-mid);
+  }
+  .guide .g-title{color:var(--it);font-weight:700;margin-bottom:10px;font-size:13.5px;letter-spacing:.6px;}
+  .guide ol{margin-left:20px;}
+  .guide li{margin-bottom:6px;}
+  .guide strong{color:var(--ink);}
+
+  .section-title{
+    font-size:20px;font-weight:700;color:var(--ink);margin:46px 0 8px;
+    padding-left:13px;border-left:4px solid var(--it);letter-spacing:.3px;
+  }
+  .section-sub{color:var(--ink-soft);font-size:13.5px;margin:0 0 18px 17px;}
+
+  .card{background:var(--card);border:1px solid var(--edge);border-radius:3px;padding:22px 26px;margin-bottom:16px;}
+  .card h3{color:var(--it);margin-bottom:10px;font-size:16.5px;}
+  .card p{color:var(--ink-mid);font-size:14.5px;}
+  .card p+p{margin-top:9px;}
+  .card strong{color:var(--ink);}
+  .card em{color:var(--warn);font-style:normal;font-weight:600;}
+
+  /* 核心命题 */
+  .credo{
+    background:var(--card);border:1px solid var(--edge);border-left:5px solid var(--bayes);
+    border-radius:3px;padding:28px 30px;margin-bottom:18px;
+  }
+  .credo h3{font-size:18px;color:var(--bayes);margin-bottom:12px;}
+  .credo p{color:var(--ink-mid);font-size:15px;}
+  .credo .big{
+    font-size:19px;color:var(--ink);font-weight:700;line-height:1.7;
+    margin:14px 0;padding-left:16px;border-left:3px solid var(--limit);
+  }
+
+  /* 公式块 */
+  .formula{
+    background:var(--code-soft);border:1px solid #c8e0d5;border-radius:3px;
+    padding:16px 20px;margin:14px 0;text-align:center;
+    font-family:"Cambria Math",Cambria,Georgia,serif;font-size:17px;color:#1d4a39;
+  }
+  .formula .note{display:block;font-family:inherit;font-size:13px;color:var(--ink-soft);margin-top:8px;font-style:italic;}
+
+  /* 行内公式 */
+  .m{font-family:"Cambria Math",Cambria,Georgia,serif;font-size:15.5px;color:#1d4a39;background:var(--code-soft);padding:1px 6px;border-radius:3px;white-space:nowrap;}
+
+  /* 两面结构 */
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px;}
+  @media(max-width:680px){.two{grid-template-columns:1fr;}}
+  .side{background:var(--card);border:1px solid var(--edge);border-radius:3px;padding:22px 24px;border-top:4px solid;}
+  .side.compress{border-top-color:var(--code);}
+  .side.comm{border-top-color:var(--it);}
+  .side .tag{font-size:11.5px;letter-spacing:1px;font-weight:700;margin-bottom:8px;}
+  .side.compress .tag{color:var(--code);}
+  .side.comm .tag{color:var(--it);}
+  .side h4{font-size:16px;color:var(--ink);margin-bottom:10px;}
+  .side p{color:var(--ink-mid);font-size:14px;}
+  .side p+p{margin-top:8px;}
+  .side .lim{margin-top:12px;padding-top:12px;border-top:1px dashed var(--edge);font-size:13px;color:var(--ink-soft);}
+
+  table{width:100%;border-collapse:collapse;margin:13px 0;font-size:13.5px;}
+  th,td{padding:10px 12px;border:1px solid var(--edge);text-align:left;vertical-align:top;}
+  th{background:var(--it-soft);color:var(--it);font-weight:700;font-size:13px;}
+  td{color:var(--ink-mid);}
+  td strong{color:var(--ink);}
+  td.num{font-family:Consolas,Monaco,monospace;color:var(--ink);white-space:nowrap;}
+
+  .quote{background:var(--limit-soft);border:1px solid #ecd9c8;border-left:4px solid var(--limit);border-radius:3px;padding:20px 24px;margin:22px 0;}
+  .quote p{font-size:15px;color:#7a4320;font-style:italic;line-height:1.8;}
+  .quote .src{margin-top:10px;font-size:12.5px;color:var(--ink-soft);text-align:right;font-style:normal;}
+
+  /* 论证链 */
+  .link{background:var(--card);border:1px solid var(--edge);border-left:4px solid var(--bayes);border-radius:3px;padding:17px 22px;margin-bottom:9px;}
+  .link .step{font-size:11.5px;color:var(--bayes);letter-spacing:1px;font-weight:700;margin-bottom:5px;}
+  .link h4{font-size:16px;color:var(--ink);margin-bottom:6px;}
+  .link p{color:var(--ink-mid);font-size:14px;}
+  .arrow{text-align:center;color:var(--edge);font-size:17px;margin:-3px 0 3px;}
+
+  /* 误用块 */
+  .warn{background:var(--warn-soft);border-left:4px solid var(--warn);border-radius:0 3px 3px 0;padding:16px 20px;margin-bottom:12px;font-size:14px;color:#7d2338;}
+  .warn .lbl{color:var(--warn);font-weight:700;display:block;margin-bottom:6px;font-size:12.5px;letter-spacing:.5px;}
+  .warn strong{color:#6a1d2f;}
+
+  /* 表格化的部分 */
+  .part-table td:first-child{white-space:nowrap;font-weight:700;color:var(--it);}
+  .part-table tr.part-row td{background:var(--bayes-soft);color:var(--bayes);font-weight:700;font-size:13px;letter-spacing:.5px;}
+
+  /* 阅读路线 */
+  .route-item{display:flex;gap:14px;align-items:flex-start;background:var(--card);border:1px solid var(--edge);border-left:4px solid;border-radius:3px;padding:15px 20px;margin-bottom:10px;}
+  .route-item.must{border-left-color:var(--code);}
+  .route-item.skim{border-left-color:var(--limit);}
+  .route-item.skip{border-left-color:#c4cbd4;}
+  .route-badge{flex-shrink:0;font-size:11.5px;padding:3px 10px;border-radius:2px;font-weight:700;margin-top:3px;white-space:nowrap;}
+  .must .route-badge{background:var(--code-soft);color:var(--code);}
+  .skim .route-badge{background:var(--limit-soft);color:var(--limit);}
+  .skip .route-badge{background:#eceff3;color:var(--ink-soft);}
+  .route-body strong{color:var(--ink);display:block;margin-bottom:3px;font-size:14.5px;}
+  .route-body span{color:var(--ink-mid);font-size:13px;}
+
+  .footer{text-align:center;margin-top:44px;padding:22px;color:var(--ink-soft);font-size:12.5px;line-height:1.9;}
+
+  @media(max-width:640px){
+    .header h1{font-size:20px;}
+    .section-title{font-size:17.5px;}
+    body{padding:20px 14px 32px;}
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="kicker">INFORMATION THEORY, INFERENCE, AND LEARNING ALGORITHMS</div>
+    <h1>一个前提，两个极限</h1>
+    <div class="subtitle">MacKay 整体架构 · 熵定压缩的下界，容量定通信的上界</div>
+    <div class="author">David J.C. MacKay · 剑桥大学出版社 2003 · 第四刷 · 640 页</div>
+  </div>
+
+  <div class="guide">
+    <div class="g-title">📖 怎么用这张图</div>
+    <ol>
+      <li><strong>先看"两个极限"</strong>——全书 50 章只做两件事：把数据压到不能再压，把信息在噪声中传到底。</li>
+      <li><strong>再记住那一个前提</strong>——这是 MacKay 反复强调的立场，也是他和"客观统计学"最大的分歧点。</li>
+      <li><strong>然后看三个核心量</strong>：信息量 → 熵 → KL 散度。它们一层套一层。</li>
+      <li><strong>重点看第 3 章那两个例子</strong>（弯硬币与血型）——它们是全书最实用的推理工具。</li>
+      <li><strong>最后看"这本书不承诺什么"</strong>——熵不度量意义，容量不保证短块长。</li>
+    </ol>
+  </div>
+
+  <!-- ================= 核心命题 ================= -->
+  <div class="section-title">全书的心跳：两个极限</div>
+  <div class="section-sub">这本书的 50 章，只服务于两个对偶的问题</div>
+
+  <div class="two">
+    <div class="side compress">
+      <div class="tag">第一部分 · 数据压缩</div>
+      <h4>把冗余挤出去</h4>
+      <p>给定一个数据源，最短能用多少比特表示它？</p>
+      <p>答案由<strong>熵</strong>给出。熵是压缩的<strong>下界</strong>——没有任何编码能比熵更短。</p>
+      <div class="lim">极限：熵 H(X)。Part I 的任务就是达到它。</div>
+    </div>
+    <div class="side comm">
+      <div class="tag">第二部分 · 噪声信道</div>
+      <h4>把冗余加回去</h4>
+      <p>给定一个会出错的信道，多快能可靠地传送信息？</p>
+      <p>答案由<strong>容量</strong>给出。容量是可靠通信的<strong>上界</strong>——超过它，错误率必然无法趋零。</p>
+      <div class="lim">极限：容量 C。Part II–III 的任务就是逼近它。</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>为什么这两件事是一体两面</h3>
+    <p>压缩是<strong>去掉</strong>冗余，通信是<strong>加入</strong>冗余。看起来相反，但它们是同一个量的两面：</p>
+    <p>• 压缩的下界是<strong>熵</strong> <span class="m">H(X)</span><br>
+       • 通信的上界是<strong>容量</strong> <span class="m">C</span>，而 <span class="m">C</span> 的定义本身就是一个熵（或互信息）的最大值</p>
+    <p>所以这本书其实是"一个量 + 它的两种用法"。</p>
+  </div>
+
+  <!-- ================= 一个前提 ================= -->
+  <div class="section-title">那一个前提</div>
+  <div class="section-sub">MacKay 在书里至少说了三遍，而且用了不同措辞</div>
+
+  <div class="credo">
+    <h3>你不能不做假设</h3>
+    <div class="big">"you can't do inference – or data compression – without making assumptions."</div>
+    <p>这句话在书里以三种形式出现，每次针对的靶子不同：</p>
+    <table>
+      <tr><th>场合</th><th>原话</th></tr>
+      <tr><td>推断（第 3 章）</td><td>"you cannot do inference without making assumptions."</td></tr>
+      <tr><td>压缩（第 3 章）</td><td>"you can't do inference – or data compression – without making assumptions."</td></tr>
+      <tr><td>一般性（第 3 章）</td><td>"How can one perform inference without making assumptions?"</td></tr>
+    </table>
+    <p>这句话为什么重要，因为它是<strong>贝叶斯立场</strong>的全部要害：既然假设不可避免，那么<em>把假设写出来</em>就比假装没有假设更诚实。</p>
+    <p>MacKay 给出的两条理由值得原样记住：</p>
+    <div class="link" style="margin-top:14px;">
+      <div class="step">理由一</div>
+      <h4>假设一旦明说，推断就是客观且唯一的</h4>
+      <p>"once assumptions are made, the inferences are objective and unique, reproducible with complete agreement by anyone who has the same information and makes the same assumptions."</p>
+    </div>
+    <div class="link">
+      <div class="step">理由二</div>
+      <h4>假设一旦明说，就更容易被批评和修改</h4>
+      <p>"when the assumptions are explicit, they are easier to criticize, and easier to modify – indeed, we can quantify the sensitivity of our inferences to the details of the assumptions."</p>
+    </div>
+    <p style="margin-top:12px;">他甚至对"先验从哪来"这个经典质疑只回了一句：<strong>"I don't see how it could be otherwise."</strong>（我看不出还能怎么样。）</p>
+  </div>
+
+  <div class="card">
+    <h3>⚠️ 这个前提常被误读成两种极端</h3>
+    <p><strong>误读一</strong>：以为"有主观假设"就等于"结论不可靠、各说各话"。<br>
+       MacKay 的说法正好相反：<em>假设相同 + 数据相同 ⇒ 结论完全相同。</em>主观的是假设，不是推理过程。</p>
+    <p><strong>误读二</strong>：以为"必须做假设"是在为一个随便挑先验的做法开脱。<br>
+       他明确说"我不会声称均匀先验有任何根本性"（<em>"I will not claim that the uniform prior is in any way fundamental"</em>），并且后面会专门给出非均匀先验的例子。</p>
+  </div>
+
+  <!-- ================= 三个核心量 ================= -->
+  <div class="section-title">三个核心量，层层递进</div>
+  <div class="section-sub">这本书的真正骨架。理解了这三层，后面的编码与推断都是推论</div>
+
+  <div class="link">
+    <div class="step">第一层 · 一个事件携带多少信息</div>
+    <h4>Shannon 信息量：<span class="m">h(x) = log₂ (1 / P(x))</span></h4>
+    <p>单位是<strong>比特</strong>。概率越小，信息量越大——因为越意外的消息越有价值。</p>
+    <p>MacKay 用英语字母分布给了具体数字（figure 2.1 / table 2.9）：</p>
+    <table>
+      <tr><th>字母</th><th>概率</th><th>信息量</th></tr>
+      <tr><td><span style="font-family:Consolas,monospace">z</span></td><td class="num">0.0007</td><td class="num">10.4 bits</td></tr>
+      <tr><td><span style="font-family:Consolas,monospace">e</span></td><td class="num">0.0913</td><td class="num">3.5 bits</td></tr>
+      <tr><td><span style="font-family:Consolas,monospace">–</span>（空格）</td><td class="num">0.1928</td><td class="num">2.4 bits</td></tr>
+    </table>
+    <p><strong>注意空格是最高频字符</strong>（0.1928），所以它信息量最低。</p>
+  </div>
+  <div class="arrow">↓ 取平均</div>
+
+  <div class="link">
+    <div class="step">第二层 · 一个信源平均有多少不确定性</div>
+    <h4>熵：<span class="m">H(X) = Σₓ P(x) · log₂ (1 / P(x))</span></h4>
+    <p>它是信息量的<strong>平均值</strong>。MacKay 给它的另一个名字是<strong>"X 的不确定性"</strong>（<em>the uncertainty of X</em>）。</p>
+    <div class="formula">
+      H(X) ≥ 0，等号成立当且仅当某个 pᵢ = 1<br>
+      H(X) ≤ log|A<sub>X</sub>|，等号成立当且仅当所有 pᵢ 相等（均匀分布）
+      <span class="note">不确定性最大 = 均匀分布；不确定性最小 = 结果已定</span>
+    </div>
+    <p><strong>具体数字</strong>：英语文献中随机取一个字母，熵约为 <strong>4.11 bits</strong>——这就是"每字母至少要 4.11 比特才能无损编码"的下界。</p>
+    <p>还有一个很实用的递归性质（<strong>熵的可分解性</strong>）：把结果分阶段揭示，各阶段的熵按概率加权相加就得到总熵。例如 <span class="m">H(1/2, 1/4, 1/4) = 1.5</span> 也可以写成 <span class="m">H(1/2, 1/2) + ½·H(1/2, 1/2) = 1 + 0.5 = 1.5</span>。</p>
+  </div>
+  <div class="arrow">↓ 比较两个分布</div>
+
+  <div class="link">
+    <div class="step">第三层 · 用错分布要多付多少代价</div>
+    <h4>相对熵 / KL 散度：<span class="m">D_KL(P‖Q) = Σₓ P(x) · log ( P(x) / Q(x) )</span></h4>
+    <p>它是"<strong>用为 Q 优化的编码去编 P 的数据，平均要多付多少比特</strong>"。</p>
+    <div class="formula">
+      D<sub>KL</sub>(P‖Q) ≥ 0，等号成立当且仅当 P = Q
+      <span class="note">这就是 Gibbs 不等式</span>
+    </div>
+    <p>MacKay 对它的评价极高：<strong>"Gibbs' inequality is probably the most important inequality in this book."</strong>（这大概是本书中最重要的不等式。）</p>
+    <p>他还特意提醒一件常被忽略的事：<strong>KL 散度不对称</strong>——一般 <span class="m">D_KL(P‖Q) ≠ D_KL(Q‖P)</span>，所以虽然有人叫它"KL 距离"，它<em>严格来说不是距离</em>。</p>
+    <p>证明它的工具是 <strong>Jensen 不等式</strong>：对凸函数 <span class="m">f</span>，<span class="m">E[f(x)] ≥ f(E[x])</span>。MacKay 给了一个很好记的读法——凸函数念"convex-smile"（⌣），凹函数念"concave-frown"（⌢）：<em>"虽然你可能忘记 convex 和 concave 朝哪边，但把微笑和皱眉搞混要难得多。"</em></p>
+  </div>
+
+  <!-- ================= 香农的登场 ================= -->
+  <div class="section-title">全书最反直觉的一个结果</div>
+  <div class="section-sub">第 1 章就用它抓住了读者，第 10 章才给出证明</div>
+
+  <div class="card">
+    <h3>香农之前，所有人的直觉都是"没有付出就没有收获"</h3>
+    <p>MacKay 把当时的共识描述成一个曲线形状的信念：可达到与不可达到的分界<strong>是一条穿过原点的曲线</strong>。</p>
+    <p>也就是说：<em>要让错误率趋近于零，速率就必须相应地趋近于零。</em>——"No pain, no gain."</p>
+  </div>
+
+  <div class="credo">
+    <h3>香农证明了：这个分界线在 R 轴上交于一个非零点</h3>
+    <div class="big">对于任何信道，都存在编码，能在<strong>非零速率</strong>下达到<strong>任意小</strong>的错误概率。</div>
+    <p>这个非零交点就是<strong>信道容量 C</strong>。对二进制对称信道（噪声水平 f）：</p>
+    <div class="formula">
+      C(f) = 1 − H₂(f)
+      <span class="note">H₂ 是二进制熵函数。当 f = 0.1 时，C ≈ 0.53</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>他讲这件事的方式极好：用磁盘做比喻</h3>
+    <p>MacKay 让读者先自己算一遍，再让香农出场。设信道噪声 f = 0.1：</p>
+    <table>
+      <tr><th>方法</th><th>达到的错误率</th><th>需要几个噪声盘</th></tr>
+      <tr><td>重复码 R3</td><td class="num">p<sub>b</sub> = 0.03</td><td>3 个</td></tr>
+      <tr><td>重复码 R60</td><td class="num">p<sub>b</sub> ≈ 10⁻¹⁵</td><td><strong>60 个</strong></td></tr>
+      <tr><td><strong>香农极限</strong></td><td class="num">任意小，10⁻¹⁸、10⁻²⁴ 都行</td><td><strong>2 个</strong>（因为 1/2 &lt; 0.53）</td></tr>
+    </table>
+    <p>然后 MacKay 写了一段香农"路过"的对话：</p>
+    <div class="quote">
+      <p>"What performance are you trying to achieve? 10⁻¹⁵? You don't need sixty disk drives – you can get that performance with just two disk drives (since 1/2 is less than 0.53). And if you want p<sub>b</sub> = 10⁻¹⁸ or 10⁻²⁴ or anything, you can get there with two disk drives too!"</p>
+      <div class="src">—— 第 1 章</div>
+    </div>
+    <p><strong>然后他立刻自己踩了刹车</strong>，这一点特别值得学。他加了一个方括号说明：严格说来上面的话可能不完全对——香农是靠<strong>块长不断增大的块码序列</strong>证明这个定理的，而所需的块长可能比一个 GB 还大。那时香农大概会说："好吧，那些小盘做不到，但如果你有两个噪声 TB 盘，你就能造一个高质量 TB 盘。"</p>
+    <p style="color:#828c9a;font-size:13.5px;">这个自我限定是全书诚实性的样板：<em>定理是渐近的，工程是有限的。</em>两者之间的差距正是编码理论存在的理由（Part VI 的 LDPC、Turbo、喷泉码就是来填这个差距的）。</p>
+  </div>
+
+  <div class="card">
+    <h3>定理的两面（MacKay 的原话）</h3>
+    <div class="quote">
+      <p>"The noisy-channel coding theorem ... asserts both that reliable communication at any rate beyond the capacity is impossible, and that reliable communication at all rates up to capacity is possible."</p>
+      <div class="src">—— 第 1 章小结</div>
+    </div>
+    <p>所以它是一个<strong>双向</strong>结果：既是悲观的上界（超过 C 不可能），也是乐观的下界（达到 C 可能）。理解这一点很重要——很多人只记住了"不可能"那一半。</p>
+  </div>
+
+  <!-- ================= 第3章两个例子 ================= -->
+  <div class="section-title">两个最实用的例子（第 3 章）</div>
+  <div class="section-sub">如果这本书你只读一章，读第 3 章；如果只记两个例子，记这两个</div>
+
+  <div class="card">
+    <h3>例子一：把函数"反过来看"（Steve Gull 的一课）</h3>
+    <p>MacKay 讲了他做本科生时的一件事。他对着一个 Tripos 考题发愁：不稳定粒子以特征长度 λ 做指数衰减，但只能在 x = 1cm 到 20cm 的窗口里观测到 N 个衰变位置，问 λ 是多少？</p>
+    <p>他试了"构造估计量"、试了"拟合直方图"，都卡住了——<strong>没有任何一个估计量在所有情形下都管用</strong>。</p>
+    <p>他的导师 <strong>Steve Gull</strong> 拿过纸，写下三行：</p>
+    <ol style="margin:10px 0 10px 22px;color:#4a5563;font-size:14.5px;">
+      <li>写出给定 λ 时一个数据点的概率 <span class="m">P(x | λ)</span>——这很平常</li>
+      <li>写出 Bayes 定理</li>
+      <li>然后<strong>把同一个函数反过来，看成 λ 的函数</strong></li>
+    </ol>
+    <p>MacKay 描述那个瞬间：每条曲线本来都是"一条无辜的指数曲线"；但当你固定 x、把它画成 λ 的函数时，<strong>一个峰出现了</strong>。</p>
+    <div class="quote">
+      <p>"A simple figure showed the probability of a single data point P(x|λ) as a familiar function of x ... Plotting the same function as a function of λ for a fixed value of x, something remarkable happens: a peak emerges."</p>
+      <div class="src">—— 第 3 章</div>
+    </div>
+    <p>Gull 对这个定理的总结是全书最好的一句概括：</p>
+    <div class="quote">
+      <p>"what you know about λ after the data arrive is what you knew before [P(λ)], and what the data told you [P({x}|λ)]."</p>
+      <div class="src">—— Steve Gull 语，MacKay 引</div>
+    </div>
+    <p><strong>MacKay 由此得出的结论非常强硬</strong>：后验分布"就是这个问题的唯一且完整的解"——<em>不需要发明"估计量"，也不需要发明比较不同估计量的标准。</em></p>
+    <p>他的对比句说得很刻薄也很清楚：<strong>"While orthodox statisticians offer twenty ways of solving a problem, and another twenty different criteria for deciding which of these solutions is the best, Bayesian statistics only offers one answer to a well-posed problem."</strong></p>
+    <p style="color:#828c9a;font-size:13px;">（顺带说明：MacKay 也明确澄清了一个常见误解——"λ 不是一个随机变量"，用概率分布 <em>P</em>(λ) 不代表他认为世界在不同假设之间随机变来变去；他只是在用概率记号表达<strong>信念</strong>。）</p>
+  </div>
+
+  <div class="card">
+    <h3>例子二：血型证据（这本书最漂亮的一个反直觉结果）</h3>
+    <p><strong>案情</strong>：犯罪现场留下两个人的血，一为 O 型（当地频率 60%），一为 AB 型（频率 1%）。嫌疑人 Oliver 是 <strong>O 型</strong>。这些数据支持"Oliver 在场"吗？</p>
+    <p><strong>粗心律师的说法</strong>：现场有 O 型血，所以支持。MacKay 说：<strong>不成立。</strong></p>
+    <p>设 S = "Oliver 与一个未知的人在场"，S̄ = "两个未知的人在場"。则：</p>
+    <div class="formula">
+      P(D | S) = p<sub>AB</sub>　　P(D | S̄) = 2·p<sub>O</sub>·p<sub>AB</sub>
+    </div>
+    <div class="formula">
+      似然比 = P(D|S) / P(D|S̄) = 1 / (2 p<sub>O</sub>) = 1/(2×0.6) ≈ <strong>0.83</strong>
+      <span class="note">小于 1 —— 这些数据其实是<strong>反对</strong> Oliver 在场的<em>弱</em>证据</span>
+    </div>
+    <p>但如果嫌疑人是 <strong>AB 型</strong>（假想人物 Alberto），似然比变成 <span class="m">1 / (2·p_AB) = 50</span>——<strong>强证据</strong>。</p>
+    <p>MacKay 把它推广到一般情形，得到一个极干净的结论：</p>
+    <div class="formula">
+      似然比 = (n<sub>O</sub>/N) ÷ p<sub>O</sub>
+      <span class="note">n<sub>O</sub>/N 是该血型在现场样本中的频率，p<sub>O</sub> 是它在人群中的频率</span>
+    </div>
+    <p>他的评语：<strong>"The likelihood ratio ... depends simply on a comparison of the frequency of his blood type in the observed data with the background frequency in the population. There is no dependence on the counts of the other types found at the scene, or their frequencies in the population."</strong></p>
+  </div>
+
+  <div class="card">
+    <h3>为什么这个结论重要（MacKay 给的两个直觉说明）</h3>
+    <p><strong>说明一（逻辑上的）</strong>：如果现场有 O 型血就支持"每一个 O 型的人都在场"，那<strong>所有人都会变得更可疑</strong>——这显然荒谬。所以"如果数据支持某些假设，它们必然也反对另一些假设"。</p>
+    <p><strong>说明二（换成数字的）</strong>：设想现场有 10 处血迹，而当地 100 个嫌疑人中 90 个是 O 型、10 个是 AB 型。Oliver 是某个 O 型嫌疑人。</p>
+    <table>
+      <tr><th>时点</th><th>Oliver 在场的概率</th></tr>
+      <tr><td>血检之前（已知 10 人曾到场）</td><td class="num">1/10</td></tr>
+      <tr><td>血检之后：10 处血迹中 9 处 AB、1 处 O</td><td class="num"><strong>1/90</strong></td></tr>
+    </table>
+    <p>证据让他的嫌疑<strong>下降了</strong>——因为现场只有一个 O 型的人。</p>
+    <p style="margin-top:10px;">MacKay 还顺带交代了一个<strong>制度性</strong>的观察，很值得记下：他认为陪审团的任务应该是把每项独立证据的似然比与审慎推理出的先验概率相乘。他补了一句——"这一观点得到许多统计学家的认同，但<em>博学的英国上诉法官最近不同意</em>，并且实际上因为陪审员被教导用 Bayes 定理处理复杂的 DNA 证据而推翻了一次判决。"</p>
+  </div>
+
+  <!-- ================= 模型比较 ================= -->
+  <div class="section-title">奥卡姆剃刀不是原则，是数学结果</div>
+  <div class="section-sub">第 3 章埋下，第 28 章完整展开</div>
+
+  <div class="card">
+    <h3>证据（evidence）= 先前推断的归一化常数</h3>
+    <p>这是 MacKay 给出的一个极实用的操作提示：</p>
+    <div class="quote">
+      <p>"The evidence for a model is usually the normalizing constant of an earlier Bayesian inference."</p>
+      <div class="src">—— 第 3 章</div>
+    </div>
+    <p>比较两个模型的工具是<strong>后验几率</strong>：</p>
+    <div class="formula">
+      P(H₁|s,F) / P(H₀|s,F) = [ P(s|F,H₁) · P(H₁) ] / [ P(s|F,H₀) · P(H₀) ]
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>关键的数学事实：两种模型"输的能力"不对称</h3>
+    <p>MacKay 用弯硬币做了对比：H₀ 是"正六面骰子，p=1/6"（<strong>零个自由参数</strong>），H₁ 是"弯硬币，p 可取 0 到 1 任意值"（<strong>一个自由参数</strong>）。</p>
+    <p>他观察到一个不对称：</p>
+    <div class="quote">
+      <p>"The simpler model, H₀, since it has no adjustable parameters, is able to lose out by the biggest margin. The odds may be hundreds to one against it. The more complex model can never lose out by a large margin; there's no data set that is actually unlikely given model H₁."</p>
+      <div class="src">—— 第 3 章</div>
+    </div>
+    <p>而习题 3.6 把这件事变成了可以量化的定理，这是全书最重要的结构性结果之一：</p>
+    <table>
+      <tr><th></th><th>log 证据比能长多快</th></tr>
+      <tr><td>支持<strong>复杂模型</strong> H₁</td><td>可以<strong>随 F 线性增长</strong></td></tr>
+      <tr><td>支持<strong>简单模型</strong> H₀</td><td>最多只能<strong>按 log F 增长</strong></td></tr>
+    </table>
+    <p><strong>这就是"自动的奥卡姆剃刀"。</strong>注意它的来源：不是因为我们偏好简单，而是因为简单模型的预测更集中、更容易被数据反驳。如果简单模型是对的，数据会越来越支持它；如果它是错的，它会输得很快但不会无限输。</p>
+    <p style="color:#828c9a;font-size:13px;">第 28 章（Model Comparison and Occam's Razor）会把这件事讲完整——那里有全书对这个原理最正式的表述。</p>
+  </div>
+
+  <!-- ================= 全书结构 ================= -->
+  <div class="section-title">50 章各自在做什么</div>
+  <div class="section-sub">7 个部分。这本书的章节组织本身就是一张地图</div>
+
+  <table class="part-table">
+    <tr class="part-row"><td colspan="2">开头（第 1–3 章）· 全书的地基</td></tr>
+    <tr><td>第 1 章</td><td>从重复码与汉明码出发，直接抛出香农的噪声信道编码定理。<strong>先给震撼，再给证明</strong></td></tr>
+    <tr><td>第 2 章</td><td>概率、熵与推断。<strong>三个核心量的定义都在这里</strong></td></tr>
+    <tr><td>第 3 章</td><td>推断的完整示范：Steve Gull 的反转、弯硬币、模型比较、血型证据</td></tr>
+
+    <tr class="part-row"><td colspan="2">Part I（第 4–7 章）· 数据压缩</td></tr>
+    <tr><td>第 4 章</td><td>信源编码定理——熵是压缩的下界</td></tr>
+    <tr><td>第 5 章</td><td>符号码（哈夫曼编码等）</td></tr>
+    <tr><td>第 6 章</td><td>流码（算术编码等）</td></tr>
+    <tr><td>第 7 章</td><td>整数编码</td></tr>
+
+    <tr class="part-row"><td colspan="2">Part II（第 8–11 章）· 噪声信道编码</td></tr>
+    <tr><td>第 8 章</td><td>相依随机变量、互信息、信道容量</td></tr>
+    <tr><td>第 9–10 章</td><td><strong>噪声信道编码定理的完整证明</strong>（第 1 章那个结果的兑现）</td></tr>
+    <tr><td>第 11 章</td><td>纠错码与真实信道</td></tr>
+
+    <tr class="part-row"><td colspan="2">Part III（第 12–19 章）· 进一步主题</td></tr>
+    <tr><td>第 12–14 章</td><td>哈希码、二进制码、好线性码的存在性</td></tr>
+    <tr><td>第 16 章</td><td><strong>消息传递（message passing）</strong>——后面很多章都靠它</td></tr>
+    <tr><td>第 18 章</td><td>填字游戏与密码破译（推断的趣味应用）</td></tr>
+    <tr><td>第 19 章</td><td><strong>性为什么存在？</strong>信息获取与演化——把信息论接到生物学</td></tr>
+
+    <tr class="part-row"><td colspan="2">Part IV（第 20–37 章）· 概率与推断 ★ 全书重心</td></tr>
+    <tr><td>第 20–26 章</td><td>聚类、完全枚举、最大似然、有用分布、精确边缘化、网格与图上的边缘化</td></tr>
+    <tr><td>第 27–28 章</td><td>拉普拉斯方法与<strong>模型比较 / 奥卡姆剃刀</strong></td></tr>
+    <tr><td>第 29–34 章</td><td>蒙特卡洛、高效蒙特卡洛、伊辛模型、变分方法、ICA 与隐变量模型</td></tr>
+    <tr><td>第 36–37 章</td><td>决策理论；<strong>贝叶斯推断 vs 抽样理论</strong>（正面处理两派之争）</td></tr>
+
+    <tr class="part-row"><td colspan="2">Part V（第 38–46 章）· 神经网络</td></tr>
+    <tr><td>第 39–40 章</td><td>单神经元作为分类器、它的容量</td></tr>
+    <tr><td>第 41 章</td><td><strong>学习即推断</strong>——MacKay 的核心立场</td></tr>
+    <tr><td>第 42–45 章</td><td>霍普菲尔德网络、玻尔兹曼机、多层网络、高斯过程</td></tr>
+
+    <tr class="part-row"><td colspan="2">Part VI（第 47–50 章）· 稀疏图码</td></tr>
+    <tr><td>第 47–50 章</td><td>LDPC 码、卷积码与 Turbo 码、Repeat-Accumulate 码、数字喷泉码——<strong>逼近香农极限的实用编码</strong></td></tr>
+  </table>
+
+  <div class="card">
+    <h3>关于这本书的读法：作者自己给了工具</h3>
+    <p>MacKay 在序里交代了练习的用法，这套标记系统很值得利用：</p>
+    <table>
+      <tr><th>标记</th><th>含义</th></tr>
+      <tr><td class="num">[1]</td><td>简单（一分钟）</td></tr>
+      <tr><td class="num">[2]</td><td>中等（一刻钟）</td></tr>
+      <tr><td class="num">[3]</td><td>较难</td></tr>
+      <tr><td class="num">[4]</td><td>难</td></tr>
+      <tr><td class="num">[5]</td><td>研究课题</td></tr>
+      <tr><td>▷</td><td>推荐</td></tr>
+      <tr><td>（页边老鼠）</td><td><strong>特别推荐</strong></td></tr>
+      <tr><td><span class="num">C</span></td><td>部分需要用计算机</td></tr>
+    </table>
+    <p>他对练习的态度是一句可以直接用在别处的话：<strong>"You can understand a subject only by creating it for yourself."</strong>（你只能通过自己把它造出来，才能真正理解一个科目。）</p>
+    <p>而关于答案，他给了一句忠告：<strong>"Use them wisely."</strong>（明智地使用它们。）</p>
+  </div>
+
+  <!-- ================= 阅读路线 ================= -->
+  <div class="section-title">怎么读这本书</div>
+  <div class="section-sub">640 页，50 章——不可能也不需要一次读完</div>
+
+  <div class="route-item must">
+    <div class="route-badge">必读</div>
+    <div class="route-body">
+      <strong>第 1 章 · Introduction to Information Theory</strong>
+      <span>它用 16 页给你整本书的问题意识和最终答案。从重复码、汉明码到香农极限，节奏极好。读完它你就知道后面 600 页在干什么。</span>
+    </div>
+  </div>
+  <div class="route-item must">
+    <div class="route-badge">必读</div>
+    <div class="route-body">
+      <strong>第 2 章 · Probability, Entropy, and Inference</strong>
+      <span>三个核心量（信息量、熵、KL 散度）都在这里定义。特别值得读 2.2 节"概率的意义"（Cox 公理）与 2.6 节 Gibbs 不等式。</span>
+    </div>
+  </div>
+  <div class="route-item must">
+    <div class="route-badge">必读</div>
+    <div class="route-body">
+      <strong>第 3 章 · More about Inference</strong>
+      <span><strong>如果只读一章，读这一章。</strong>它不教新工具，而是示范怎么用。Steve Gull 的"把函数反过来看"、弯硬币的模型比较、血型证据——三个例子都有很强的迁移价值。</span>
+    </div>
+  </div>
+  <div class="route-item must">
+    <div class="route-badge">必读</div>
+    <div class="route-body">
+      <strong>第 10 章 · The Noisy-Channel Coding Theorem</strong>
+      <span>第 1 章那个承诺的兑现。它是信息论的中心定理，值得看完整的证明思路（典型集、联合典型性）。</span>
+    </div>
+  </div>
+  <div class="route-item must">
+    <div class="route-badge">必读</div>
+    <div class="route-body">
+      <strong>第 28 章 · Model Comparison and Occam's Razor</strong>
+      <span>把第 3 章埋的那条线完整展开。这一章的价值超出信息论——它给了"为什么简单模型占优"一个数学解释，而不是一条美学原则。</span>
+    </div>
+  </div>
+
+  <div class="route-item skim">
+    <div class="route-badge">可略读</div>
+    <div class="route-body">
+      <strong>第 4–7 章（Part I 数据压缩）</strong>
+      <span>第 4 章的定理重要；第 5–7 章的具体编码技术（哈夫曼、算术编码、整数码）可以按需查，不必顺序读完。</span>
+    </div>
+  </div>
+  <div class="route-item skim">
+    <div class="route-badge">可略读</div>
+    <div class="route-body">
+      <strong>第 47–50 章（Part VI 稀疏图码）</strong>
+      <span>这是编码理论的工程前沿。核心思想（用稀疏图 + 消息传递逼近香农极限）值得知道，具体构造可以跳过。</span>
+    </div>
+  </div>
+  <div class="route-item skip">
+    <div class="route-badge">按需查</div>
+    <div class="route-body">
+      <strong>各章末尾的习题解答</strong>
+      <span>MacKay 把解答放在同章末尾。建议<strong>先做再看</strong>——他自己就是这么要求的（"Use them wisely"）。带页边老鼠标记的特别推荐，值得优先做。</span>
+    </div>
+  </div>
+
+  <!-- ================= 边界 ================= -->
+  <div class="section-title">这本书不承诺什么</div>
+  <div class="section-sub">形式系统的边界必须说清楚，否则最容易被误用</div>
+
+  <div class="warn">
+    <span class="lbl">边界一 · 熵不是"混乱程度"</span>
+    熵度量的是<strong>不确定性</strong>，具体说是"平均需要多少比特才能描述结果"。它与"无序""混乱""热力学熵"的日常联想<strong>不是同一回事</strong>。物理熵有明确的热力学定义，两者的数学形式相同是深刻的事实，但<em>把"社会越来越乱"说成"熵增"是纯粹的误用</em>。
+  </div>
+
+  <div class="warn">
+    <span class="lbl">边界二 · 信息不是意义</span>
+    这本书里的"信息"是<strong>纯统计量</strong>：一个事件的概率越低，它携带的信息量越大。一串完全随机的字符信息量最大化，但它<strong>什么也没告诉你</strong>。MacKay 在定义处就提醒过"比特"这个词有两个含义（信息单位 / 0-1 变量），要小心区分。
+  </div>
+
+  <div class="warn">
+    <span class="lbl">边界三 · 容量是渐近结果，不是工程保证</span>
+    噪声信道编码定理靠<strong>块长不断增大的块码序列</strong>证明。它告诉你"存在这样的码"，<em>不</em>告诉你"这个码有多长、多难解码"。MacKay 自己在第 1 章就主动加注说明了这个差距——而 Part VI 的 LDPC / Turbo / 喷泉码就是来填这个差距的。
+  </div>
+
+  <div class="warn">
+    <span class="lbl">边界四 · 贝叶斯不是"没有争议的共识"</span>
+    MacKay 明确警告读者这一点：<strong>"the reader is warned that this is not yet a globally held view – the field of statistics was dominated for most of the 20th century by non-Bayesian methods."</strong>（读者要被告知，这还不是一个全球共识——统计学的领域在 20 世纪大部分时间里由非贝叶斯方法主导。）他自己是贝叶斯派，而且他知道这一点。
+  </div>
+
+  <div class="quote">
+    <p>"you cannot do inference without making assumptions."<br><br>
+    "once assumptions are made, the inferences are objective and unique, reproducible with complete agreement by anyone who has the same information and makes the same assumptions."</p>
+    <div class="src">—— 第 3 章，全书的方法论核心</div>
+  </div>
+
+  <!-- ================= 连接 ================= -->
+  <div class="section-title">这本书在项目里的位置</div>
+
+  <div class="card">
+    <h3>它与《盲眼钟表匠》的关系（同域）</h3>
+    <p>一条不太明显但很深的连接：<strong>道金斯定义的"复杂"——事前指定 + 概率极低——和信息论里的"信息量"是同一个东西。</strong></p>
+    <p>一个事件的概率越低，它携带的信息量越大。所以"复杂"可以被读作"包含大量信息"，而<strong>累积选择可以被读作一个从环境中往基因组里积累信息的机制</strong>。</p>
+    <p>MacKay 的书里甚至有一章直接处理生物学（第 19 章"性为什么存在？信息获取与演化"）——两本书在这个点上会接起来。</p>
+  </div>
+
+  <div class="card">
+    <h3>它与《视觉》（Marr，06 域）的关系</h3>
+    <p>Marr 的第三个表征层次是"硬件实现"，而信息论是连接"计算理论"与"算法"的数学语言之一。马尔关于"视觉在做什么"的计算理论，本质上是一个<strong>关于什么信息可从图像中提取</strong>的问题。</p>
+  </div>
+
+  <div class="card">
+    <h3>它与 07_技术 的关系</h3>
+    <p>这本书是信号处理、图像压缩、纠错码、机器学习的共同数学基础。项目里《数字图像处理》用的压缩标准（JPEG/PNG）背后就是 Part I 的熵编码；通信系统背后是 Part II 的容量定理。</p>
+  </div>
+
+  <div class="card">
+    <h3>它对 03 域的意义：这正是本域缺的"严格性"</h3>
+    <p>这一域有两个功能：<strong>形式系统提供严格性</strong>，<strong>经验科学提供实在性</strong>。道金斯给的是后者，MacKay 给的是前者。</p>
+    <p>它教的是这样一件事：<strong>给定假设，什么叫"证明确实成立"，以及一个结论的成立范围可以被精确地划出来。</strong>——通道容量是 0.53，超过它不可能；这就是"确凿"的样子。</p>
+  </div>
+
+  <div class="footer">
+    MacKay《信息论、推理与学习算法》整体架构 · 剑桥大学出版社 2003<br>
+    熵定压缩的下界 · 容量定通信的上界 · 假设必须明说<br>
+    <em>"Peace cannot be kept by force. It can only be achieved through understanding."</em> —— 本书献词引爱因斯坦
+  </div>
+
+</div>
+</body>
+</html>
