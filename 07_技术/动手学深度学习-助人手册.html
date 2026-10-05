@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>《动手学深度学习》助人手册 —— 12 个"模型不工作时该问什么"的场景</title>
+<style>
+  :root{
+    --paper:#0f1117; --card:#171a22; --edge:#282d39;
+    --ink:#e6e9f0; --ink-mid:#a8b0c0; --ink-soft:#6c7486;
+    --core:#4ea1d3; --core-soft:#12222d;
+    --ask:#e0a13c; --fit:#e0a13c; --reg:#c76ee0; --data:#5cc98f;
+    --warn:#ee6c5a; --warn-soft:#2b1a18; --key:#d9c26a; --key-soft:#2a2517;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--paper);color:var(--ink);padding:36px 20px 48px;line-height:1.85;-webkit-font-smoothing:antialiased;}
+  .container{max-width:960px;margin:0 auto;}
+  .header{text-align:center;margin-bottom:26px;padding:46px 24px 40px;background:var(--card);
+    border:1px solid var(--edge);border-top:5px solid var(--core);border-radius:4px;}
+  .header .kicker{font-size:11.5px;letter-spacing:2.5px;color:var(--ink-soft);margin-bottom:14px;font-family:Consolas,monospace;}
+  .header h1{font-size:23px;color:var(--ink);margin-bottom:14px;letter-spacing:.5px;line-height:1.5;}
+  .header .subtitle{font-size:14.5px;color:var(--ink-mid);}
+  .header .author{margin-top:16px;font-size:12.5px;color:var(--ink-soft);}
+  .guide{background:var(--core-soft);border:1px solid #1d3646;border-left:4px solid var(--core);
+    border-radius:3px;padding:20px 24px;margin-bottom:28px;font-size:14.5px;color:var(--ink-mid);}
+  .guide .t{color:var(--core);font-weight:700;margin-bottom:10px;font-size:13.5px;letter-spacing:.5px;}
+  .guide p+p{margin-top:8px;} .guide strong{color:var(--ink);}
+  .guide code{font-family:Consolas,monospace;color:var(--core);background:#0d1a22;padding:1px 5px;border-radius:2px;font-size:12.5px;}
+  .guide ol{margin:8px 0 0 20px;} .guide li{margin-bottom:5px;}
+  .section-title{font-size:20px;font-weight:700;color:var(--ink);margin:44px 0 8px;padding-left:13px;
+    border-left:4px solid var(--core);letter-spacing:.3px;}
+  .section-sub{color:var(--ink-soft);font-size:13.5px;margin:0 0 18px 17px;}
+  table{width:100%;border-collapse:collapse;margin:13px 0;font-size:13.5px;}
+  th,td{padding:9px 11px;border:1px solid var(--edge);text-align:left;vertical-align:top;}
+  th{background:#1c212b;color:var(--core);font-weight:700;font-size:12.5px;}
+  td{color:var(--ink-mid);} td strong{color:var(--ink);}
+  th code,td code{font-family:Consolas,monospace;color:var(--core);font-size:12px;}
+  td em{color:var(--fit);font-style:normal;font-weight:600;}
+  .sc{background:var(--card);border:1px solid var(--edge);border-radius:3px;margin-bottom:16px;overflow:hidden;}
+  .sc-head{padding:15px 22px;display:flex;gap:12px;align-items:baseline;background:var(--core-soft);border-bottom:1px solid var(--edge);}
+  .sc-head .id{font-size:11.5px;font-weight:700;color:#0f1117;background:var(--core);padding:2px 9px;border-radius:2px;font-family:Consolas,monospace;flex-shrink:0;}
+  .sc-head .tt{font-size:15.5px;font-weight:700;color:var(--ink);line-height:1.6;}
+  .sc-body{padding:18px 22px;}
+  .row{padding:10px 0;border-bottom:1px dashed var(--edge);font-size:13.5px;color:var(--ink-mid);}
+  .row:last-child{border-bottom:none;}
+  .row .lb{font-weight:700;font-size:11.5px;letter-spacing:.3px;display:block;margin-bottom:4px;}
+  .row.say .lb{color:var(--ask);} .row.why .lb{color:var(--core);} .row.stop .lb{color:var(--warn);}
+  .row.ok .lb{color:var(--data);}
+  .row strong{color:var(--ink);}
+  .row code{font-family:Consolas,monospace;color:var(--core);background:#0d1a22;padding:1px 5px;border-radius:2px;font-size:12.5px;}
+  .row em{color:var(--reg);font-style:normal;font-weight:600;}
+  .quote{background:var(--key-soft);border:1px solid #3d3520;border-left:4px solid var(--key);
+    border-radius:3px;padding:18px 22px;margin:22px 0;}
+  .quote p{font-size:15px;color:#e8dca0;font-style:italic;line-height:1.8;}
+  .quote .src{margin-top:10px;font-size:12.5px;color:var(--ink-soft);text-align:right;font-style:normal;}
+  .checklist{background:var(--card);border:1px solid var(--edge);border-radius:3px;padding:26px;}
+  .checklist h3{color:var(--core);font-size:16.5px;margin-bottom:16px;}
+  .checklist ul{list-style:none;}
+  .checklist li{padding:5px 0 5px 28px;position:relative;color:var(--ink-mid);font-size:13.5px;}
+  .checklist li::before{content:"☐";position:absolute;left:4px;color:#3d4450;font-size:15px;}
+  .footer{text-align:center;margin-top:44px;padding:22px;color:var(--ink-soft);font-size:12.5px;line-height:1.9;}
+  @media(max-width:640px){
+    .header h1{font-size:19px;} .section-title{font-size:17.5px;}
+    body{padding:20px 14px 32px;} table{font-size:11.5px;}
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="kicker">HELPING MANUAL · DIVE INTO DEEP LEARNING</div>
+    <h1>12 个"模型不工作时该问什么"的场景</h1>
+    <div class="subtitle">《动手学深度学习》助人手册 · 中文版 · PyTorch 实现</div>
+    <div class="author">每个场景给三样东西：该问什么 · 为什么这么问 · 什么时候该停</div>
+  </div>
+
+  <div class="guide">
+    <div class="t">📖 这份手册和前两份助人手册都不同</div>
+    <p>07 域现在有三份助人手册，而它们针对的<strong>求助形态完全不一样</strong>：</p>
+    <table>
+      <tr><th>手册</th><th>求助形态</th><th>诊断方式</th></tr>
+      <tr><td>OSTEP 助人手册</td><td>"这个概念我搞不懂"</td><td>换个角度讲</td></tr>
+      <tr><td>algs4 助人手册</td><td>"这段代码跑得慢"</td><td><strong>有明确的诊断顺序</strong>（规模→增长级→数据结构→内存→常数）</td></tr>
+      <tr><td><strong>d2l 助人手册（本份）</strong></td><td><strong>"这个模型效果不好"</strong></td><td><strong>诊断顺序也很重要，但顺序不同</strong></td></tr>
+    </table>
+    <p><strong>机器学习诊断的特殊之处</strong>：它有<em>两个</em>独立的失败层面，而且<strong>顺序不能颠倒</strong>——</p>
+    <ol>
+      <li><strong>先确认"训出来了没有"</strong>（优化层面）。<em>如果没训出来，后面所有关于泛化的分析都是空的。</em></li>
+      <li><strong>再确认"泛化好不好"</strong>（泛化层面）。</li>
+      <li><strong>最后确认"评估可信不可信"</strong>（数据层面）。<em>这一步最容易被跳过，而它一旦有问题，前面两步的结论全部作废。</em></li>
+    </ol>
+    <p>每个场景都给三个固定栏目，最后一条是这一域特有的纪律：<strong>机器学习的实验成本很高，而"继续调"的边际收益往往很低。</strong></p>
+  </div>
+
+  <!-- ============ 诊断顺序 ============ -->
+  <div class="section-title">先记住诊断顺序（和调代码不同）</div>
+  <div class="section-sub">顺序错了不只是浪费时间——可能得出完全错误的结论</div>
+
+  <table>
+    <tr>
+      <th style="width:6%">步</th>
+      <th style="width:26%">先看什么</th>
+      <th>为什么必须先看</th>
+    </tr>
+    <tr>
+      <td><strong>1</strong></td>
+      <td><strong>训练误差降下来了吗</strong></td>
+      <td>如果训练误差还很高，<em>模型根本没学会</em>——这时讨论过拟合毫无意义。<strong>这是"优化层面"的问题。</strong></td>
+    </tr>
+    <tr>
+      <td><strong>2</strong></td>
+      <td><strong>训练误差 vs 验证误差的相对位置</strong></td>
+      <td>这一步才判断欠拟合/过拟合。<em>书里说"目标是验证误差低，不是两条线贴近"。</em></td>
+    </tr>
+    <tr>
+      <td><strong>3</strong></td>
+      <td><strong>你的验证集能代表目标环境吗</strong></td>
+      <td><strong>这一步最容易被跳过，也最危险。</strong><em>验证集和线上不同分布时，前两步的结论全部乐观（实验 11：跨分布误差 870 倍）。</em></td>
+    </tr>
+    <tr>
+      <td><strong>4</strong></td>
+      <td>数据量够不够</td>
+      <td>如果确实过拟合，<em>先看能不能加数据</em>——通常比调模型更有效。</td>
+    </tr>
+    <tr>
+      <td><strong>5</strong></td>
+      <td>正则化 / 容量调整</td>
+      <td>到这一步才动模型。<em>而且要小心：实验 9 显示惩罚不一定有用。</em></td>
+    </tr>
+    <tr>
+      <td><strong>6</strong></td>
+      <td>最后一层：换模型结构</td>
+      <td>成本最高、收益最不确定。<strong>很多人一开始就跳到这一步。</strong></td>
+    </tr>
+  </table>
+
+  <div class="quote">
+    <p>"我们如何才能确定模型是真正发现了一种泛化的模式，而不是简单地记住了数据呢？"</p>
+    <div class="src">—— d2l 第 4.4 节开篇。这是这份手册每一个场景都在回答的问题</div>
+  </div>
+
+  <!-- ============ 场景 ============ -->
+  <div class="section-title">12 个场景</div>
+
+  <div class="sc">
+    <div class="sc-head"><span class="id">S1</span><span class="tt">"我的模型效果不好"——还没说是哪一层面不好</span></div>
+    <div class="sc-body">
+      <div class="row say"><span class="lb">该问什么</span>"训练误差是多少？验证误差是多少？两个都说一下。"</div>
+      <div class="row why"><span class="lb">为什么这么问</span>这一句话就把问题<strong>分成两半</strong>：<em>训练误差高 → 优化问题；训练误差低而验证误差高 → 泛化问题。</em>这两个方向的排查完全不一样。</div>
+      <div class="row ok"><span class="lb">怎么读答案</span>
+        <table style="margin-top:6px;">
+          <tr><th>训练误差</th><th>验证误差</th><th>结论</th><th>去哪</th></tr>
+          <tr><td>高</td><td>高</td><td>欠拟合</td><td><strong>S4（没训出来）</strong></td></tr>
+          <tr><td>低</td><td>高</td><td>过拟合</td><td><strong>S2（诊断树）</strong></td></tr>
+          <tr><td>低</td><td>低</td><td>模型没问题</td><td><strong>S7（离线好线上差）</strong></td></tr>
+        </table>
+      </div>
+      <div class="row stop"><span class="lb">什么时候该停</span>如果对方答不出训练误差（"我只看了准确率"），<strong>先让他把两个误差都打出来</strong>。凭"准确率"这一个数字，什么都判断不了。</div>
+    </div>
+  </div>
+
+  <div class="sc">
+    <div class="sc-head"><span class="id">S2</span><span class="tt">"训练误差很低，验证误差很高"</span></div>
+    <div class="sc-body">
+      <div class="row say"><span class="lb">该问什么</span>"训练样本有多少？模型有多少参数？"</div>
+      <div class="row why"><span class="lb">为什么这么问</span>因为<strong>过拟合由「容量 ÷ 样本量」决定，不是由容量单独决定</strong>（实验 8 的结论）。<em>同样 20 阶的模型，样本 100 时不过拟合，样本 20 时就过了。</em></div>
+      <div class="row ok"><span class="lb">实测参照（本项目实验 8）</span>
+        <table style="margin-top:6px;">
+          <tr><th>训练样本</th><th>最优阶数</th><th>20 阶验证误差</th></tr>
+          <tr><td>100</td><td>≥20（不过拟合）</td><td>0.1075</td></tr>
+          <tr><td>20</td><td><strong>4</strong></td><td>0.5268</td></tr>
+        </table>
+        <em>样本从 100 降到 20，最优容量从"≥20"掉到 4。</em>
+      </div>
+      <div class="row stop"><span class="lb">什么时候该停</span>如果样本量确实很少（几百），<strong>先别调模型</strong>——那个规模下"换更强的模型"通常没用，甚至有害。<em>书里明说了：深度学习"只有在有数千个训练样本时才优于线性模型"。</em></div>
+    </div>
+  </div>
+
+  <div class="sc">
+    <div class="sc-head"><span class="id">S3</span><span class="tt">"我加了权重衰减，但没用"</span></div>
+    <div class="sc-body">
+      <div class="row say"><span class="lb">该问什么</span>"你怎么确定模型确实过拟合了？先看训练误差和验证误差的绝对值。"</div>
+      <div class="row why"><span class="lb">为什么这么问</span>因为<strong>正则化只有在"参数估计的方差"是主要误差来源时才有用</strong>。如果模型本来就没过拟合，加惩罚只是把有用的信号一起压小——<em>纯损失。</em></div>
+      <div class="row ok"><span class="lb">实测参照（本项目实验 9）</span>
+        <table style="margin-top:6px;">
+          <tr><th>配置</th><th>λ=0 验证误差</th><th>最优 λ</th><th>惩罚有用吗</th></tr>
+          <tr><td><strong>12 阶</strong>（容量大）</td><td>0.2785</td><td><strong>0</strong></td><td><strong>没用</strong></td></tr>
+          <tr><td><strong>3 阶</strong>（容量小）</td><td>2.9235</td><td>0.05</td><td><strong>有用</strong>（→2.5553）</td></tr>
+        </table>
+        <em>注意：两组用的是同一份数据、同样的样本量，只改了阶数。</em>
+      </div>
+      <div class="row why"><span class="lb">一个特别隐蔽的原因</span>如果<strong>"参数个数 ≠ 有效容量"</strong>，那么惩罚就没东西可惩罚。<em>d2l 用 <code>1/i!</code> 缩放特征，18 阶特征标准差只剩 1.42e-11，所以 12 阶模型的有效自由度只有 5-6 个。</em></div>
+      <div class="row stop"><span class="lb">什么时候该停</span>如果 λ 从 0 试到 1 都只有"变差"没有"变好"，<strong>就停手</strong>——这个模型不需要正则化。<em>这时要么加数据，要么降低容量，别在 λ 上继续磨。</em></div>
+    </div>
+  </div>
+
+  <div class="sc">
+    <div class="sc-head"><span class="id">S4</span><span class="tt">"模型根本不收敛" / "损失降不下去"</span></div>
+    <div class="sc-body">
+      <div class="row say"><span class="lb">该问什么</span>"学习率多大？损失曲线长什么样——是平的、缓慢下降、还是上下跳？"</div>
+      <div class="row why"><span class="lb">为什么这么问</span>这三种形状对应完全不同的原因：<em>平的且高 = 学习率太小（或容量不足）；缓慢下降 = 还没训完；上下跳 = 学习率偏大。</em></div>
+      <div class="row ok"><span class="lb">实测参照（本项目实验 12）</span>
+        <table style="margin-top:6px;">
+          <tr><th>学习率</th><th>最后一步损失</th><th>症状</th></tr>
+          <tr><td>1e-5</td><td>23.43</td><td>几乎不动</td></tr>
+          <tr><td>0.03</td><td>0.22</td><td>接近收敛</td></tr>
+          <tr><td><strong>0.3</strong></td><td><strong>0.006</strong></td><td>好</td></tr>
+          <tr><td>1.0</td><td colspan="2"><strong>第 12 步发散到 2.7e12</strong></td></tr>
+        </table>
+      </div>
+      <div class="row stop"><span class="lb">什么时候该停</span>如果学习率从 1e-5 试到 1 都不收敛，<strong>停下来看别的地方</strong>：<em>特征尺度是否差异过大（实验 8 里不缩放会直接 NaN）、损失函数是否写错、标签是否对齐。</em><strong>继续调学习率是在掩盖症状。</strong></div>
+    </div>
+  </div>
+
+  <div class="sc">
+    <div class="sc-head"><span class="id">S5</span><span class="tt">"验证误差比噪声还低，我是不是做出了突破"</span></div>
+    <div class="sc-body">
+      <div class="row say"><span class="lb">该问什么</span>"你怎么知道噪声水平是多少？检查过训练集和验证集有没有重叠吗？"</div>
+      <div class="row why"><span class="lb">为什么这么问</span>因为<strong>泛化误差的下限就是噪声方差</strong>——<em>y = f(x) + ε，而 ε 不可预测。</em>低于下限只有一个解释：<strong>数据泄漏。</strong></div>
+      <div class="row ok"><span class="lb">该查的五种泄漏</span>
+        <table style="margin-top:6px;">
+          <tr><th>来源</th><th>机制</th></tr>
+          <tr><td>重复样本</td><td>同一条数据同时在训练集和验证集（去重没做）</td></tr>
+          <tr><td>时间泄漏</td><td>用未来数据预测过去</td></tr>
+          <tr><td>特征泄漏</td><td>特征里含标签信息</td></tr>
+          <tr><td><strong>预处理泄漏</strong></td><td><em>标准化/填充缺失值时用了全量（含验证集）的统计量</em></td></tr>
+          <tr><td>分组泄漏</td><td>同一用户的多个样本被分到两侧</td></tr>
+        </table>
+      </div>
+      <div class="row stop"><span class="lb">什么时候该停</span><strong>这一条几乎不需要"停"的考量</strong>——异常好就是有问题，查到底。<em>但它有一个前提：你得真的知道噪声方差。如果不知道，这条的用法是反向的：<b>看到异常低的验证误差，先去查泄漏，而不是先庆祝。</b></em></div>
+    </div>
+  </div>
+
+  <div class="sc">
+    <div class="sc-head"><span class="id">S6</span><span class="tt">"我应该先调哪个超参数"</span></div>
+    <div class="sc-body">
+      <div class="row say"><span class="lb">该问什么</span>"现在最突出的问题是哪个——训不出来，还是训出来了但泛化差？"</div>
+      <div class="row why"><span class="lb">为什么这么问</span>因为<strong>调参的优先级由诊断结果决定，不由"哪个参数最常被提"决定</strong>。</div>
+      <div class="row ok"><span class="lb">按诊断结果定优先级</span>
+        <table style="margin-top:6px;">
+          <tr><th>症状</th><th>先调什么</th><th>为什么</th></tr>
+          <tr><td>训练误差就很高</td><td><strong>学习率</strong></td><td>优化没成，别的都无从谈起</td></tr>
+          <tr><td>训练误差低、验证高</td><td>先看<strong>数据量</strong>，再看正则化</td><td>加数据通常比调 λ 更有效</td></tr>
+          <tr><td>验证误差低但线上差</td><td><strong>什么都别调</strong></td><td>这是评估问题，不是模型问题（见 S7）</td></tr>
+          <tr><td>结果在多次运行间波动大</td><td><strong>随机种子 / 多次平均</strong></td><td>见 S11，波动本身可能是主要问题</td></tr>
+        </table>
+      </div>
+      <div class="row stop"><span class="lb">什么时候该停</span><strong>这一条最需要"停"的纪律。</strong>调试参是无底洞——<em>如果你的改进幅度小于多次运行的波动幅度，那你测到的很可能只是噪声。</em>先做 S11，确认真实基线。</div>
+    </div>
+  </div>
+
+  <div class="sc">
+    <div class="sc-head"><span class="id">S7</span><span class="tt">"离线指标很好，上线就崩"</span></div>
+    <div class="sc-body">
+      <div class="row say"><span class="lb">该问什么</span>"线上数据和你的验证集，分布一样吗？你是怎么确认的？"</div>
+      <div class="row why"><span class="lb">为什么这么问</span>因为这是<strong>机器学习项目里最常见、也最难自己发现的问题</strong>。而它的诊断<em>不在模型里，在数据里</em>。</div>
+      <div class="row ok"><span class="lb">实测参照（本项目实验 11）</span>
+        <table style="margin-top:6px;">
+          <tr><th>指标</th><th>数值</th></tr>
+          <tr><td>训练误差</td><td><strong>0.0101</strong>（看起来完全健康）</td></tr>
+          <tr><td>同分布验证误差</td><td>0.0750（正常）</td></tr>
+          <tr><td>跨分布验证误差（平移 1.0σ）</td><td><strong>0.1813（2.4×）</strong></td></tr>
+          <tr><td>跨分布（平移 3.0σ）</td><td><strong>65.23（870×）</strong></td></tr>
+        </table>
+        <em><strong>同一个模型、同一份训练集</strong>，变的只是验证数据的分布。</em>
+      </div>
+      <div class="row why"><span class="lb">为什么训练误差看不出来</span>因为<strong>它对分布变化完全不敏感</strong>。模型照样输出预测，只是那些预测在新分布上是错的。<em>而且不报错、不抛异常。</em></div>
+      <div class="row stop"><span class="lb">什么时候该停</span>如果你能拿到线上数据做分布对比，做到"确认了差异的具体维度"就可以停。<br><strong>如果拿不到，那唯一可靠的办法是按来源或时间切分做验证</strong>——刻意让验证集分布不同，提前暴露问题。<em>这一步不做，"离线好"就没有任何保证力。</em></div>
+    </div>
+  </div>
+
+  <div class="sc">
+    <div class="sc-head"><span class="id">S8</span><span class="tt">"书里说'轻微违背 i.i.d. 没关系'，那我到底要不要担心"</span></div>
+    <div class="sc-body">
+      <div class="row say"><span class="lb">该问什么</span>"你的'轻微'有多少？能量化吗？"</div>
+      <div class="row why"><span class="lb">为什么这么问</span>因为书里那句"轻微违背……仍将继续运行得非常好"是<strong>方向性的</strong>，不是<strong>定量</strong>的。<em>而"轻微"的边界只能自己测。</em></div>
+      <div class="row ok"><span class="lb">实测的边界形状（本项目实验 11）</span>
+        <table style="margin-top:6px;">
+          <tr><th>输入均值平移</th><th>相对同分布</th><th>判断</th></tr>
+          <tr><td>0.25σ</td><td>0.27×（几乎没变）</td><td>确实"轻微"，安全</td></tr>
+          <tr><td>0.50σ</td><td>0.47×</td><td>仍然安全</td></tr>
+          <tr><td><strong>1.00σ</strong></td><td><strong>2.57×</strong></td><td><strong>开始出事</strong></td></tr>
+          <tr><td>3.00σ</td><td><strong>869.74×</strong></td><td>严重失效</td></tr>
+        </table>
+        <strong>边界在 0.5σ~1.0σ 之间，而且形状是非线性的</strong>——小幅平移误差几乎不动，越过某点后<em>急剧上升</em>。
+      </div>
+      <div class="row stop"><span class="lb">什么时候该停</span>如果你测出"我的场景在中度以内"，<strong>可以接受</strong>，但要在文档里写明这个边界。<em>如果测不出边界（拿不到跨分布数据），那就默认它不安全，按 S7 的办法构造切分验证。</em></div>
+    </div>
+  </div>
+
+  <div class="sc">
+    <div class="sc-head"><span class="id">S9</span><span class="tt">"我又收集了一倍数据，但效果没提升"</span></div>
+    <div class="sc-body">
+      <div class="row say"><span class="lb">该问什么</span>"新数据是从同一个来源收的吗？而且——你的验证误差在哪个量级上？"</div>
+      <div class="row why"><span class="lb">为什么这么问</span>因为<strong>数据量和验证误差之间是"门槛 + 收益递减"的关系，不是线性的</strong>。过了门槛之后加数据收益很小。</div>
+      <div class="row ok"><span class="lb">实测参照（本项目实验 10）</span>
+        <table style="margin-top:6px;">
+          <tr><th>样本量</th><th>验证误差</th></tr>
+          <tr><td>10</td><td>2.2969</td></tr>
+          <tr><td>20</td><td>1.9568</td></tr>
+          <tr><td><strong>40</strong></td><td><strong>0.0366</strong>（骤降）</td></tr>
+          <tr><td>160</td><td>0.0406</td></tr>
+          <tr><td>640（<strong>8 倍</strong>）</td><td>0.0334（<em>几乎没改善</em>）</td></tr>
+        </table>
+      </div>
+      <div class="row why"><span class="lb">另一个可能：新数据分布不同</span>如果是跨来源收的数据，<strong>加进去可能反而有害</strong>（污染训练集）。<em>这就回到 S7。</em></div>
+      <div class="row stop"><span class="lb">什么时候该停</span><strong>画一条学习曲线再决定要不要继续收数据。</strong><em>如果曲线已经平了，继续收数据的性价比极低——那时该去改特征或改模型，而不是继续加数据。</em></div>
+    </div>
+  </div>
+
+  <div class="sc">
+    <div class="sc-head"><span class="id">S10</span><span class="tt">"我该留多大的验证集？"</span></div>
+    <div class="sc-body">
+      <div class="row say"><span class="lb">该问什么</span>"你打算在验证集上做多少次决策？只选一个模型，还是要试几十个配置？"</div>
+      <div class="row why"><span class="lb">为什么这么问</span>因为<strong>验证集会被"用掉"</strong>。<em>你在它上面试的配置越多，最终报告的验证误差就越乐观——这叫"过拟合验证集"。</em></div>
+      <div class="row ok"><span class="lb">按用途定大小</span>
+        <table style="margin-top:6px;">
+          <tr><th>用途</th><th>建议</th><th>理由</th></tr>
+          <tr><td>只比 2-3 个模型</td><td>10–20%</td><td>够用</td></tr>
+          <tr><td>要调多个超参</td><td><strong>用交叉验证</strong></td><td>小验证集噪声大，会误导选择</td></tr>
+          <tr><td>样本很少（&lt;1000）</td><td><strong>交叉验证 + 留一个测试集</strong></td><td>单次划分不可靠</td></tr>
+          <tr><td>测试集</td><td><strong>只能用一次</strong></td><td>用过就不再是测试集</td></tr>
+        </table>
+      </div>
+      <div class="row stop"><span class="lb">什么时候该停</span>如果你已经用测试集看过结果了，<strong>就承认那个数字不再可信</strong>，去重新划一份。<em>继续在旧测试集上比较不同方案，只是在给自己制造虚假信心。</em></div>
+    </div>
+  </div>
+
+  <div class="sc">
+    <div class="sc-head"><span class="id">S11</span><span class="tt">"我改了个参数，效果好了一点点"</span></div>
+    <div class="sc-body">
+      <div class="row say"><span class="lb">该问什么</span>"同样的配置换几个随机种子跑一遍，结果波动有多大？"</div>
+      <div class="row why"><span class="lb">为什么这么问</span>因为<strong>如果改进幅度小于运行间波动，那你测到的很可能只是噪声</strong>。</div>
+      <div class="row ok"><span class="lb">本项目实验 10 里就有这个现象</span>
+        <table style="margin-top:6px;">
+          <tr><th>样本量</th><th>验证误差</th><th>说明</th></tr>
+          <tr><td>40</td><td>0.0366</td><td>—</td></tr>
+          <tr><td>80</td><td>0.0302</td><td>降</td></tr>
+          <tr><td><strong>160</strong></td><td><strong>0.0406</strong></td><td><strong>反而升了</strong></td></tr>
+          <tr><td>320</td><td>0.0401</td><td>—</td></tr>
+        </table>
+        <em>数据量增加本该让误差下降，这里却出现了回升。原因就是训练本身的随机性（初始化、优化路径）。</em>
+      </div>
+      <div class="row stop"><span class="lb">什么时候该停</span><strong>这是最该早停的一条。</strong><em>规则：改进幅度必须明显大于多次运行的波动，否则不值得采纳。具体做法——每个配置跑 3-5 个种子，报告均值和标准差，而不是单次结果。</em></div>
+    </div>
+  </div>
+
+  <div class="sc">
+    <div class="sc-head"><span class="id">S12</span><span class="tt">"效果够好了，但我想再提升 2%"</span></div>
+    <div class="sc-body">
+      <div class="row say"><span class="lb">该问什么</span>"这 2% 是业务要求，还是技术追求？现在的瓶颈在数据、模型，还是评估？"</div>
+      <div class="row why"><span class="lb">为什么这么问</span>因为到了这一步，<strong>前面那 12 个场景能提供的帮助已经用完了</strong>。剩下的提升通常来自三处：</div>
+      <div class="row ok"><span class="lb">剩下的三个来源</span>
+        <table style="margin-top:6px;">
+          <tr><th>来源</th><th>说明</th></tr>
+          <tr><td><strong>更好的特征</strong></td><td>通常是性价比最高的——<em>尤其表格类任务</em></td></tr>
+          <tr><td><strong>更多同分布数据</strong></td><td>但先看学习曲线平了没有（S9）</td></tr>
+          <tr><td><strong>更好的评估</strong></td><td><em>有时"提升 2%"的真正含义是"终于测准了"——之前那 2% 是噪声</em></td></tr>
+        </table>
+      </div>
+      <div class="row stop"><span class="lb">什么时候该停</span><strong>这一条我想说得直接一点：为了 2% 而无限调参，通常是坏交易。</strong><br><em>机器学习的调参收益递减很快，而"过拟合验证集"的风险递增很快。而且业务上真正要紧的往往是稳健性、可解释性、延迟——那些不在这 2% 里。</em><br><strong>建议是：设定一个明确的停止条件（比如"连续 20 次实验没有超过波动幅度的改进"），到了就停。</strong></div>
+    </div>
+  </div>
+
+  <!-- ============ 收尾 ============ -->
+  <div class="section-title">这份手册自己的一条纪律</div>
+
+  <div class="b" style="background:var(--warn-soft);border-left:4px solid var(--warn);border-radius:0 3px 3px 0;padding:18px 22px;font-size:14.5px;color:#f0b3a9;border:1px solid #3a2019;">
+    <p style="margin-bottom:10px;"><strong style="color:var(--warn);">机器学习的实验成本很高，所以要更早问"够了吗"。</strong></p>
+    <p>调代码时，"再试一个方案"的成本是几分钟。而训练一个模型可能是几小时——<strong>如果还要调参、跑多个种子，成本会成倍放大。</strong></p>
+    <p style="margin-top:9px;">而机器学习有一个调代码没有的风险：<strong>你在验证集上试的每一个配置，都会让最终报告的验证误差更乐观一点。</strong><em>也就是说，"继续调"不只是在花时间，它在系统性地损害你对自己模型的判断力。</em></p>
+    <p style="margin-top:9px;">——所以这份手册的每个场景都标了「什么时候该停」，而不是只给排查方向。<strong>在机器学习里，"停"是一个技术判断，不是一个态度问题。</strong></p>
+  </div>
+
+  <div class="quote">
+    <p>"假设是存在漏洞的，即很容易找出假设失效的情况。"</p>
+    <div class="src">—— 这句和第 3 步（验证集能代表目标环境吗）是同一件事。<strong>它是这份手册里最该早问的一句。</strong></div>
+  </div>
+
+  <div class="checklist" style="margin-top:26px;">
+    <h3>✅ 12 项诊断自测（面向你自己的情况）</h3>
+    <ul>
+      <li>我知道诊断的正确顺序：先确认训出来了没有 → 再看泛化 → <strong>最后确认评估可信</strong></li>
+      <li>我知道"训练误差高"和"验证误差高"是两个完全不同的方向</li>
+      <li>我知道过拟合由「容量÷样本量」决定，不是容量单独决定</li>
+      <li>我知道低样本量时"换更强的模型"通常没用</li>
+      <li>我知道正则化不一定有用——它依赖"确实过拟合"这个前提</li>
+      <li>我知道"参数个数 ≠ 有效容量"，特征缩放会影响后者</li>
+      <li>我能从损失曲线的形状区分"学习率太小 / 还没训完 / 学习率太大"</li>
+      <li>我知道验证误差低于噪声方差意味着数据泄漏，而不是突破</li>
+      <li>我能列出五种数据泄漏来源（含预处理泄漏）</li>
+      <li>我知道"离线好线上崩"要查数据分布，不是查模型</li>
+      <li>我知道"轻微违背 i.i.d."的边界要自己测，而且形状是非线性的</li>
+      <li>我知道数据量收益递减，该画学习曲线再决定要不要继续收</li>
+      <li>我知道验证集会被"用掉"，试的配置越多报告越乐观</li>
+      <li>我知道改进幅度必须大于运行间波动，否则只是噪声</li>
+      <li>我知道该给调参设定明确的停止条件</li>
+    </ul>
+  </div>
+
+  <div class="footer">
+    《动手学深度学习》助人手册 · Release 2.0.0 · 中文版 · PyTorch 实现<br>
+    12 个场景 · 诊断顺序（优化 → 泛化 → 评估）· 每个场景都标明"什么时候该停"<br>
+    <em>先确认训出来了没有，再看泛化，最后确认评估可信</em>
+  </div>
+
+</div>
+</body>
+</html>

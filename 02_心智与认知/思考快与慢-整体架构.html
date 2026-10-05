@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>《思考，快与慢》双系统认知架构</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: #0f172a;
+    color: #e2e8f0;
+    padding: 24px;
+    min-height: 100vh;
+  }
+  .container { max-width: 1200px; margin: 0 auto; }
+  h1 {
+    text-align: center;
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, #38bdf8, #818cf8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .subtitle {
+    text-align: center;
+    color: #94a3b8;
+    font-size: 14px;
+    margin-bottom: 32px;
+  }
+  .diagram-wrap {
+    background: #1e293b;
+    border-radius: 16px;
+    padding: 32px;
+    border: 1px solid #334155;
+    overflow-x: auto;
+  }
+  svg { display: block; margin: 0 auto; }
+
+  .node { cursor: pointer; transition: all 0.2s; }
+  .node:hover { filter: brightness(1.15); }
+
+  .node-system1 { fill: #0ea5e9; fill-opacity: 0.2; stroke: #38bdf8; stroke-width: 2; }
+  .node-system2 { fill: #8b5cf6; fill-opacity: 0.2; stroke: #a78bfa; stroke-width: 2; }
+  .node-external { fill: #64748b; fill-opacity: 0.2; stroke: #94a3b8; stroke-width: 2; }
+  .node-sub-s1 { fill: #0ea5e9; fill-opacity: 0.1; stroke: #38bdf8; stroke-width: 1.5; }
+  .node-sub-s2 { fill: #8b5cf6; fill-opacity: 0.1; stroke: #a78bfa; stroke-width: 1.5; }
+
+  .node-title { font-size: 16px; font-weight: 700; fill: #e2e8f0; text-anchor: middle; }
+  .node-subtitle { font-size: 12px; fill: #94a3b8; text-anchor: middle; }
+  .node-tag { font-size: 11px; fill: #64748b; text-anchor: middle; }
+  .sub-title { font-size: 13px; font-weight: 600; fill: #e2e8f0; text-anchor: middle; }
+  .sub-desc { font-size: 10px; fill: #94a3b8; text-anchor: middle; }
+
+  .boundary-s1 { fill: none; stroke: #38bdf8; stroke-width: 1.5; stroke-dasharray: 8,4; opacity: 0.4; rx: 12; }
+  .boundary-s2 { fill: none; stroke: #a78bfa; stroke-width: 1.5; stroke-dasharray: 8,4; opacity: 0.4; rx: 12; }
+  .boundary-label { font-size: 12px; font-weight: 600; opacity: 0.7; }
+
+  .conn { fill: none; stroke-width: 2; }
+  .conn-emphasis { stroke: #38bdf8; }
+  .conn-dashed { stroke: #64748b; stroke-dasharray: 6,4; }
+  .conn-security { stroke: #f59e0b; }
+  .conn-normal { stroke: #94a3b8; }
+
+  .conn-label { font-size: 11px; fill: #94a3b8; text-anchor: middle; }
+
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    margin-top: 24px;
+  }
+  .card {
+    background: #1e293b;
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid #334155;
+  }
+  .card-dot {
+    display: inline-block;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    margin-right: 8px;
+  }
+  .card-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+  }
+  .card ul { list-style: none; }
+  .card li {
+    font-size: 13px;
+    color: #cbd5e1;
+    padding: 4px 0;
+    padding-left: 16px;
+    position: relative;
+  }
+  .card li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: #64748b;
+  }
+
+  .tooltip {
+    position: fixed;
+    background: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 13px;
+    max-width: 280px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s;
+    z-index: 100;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  }
+  .tooltip.visible { opacity: 1; }
+  .tooltip h4 { font-size: 14px; margin-bottom: 6px; color: #e2e8f0; }
+  .tooltip p { font-size: 12px; color: #94a3b8; line-height: 1.5; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>《思考，快与慢》双系统认知架构</h1>
+  <p class="subtitle">系统1（快思考）与系统2（慢思考）的协作机制与偏见来源</p>
+
+  <div class="diagram-wrap">
+    <svg width="1000" height="520" viewBox="0 0 1000 520">
+      <!-- 边界 -->
+      <rect class="boundary-s1" x="200" y="60" width="280" height="380" rx="12"/>
+      <text class="boundary-label" x="340" y="80" fill="#38bdf8" text-anchor="middle">系统 1 · 快思考（自动模式）</text>
+
+      <rect class="boundary-s2" x="520" y="60" width="280" height="380" rx="12"/>
+      <text class="boundary-label" x="660" y="80" fill="#a78bfa" text-anchor="middle">系统 2 · 慢思考（控制模式）</text>
+
+      <!-- 连接线路 -->
+      <!-- 刺激 → 系统1 -->
+      <path class="conn conn-emphasis" d="M 155 265 L 240 265" marker-end="url(#arrow-blue)"/>
+      <text class="conn-label" x="197" y="255">持续输入</text>
+
+      <!-- 系统1 → 系统2（请求介入）-->
+      <path class="conn conn-dashed" d="M 340 240 L 660 240" marker-end="url(#arrow-gray)"/>
+      <text class="conn-label" x="500" y="230">遇到困难请求介入</text>
+
+      <!-- 系统2 → 系统1（监督校正）-->
+      <path class="conn conn-security" d="M 660 290 L 340 290" marker-end="url(#arrow-amber)"/>
+      <text class="conn-label" x="500" y="305">监督 · 校正 · 抑制</text>
+
+      <!-- 系统1 → 输出（快速反应）-->
+      <path class="conn conn-emphasis" d="M 460 265 L 845 265" marker-end="url(#arrow-blue)"/>
+      <text class="conn-label" x="650" y="255">快速直觉反应</text>
+
+      <!-- 系统2 → 输出（深思决策）-->
+      <path class="conn conn-normal" d="M 780 290 L 845 280" marker-end="url(#arrow-gray)"/>
+      <text class="conn-label" x="812" y="268">深思熟虑</text>
+
+      <!-- 箭头定义 -->
+      <defs>
+        <marker id="arrow-blue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+          <polygon points="0 0, 10 3.5, 0 7" fill="#38bdf8"/>
+        </marker>
+        <marker id="arrow-gray" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+          <polygon points="0 0, 10 3.5, 0 7" fill="#94a3b8"/>
+        </marker>
+        <marker id="arrow-amber" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+          <polygon points="0 0, 10 3.5, 0 7" fill="#f59e0b"/>
+        </marker>
+      </defs>
+
+      <!-- 外部刺激 -->
+      <g class="node" data-tip="stimulus">
+        <rect class="node-external" x="30" y="230" width="125" height="70" rx="8"/>
+        <text class="node-title" x="92" y="258">外部刺激</text>
+        <text class="node-subtitle" x="92" y="278">信息 / 事件 / 问题</text>
+      </g>
+
+      <!-- 系统1 主节点 -->
+      <g class="node" data-tip="system1">
+        <rect class="node-system1" x="245" y="220" width="190" height="90" rx="10"/>
+        <text class="node-title" x="340" y="250">系统 1</text>
+        <text class="node-subtitle" x="340" y="270">快思考 · 无意识</text>
+        <text class="node-tag" x="340" y="290">自动 · 快速 · 不费力</text>
+      </g>
+
+      <!-- 系统1 子节点 -->
+      <g class="node" data-tip="associative">
+        <rect class="node-sub-s1" x="220" y="110" width="120" height="55" rx="6"/>
+        <text class="sub-title" x="280" y="132">联想记忆</text>
+        <text class="sub-desc" x="280" y="150">概念激活 · 启动效应</text>
+      </g>
+
+      <g class="node" data-tip="heuristics">
+        <rect class="node-sub-s1" x="350" y="110" width="120" height="55" rx="6"/>
+        <text class="sub-title" x="410" y="132">启发法</text>
+        <text class="sub-desc" x="410" y="150">锚定 · 可得性 · 代表性</text>
+      </g>
+
+      <g class="node" data-tip="intuition">
+        <rect class="node-sub-s1" x="280" y="380" width="120" height="55" rx="6"/>
+        <text class="sub-title" x="340" y="402">直觉判断</text>
+        <text class="sub-desc" x="340" y="420">情感 · 印象 · 基本评估</text>
+      </g>
+
+      <!-- 系统2 主节点 -->
+      <g class="node" data-tip="system2">
+        <rect class="node-system2" x="565" y="220" width="190" height="90" rx="10"/>
+        <text class="node-title" x="660" y="250">系统 2</text>
+        <text class="node-subtitle" x="660" y="270">慢思考 · 受控</text>
+        <text class="node-tag" x="660" y="290">费力 · 逻辑 · 懒惰</text>
+      </g>
+
+      <!-- 系统2 子节点 -->
+      <g class="node" data-tip="attention">
+        <rect class="node-sub-s2" x="540" y="110" width="120" height="55" rx="6"/>
+        <text class="sub-title" x="600" y="132">注意力控制</text>
+        <text class="sub-desc" x="600" y="150">集中 · 分配 · 转移</text>
+      </g>
+
+      <g class="node" data-tip="reasoning">
+        <rect class="node-sub-s2" x="670" y="110" width="120" height="55" rx="6"/>
+        <text class="sub-title" x="730" y="132">逻辑推理</text>
+        <text class="sub-desc" x="730" y="150">计算 · 规则 · 统计思维</text>
+      </g>
+
+      <g class="node" data-tip="selfcontrol">
+        <rect class="node-sub-s2" x="600" y="380" width="120" height="55" rx="6"/>
+        <text class="sub-title" x="660" y="402">自我控制</text>
+        <text class="sub-desc" x="660" y="420">抑制冲动 · 校正偏见</text>
+      </g>
+
+      <!-- 输出 -->
+      <g class="node" data-tip="output">
+        <rect class="node-external" x="845" y="235" width="130" height="70" rx="8"/>
+        <text class="node-title" x="910" y="263">判断与决策</text>
+        <text class="node-subtitle" x="910" y="283">信念 · 选择 · 行为</text>
+      </g>
+    </svg>
+  </div>
+
+  <div class="cards">
+    <div class="card">
+      <div class="card-title"><span class="card-dot" style="background:#38bdf8;"></span>系统 1 · 快思考</div>
+      <ul>
+        <li>运行无意识、快速、不费力</li>
+        <li>联想记忆持续自动运行</li>
+        <li>依赖启发法，易产生系统性偏见</li>
+        <li>大多数日常判断由它主导</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="card-dot" style="background:#a78bfa;"></span>系统 2 · 慢思考</div>
+      <ul>
+        <li>需要集中注意力，费力且受控</li>
+        <li>具备逻辑推理与统计思维能力</li>
+        <li>本性懒惰，常默认接受系统1建议</li>
+        <li>负责自我控制与重要决策</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="card-dot" style="background:#f59e0b;"></span>核心偏见来源</div>
+      <ul>
+        <li>锚定效应 · 可得性启发 · 代表性启发</li>
+        <li>损失厌恶 · 禀赋效应 · 框架效应</li>
+        <li>后见之明 · 过度自信 · 光环效应</li>
+        <li>回归平均值被误读为因果效应</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="tooltip" id="tooltip">
+  <h4 id="tip-title"></h4>
+  <p id="tip-desc"></p>
+</div>
+
+<script>
+(function() {
+  const tips = {
+    stimulus: {
+      title: '外部刺激',
+      desc: '来自环境的信息、事件或问题。系统1会自动对这些刺激做出快速反应，大多数时候我们甚至意识不到这个过程。'
+    },
+    system1: {
+      title: '系统 1 · 快思考',
+      desc: '大脑的自动模式。持续运行、快速反应、不费力。它处理我们看到的愤怒表情、简单加法、恐惧反应等。是偏见和启发法的主要来源。'
+    },
+    associative: {
+      title: '联想记忆',
+      desc: '概念之间的自动激活扩散。看到"佛罗里达"这个词会让人走得更慢（佛罗里达效应）；眼睛图案的出现会让人更诚实。'
+    },
+    heuristics: {
+      title: '启发法',
+      desc: '系统1的"捷径"：锚定效应（先入为主）、可得性启发（容易想起的事更常见）、代表性启发（像就是）。高效但有系统性偏差。'
+    },
+    intuition: {
+      title: '直觉判断',
+      desc: '基于情感和印象的快速判断。我们对陌生人的第一印象、对风险的本能反应，都来自系统1的直觉。强度匹配是其核心机制。'
+    },
+    system2: {
+      title: '系统 2 · 慢思考',
+      desc: '大脑的控制模式。需要集中注意力，费力且受控。它处理复杂计算、逻辑推理、自我控制。本性懒惰——能不费力就不费力。'
+    },
+    attention: {
+      title: '注意力控制',
+      desc: '系统2的核心能力。我们可以把注意力集中在一件事上，但注意力是有限的资源。自我损耗会消耗注意力，让系统2变弱。'
+    },
+    reasoning: {
+      title: '逻辑推理',
+      desc: '系统2的计算能力。它可以做复杂的数学计算、遵循规则、进行统计思维。但需要主动调用，而且很容易因为懒惰而放弃。'
+    },
+    selfcontrol: {
+      title: '自我控制',
+      desc: '系统2对系统1的监督和抑制功能。它可以校正系统1的偏见，抑制冲动反应。但自我控制是消耗性的——用多了会疲劳。'
+    },
+    output: {
+      title: '判断与决策',
+      desc: '最终的输出：我们的信念、选择和行为。大多数日常决策由系统1主导，只有当系统1遇到困难或重要决策时，系统2才会介入。'
+    }
+  };
+
+  const tooltip = document.getElementById('tooltip');
+  const tipTitle = document.getElementById('tip-title');
+  const tipDesc = document.getElementById('tip-desc');
+
+  document.querySelectorAll('.node').forEach(node => {
+    const key = node.dataset.tip;
+    if (!tips[key]) return;
+
+    node.addEventListener('mouseenter', (e) => {
+      tipTitle.textContent = tips[key].title;
+      tipDesc.textContent = tips[key].desc;
+      tooltip.classList.add('visible');
+    });
+
+    node.addEventListener('mousemove', (e) => {
+      tooltip.style.left = (e.clientX + 15) + 'px';
+      tooltip.style.top = (e.clientY + 15) + 'px';
+    });
+
+    node.addEventListener('mouseleave', () => {
+      tooltip.classList.remove('visible');
+    });
+  });
+})();
+</script>
+</body>
+</html>

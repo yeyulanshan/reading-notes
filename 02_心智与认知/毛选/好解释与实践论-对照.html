@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>好解释 × 实践论 —— 两个判据的对照</title>
+<style>
+  :root{
+    --paper:#0d1116; --card:#151b22; --edge:#27313b;
+    --ink:#e6ecf2; --ink-mid:#a3b1bf; --ink-soft:#6b7a8a;
+    --dd:#5aa9e6;      /* 多伊奇 */
+    --dd-soft:#0f2029;
+    --mao:#d9694f;     /* 毛泽东 */
+    --mao-soft:#2a1712;
+    --both:#5cc98f;    /* 汇合 */
+    --both-soft:#11251b;
+    --gap:#e0a13c;     /* 缺口 */
+    --gap-soft:#2a2113;
+    --key:#e0c46a; --key-soft:#2a2517;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--paper);color:var(--ink);padding:36px 20px 52px;line-height:1.95;-webkit-font-smoothing:antialiased;}
+  .container{max-width:1020px;margin:0 auto;}
+  .header{text-align:center;margin-bottom:24px;padding:44px 24px 38px;background:var(--card);
+    border:1px solid var(--edge);border-radius:4px;position:relative;overflow:hidden;}
+  .header::before{content:"";position:absolute;top:0;left:0;width:50%;height:5px;background:var(--dd);}
+  .header::after{content:"";position:absolute;top:0;right:0;width:50%;height:5px;background:var(--mao);}
+  .header .kicker{font-size:11.5px;letter-spacing:2.5px;color:var(--ink-soft);margin-bottom:14px;font-family:Consolas,monospace;}
+  .header h1{font-size:24px;color:var(--ink);margin-bottom:13px;letter-spacing:1px;}
+  .header .subtitle{font-size:14.6px;color:var(--ink-mid);}
+  .header .meta{margin-top:16px;font-size:12.5px;color:var(--ink-soft);line-height:1.9;}
+  .header .meta b{color:var(--dd);font-weight:600;}
+  .header .meta i{color:var(--mao);font-style:normal;font-weight:600;}
+  .lead{background:var(--card);border:1px solid var(--edge);border-radius:3px;
+    padding:22px 26px;margin-bottom:26px;font-size:14.6px;color:var(--ink-mid);}
+  .lead .t{color:var(--key);font-weight:700;margin-bottom:11px;font-size:14px;}
+  .lead p+p{margin-top:9px;} .lead strong{color:var(--ink);}
+  .lead em{color:var(--both);font-style:normal;}
+  h2{font-size:19.5px;font-weight:700;color:var(--ink);margin:42px 0 6px;padding-left:14px;
+    border-left:4px solid var(--key);letter-spacing:.4px;}
+  .sub{color:var(--ink-soft);font-size:13.5px;margin:0 0 18px 18px;}
+  h3{font-size:15.6px;color:var(--ink);margin:26px 0 8px;}
+  .vs{display:grid;grid-template-columns:1fr 1fr;gap:0;margin:16px 0;
+    border:1px solid var(--edge);border-radius:3px;overflow:hidden;}
+  .vs-a{background:var(--dd-soft);padding:16px 19px;border-right:1px solid var(--edge);}
+  .vs-b{background:var(--mao-soft);padding:16px 19px;}
+  .vs-h{font-size:11.5px;font-weight:700;letter-spacing:1.2px;margin-bottom:10px;font-family:Consolas,monospace;}
+  .vs-a .vs-h{color:var(--dd);} .vs-b .vs-h{color:var(--mao);}
+  .vs-cn{font-size:14.6px;line-height:2;color:var(--ink);}
+  .vs-src{font-size:11.5px;color:var(--ink-soft);margin-top:8px;}
+  .quote{background:var(--key-soft);border:1px solid #3d3520;border-left:4px solid var(--key);
+    border-radius:3px;padding:16px 22px;margin:16px 0;}
+  .quote .cn{font-size:15.3px;color:#efe3b8;line-height:2.05;letter-spacing:.4px;}
+  .quote .src{margin-top:8px;font-size:12.5px;color:var(--ink-soft);text-align:right;}
+  .quote .gloss{margin-top:9px;font-size:13.4px;color:var(--ink-mid);border-top:1px dashed #4a4028;padding-top:9px;}
+  .q-mao{border-left-color:var(--mao);background:#241512;border-color:#3d231c;}
+  .q-mao .cn{color:#f0cfc4;} .q-mao .gloss{border-top-color:#4a2c24;}
+  .q-dd{border-left-color:var(--dd);background:#0f2029;border-color:#1d3646;}
+  .q-dd .cn{color:#c8e2f5;} .q-dd .gloss{border-top-color:#1d3646;}
+  .box{border-radius:3px;padding:16px 22px;margin:18px 0;font-size:13.8px;}
+  .box.good{background:var(--both-soft);border:1px solid #1d3a2a;border-left:4px solid var(--both);color:#a8dcc0;}
+  .box.good strong{color:var(--both);}
+  .box.gap{background:var(--gap-soft);border:1px solid #3d3220;border-left:4px solid var(--gap);color:#e8c99a;}
+  .box.gap strong{color:var(--gap);}
+  .box.key{background:var(--key-soft);border:1px solid #3d3520;border-left:4px solid var(--key);color:#e8dca0;}
+  .box.key strong{color:var(--key);}
+  .box em{font-style:normal;color:var(--ink);}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.4px;}
+  th,td{padding:9px 12px;border:1px solid var(--edge);text-align:left;vertical-align:top;}
+  th{background:#18212a;color:var(--key);font-weight:700;font-size:12.5px;}
+  td{color:var(--ink-mid);} td strong{color:var(--ink);}
+  td.a{color:#a8d2ee;} td.b{color:#eab5a6;}
+  ul,ol{margin:10px 0 0 22px;} li{margin-bottom:6px;color:var(--ink-mid);font-size:13.6px;}
+  li strong{color:var(--ink);}
+  .footer{text-align:center;margin-top:46px;padding:22px;color:var(--ink-soft);font-size:12.5px;line-height:1.95;}
+  @media(max-width:700px){
+    .vs{grid-template-columns:1fr;} .vs-a{border-right:none;border-bottom:1px solid var(--edge);}
+    .header h1{font-size:19px;} h2{font-size:17px;} body{padding:20px 14px 34px;}
+    table{font-size:11.5px;} .quote .cn{font-size:14px;}
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="kicker">TWO CRITERIA · DEUTSCH × 實踐論</div>
+    <h1>好解释 × 实践论</h1>
+    <div class="subtitle">「难以改变」与「社会实践」—— 两个判据的对照</div>
+    <div class="meta">
+      <b>《无穷的开始》</b> 第 1 章（595 页底本，全文已抽）<br>
+      <i>《实践论》</i> 1937 年 7 月，《毛泽东选集》第一卷 p285–298（<i>9,700 汉字</i>）<br>
+      <i>《矛盾论》</i> 《毛泽东选集》第一卷 p299–342（<i>23,735 汉字</i>）<br>
+      全部引文摘自两书原文，已逐句核对
+    </div>
+  </div>
+
+  <div class="lead">
+    <div class="t">先说结论：它们不是同一件事，但有一处是真的汇合</div>
+    <p>你提到这两本影响都很大。我读完两份原文之后，判断是：</p>
+    <p><strong>它们处理的是同一个问题（"凭什么说一个说法接上了现实"），给了两个不同的答案。</strong>
+    而且<em>两个答案各有一个对方缺的东西</em>。</p>
+    <p>而它们<strong>真正汇合的地方只有一处</strong>，但那一处很硬 —— 见第五节。</p>
+    <p><strong>⚠️ 先声明两件事</strong>：① 我先前凭记忆引的那两句<strong>原文已核实，是准确的</strong>；
+    ② 本文所有对照是<strong>文本层面的</strong>，不涉及对两本书的历史评价与政治评价。</p>
+  </div>
+
+  <!-- ==================== 一 ==================== -->
+  <h2>一 · 两个判据的原文并列</h2>
+
+  <div class="vs">
+    <div class="vs-a">
+      <div class="vs-h">多伊奇 · 判据是「可变更性」</div>
+      <div class="vs-cn">好/坏解释—— 一种解释，<strong>很难/容易改变</strong>并仍然能说明它声称能说明的事物。</div>
+      <div class="vs-src">《无穷的开始》第 1 章「术语」</div>
+      <div class="vs-cn" style="margin-top:14px;">我们通过寻求好解释来做到这一点，好解释是难以改变的，<strong>改变细节会毁掉整个解释</strong>。这才是科学革命的决定性因素……<strong>而实验检验不是</strong>。</div>
+      <div class="vs-src">第 1 章「小结」</div>
+    </div>
+    <div class="vs-b">
+      <div class="vs-h">毛泽东 · 判据是「社会实践」</div>
+      <div class="vs-cn"><strong>判定认识或理论之是否真理，不是依主观上觉得如何而定，而是依客观上社会实践的结果如何而定。真理的标准只能是社会的实践。</strong></div>
+      <div class="vs-src">《实践论》</div>
+      <div class="vs-cn" style="margin-top:14px;">只有在社会实践过程中……人们达到了思想中所预想的结果时，人们的认识才被证实了。</div>
+      <div class="vs-src">《实践论》</div>
+    </div>
+  </div>
+
+  <div class="box key">
+    <p><strong>看上去这是"标准之争"：一个说"难以改变"，一个说"社会实践"。</strong></p>
+    <p>但读下去会发现——<strong>它们实际上在回答两个不同的问题</strong>，所以不能简单说谁对谁错。见第二、三节。</p>
+  </div>
+
+  <!-- ==================== 二 ==================== -->
+  <h2>二 · 分歧一：知识从哪里来？</h2>
+  <div class="sub">这是两者最直接的对立。但毛选的立场比"经验论"精细</div>
+
+  <div class="quote q-mao">
+    <div class="cn">你要有知识，你就得参加变革现实的实践。<strong>你要知道梨子的滋味，你就得变革梨子，亲口吃一吃。</strong><br>
+    你要知道原子的组织同性质，你就得实行物理学和化学的实验，变革原子的情况。<br>
+    <strong>一切真知都是从直接经验发源的。</strong></div>
+    <div class="src">《实践论》</div>
+  </div>
+
+  <div class="quote q-dd">
+    <div class="cn">知识从何而来？经验主义说，我们从感觉经验中推演出知识。<strong>这种观点是错的。</strong><br>
+    理论的真正源头是猜想，知识的真正源头是随批评而修改的猜想。<br>
+    <strong>实验和观测的功能是在现有理论中作出选择，并不是作为新理论的来源。</strong></div>
+    <div class="src">《无穷的开始》第 1 章「小结」</div>
+  </div>
+
+  <h3>★ 但这里有一个我之前判断错了的地方，必须说清</h3>
+
+  <p style="color:var(--ink-mid);font-size:14px;"><strong>毛选并不主张"知识＝感觉的堆积"。</strong>它<strong>自己批评经验论</strong>：</p>
+
+  <div class="quote q-mao">
+    <div class="cn">如果以为认识可以停顿在低级的感性阶段，以为只有感性认识可靠，而理性认识是靠不住的，<strong>这便是重复了历史上的"经验论"的错误。</strong></div>
+    <div class="src">《实践论》</div>
+  </div>
+
+  <p style="color:var(--ink-mid);font-size:14px;">它给的是一个<strong>三段结构</strong>：</p>
+
+  <table>
+    <tr><th style="width:26%">毛选的三段</th><th>原文</th></tr>
+    <tr><td><strong>① 认识开始于经验</strong></td>
+      <td class="b">"认识开始于经验——这就是<b>认识论的唯物论</b>"</td></tr>
+    <tr><td><strong>② 感性必须上升到理性</strong></td>
+      <td class="b">"将丰富的感觉材料加以<b>去粗取精、去伪存真、由此及彼、由表及里</b>的改造制作工夫，造成概念和理论的系统"</td></tr>
+    <tr><td><strong>③ 理性必须回到实践</strong></td>
+      <td class="b">"抓着了世界的规律性的认识，必须把它<b>再回到改造世界的实践中去</b>……这就是检验理论和发展理论的过程"</td></tr>
+  </table>
+
+  <div class="box gap">
+    <p><strong>所以真正的分歧不在"要不要经验"，而在第 ② 步。</strong></p>
+    <p><strong>毛选</strong>说：感觉材料经过"改造制作"就<strong>升华</strong>为理性认识，而这个过程是认识过程的<strong>第 2 阶段</strong>。</p>
+    <p><strong>多伊奇</strong>说：理论<strong>不从经验里来</strong>，经验只在"已有理论之间做选择"。</p>
+    <p><em>差别是：毛选认为经验是理论的<strong>原料</strong>（要加工）；多伊奇认为经验是理论的<strong>裁判</strong>（只做取舍）。</em></p>
+    <p style="margin-top:10px;"><strong>这个分歧是可判的</strong>：可以问"第 ② 步的'改造制作'具体是怎么操作的"。
+    毛选给了四个字（去粗取精、去伪存真……），但<strong>没有给操作规则</strong>；
+    而按多伊奇的判据，"四个字"恰好是<strong>容易替换的</strong>——换成"归纳""抽象""总结"都行，而解释力不变。</p>
+  </div>
+
+  <!-- ==================== 三 ==================== -->
+  <h2>三 · 分歧二：实践能裁决吗？</h2>
+  <div class="sub">这是最要紧的一处，而且两个立场互有攻守</div>
+
+  <div class="quote q-mao">
+    <div class="cn">只有在社会实践过程中（物质生产过程中，阶级斗争过程中，科学实验过程中），<strong>人们达到了思想中所预想的结果时，人们的认识才被证实了。</strong><br>
+    ……如果不合，就会在实践中失败。人们经过失败之后，也就从失败取得教训，改正自己的思想使之适合于外界的规律性。</div>
+    <div class="src">《实践论》</div>
+  </div>
+
+  <div class="box gap">
+    <p><strong>多伊奇会问一个具体的问题：</strong></p>
+    <p>你说"达到预想的结果就证实了"。那么——<strong>"预想的结果"本身从哪来？</strong></p>
+    <p>它来自理论。<strong>所以理论在检验之前就已经在决定"什么算成功"了。</strong></p>
+    <p>举一个书里的现成例子（第 1 章）：<strong>地心说也能"达到预想的结果"</strong>——
+    它预测太阳每天升起，那个预测每天都被证实。<em>而它是错的。</em></p>
+    <p><strong>所以"实践成功"不能单独裁决理论，因为成功与失败是由理论解释出来的。</strong></p>
+  </div>
+
+  <div class="box good">
+    <p><strong>但反过来，毛选也会问多伊奇一个不好答的问题：</strong></p>
+    <p>你说"难以改变"是好解释的标准。那么——<strong>一个从没有人检验过的、细节严密自洽的坏解释，算不算好解释？</strong></p>
+    <p>按字面定义，它"难以改变"，所以它<strong>符合</strong>判据。</p>
+    <p><em>而毛选会说：那还没证实呢，它得回到实践中去。</em></p>
+    <p><strong>这一击是有效的</strong> —— 因为多伊奇的判据是<strong>结构性的</strong>（看解释内部的锁合程度），
+    它不要求这个解释已经被检验过。</p>
+  </div>
+
+  <div class="box key">
+    <p><strong>★ 我的判断：它们不是竞争关系，是两个不同的操作。</strong></p>
+    <table style="margin-top:10px;">
+      <tr><th style="width:22%"></th><th>它回答的问题</th><th>它不回答的</th></tr>
+      <tr><td class="a"><strong>多伊奇</strong></td>
+        <td>为什么这个解释<b>可能被反驳</b>（以及为什么只有它可能被反驳）</td>
+        <td>它<b>是否真的被反驳过</b></td></tr>
+      <tr><td class="b"><strong>实践论</strong></td>
+        <td>这个理论<b>是否经住了检验</b></td>
+        <td>它<b>为什么可能被检验</b></td></tr>
+    </table>
+    <p style="margin-top:10px;"><em>多伊奇给的是"可反驳性"，毛选给的是"已反驳/未反驳"。
+    前者是后者的前提——<strong>一个不能失败的解释，你拿它去实践也没用，因为它总能解释掉任何结果。</strong></em></p>
+  </div>
+
+  <!-- ==================== 四 ==================== -->
+  <h2>四 · 分歧三：失败意味着什么？</h2>
+  <div class="sub">这一处两人的语气很不一样</div>
+
+  <div class="vs">
+    <div class="vs-a">
+      <div class="vs-h">多伊奇 · 失败＝知识不足</div>
+      <div class="vs-cn">乐观主义（在我主张的意义上）是这样一种理论：<strong>所有的失败——所有的恶——都是知识不足造成的。</strong><br><br>有些问题很困难，但<strong>把困难的问题和不可能解决的问题混为一谈是错误的</strong>。</div>
+      <div class="vs-src">第 9 章「小结」</div>
+    </div>
+    <div class="vs-b">
+      <div class="vs-h">毛泽东 · 失败＝必须取得教训</div>
+      <div class="vs-cn">人们要想得到工作的胜利即得到预想的结果，一定要使自己的思想合于客观外界的规律性，<strong>如果不合，就会在实践中失败</strong>。<br><br>人们经过失败之后，也就<strong>从失败取得教训</strong>，改正自己的思想……所谓"<strong>失败者成功之母</strong>"，"<strong>吃一堑长一智</strong>"，就是这个道理。</div>
+      <div class="vs-src">《实践论》</div>
+    </div>
+  </div>
+
+  <div class="box gap">
+    <p><strong>差别在"失败的归属"</strong></p>
+    <p><strong>多伊奇</strong>：失败<em>总是</em>知识不足，所以<strong>任何失败原则上都可解决</strong>（只要知识够）。这是乐观主义。</p>
+    <p><strong>毛选</strong>：失败<em>证明</em>思想不合规律，<strong>所以必须改思想</strong>。这是纠错机制。</p>
+    <p><em>两者不冲突，但强度不同：多伊奇说"一定能解决"，毛选说"必须改正"。</em></p>
+  </div>
+
+  <div class="box gap">
+    <p><strong>⚠️ 而我必须指出第 9 章那个断言的一个反身问题</strong></p>
+    <p>"所有失败都是知识不足"——<strong>什么样的观察能推翻它？</strong></p>
+    <p>如果答案是"没有任何观察能推翻"，那按多伊奇<strong>自己的判据</strong>（难以改变、但也要可能被改变），
+    这句话就是<strong>坏解释</strong>。</p>
+    <p><em>他在第 1 章说"好解释是难以改变的，改变细节会毁掉整个解释"。
+    而"所有失败都是知识不足"这句话，你改任何一个细节——比如改成"部分失败"——它都还成立。
+    这说明它<strong>太容易改了</strong>，或者反过来说，<strong>它不可能被改错</strong>。</em></p>
+    <p><strong>这个反身性问题原文没有处理。</strong> 我认为这是全书最值得追问的一处。</p>
+  </div>
+
+  <!-- ==================== 五 ==================== -->
+  <h2>五 · 真正的汇合（只有这一处，但很硬）</h2>
+
+  <div class="box good">
+    <p style="font-size:15.5px;color:var(--ink);text-align:center;line-height:2;">
+      两个判据都要求同一件事：<br>
+      <strong>一个说法必须能够失败 —— 而且失败必须是可指认的。</strong>
+    </p>
+  </div>
+
+  <div class="quote q-mao">
+    <div class="cn">只有在社会实践过程中……人们达到了思想中所预想的结果时，人们的认识才被证实了。</div>
+    <div class="src">《实践论》</div>
+    <div class="gloss"><strong>"预想的结果"是这句话的关键。</strong>
+    一个说法要能被实践检验，它必须先<b>给出一个具体的、事先的预想</b> ——
+    <em>否则达不到也无所谓，那就不叫失败。</em></div>
+  </div>
+
+  <div class="quote q-dd">
+    <div class="cn">好解释是难以改变的，改变细节会毁掉整个解释。</div>
+    <div class="src">《无穷的开始》第 1 章</div>
+    <div class="gloss"><strong>而"难以改变"的意思正是：它的细节是被锁定的。</strong>
+    锁定了，你才能指着某处说"这里不对"。<br>
+    <em>而可随意替换的细节，改不改都不影响 —— 所以也就没有"不对"这回事。</em></div>
+  </div>
+
+  <div class="box key">
+    <p><strong>★ 所以这两个判据是同一件事的两端：</strong></p>
+    <table style="margin-top:10px;">
+      <tr><th style="width:30%">判据</th><th>它保证的是</th></tr>
+      <tr><td class="a">多伊奇：难以改变</td>
+        <td><strong>这个解释<em>有可能</em>失败</strong>（因为细节被现实锁住，改了就冲突）</td></tr>
+      <tr><td class="b">实践论：社会实践</td>
+        <td><strong>这个解释<em>是否已经</em>失败</strong>（达到预想结果＝没失败）</td></tr>
+    </table>
+    <p style="margin-top:10px;"><em>一个是"可证伪性"，一个是"证伪的实际操作"。而后者以前者为前提。</em></p>
+  </div>
+
+  <h3>顺带：《矛盾论》对多伊奇的一个补充</h3>
+
+  <div class="quote q-mao">
+    <div class="cn">我们的教条主义者是懒汉，他们拒绝对于具体事物做任何艰苦的研究工作，
+    他们把一般真理看成是凭空出现的东西，<strong>把它变成为人们所不能够捉摸的纯粹抽象的公式</strong>，
+    完全否认了并且颠倒了这个人类认识真理的正常秩序。</div>
+    <div class="src">《矛盾论》「矛盾的特殊性」</div>
+    <div class="gloss">这一段用的是多伊奇的语言：<strong>把一般真理变成"纯粹抽象的公式"——而公式是可以套任何东西的，所以它不承担后果。</strong><br>
+    <em>换句话说，《矛盾论》批评教条主义时用的判据，和多伊奇批评坏解释时用的是同一个：
+    <b>它太容易被套到任何地方去了。</b></em></div>
+  </div>
+
+  <!-- ==================== 六 ==================== -->
+  <h2>六 · 一处我需要如实标注的边界</h2>
+
+  <table>
+    <tr><th style="width:26%">维度</th><th>说明</th></tr>
+    <tr><td><strong>我做的是什么</strong></td>
+      <td><strong>文本层面的判据对照</strong>。我只比较两份文本对"怎样算接上了现实"这个问题的回答。</td></tr>
+    <tr><td><strong>我没做什么</strong></td>
+      <td>我没有、也不打算评价这两本书的历史作用、政治立场与现实后果。
+      <em>那是另一类问题，需要另一类材料，而这份文档的资料只有两本书的正文。</em></td></tr>
+    <tr><td><strong>《实践论》的篇幅限制</strong></td>
+      <td><strong>只有 9,700 汉字</strong>（《矛盾论》23,735）。所以本文引《实践论》较多，
+      <em>不是因为它更重要，而是因为它更短、更集中。</em></td></tr>
+    <tr><td><strong>我只有第一卷</strong></td>
+      <td>《论持久战》在<b>第二卷</b>（检索确认：第一卷里 0 次出现）。所以本文没有涉及它。</td></tr>
+    <tr><td><strong>最深的一处我没做</strong></td>
+      <td>《实践论》有一个我认为<strong>与多伊奇冲突最尖锐</strong>的地方——
+      它把"认识"放在<b>阶级地位</b>里（"各种思想无不打上阶级的烙印"）。
+      <em>这与多伊奇"通用解释者"的立场直接对立</em>（人的解释能力是否受社会位置限制）。
+      <strong>这一处需要单独一份产出，我没有把它塞进本文</strong>，因为它足够大。</td></tr>
+  </table>
+
+  <!-- ==================== 七 ==================== -->
+  <h2>七 · 给你自己的三个问题</h2>
+
+  <ol>
+    <li><strong>你读《实践论》时，读到的是"检验标准"还是"行动号召"？</strong><br>
+    文本里两者都有。<em>而这两种读法会导出完全不同的用法</em>——前者是方法论，后者是动员。</li>
+
+    <li><strong>"失败者成功之母"和多伊奇的"所有失败都是知识不足"，你觉得哪个更接近你的经验？</strong><br>
+    它们听起来像同一句话，但差别在<strong>前者要求你改，后者承诺你能解决</strong>。
+    <em>你在 `思/收获.txt` 里写"我相信自己"——那句话更靠近哪一边？</em></li>
+
+    <li><strong>如果你要对一个说法做"实践检验"，你能事先说出"预想的结果"是什么吗？</strong><br>
+    这一问我认为是两份文本合起来给出的最有用的操作：<strong>说不出预想结果的说法，是无法被检验的</strong>——
+    <em>而无法被检验的说法，按两个判据都不是知识。</em>
+    <strong>这一条可以用来测你自己那些感悟。</strong></li>
+  </ol>
+
+  <div class="quote">
+    <div class="cn">感觉到了的东西，我们不能立刻理解它，<strong>只有理解了的东西才更深刻地感觉它</strong>。<br>
+    感觉只解决现象问题，理论才解决本质问题。</div>
+    <div class="src">《实践论》</div>
+    <div class="gloss">这一句我认为是全篇最接近多伊奇的一句 —— <strong>"只有理解了的东西才更深刻地感觉它"。</strong><br>
+    <em>这正是"观察是理论负载的"（多伊奇第 2 章）的另一种说法。</em><br>
+    <strong>两本对立的书，在这里说的是同一件事。</strong></div>
+  </div>
+
+  <div class="footer">
+    好解释 × 实践论 · 「底层」项目<br>
+    底本：《无穷的开始》第 1 章 ·《毛泽东选集》第一卷 p285–342<br>
+    <em>全部引文已逐句核对原文；对照与判断部分为待议读法</em>
+  </div>
+
+</div>
+</body>
+</html>

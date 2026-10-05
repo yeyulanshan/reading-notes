@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>《动手学深度学习》整体架构 —— 一本教「怎么知道模型行不行」的书</title>
+<style>
+  :root{
+    --paper:#0f1117; --card:#171a22; --edge:#282d39;
+    --ink:#e6e9f0; --ink-mid:#a8b0c0; --ink-soft:#6c7486;
+    --core:#4ea1d3; --core-soft:#12222d;      /* 主色：蓝 */
+    --fit:#e0a13c; --fit-soft:#2a2114;         /* 拟合 */
+    --reg:#c76ee0; --reg-soft:#241a2b;         /* 正则化 */
+    --data:#5cc98f; --data-soft:#122620;       /* 数据 */
+    --warn:#ee6c5a; --warn-soft:#2b1a18;
+    --key:#d9c26a; --key-soft:#2a2517;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--paper);color:var(--ink);padding:36px 20px 48px;line-height:1.85;-webkit-font-smoothing:antialiased;}
+  .container{max-width:1000px;margin:0 auto;}
+
+  .header{text-align:center;margin-bottom:26px;padding:46px 24px 40px;background:var(--card);
+    border:1px solid var(--edge);border-top:5px solid var(--core);border-radius:4px;}
+  .header .kicker{font-size:11.5px;letter-spacing:2.5px;color:var(--ink-soft);margin-bottom:14px;font-family:Consolas,monospace;}
+  .header h1{font-size:25px;color:var(--ink);margin-bottom:14px;letter-spacing:.5px;line-height:1.5;}
+  .header .subtitle{font-size:14.5px;color:var(--ink-mid);}
+  .header .author{margin-top:16px;font-size:12.5px;color:var(--ink-soft);}
+
+  .guide{background:var(--core-soft);border:1px solid #1d3646;border-left:4px solid var(--core);
+    border-radius:3px;padding:20px 24px;margin-bottom:28px;font-size:14.5px;color:var(--ink-mid);}
+  .guide .t{color:var(--core);font-weight:700;margin-bottom:10px;font-size:13.5px;letter-spacing:.5px;}
+  .guide p+p{margin-top:8px;} .guide strong{color:var(--ink);}
+  .guide code{font-family:Consolas,monospace;color:var(--core);background:#0d1a22;padding:1px 5px;border-radius:2px;font-size:12.5px;}
+
+  .section-title{font-size:20px;font-weight:700;color:var(--ink);margin:46px 0 8px;padding-left:13px;
+    border-left:4px solid var(--core);letter-spacing:.3px;}
+  .section-sub{color:var(--ink-soft);font-size:13.5px;margin:0 0 18px 17px;}
+
+  .card{background:var(--card);border:1px solid var(--edge);border-radius:3px;padding:22px 26px;margin-bottom:16px;}
+  .card h3{color:var(--core);margin-bottom:10px;font-size:16.5px;}
+  .card p{color:var(--ink-mid);font-size:14.5px;} .card p+p{margin-top:9px;}
+  .card strong{color:var(--ink);}
+  .card code{font-family:Consolas,monospace;color:var(--core);background:#0d1a22;padding:1px 5px;border-radius:2px;font-size:12.5px;}
+
+  table{width:100%;border-collapse:collapse;margin:13px 0;font-size:13px;}
+  th,td{padding:9px 11px;border:1px solid var(--edge);text-align:left;vertical-align:top;}
+  th{background:#1c212b;color:var(--core);font-weight:700;font-size:12.5px;}
+  td{color:var(--ink-mid);} td strong{color:var(--ink);}
+  th code,td code{font-family:Consolas,monospace;color:var(--core);font-size:12px;}
+  td em{color:var(--fit);font-style:normal;font-weight:600;}
+
+  .tri{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin:18px 0;}
+  .tri .it{background:var(--card);border:1px solid var(--edge);border-top:4px solid;border-radius:3px;padding:16px 18px;}
+  .tri .it.a{border-top-color:var(--fit);} .tri .it.b{border-top-color:var(--core);}
+  .tri .it.c{border-top-color:var(--warn);}
+  .tri .it h4{font-size:15.5px;color:var(--ink);margin-bottom:7px;}
+  .tri .it p{font-size:13px;color:var(--ink-mid);}
+  .tri .it .d{font-size:12px;color:var(--ink-soft);margin-top:7px;font-family:Consolas,monospace;}
+
+  .quote{background:var(--key-soft);border:1px solid #3d3520;border-left:4px solid var(--key);
+    border-radius:3px;padding:18px 22px;margin:22px 0;}
+  .quote p{font-size:15px;color:#e8dca0;font-style:italic;line-height:1.8;}
+  .quote .src{margin-top:10px;font-size:12.5px;color:var(--ink-soft);text-align:right;font-style:normal;}
+
+  .pit{background:var(--warn-soft);border-left:4px solid var(--warn);border-radius:0 3px 3px 0;
+    padding:15px 19px;margin-bottom:12px;font-size:14px;color:#f0b3a9;}
+  .pit .lbl{color:var(--warn);font-weight:700;display:block;margin-bottom:6px;font-size:12.5px;}
+  .pit strong{color:#ffd0c7;}
+
+  .lab{background:var(--reg-soft);border:1px solid #3a2a44;border-left:4px solid var(--reg);
+    border-radius:3px;padding:18px 22px;margin-bottom:14px;font-size:14px;color:var(--ink-mid);}
+  .lab .t{color:var(--reg);font-weight:700;margin-bottom:8px;font-size:13.5px;letter-spacing:.4px;}
+  .lab strong{color:var(--ink);}
+  .lab code{font-family:Consolas,monospace;color:var(--reg);background:#1a1220;padding:1px 5px;border-radius:2px;font-size:12.5px;}
+  .lab ol,.lab ul{margin:8px 0 0 20px;} .lab li{margin-bottom:5px;}
+
+  .footer{text-align:center;margin-top:44px;padding:22px;color:var(--ink-soft);font-size:12.5px;line-height:1.9;}
+
+  @media(max-width:640px){
+    .header h1{font-size:19px;} .section-title{font-size:17.5px;}
+    body{padding:20px 14px 32px;} table{font-size:11.5px;}
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="kicker">DIVE INTO DEEP LEARNING · RELEASE 2.0.0</div>
+    <h1>一本教"怎么知道模型行不行"的书</h1>
+    <div class="subtitle">《动手学深度学习》整体架构 · 中文版 · PyTorch 实现</div>
+    <div class="author">Aston Zhang · Zachary C. Lipton · 李沐 · Alexander J. Smol</div>
+  </div>
+
+  <div class="guide">
+    <div class="t">📖 这本书在 07 域补的是哪一块</div>
+    <p>"机器学习"这个缺口其实是三层，而<strong>这本书主要补前两层</strong>：</p>
+    <table>
+      <tr><th>层</th><th>内容</th><th>谁覆盖</th></tr>
+      <tr><td><strong>① 判断框架</strong></td><td>怎么知道模型是真学到了，还是背下来了</td><td><strong>← 这本书第 4 章</strong></td></tr>
+      <tr><td><strong>② 机制</strong></td><td>反向传播、卷积、注意力怎么工作</td><td><strong>← 这本书 5–13 章</strong></td></tr>
+      <tr><td><strong>③ 统计基础</strong></td><td>偏差-方差、交叉验证、为什么留验证集</td><td>ISLP（另一本）</td></tr>
+    </table>
+    <p><strong>而它的"理论底座"其实你项目里已经有了</strong>：MacKay《信息论》第 V 部分（38–44 章）讲了神经网络，而且是从<strong>信息论视角</strong>——"学习即推断"。<em>那本给你"为什么这样学是有道理的"，这本给你"实际上怎么跑起来"。</em></p>
+  </div>
+
+  <!-- ============ 核心 ============ -->
+  <div class="section-title">全书最重要的一节：第 4.4 节</div>
+  <div class="section-sub">这一节不是讲模型的，是讲"怎么判断"的——而它才是全书的地基</div>
+
+  <div class="card">
+    <p><strong>它从一个问题开始</strong>（第 6958 行）：</p>
+    <p style="padding:12px 18px;background:#1c212b;border-left:3px solid var(--core);border-radius:0 3px 3px 0;color:var(--ink);">
+      "作为机器学习科学家，我们的目标是发现模式。但是，<strong>我们如何才能确定模型是真正发现了一种泛化的模式，而不是简单地记住了数据呢？</strong>"
+    </p>
+    <p><strong>它举的例子极好</strong>——用基因数据预测痴呆状态：</p>
+    <p style="padding:12px 18px;background:#1c212b;border-left:3px solid var(--fit);border-radius:0 3px 3px 0;color:var(--ink-mid);font-size:13.5px;">
+      "因为基因可以唯一确定每个个体（不考虑双胞胎），所以在这个任务中是有可能记住整个数据集的。我们不想让模型只会做这样的事情：<strong>'那是鲍勃！我记得他！他有痴呆症！'</strong>"
+    </p>
+    <p>——<strong>这句话把"过拟合"从一个技术词变成了一个你一眼能认出的荒谬行为。</strong></p>
+  </div>
+
+  <div class="card">
+    <h3>两个误差的定义（这是全部判据的基础）</h3>
+    <table>
+      <tr><th>概念</th><th>定义（书中原话）</th></tr>
+      <tr>
+        <td><strong>训练误差</strong><br>training error</td>
+        <td>"模型在训练数据集上计算得到的误差"</td>
+      </tr>
+      <tr>
+        <td><strong>泛化误差</strong><br>generalization error</td>
+        <td>"模型应用在<strong>同样从原始样本的分布中抽取的无限多数据样本</strong>时，模型误差的期望"</td>
+      </tr>
+    </table>
+    <p><strong>而书里立刻补了一句最关键的话</strong>（第 6984 行）：</p>
+    <p style="padding:12px 18px;background:var(--key-soft);border-left:3px solid var(--key);border-radius:0 3px 3px 0;color:#e8dca0;font-style:italic;">
+      "问题是，<strong>我们永远不能准确地计算出泛化误差。</strong>这是因为无限多的数据样本是一个虚构的对象。"
+    </p>
+    <p>——<strong>这一句是整本书的诚实之处。</strong>它没有声称你能算出真实的泛化误差，它只说你能<em>估计</em>：用一个独立的测试集。</p>
+  </div>
+
+  <!-- ============ 判据 ============ -->
+  <div class="section-title">那个可操作的判据：看两条误差的相对位置</div>
+
+  <div class="tri">
+    <div class="it a">
+      <h4>欠拟合 underfitting</h4>
+      <p>训练误差和验证误差<strong>都很高</strong>，但两者差距小。</p>
+      <div class="d">→ 模型太简单，表达力不足</div>
+    </div>
+    <div class="it b">
+      <h4>刚好</h4>
+      <p>训练误差低，验证误差也低，差距可接受。</p>
+      <div class="d">→ 泛化误差小</div>
+    </div>
+    <div class="it c">
+      <h4>过拟合 overfitting</h4>
+      <p>训练误差<strong>明显低于</strong>验证误差。</p>
+      <div class="d">→ 记住了训练集</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p><strong>而书里对"过拟合"给了一个反直觉的宽容</strong>（第 7093 行）：</p>
+    <p style="padding:12px 18px;background:#1c212b;border-left:3px solid var(--reg);border-radius:0 3px 3px 0;color:var(--ink-mid);font-size:13.5px;">
+      "注意，<strong>过拟合并不总是一件坏事。</strong>特别是在深度学习领域，众所周知，最好的预测模型在训练数据上的表现往往比在保留（验证）数据上好得多。<strong>最终，我们通常更关心验证误差，而不是训练误差和验证误差之间的差距。</strong>"
+    </p>
+    <p>——<strong>这是一个很重要的立场。</strong>它意味着：不要为了"消除过拟合"而牺牲验证误差。目标是<em>验证误差低</em>，不是<em>两条曲线贴在一起</em>。</p>
+  </div>
+
+  <div class="card">
+    <h3>影响过拟合的两个因素</h3>
+    <table>
+      <tr><th>因素</th><th>规律</th></tr>
+      <tr>
+        <td><strong>模型复杂度</strong></td>
+        <td>阶数越高 → 训练误差单调下降（"最坏也是相等"）→ 但验证误差先降后升</td>
+      </tr>
+      <tr>
+        <td><strong>数据集大小</strong></td>
+        <td>"训练数据集中的样本越少，我们就越有可能（且更严重地）过拟合"</td>
+      </tr>
+    </table>
+    <p><strong>它还给了一个关于深度的现实判断</strong>（第 7140 行）：</p>
+    <p style="padding:12px 18px;background:#1c212b;border-left:3px solid var(--data);border-radius:0 3px 3px 0;color:var(--ink-mid);font-size:13.5px;">
+      "对于许多任务，<strong>深度学习只有在有数千个训练样本时才优于线性模型。</strong>从一定程度上来说，深度学习目前的生机要归功于廉价存储、互联设备以及数字化经济带来的海量数据集。"
+    </p>
+    <p><em>这句话值得单独记——它是对"深度学习为什么现在才起来"的一个非技术解释：不是算法突然变好了，是数据突然变多了。</em></p>
+  </div>
+
+  <!-- ============ iid ============ -->
+  <div class="section-title">那个被默认、却常常不成立的假设</div>
+  <div class="section-sub">书里主动拆穿了自己的框架——这一点很值得学</div>
+
+  <div class="card">
+    <p><strong>它先说明框架依赖什么</strong>（第 7015 行）：</p>
+    <p style="padding:12px 18px;background:#1c212b;border-left:3px solid var(--core);border-radius:0 3px 3px 0;color:var(--ink);">
+      "我们假设训练数据和测试数据都是<strong>从相同的分布中独立提取的</strong>。这通常被称为<strong>独立同分布假设（i.i.d. assumption）</strong>，这意味着对数据进行采样的过程没有进行'记忆'。"
+    </p>
+    <p><strong>然后它立刻自己拆台</strong>（第 7019 行起）：</p>
+    <p style="padding:12px 18px;background:var(--warn-soft);border-left:3px solid var(--warn);border-radius:0 3px 3px 0;color:#f0b3a9;font-size:13.5px;">
+      "要成为一名优秀的机器学习科学家需要具备<strong>批判性思考能力</strong>。假设是存在漏洞的，即很容易找出假设失效的情况。"<br><br>
+      "如果我们根据从加州大学旧金山分校医学中心的患者数据训练死亡风险预测模型，并将其应用于马萨诸塞州综合医院的患者数据，结果会怎么样？这两个数据的分布可能不完全一样。"
+    </p>
+    <p><strong>还有时间维度上的违反</strong>："当我们对微博的主题进行分类时，新闻周期会使得正在讨论的话题产生时间依赖性，从而违反独立性假设。"</p>
+    <p><strong>而它给的结论是务实而非教条的</strong>（第 7024 行）：</p>
+    <p style="padding:12px 18px;background:#1c212b;border-left:3px solid var(--data);border-radius:0 3px 3px 0;color:var(--ink-mid);font-size:13.5px;">
+      "有时候我们即使<strong>轻微违背</strong>独立同分布假设，模型仍将继续运行得非常好。……毕竟，几乎所有现实的应用都至少涉及到一些违背独立同分布假设的情况。"
+    </p>
+  </div>
+
+  <div class="quote">
+    <p>"假设是存在漏洞的，即很容易找出假设失效的情况。"</p>
+    <div class="src">—— 第 4.4.1 节。这句话和 algs4 的 "random keys"、哈希表的 Assumption J 是同一条纪律</div>
+  </div>
+
+  <!-- ============ 章节地图 ============ -->
+  <div class="section-title">全书 18 章的实际覆盖</div>
+  <div class="section-sub">按"它在补哪一层"重新分组，而不是照抄目录顺序</div>
+
+  <table>
+    <tr><th style="width:24%">章（PDF 页）</th><th>内容</th><th>补哪一层</th></tr>
+    <tr><td>预备知识（p57）· 深度学习计算（p209）</td><td>张量、自动求导、层与块、参数管理</td><td>工具</td></tr>
+    <tr style="background:#12222d;">
+      <td><strong>线性神经网络（p103）</strong> · <strong>多层感知机（p145）</strong></td>
+      <td><strong>线性回归 · softmax 回归 · 模型选择/欠拟合/过拟合 · 权重衰减 · Dropout · 数值稳定性</strong></td>
+      <td><strong>① 判断框架</strong><br><em>全书最重要的部分</em></td>
+    </tr>
+    <tr><td>卷积神经网络（p235）· 现代卷积神经网络（p265）</td><td>卷积、填充步幅、通道、池化 · AlexNet/VGG/BN/ResNet</td><td>② 机制（视觉）</td></tr>
+    <tr><td>循环神经网络（p307）· 现代循环神经网络（p353）</td><td>RNN、BPTT、梯度爆炸 · GRU/LSTM/Seq2Seq</td><td>② 机制（序列）</td></tr>
+    <tr style="background:#12222d;">
+      <td><strong>注意力机制（p399）</strong></td>
+      <td><strong>注意力评分 · Bahdanau · 多头注意力 · 自注意力 · Transformer</strong></td>
+      <td><strong>② 机制（现代核心）</strong></td>
+    </tr>
+    <tr><td>优化算法（p445）· 计算性能（p521）</td><td>GD/SGD/Momentum/AdaGrad/RMSProp/Adam · 并行、多GPU</td><td>② 机制（训练）</td></tr>
+    <tr><td>计算机视觉（p567）</td><td>图像增广、微调、目标检测、语义分割</td><td>② 机制（视觉应用）</td></tr>
+    <tr><td>NLP 预训练（p667）· NLP 应用（p721）</td><td>词嵌入、BERT、微调、情感分析、机器翻译</td><td>② 机制（语言）</td></tr>
+  </table>
+
+  <div class="card">
+    <h3>注意它把什么放在了最前面</h3>
+    <p><strong>第 3–4 章（线性模型 + 多层感知机）就讲了过拟合、权重衰减、Dropout。</strong>也就是说——<em>它在你学会任何"深"的东西之前，先教会你"怎么判断一个模型行不行"。</em></p>
+    <p><strong>这个顺序是刻意的，也是这本书最值得学的地方之一。</strong>相比之下，很多教材把正则化放在很后面当"技巧"，而这里它是<strong>和第一个模型一起出现的判据</strong>。</p>
+  </div>
+
+  <!-- ============ 与 algs4 的对照 ============ -->
+  <div class="section-title">它和 algs4 是同一个套路的第三个版本</div>
+  <div class="section-sub">07 域现在有三本技术书，它们的骨架其实一致</div>
+
+  <table>
+    <tr><th></th><th>OSTEP（系统）</th><th>algs4（算法）</th><th>d2l（机器学习）</th></tr>
+    <tr><td><strong>抽象</strong></td><td>进程、地址空间</td><td>栈、符号表、图</td><td>模型、层、损失函数</td></tr>
+    <tr><td><strong>机制</strong></td><td>上下文切换、页表</td><td>数组、树、哈希</td><td>反向传播、卷积、注意力</td></tr>
+    <tr><td><strong>代价</strong></td><td>（分散各处）</td><td><strong>Proposition：增长级</strong></td><td><strong>训练误差 vs 验证误差</strong></td></tr>
+    <tr><td><strong>策略</strong></td><td>调度、置换</td><td>按访问模式选结构</td><td>按数据量选模型复杂度</td></tr>
+    <tr><td><strong>怎么验证</strong></td><td>跑起来看</td><td><strong>倍增测试</strong></td><td><strong>留出验证集</strong></td></tr>
+  </table>
+
+  <div class="card">
+    <p><strong>而这里有一条很深的同构</strong>，值得单独说：</p>
+    <table>
+      <tr><th>algs4 的纪律</th><th>d2l 的纪律</th></tr>
+      <tr>
+        <td><strong>代价模型选错了，结论就错了</strong><br><em>"数组访问次数"这个模型看不见缓存</em></td>
+        <td><strong>评估方式选错了，模型就废了</strong><br><em>用训练误差评估，等于没评估</em></td>
+      </tr>
+    </table>
+    <p>——<em>两者都是"衡量方式决定了你能看见什么"。</em>你在 <code>动手实验</code> 里亲手验证过 algs4 那一半（矩阵遍历差 18 倍，而账面复杂度一样）；机器学习这一半就是这本书第 4 章。</p>
+  </div>
+
+  <!-- ============ 边界 ============ -->
+  <div class="section-title">这本书不承诺什么</div>
+
+  <div class="pit">
+    <span class="lbl">边界一 · 它是"动手"导向的，数学推导偏浅</span>
+    它给你代码、图、直觉，但<strong>不给你完整的数学证明</strong>。<em>所以它不能单独用——要配 ISLP 补统计基础，配 MacKay 补信息论视角。</em>
+  </div>
+
+  <div class="pit">
+    <span class="lbl">边界二 · 它的结论全是经验性的，必须带条件</span>
+    这本书里几乎所有"X 更好"都要加限定。比如它自己说"深度学习只有在有数千个训练样本时才优于线性模型"——<strong>注意那个"数千"和"许多任务"</strong>。<em>这就是为什么这一域要新增一份「经验结论的适用边界手册」：把每条主张逼问"在什么数据上、样本多大、超参调了没有"。</em>
+  </div>
+
+  <div class="pit">
+    <span class="lbl">边界三 · PDF 里的数学公式被拍平了</span>
+    我核对了原文：公式被提取成文本时<strong>根号拆行、上下标错位</strong>（例如 <code>y = w⊤x + b + ϵ</code>、<code>√ 2πσ2</code>）。<strong>引用公式时必须核对原书 PDF</strong>，不能只信全文 txt。
+  </div>
+
+  <div class="pit">
+    <span class="lbl">边界四 · 它的框架依赖 i.i.d.，而它自己说了这个假设常被违反</span>
+    书里主动拆穿了自己（见上面那一节）。<em>这是这本书诚实的地方，也是你引用它时必须一起引用的前提。</em>
+  </div>
+
+  <div class="quote">
+    <p>"我们如何才能确定模型是真正发现了一种泛化的模式，而不是简单地记住了数据呢？"</p>
+    <div class="src">—— 第 4.4 节开篇。全书的地基问题</div>
+  </div>
+
+  <!-- ============ 可跑验证 ============ -->
+  <div class="section-title">🔬 可跑的验证环节（模型版）</div>
+  <div class="section-sub">前面 algs4 / Dive into Systems 的实验验证"复杂度"，这里验证"泛化"</div>
+
+  <div class="lab">
+    <div class="t">🔬 这一域已经有一套实验集，机器学习版应该长什么样</div>
+    <p>本机已确认装有 <code>torch 2.8.0+cpu</code> 与 <code>numpy 2.2.6</code>，所以模型实验<strong>能真跑</strong>（不需要 GPU）。</p>
+    <p>而 algs4 那套实验的方法论可以直接搬过来——<strong>它们验证的东西不同，但做法一致</strong>：</p>
+    <table>
+      <tr><th>算法实验（已有）</th><th>模型实验（待做）</th></tr>
+      <tr><td>翻倍输入，看耗时比值 → 读出增长级</td><td>翻倍模型复杂度，看<strong>两条误差曲线的分叉</strong></td></tr>
+      <tr><td>改一个参数（容量增长方式），看摊还是否失效</td><td>改一个超参（权重衰减 λ），看<strong>验证误差怎么变</strong></td></tr>
+      <tr><td>打破 Assumption（坏散列），看性能崩掉</td><td>打破 i.i.d.（把训练分布和测试分布错开），<strong>看泛化怎么崩</strong></td></tr>
+      <tr><td>对照组分离混杂因素（连续池 vs malloc）</td><td>对照组分离"数据量"与"模型复杂度"各自的作用</td></tr>
+    </table>
+    <p style="margin-top:10px;"><strong>我打算做的模型实验</strong>（全部中文命名，放在同一个 <code>动手实验</code> 目录里）：</p>
+    <ol>
+      <li><strong>实验8_过拟合分叉</strong> —— 用多项式回归，把阶数从 1 调到 20，画出训练误差与验证误差的<strong>分叉点</strong></li>
+      <li><strong>实验9_权重衰减</strong> —— 固定模型容量，只改 λ，看验证误差的 U 形曲线（<em>λ 太小过拟合，太大欠拟合</em>）</li>
+      <li><strong>实验10_数据量</strong> —— 固定模型容量，只加数据，看泛化误差怎么降（<em>验证书里"更多数据不会有害"那句</em>）</li>
+      <li><strong>实验11_打破独立同分布</strong> —— 训练用分布 A、测试用分布 B，看<strong>训练误差照降而验证误差崩掉</strong></li>
+      <li><strong>实验12_学习率</strong> —— 只改学习率，看训练曲线从"不动"到"震荡"的全过程</li>
+    </ol>
+    <p style="margin-top:10px;"><em>其中实验 11 是我最想做的——因为它是书里<strong>自己拆穿自己</strong>的那一处，而"亲手把 i.i.d. 打破"比读十遍那段话都有效。</em></p>
+  </div>
+
+  <div class="footer">
+    《动手学深度学习》整体架构 · Release 2.0.0 · 中文版 · PyTorch 实现<br>
+    判断框架（第 4 章）· 机制（5–13 章）· 与 algs4 的同构 · 可跑的模型实验<br>
+    <em>"假设是存在漏洞的，即很容易找出假设失效的情况"</em>
+  </div>
+
+</div>
+</body>
+</html>

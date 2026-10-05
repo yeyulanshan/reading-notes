@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>《論語》整体架构 —— 关系性自我的第一份文献</title>
+<style>
+  :root{
+    --paper:#14100c; --card:#1c1712; --edge:#332a20;
+    --ink:#ece4d8; --ink-mid:#b3a693; --ink-soft:#7a6f5f;
+    --core:#c9a227; --core-soft:#241d10;
+    --ren:#d98c3f; --li:#8fae6b; --xiao:#c96b6b; --xue:#6b9fc9;
+    --key:#e0c46a; --key-soft:#2a2415;
+    --warn:#d9694f; --warn-soft:#2a1712;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--paper);color:var(--ink);padding:36px 20px 52px;line-height:1.9;-webkit-font-smoothing:antialiased;}
+  .container{max-width:1000px;margin:0 auto;}
+  .header{text-align:center;margin-bottom:26px;padding:48px 24px 42px;background:var(--card);
+    border:1px solid var(--edge);border-top:5px solid var(--core);border-radius:4px;}
+  .header .kicker{font-size:11.5px;letter-spacing:3px;color:var(--ink-soft);margin-bottom:16px;font-family:Consolas,monospace;}
+  .header h1{font-size:26px;color:var(--ink);margin-bottom:14px;letter-spacing:2px;line-height:1.5;}
+  .header .subtitle{font-size:14.5px;color:var(--ink-mid);}
+  .header .meta{margin-top:18px;font-size:12.5px;color:var(--ink-soft);line-height:1.9;}
+  .header .meta span{color:var(--core);}
+  .lead{background:var(--core-soft);border:1px solid #3d3218;border-left:4px solid var(--core);
+    border-radius:3px;padding:22px 26px;margin-bottom:26px;font-size:15px;color:var(--ink-mid);}
+  .lead .t{color:var(--core);font-weight:700;margin-bottom:12px;font-size:14px;letter-spacing:.5px;}
+  .lead p+p{margin-top:10px;} .lead strong{color:var(--ink);}
+  .lead em{color:var(--ren);font-style:normal;font-weight:600;}
+  h2{font-size:20px;font-weight:700;color:var(--ink);margin:40px 0 6px;padding-left:14px;
+    border-left:4px solid var(--core);letter-spacing:.5px;}
+  .sub{color:var(--ink-soft);font-size:13.5px;margin:0 0 18px 18px;}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.5px;}
+  th,td{padding:9px 12px;border:1px solid var(--edge);text-align:left;vertical-align:top;}
+  th{background:#231d16;color:var(--core);font-weight:700;font-size:12.5px;}
+  td{color:var(--ink-mid);} td strong{color:var(--ink);} td em{color:var(--ren);font-style:normal;}
+  .quote{background:var(--key-soft);border:1px solid #3d3520;border-left:4px solid var(--key);
+    border-radius:3px;padding:18px 24px;margin:20px 0;}
+  .quote .cn{font-size:16.5px;color:#efe3b8;line-height:2.05;letter-spacing:.6px;}
+  .quote .src{margin-top:10px;font-size:12.5px;color:var(--ink-soft);text-align:right;}
+  .quote .gloss{margin-top:10px;font-size:13.5px;color:var(--ink-mid);border-top:1px dashed #4a4028;padding-top:10px;}
+  .layer{background:var(--card);border:1px solid var(--edge);border-radius:3px;margin-bottom:16px;overflow:hidden;}
+  .layer-head{padding:14px 22px;background:var(--core-soft);border-bottom:1px solid var(--edge);
+    display:flex;gap:12px;align-items:baseline;}
+  .layer-head .n{font-family:Consolas,monospace;font-size:11.5px;font-weight:700;color:#14100c;
+    background:var(--core);padding:2px 9px;border-radius:2px;flex-shrink:0;}
+  .layer-head .tt{font-size:15.5px;font-weight:700;color:var(--ink);}
+  .layer-body{padding:16px 22px;font-size:13.8px;color:var(--ink-mid);}
+  .layer-body p+p{margin-top:9px;} .layer-body strong{color:var(--ink);}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0;}
+  .cell{background:var(--card);border:1px solid var(--edge);border-radius:3px;padding:16px 18px;}
+  .cell .h{font-size:13px;font-weight:700;margin-bottom:8px;letter-spacing:.4px;}
+  .cell p{font-size:13.2px;color:var(--ink-mid);} .cell strong{color:var(--ink);}
+  .warn{background:var(--warn-soft);border:1px solid #3a2019;border-left:4px solid var(--warn);
+    border-radius:0 3px 3px 0;padding:16px 22px;margin:18px 0;font-size:13.8px;color:#eab5a6;}
+  .warn strong{color:var(--warn);}
+  ul,ol{margin:10px 0 0 22px;} li{margin-bottom:6px;color:var(--ink-mid);font-size:13.6px;}
+  li strong{color:var(--ink);}
+  .footer{text-align:center;margin-top:46px;padding:22px;color:var(--ink-soft);font-size:12.5px;line-height:1.95;}
+  @media(max-width:680px){
+    .grid{grid-template-columns:1fr;} .header h1{font-size:20px;} h2{font-size:17.5px;}
+    body{padding:20px 14px 34px;} table{font-size:11.5px;} .quote .cn{font-size:15px;}
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="kicker">LUNYU · THE ANALECTS · 關係性自我</div>
+    <h1>《論語》整体架构</h1>
+    <div class="subtitle">一个不是"个体"的自我模型 —— 它的第一份文献</div>
+    <div class="meta">
+      底本：Project Gutenberg #4094（Legge 双语版）<br>
+      纯中文抽出件 <span>18,613 字</span> · <span>20 篇</span> · <span>493 章</span> · 繁体<br>
+      <span>⚠️ 章号不可用于引用</span>（本版与通行本不一致，详见同目录《底本考订.md》）
+    </div>
+  </div>
+
+  <div class="lead">
+    <div class="t">这份文档要回答的问题</div>
+    <p>《論語》在中国从来是"必读"，所以"它讲了什么"这件事不缺答案。<strong>缺的是</strong>：</p>
+    <p><strong>它在我们这个项目的框架里，究竟处在一个什么位置？</strong></p>
+    <p>而这个项目的框架是这样搭的：<em>01 域问"认识本身怎么才可能"，02 域问"我以为的世界和实际的世界之间隔着什么"，
+    04 域问"陌生人之间的协作怎么长出来"</em>——<strong>每一个域都是一个"问题"，不是一个"学科"或"文化"。</strong></p>
+    <p>于是《論語》不能作为一个"中国哲学域"塞进来。它要进来，只能以<strong>回答某个域的那个问题</strong>的方式进来。</p>
+    <p><strong>而它能回答的，是几乎所有域都默认掉的那一条前提：</strong>
+    <em>自我是一个独立的个体——先有边界，再去连接。</em></p>
+    <p>《論語》的起点不是这个。<strong>它的起点是：人在关系里才被定义出来。</strong></p>
+  </div>
+
+  <!-- ============ 一 ============ -->
+  <h2>一 · 先说清它不是一本什么书</h2>
+  <div class="sub">这一步很必要，因为对《論語》的默认期待会导致读不进去</div>
+
+  <table>
+    <tr><th style="width:22%">它不是</th><th>为什么这个期待会落空</th></tr>
+    <tr>
+      <td><strong>不是一部体系著作</strong></td>
+      <td>它没有定义、没有推理链、没有章节递进。<strong>同一个概念（仁）在不同章里被给出不同的说法</strong>，
+      而且它自己不觉得这是矛盾。</td>
+    </tr>
+    <tr>
+      <td><strong>不是孔子写的</strong></td>
+      <td>是弟子及再传弟子辑录的对话与言行。<strong>所以"孔子说了什么"和"编者想让你看到什么"是两层。</strong></td>
+    </tr>
+    <tr>
+      <td><strong>不是伦理学教材</strong></td>
+      <td>它几乎不给规则。<strong>问"什么是孝"，它会给你几个具体的人怎么做，而不是一个定义。</strong></td>
+    </tr>
+    <tr>
+      <td><strong>不是成功学</strong></td>
+      <td>它反复说"不患人之不己知"（别怕别人不了解你）——<strong>它要的是"成人"，不是"成事"。</strong></td>
+    </tr>
+  </table>
+
+  <div class="warn">
+    <p><strong>⚠️ 一个必须先声明的方法论限制</strong></p>
+    <p>本产出<strong>没有今人注解可依</strong>（朱熹、杨伯峻等均为版权书）。古文的多义性是真实的，
+    所以凡是解释有歧义处，本文都<strong>标明"这是有争议的"</strong>，而不是给确定答案。</p>
+    <p>这与 `01_哲学与思维地基` 的精神一致：那个域的核心是"判断一个说法可不可信"。
+    <strong>那么"我这一句读得对不对"，本身就是需要标注置信度的东西。</strong></p>
+  </div>
+
+  <!-- ============ 二 ============ -->
+  <h2>二 · 它的出发点：一个不是"个体"的自我</h2>
+  <div class="sub">这是这份架构的核心，也是《論語》对本项目其他域的全部意义所在</div>
+
+  <div class="quote">
+    <div class="cn">有子曰、其為人也孝弟、而好犯上者鮮矣、不好犯上、而好作亂者、未之有也。<br>
+    君子務本、本立、而道生、<strong>孝弟也者、其為仁之本與</strong>。</div>
+    <div class="src">《論語·學而》「有子曰」章（底本作：君子務本、本立、而道生、孝弟也者、其為仁之本與）</div>
+    <div class="gloss"><strong>关键在最后一句。</strong>它不说"孝弟是仁的一种表现"，而说"<strong>孝弟是仁的本</strong>"
+    —— 即：<strong>对他人的基本伦理（仁），其根源在家庭关系里，而不在个体内部。</strong></div>
+  </div>
+
+  <p style="color:var(--ink-mid);font-size:14px;">把这句和西方伦理学的起点放在一起，差别立刻显出来：</p>
+
+  <div class="grid">
+    <div class="cell">
+      <div class="h" style="color:var(--xue)">西方伦理学的常见起点</div>
+      <p>一个<strong>独立的理性主体</strong>，然后问：<strong>他应当如何对待他人？</strong></p>
+      <p>（康德：普遍化你的准则。功利主义：最大化总效用。契约论：在无知之幕后面你会同意什么。）</p>
+      <p><em>共同点：关系是主体"之后"的事。</em></p>
+    </div>
+    <div class="cell">
+      <div class="h" style="color:var(--ren)">《論語》的起点</div>
+      <p>一个<strong>已经在关系中的人</strong>，然后问：<strong>他要成为什么样的人？</strong></p>
+      <p>（"仁"不是一条规则，是一种存在方式；而它有"本"，本在孝弟。）</p>
+      <p><em>共同点：关系不是"之后"的事，是构成性的。</em></p>
+    </div>
+  </div>
+
+  <div class="quote">
+    <div class="cn">顏淵問仁。子曰、<strong>克己復禮為仁</strong>、一日克己復禮、天下歸仁焉、
+    <strong>為仁由己、而由人乎哉</strong>。</div>
+    <div class="src">《論語·顏淵》「顏淵問仁」章</div>
+    <div class="gloss">这一章有个<strong>表面矛盾</strong>，而它正是要害：<br>
+    "天下歸仁"是<strong>关系性的</strong>（天下都归向仁），但"為仁由己、而由人乎哉"又是<strong>个体性的</strong>（由自己，不由别人）。<br>
+    <strong>解法是：仁必须由自己开始，但它不在自己内部完成。</strong>它是"己"与"礼"（即与他人共处的形式）之间的东西。</div>
+  </div>
+
+  <!-- ============ 三 ============ -->
+  <h2>三 · 三层结构：本 · 途 · 成</h2>
+  <div class="sub">《論語》讲"成人"这件事，可以拆成三层。这不是它的章节结构，是它的论证结构</div>
+
+  <div class="layer">
+    <div class="layer-head"><span class="n">本</span><span class="tt">关系是起点，不是选项</span></div>
+    <div class="layer-body">
+      <p><strong>孝弟為仁之本</strong>（學而）· <strong>三年無改於父之道、可謂孝矣</strong>（學而／里仁）·
+      <strong>父母在、不遠游、游必有方</strong>（里仁）</p>
+      <p>它不是主张"应该重视家庭"，而是主张<em>人的伦理能力首先在家庭关系里生成</em>。</p>
+      <p><strong>证据在哪：</strong>如果孝只是"一条规则"，那么它可以被别的规则替代。
+      但《論語》把它放在"本"的位置 —— <strong>没有它，仁就没有生长的地方。</strong></p>
+    </div>
+  </div>
+
+  <div class="layer">
+    <div class="layer-head"><span class="n">途</span><span class="tt">怎么从"本"长出来：忠恕</span></div>
+    <div class="layer-body">
+      <div class="quote" style="margin:10px 0;">
+        <div class="cn">子曰、參乎、吾道一以貫之。曾子曰、唯。<br>
+        子出、門人問曰、何謂也。曾子曰、<strong>夫子之道、忠恕而已矣</strong>。</div>
+        <div class="src">《論語·里仁》「吾道一以貫之」章</div>
+        <div class="gloss">孔子只说"一以贯之"，是曾参给出了内容：<strong>忠恕</strong>。<br>
+        <strong>忠</strong>是尽己（向内），<strong>恕</strong>是推己及人（向外）。<em>而这两个都不是独处时能完成的。</em></div>
+      </div>
+      <div class="quote" style="margin:10px 0;">
+        <div class="cn">仲弓問仁。子曰、出門如見大賓、使民如承大祭、<strong>己所不欲、勿施於人</strong>、
+        在邦無怨、在家無怨。</div>
+        <div class="src">《論語·顏淵》「仲弓問仁」章</div>
+        <div class="gloss"><strong>注意这一章的落点是"无怨"</strong> —— 不是一个内在状态，是<em>关系里的一个事实</em>。</div>
+      </div>
+      <div class="quote" style="margin:10px 0;">
+        <div class="cn">子貢曰、如有博施於民、而能濟眾、何如、可謂仁乎。子曰、何事於仁、必也聖乎、
+        堯舜其猶病諸。夫仁者、<strong>己欲立而立人、己欲達而達人</strong>。能近取譬、可謂仁之方也已。</div>
+        <div class="src">《論語·雍也》「子貢曰如有博施於民」章</div>
+        <div class="gloss"><strong>"能近取譬"是方法。四个字里藏着整条路径：</strong>
+        从最近的关系（"近"）取一个类比（"譬"），再推出去。<em>这正是"孝弟為仁之本"的操作含义。</em></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="layer">
+    <div class="layer-head"><span class="n">成</span><span class="tt">目标是"成人"，不是"成事"</span></div>
+    <div class="layer-body">
+      <p><strong>古之學者為己、今之學者為人</strong>（憲問）· <strong>君子求諸己、小人求諸人</strong>（衛靈公）·
+      <strong>仁遠乎哉、我欲仁、斯仁至矣</strong>（述而）</p>
+      <p><strong>"為己"不是自私</strong> —— 它是说学习的目的是成为那个人，而不是表演给别人看。
+      <em>这与 02 域卡尼曼讲的"印象管理"是同一个问题的两种说法。</em></p>
+      <p><strong>"仁遠乎哉"这一章值得单说</strong>：它把仁说成<em>当下可及的</em>，而不是一个长期修养的终点。
+      这与"本"层有张力 —— 如果仁这么近，为什么还要孝弟为本？<strong>这一处我认为是有歧义的，不下断语。</strong></p>
+    </div>
+  </div>
+
+  <!-- ============ 四 ============ -->
+  <h2>四 · 它对本项目其他五个域的意义</h2>
+  <div class="sub">这是这份架构最实用的部分：每个域拿《論語》来问一个具体问题</div>
+
+  <table>
+    <tr><th style="width:14%">域</th><th style="width:38%">那个域现有的预设</th><th>《論語》的重新提问</th></tr>
+    <tr>
+      <td><strong>01 哲学</strong></td>
+      <td>"认识"的主体是一个独立的判断者</td>
+      <td><strong>主体是不是在关系中才被定义？</strong>「知之為知之、不知為不知、是知也」（為政）<br>
+      —— 这里的"知"不只是认知命题，<em>还是一个自我定位</em></td>
+    </tr>
+    <tr>
+      <td><strong>02 心智</strong></td>
+      <td>认知可以被拆成机制来测量偏差</td>
+      <td><strong>"偏差"相对于什么标准？</strong>如果自我是关系性的，<em>"独立判断"本身可能就是一个特定文化的标准</em><br>
+      （这正是 02 自己记的 WEIRD 样本偏差问题）</td>
+    </tr>
+    <tr>
+      <td><strong>04 制度</strong></td>
+      <td>陌生人之间的协作靠契约与产权</td>
+      <td><strong>关系能不能承担制度的功能？</strong>「其身正、不令而行；其身不正、雖令不從」（子路）<br>
+      —— <em>这是以"身"代替"法"的治理逻辑，与 04 域的路径正相反</em></td>
+    </tr>
+    <tr>
+      <td><strong>05 历史</strong></td>
+      <td>长时段因果由地理与技术驱动</td>
+      <td><strong>"关系"是不是一种被低估的因果？</strong>中国的官僚制比欧洲早一千多年，
+      <em>而它的合法性论述用的是"君臣父子"的类比（顏淵「君君臣臣父父子子」）</em></td>
+    </tr>
+    <tr>
+      <td><strong>06 文学</strong></td>
+      <td>叙事以个体为主角</td>
+      <td><strong>既然《論語》的自我是关系性的，那么"关系做主角"的叙事就不该被当成例外</strong><br>
+      （见 `00_中文原典/` 的《紅樓夢》《儒林外史》）</td>
+    </tr>
+    <tr>
+      <td><strong>08 关系</strong></td>
+      <td>"你"先存在，然后建立关系（依恋理论）</td>
+      <td><strong>「孝」在西方框架里装不下</strong> —— 它不是义务、不是情感、不是契约。<br>
+      <em>而"装不下"正是 08 域第 8 层（越界之维）已经在处理的事</em></td>
+    </tr>
+  </table>
+
+  <div class="warn">
+    <p><strong>⚠️ 一个必须防的滑坡</strong></p>
+    <p>上面这些对照，<strong>很容易退化成"中国传统更重视家庭"这类文化比较</strong>。</p>
+    <p><strong>一旦变成文化比较，它就失去了在本项目里的位置</strong> —— 因为本项目要的不是"另一种文化风格"，
+    而是<strong>一个可检验的主张</strong>：</p>
+    <p><em>"独立自我"和"关系性自我"可以当作两个不同的模型来对照</em>，
+    而它们对同一个现象会给出不同的预测（比如：什么算"判断偏误"、什么算"忠诚"、什么算"诚实"）。</p>
+  </div>
+
+  <!-- ============ 五 ============ -->
+  <h2>五 · 一个诚实的判断</h2>
+  <div class="sub">这份产出哪里强、哪里弱</div>
+
+  <table>
+    <tr><th style="width:26%">维度</th><th>判断</th></tr>
+    <tr><td><strong>底本的可靠性</strong></td>
+      <td><strong>中</strong>。内容经核验完整（99 条标志句 + 237 条引用句，0 条真缺失），
+      但<em>不是校勘本</em>，且<strong>章号不可用</strong>、有异文（季氏作李氏等）。</td></tr>
+    <tr><td><strong>解释的可靠性</strong></td>
+      <td><strong>低—中</strong>。<strong>没有今人注解可依</strong>，古文多义性未消。
+      凡歧义处本文均已标注。</td></tr>
+    <tr><td><strong>与本项目框架的贴合度</strong></td>
+      <td><strong>高</strong>。"关系性自我"确实能对 01/02/04/05/06/08 各提出一个具体问题，
+      而不是泛泛地说"中国思想不一样"。</td></tr>
+    <tr><td><strong>最大的不确定</strong></td>
+      <td><strong>把《論語》读成"关系性自我"的文献，这个读法本身是有立场的。</strong>
+      它是<em>用现代哲学问题的框架去问一部先秦文本</em> —— 这个操作在汉学界是有争议的。
+      <strong>本文采用它，是因为本项目的组织方式要求如此，不是因为它是唯一正确的读法。</strong></td></tr>
+  </table>
+
+  <!-- ============ 六 ============ -->
+  <h2>六 · 怎么用这份架构</h2>
+
+  <ol>
+    <li><strong>先读《底本考订.md》</strong> —— 否则会按章号引用而引错（Legge 版章号与通行本不一致）。</li>
+    <li><strong>再读本文件</strong> —— 建立"它不是体系著作、它的起点不是个体、它分本途成三层"这个地图。</li>
+    <li><strong>然后读《論語-问题手册》</strong> —— 用问题检验自己读懂了没有，而不是复述内容。</li>
+    <li><strong>歧义处不要急着定论</strong> —— 凡本文标"有争议"处，都请自己回到原文判断。</li>
+  </ol>
+
+  <div class="quote">
+    <div class="cn">子絕四、毋意、毋必、毋固、毋我。</div>
+    <div class="src">《論語·子罕》「子絕四」章</div>
+    <div class="gloss">这十二个字值得放在整份架构的最后。<br>
+    <strong>毋意</strong>（不凭空猜测）· <strong>毋必</strong>（不绝对肯定）· <strong>毋固</strong>（不固执己见）·
+    <strong>毋我</strong>（不自我中心）<br>
+    <em>而最后的"毋我"，正是这份文档一直试图说清的那件事。</em></div>
+  </div>
+
+  <div class="footer">
+    《論語》整体架构 · 「底层」项目 `00_中文原典` · 关系性自我这一轴<br>
+    底本：Project Gutenberg #4094（Legge 双语版，公共领域）· 纯中文抽出件 18,613 字<br>
+    <em>引用方式：篇名 + 原文首句。本版章号不可用。</em>
+  </div>
+
+</div>
+</body>
+</html>

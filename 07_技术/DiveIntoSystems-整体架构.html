@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dive into Systems 整体架构 —— 性能的另一半答案</title>
+<style>
+  :root{
+    --paper:#131318; --card:#1b1b23; --edge:#2e2e3a;
+    --ink:#e8e8f0; --ink-mid:#b0b0c0; --ink-soft:#787888;
+    --hw:#c0392b; --hw-soft:#2a1615;        /* 硬件 */
+    --sys:#2980b9; --sys-soft:#12202c;       /* 系统 */
+    --perf:#e67e22; --perf-soft:#2a1e12;     /* 性能 */
+    --cache:#9b59b6; --cache-soft:#221828;   /* 缓存 */
+    --par:#16a085; --par-soft:#122622;       /* 并行 */
+    --key:#d4b83c; --key-soft:#2a2517;
+    --warn:#e74c3c;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--paper);color:var(--ink);padding:36px 20px 48px;line-height:1.85;-webkit-font-smoothing:antialiased;}
+  .container{max-width:1000px;margin:0 auto;}
+
+  .header{text-align:center;margin-bottom:26px;padding:46px 24px 40px;background:var(--card);
+    border:1px solid var(--edge);border-top:5px solid var(--cache);border-radius:4px;}
+  .header .kicker{font-size:11.5px;letter-spacing:2.5px;color:var(--ink-soft);margin-bottom:14px;font-family:Consolas,monospace;}
+  .header h1{font-size:25px;color:var(--ink);margin-bottom:14px;letter-spacing:.5px;line-height:1.5;}
+  .header .subtitle{font-size:14.5px;color:var(--ink-mid);}
+  .header .author{margin-top:16px;font-size:12.5px;color:var(--ink-soft);}
+
+  .guide{background:var(--cache-soft);border:1px solid #34243d;border-left:4px solid var(--cache);
+    border-radius:3px;padding:20px 24px;margin-bottom:28px;font-size:14.5px;color:var(--ink-mid);}
+  .guide .t{color:var(--cache);font-weight:700;margin-bottom:10px;font-size:13.5px;letter-spacing:.5px;}
+  .guide p+p{margin-top:8px;} .guide strong{color:var(--ink);}
+  .guide code{font-family:Consolas,monospace;color:var(--cache);background:#180f1e;padding:1px 5px;border-radius:2px;font-size:12.5px;}
+
+  .section-title{font-size:20px;font-weight:700;color:var(--ink);margin:46px 0 8px;padding-left:13px;
+    border-left:4px solid var(--cache);letter-spacing:.3px;}
+  .section-sub{color:var(--ink-soft);font-size:13.5px;margin:0 0 18px 17px;}
+
+  .card{background:var(--card);border:1px solid var(--edge);border-radius:3px;padding:22px 26px;margin-bottom:16px;}
+  .card h3{color:var(--cache);margin-bottom:10px;font-size:16.5px;}
+  .card p{color:var(--ink-mid);font-size:14.5px;} .card p+p{margin-top:9px;}
+  .card strong{color:var(--ink);}
+  .card code{font-family:Consolas,monospace;color:var(--cache);background:#180f1e;padding:1px 5px;border-radius:2px;font-size:12.5px;}
+
+  table{width:100%;border-collapse:collapse;margin:13px 0;font-size:13px;}
+  th,td{padding:9px 11px;border:1px solid var(--edge);text-align:left;vertical-align:top;}
+  th{background:#22222c;color:var(--cache);font-weight:700;font-size:12.5px;}
+  td{color:var(--ink-mid);} td strong{color:var(--ink);}
+  th code,td code{font-family:Consolas,monospace;color:var(--cache);font-size:12px;}
+  td em{color:var(--perf);font-style:normal;font-weight:600;}
+
+  .stack{display:flex;flex-direction:column-reverse;gap:0;margin:22px 0;}
+  .stack .lv{background:var(--card);border:1px solid var(--edge);border-left:5px solid;padding:14px 20px;}
+  .stack .lv:not(:last-child){border-top:none;}
+  .stack .lv:first-child{border-radius:0 0 3px 3px;} .stack .lv:last-child{border-radius:3px 3px 0 0;}
+  .stack .lv .n{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;}
+  .stack .lv .nm{font-size:15px;font-weight:700;color:var(--ink);}
+  .stack .lv .cost{font-size:12px;font-family:Consolas,monospace;color:var(--perf);}
+  .stack .lv p{font-size:13px;color:var(--ink-mid);margin-top:4px;}
+
+  .quote{background:var(--key-soft);border:1px solid #3d3520;border-left:4px solid var(--key);
+    border-radius:3px;padding:18px 22px;margin:22px 0;}
+  .quote p{font-size:15px;color:#e8dca0;font-style:italic;line-height:1.8;}
+  .quote .src{margin-top:10px;font-size:12.5px;color:var(--ink-soft);text-align:right;font-style:normal;}
+
+  .pit{background:#2a1615;border-left:4px solid var(--warn);border-radius:0 3px 3px 0;
+    padding:15px 19px;margin-bottom:12px;font-size:14px;color:#f0b0aa;}
+  .pit .lbl{color:var(--warn);font-weight:700;display:block;margin-bottom:6px;font-size:12.5px;}
+  .pit strong{color:#ffd5d0;}
+
+  .lab{background:#2a1e12;border:1px solid #3d2e1c;border-left:4px solid var(--perf);
+    border-radius:3px;padding:18px 22px;margin-bottom:14px;font-size:14px;color:#e8d0b0;}
+  .lab .t{color:var(--perf);font-weight:700;margin-bottom:8px;font-size:13.5px;letter-spacing:.4px;}
+  .lab strong{color:#f8e8d0;}
+  .lab code{font-family:Consolas,monospace;color:var(--perf);background:#1e1610;padding:1px 5px;border-radius:2px;font-size:12.5px;}
+  .lab ol,.lab ul{margin:8px 0 0 20px;} .lab li{margin-bottom:5px;}
+
+  .footer{text-align:center;margin-top:44px;padding:22px;color:var(--ink-soft);font-size:12.5px;line-height:1.9;}
+
+  @media(max-width:640px){
+    .header h1{font-size:20px;} .section-title{font-size:17.5px;}
+    body{padding:20px 14px 32px;} table{font-size:11.5px;}
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="kicker">DIVE INTO SYSTEMS · MATTHEWS, NEWHALL, WEBB</div>
+    <h1>性能的另一半答案</h1>
+    <div class="subtitle">Dive into Systems 整体架构 · 15 章 + 2 附录 · 作者官方免费在线教材</div>
+    <div class="author">Suzanne J. Matthews · Tia Newhall · Kevin C. Webb</div>
+  </div>
+
+  <div class="guide">
+    <div class="t">📖 这本书在 07 域补的是哪一块</div>
+    <p>我们在讨论"计算基础"这个缺口时，把它拆成了四层。algs4 覆盖了 <strong>① 算法 · ② 数据结构 · ④ 不可解性</strong>，但它<strong>明确不管第③层</strong>——真实硬件上的性能。</p>
+    <table>
+      <tr><th>层</th><th>内容</th><th>谁覆盖</th></tr>
+      <tr><td>① 算法</td><td>怎么把问题变成可计算的步骤</td><td>algs4</td></tr>
+      <tr><td>② 数据结构</td><td>数据怎么组织</td><td>algs4</td></tr>
+      <tr><td><strong>③ 真实硬件上的性能</strong></td><td><strong>缓存、内存层级、访问模式</strong></td><td><strong>← 这本书</strong></td></tr>
+      <tr><td>④ 不可解性</td><td>有些问题没有高效解法</td><td>algs4</td></tr>
+    </table>
+    <p><strong>这一层为什么必须补</strong>：algs4 会告诉你"数组和链表遍历都是 <code>O(N)</code>"。而在真实机器上，<strong>这两者可能差 5–10 倍</strong>——因为一个利用了缓存，另一个没有。<em>你要能解释这个差距，才算真的知道"程序为什么快"。</em></p>
+  </div>
+
+  <!-- ============ 记忆层级 ============ -->
+  <div class="section-title">第 11 章：记忆层级——这层的核心</div>
+  <div class="section-sub">整本书最重要的一章，因为它解释了"为什么复杂度相同但速度不同"</div>
+
+  <div class="stack">
+    <div class="lv" style="border-left-color:var(--cache);">
+      <div class="n"><span class="nm">CPU 寄存器</span><span class="cost">最快 · 最小</span></div>
+      <p>指令直接操作的地方</p>
+    </div>
+    <div class="lv" style="border-left-color:var(--cache);">
+      <div class="n"><span class="nm">CPU 缓存（L1 / L2 / L3）</span><span class="cost">快 · 小</span></div>
+      <p><strong>本书的重点。</strong>按"块"（cache block）从内存搬数据，不是一个个搬</p>
+    </div>
+    <div class="lv" style="border-left-color:var(--hw);">
+      <div class="n"><span class="nm">主存（RAM）</span><span class="cost">慢 · 大</span></div>
+      <p>algs4 的代价模型把"访问一次"当成等价代价的地方</p>
+    </div>
+    <div class="lv" style="border-left-color:var(--sys);">
+      <div class="n"><span class="nm">磁盘 / 固态</span><span class="cost">最慢 · 最大</span></div>
+      <p>B 树为什么存在的地方（接 algs4 第 6.2 节）</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <p><strong>这本书用了一个很好的类比讲这个层级</strong>：Fiona 在宿舍桌上做作业——<em>桌子只能放三本书</em>，门外有书架，校园里有图书馆。</p>
+    <table>
+      <tr><th>类比</th><th>对应</th></tr>
+      <tr><td>桌子（3 本）</td><td>CPU 缓存</td></tr>
+      <tr><td>门外书架</td><td>主存</td></tr>
+      <tr><td>校园图书馆</td><td>磁盘</td></tr>
+    </table>
+    <p><strong>而这个类比立刻逼出一个问题</strong>：桌子满了该把哪本书拿走？</p>
+    <p style="padding:12px 18px;background:#22222c;border-left:3px solid var(--cache);color:var(--ink-mid);font-size:13.5px;border-radius:0 3px 3px 0;margin-top:10px;">
+      书里给出的答案是——<strong>把"最近最少使用"的那本（least recently used）拿走。</strong>
+    </p>
+    <p><strong>而它给出了那个理由，这句话是整章的哲学基础</strong>：</p>
+    <p style="padding:12px 18px;background:#2a2517;border-left:3px solid var(--key);color:#e8dca0;font-style:italic;font-size:14px;border-radius:0 3px 3px 0;margin-top:10px;">
+      "systems look to the <strong>past</strong> as a predictor of what will likely happen in the <strong>future</strong>."
+    </p>
+    <p>——<strong>用过去预测未来。</strong>这是整个记忆层级设计的唯一依据：硬件造不出能预知未来的电路。</p>
+  </div>
+
+  <div class="card">
+    <h3>两种局部性，两个不同的问题</h3>
+    <table>
+      <tr><th>类型</th><th>含义</th><th>对缓存设计的意义</th></tr>
+      <tr>
+        <td><strong>时间局部性</strong><br>temporal locality</td>
+        <td>刚用过的东西，很可能马上再用</td>
+        <td>决定<strong>淘汰策略</strong>（LRU）</td>
+      </tr>
+      <tr>
+        <td><strong>空间局部性</strong><br>spatial locality</td>
+        <td>用了某个地址，附近的地址很可能也要用</td>
+        <td>决定<strong>块大小</strong>（一次搬多少）</td>
+      </tr>
+    </table>
+    <p><strong>这两个是不同的问题</strong>，而工程上把它们分开了：<em>时间局部性管"留谁"，空间局部性管"搬多少"。</em></p>
+  </div>
+
+  <!-- ============ 那个 5 倍 ============ -->
+  <div class="section-title">全书最有价值的一个例子</div>
+  <div class="section-sub">同一个双重循环，只换索引顺序，快约 5 倍</div>
+
+  <div class="card">
+    <p>书里给了一个 N×N 矩阵求平均值的两种写法。它们<strong>唯一的差别是内存索引方式</strong>：</p>
+    <table>
+      <tr><th>版本 1（快约 5 倍）</th><th>版本 2</th></tr>
+      <tr>
+        <td><code>total += mat[i][j];</code></td>
+        <td><code>total += mat[j][i];</code></td>
+      </tr>
+    </table>
+    <p><strong>书里的解释很干净</strong>：</p>
+    <p style="padding:12px 18px;background:#22222c;border-left:3px solid var(--perf);color:var(--ink-mid);font-size:13.5px;border-radius:0 3px 3px 0;">
+      版本 1 "accesses the matrix's values <strong>sequentially in memory</strong>"——它每读一个块只付一次去内存的代价。<br>
+      版本 2 "accesses the matrix's values by <strong>repeatedly jumping between rows</strong> across nonsequential memory addresses. It <strong>never reads from the same cache block in subsequent memory accesses</strong>"——它<strong>每读一个值就要付一次去内存的代价</strong>。
+    </p>
+    <p><strong>注意两个版本的工作量完全一样</strong>：都是 N² 次加法、N² 次数组访问。在 algs4 的代价模型下，<em>它们是一样快的</em>。</p>
+    <p><strong>而在真实机器上差 5 倍。</strong></p>
+  </div>
+
+  <div class="quote">
+    <p>"This example illustrates how a programmer can affect the <strong>system-level costs</strong> of a program's execution."</p>
+    <div class="src">—— 11.3.1 节。这句话可以当作 algs4 与这本书的分界线</div>
+  </div>
+
+  <div class="lab">
+    <div class="t">🔬 可跑验证 · 这是这个项目里最值得亲手做的一个实验</div>
+    <p>用任何一种语言（C 最能体现，Python 需要改用手写循环才能看出来）：</p>
+    <ol>
+      <li>建一个足够大的二维矩阵（让总大小<b>远超</b>缓存，比如 4096×4096 的 <code>float</code>，约 64 MB）</li>
+      <li>用<strong>行优先</strong>顺序遍历求和，计时</li>
+      <li>用<strong>列优先</strong>顺序遍历求和，计时</li>
+      <li>反复跑几次取稳定值</li>
+    </ol>
+    <p><strong>预期：行优先明显更快（在这个规模上常见 3–10 倍）。</strong></p>
+    <p><em>这个实验的价值在于它一次性证明了三件事</em>：① 复杂度相同的代码可以差几倍；② 差距来自访问模式而不是算法；③ <strong>你可以通过重排循环来提高速度，而不改变任何计算结果</strong>。</p>
+  </div>
+
+  <!-- ============ 三级缓存设计 ============ -->
+  <div class="section-title">第 11.4 节：缓存是怎么设计的</div>
+  <div class="section-sub">三种映射方式，代价与复杂度递增</div>
+
+  <table>
+    <tr><th>设计</th><th>机制</th><th>问题</th></tr>
+    <tr>
+      <td><strong>直接映射</strong><br>direct-mapped</td>
+      <td>每个内存块只能放到缓存里<b>唯一一个</b>位置</td>
+      <td><em>冲突缺失</em>——两个正好映射到同一位置的热点数据会互相踢出</td>
+    </tr>
+    <tr>
+      <td><strong>组相联</strong><br>set associative</td>
+      <td>一个"组"里有 <code>N</code> 个位置（N-路组相联），块可放组内任意位置</td>
+      <td>硬件更复杂（要并行比较 N 个标签）</td>
+    </tr>
+    <tr>
+      <td><strong>全相联</strong><br>fully associative</td>
+      <td>可以放任何位置</td>
+      <td>硬件最复杂，只用于很小的缓存</td>
+    </tr>
+  </table>
+
+  <div class="card">
+    <p><strong>书里把直接映射缓存的地址分成三段</strong>，这个划分是理解全部缓存行为的关键：</p>
+    <table>
+      <tr><th>段</th><th>决定什么</th></tr>
+      <tr><td><strong>标签</strong>（tag）</td><td>这个位置里<b>是不是</b>我要的那块数据</td></tr>
+      <tr><td><strong>索引</strong>（index）</td><td>放到缓存的<b>哪一组</b></td></tr>
+      <tr><td><strong>块内偏移</strong>（offset）</td><td>在块内的<b>哪个字节</b></td></tr>
+    </table>
+    <p><strong>而它区分了两种写策略</strong>：</p>
+    <table>
+      <tr><th>策略</th><th>做法</th><th>代价</th></tr>
+      <tr><td><strong>写回</strong>（write-back）</td><td>只改缓存，标脏；被淘汰时才写回内存</td><td>内存写少，但要维护脏位</td></tr>
+      <tr><td><strong>写直达</strong>（write-through）</td><td>每次都同时写缓存和内存</td><td>内存写多，但简单、一致性好</td></tr>
+    </table>
+    <p><em>这个取舍和 OSTEP 里"页表项要维护脏位"是同一类问题。</em></p>
+  </div>
+
+  <div class="card">
+    <h3>而它给了工具：Cachegrind</h3>
+    <p>第 11.5 节专门讲<b>怎么测量</b>缓存行为——用 <code>cachegrind</code> 得到<strong>缓存缺失次数</strong>的统计。</p>
+    <p><strong>这一点很重要</strong>：它说明这一层也是<strong>可测量的</strong>，不是靠猜。<em>你不必知道缓存有多少路、多少字节，你可以直接问工具"这段代码缺了多少次"。</em></p>
+    <p>而第 12.3.3 节讲 <code>massif</code>——<b>内存剖析</b>，看程序在什么时候用了多少内存。<em>这两个工具合起来，把"内存"从一个模糊概念变成了两个可量化的数：<strong>缺失次数</strong>与<strong>峰值占用</strong>。</em></p>
+  </div>
+
+  <!-- ============ 代码优化 ============ -->
+  <div class="section-title">第 12 章：代码优化——程序员能做什么</div>
+  <div class="section-sub">这一章是把第 11 章的理论变成可操作的手法</div>
+
+  <table>
+    <tr><th>手法</th><th>做法</th><th>利用的是什么</th></tr>
+    <tr>
+      <td><strong>循环交换</strong><br>loop interchange</td>
+      <td>交换嵌套循环的顺序，让最内层循环访问<b>连续内存</b></td>
+      <td><strong>空间局部性</strong>（就是上面那个 5 倍的例子）</td>
+    </tr>
+    <tr>
+      <td><strong>循环分裂</strong><br>fission</td>
+      <td>把一个循环拆成多个</td>
+      <td>让每次遍历的工作集更小、更集中</td>
+    </tr>
+    <tr>
+      <td><strong>循环合并</strong><br>fusion</td>
+      <td>把多个循环合成一个</td>
+      <td>减少重复遍历、提高时间局部性</td>
+    </tr>
+  </table>
+
+  <div class="card">
+    <p><strong>而第 12 章的基础部分讲了更根本的东西</strong>：编译器已经在做什么（所以你不必手工做）、以及哪些优化会<strong>妨碍</strong>编译器。</p>
+    <p><em>这一节的实用价值很高：它告诉你什么时候"手工优化"是在跟编译器抢活干，什么时候是必要的。</em></p>
+  </div>
+
+  <!-- ============ 与 OSTEP 的接口 ============ -->
+  <div class="section-title">一个漂亮的跨书连接：LRU 在两个层面上</div>
+  <div class="section-sub">我核对了原文——这不是我的联想，是两本书真的在讲同一件事</div>
+
+  <div class="card">
+    <table>
+      <tr><th></th><th>OSTEP（操作系统）</th><th>Dive into Systems（硬件/系统）</th></tr>
+      <tr>
+        <td><strong>问题</strong></td>
+        <td>物理内存满了，该把哪一页换出去？</td>
+        <td>缓存满了，该把哪一块淘汰？</td>
+      </tr>
+      <tr>
+        <td><strong>答案</strong></td>
+        <td><strong>LRU</strong>（最近最少使用），以及它的各种近似</td>
+        <td><strong>LRU</strong>（最近最少使用）</td>
+      </tr>
+      <tr>
+        <td><strong>为什么</strong></td>
+        <td>用过去的访问模式预测未来</td>
+        <td><strong>"systems look to the past as a predictor of what will likely happen in the future"</strong></td>
+      </tr>
+      <tr>
+        <td><strong>在体系里的层</strong></td>
+        <td><b>策略</b>（policy）——软件可换</td>
+        <td><b>机制</b>（mechanism）——硬件固定</td>
+      </tr>
+    </table>
+    <p><strong>我核对了两本书的原文</strong>：OSTEP 提到 LRU 共 <strong>44 次</strong>，Dive into Systems <strong>19 次</strong>（其中 11 次是完整拼写 "least recently used"）。</p>
+    <p><strong>这个连接的价值在于它展示了一件事</strong>：<em>同一个策略（用过去预测未来）在从寄存器到磁盘的<strong>每一层</strong>都在被使用</em>。而两本书从两端逼近它——OSTEP 从软件策略那边，Dive into Systems 从硬件机制那边。</p>
+    <p><strong>这也正好印证了 OSTEP 那套"抽象 → 机制 → 策略"</strong>：在缓存这一层，机制（几路组相联、块多大）是硬件定死的，而策略（LRU）是硬件实现的固定选择——<em>软件改不了</em>。而在虚拟内存那一层，机制和策略都在操作系统手里。<strong>同一件事在不同层级上的可调整程度不同——这本身就是一个重要的认知。</strong></p>
+  </div>
+
+  <!-- ============ 全书结构 ============ -->
+  <div class="section-title">15 章的实际覆盖面</div>
+  <div class="section-sub">以及它与 OSTEP 的重叠部分（需要标注，避免重复劳动）</div>
+
+  <table>
+    <tr><th style="width:26%">章</th><th>内容</th><th>与 OSTEP 的关系</th></tr>
+    <tr><td><strong>1–2 C 语言</strong></td><td>C 入门 · 指针/动态内存/数组/字符串/结构体</td><td>—（OSTEP 不教语言）</td></tr>
+    <tr><td><strong>3 C 调试</strong></td><td>GDB · Valgrind · 汇编调试 · 多线程调试</td><td>—<em>这一章很实用</em></td></tr>
+    <tr><td><strong>4 二进制与数据表示</strong></td><td>进制 · 有符号整数 · 算术 · 溢出 · 位运算 · 大小端 · 浮点</td><td>—</td></tr>
+    <tr><td><strong>5 体系结构</strong></td><td>历史 · 冯诺依曼 · 门电路 · CPU · 指令执行 · 流水线</td><td>—</td></tr>
+    <tr><td><strong>6–10 汇编</strong></td><td>汇编导论 · x86-64 · IA32 · ARM64 · 要点</td><td>—<em>三种架构对照是特色</em></td></tr>
+    <tr style="background:#221828;"><td><strong>11 记忆层级</strong></td><td><strong>层级 · 设备 · 局部性 · 缓存 · Cachegrind · 一致性</strong></td><td><strong>★ 核心，OSTEP 不深入</strong></td></tr>
+    <tr style="background:#221828;"><td><strong>12 代码优化</strong></td><td><strong>基础 · 循环与函数 · 内存考量（循环交换/分裂/合并）· Massif</strong></td><td><strong>★ 核心，OSTEP 不涉及</strong></td></tr>
+    <tr><td>13 操作系统</td><td>实现 · 进程 · 虚拟内存 · IPC（信号/消息/共享内存）</td><td><em>⚠️ 与 OSTEP 高度重叠</em></td></tr>
+    <tr style="background:#122622;"><td><strong>14 共享内存与并行</strong></td><td><strong>多核 · POSIX 线程 · 同步 · 互斥量 · 信号量 · 性能 · 缓存一致性 · 线程安全 · OpenMP</strong></td><td><em>⚠️ 部分重叠，但性能与一致性更深</em></td></tr>
+    <tr><td>15 并行</td><td>GPU · 分布式内存 · 云</td><td>OSTEP 提到但没展开</td></tr>
+    <tr><td>附录 1–2</td><td>C 快速入门 · 命令行工具（make/grep/chmod/ssh/timing 等）</td><td>—</td></tr>
+  </table>
+
+  <div class="pit">
+    <span class="lbl">⚠️ 一个需要标注的重叠</span>
+    <strong>第 13 章（操作系统）与 OSTEP 高度重叠</strong>——进程、虚拟内存、IPC 这些 OSTEP 讲得更系统（那是它的主题）。<br>
+    <strong>所以这一域的工作流应该是</strong>：<em>第 11–12 章必读（这是它不可替代的部分）；第 13 章当作 OSTEP 的补充或复习；第 14 章的性能部分（performance / cache_coherence / thread_safety）值得单独读，因为 OSTEP 的并发部分更偏机制而非性能。</em><br>
+    第 1–6 章与汇编部分按需查阅——它们服务于"理解程序在机器上怎么跑"，而不是"性能为什么不同"。
+  </div>
+
+  <!-- ============ 边界 ============ -->
+  <div class="section-title">这本书不承诺什么</div>
+
+  <div class="pit">
+    <span class="lbl">边界一 · 它是 C 和汇编的，门槛比 algs4 高</span>
+    这本书要求你读得懂 C、能看一眼汇编。对"只有一点计算机基础的工科本科生"来说，<strong>第 1–2 章是硬门槛</strong>。<em>好消息是附录 1 就是 C 快速入门，而且它的写法很照顾初学者。</em>
+  </div>
+
+  <div class="pit">
+    <span class="lbl">边界二 · 它讲的是"为什么慢"，不是"怎么快"</span>
+    它给你局部性的原理和测量的工具，但<strong>不给你一份"优化清单"</strong>。<em>因为优化清单依赖具体语言、编译器、硬件——那些立刻过期，而局部性原理不会。</em>
+  </div>
+
+  <div class="pit">
+    <span class="lbl">边界三 · 缓存参数是它给的，但你机器上的不同</span>
+    书里用具体的块大小（如 16 字节）、具体的路数来举例。<strong>你机器上的实际参数不同，而且现代 CPU 有多级缓存。</strong><em>所以书里的数字要当"量级示例"读，不要当"你机器的规格"用。要看你自己的，用 <code>lscpu</code> 之类工具。</em>
+  </div>
+
+  <div class="pit">
+    <span class="lbl">边界四 · 它不覆盖 GPU 与分布式性能的深处</span>
+    第 15 章只有三节（GPU / 分布式内存 / 云），<strong>是导论而非深入</strong>。<em>如果以后要做 GPU 或分布式性能优化，需要另外的书。</em>
+  </div>
+
+  <div class="quote">
+    <p>"systems look to the <strong>past</strong> as a predictor of what will likely happen in the <strong>future</strong>."</p>
+    <div class="src">—— 11.3.3 节。整个记忆层级设计的唯一依据</div>
+  </div>
+
+  <!-- ============ 两本书怎么配 ============ -->
+  <div class="section-title">两本书的配合方式</div>
+
+  <table>
+    <tr><th>问题</th><th>algs4 回答</th><th>Dive into Systems 回答</th></tr>
+    <tr>
+      <td>"这段代码大概多快？"</td>
+      <td>增长级、代价模型、Proposition</td>
+      <td><em>不算这个</em>——它假设你已经有复杂度概念</td>
+    </tr>
+    <tr>
+      <td>"为什么两个都是 O(N) 的遍历速度不同？"</td>
+      <td><em>回答不了</em>（它的代价模型里两者等价）</td>
+      <td><strong>空间局部性 + 缓存块</strong></td>
+    </tr>
+    <tr>
+      <td>"排序该选哪个？"</td>
+      <td><strong>完整的策略表</strong>（快排最快、归并稳定、堆原地）</td>
+      <td>补充：为什么快排实践中更快（<em>访问模式更局部化</em>）</td>
+    </tr>
+    <tr>
+      <td>"哈希表为什么有时很慢？"</td>
+      <td><strong>Assumption J 可能不成立</strong></td>
+      <td>补充：缓存缺失也会让它变慢</td>
+    </tr>
+    <tr>
+      <td>"B 树为什么比红黑树好？"</td>
+      <td>它优化的目标是 <strong>I/O 次数</strong>，不是比较次数</td>
+      <td><strong>完整的层级依据</strong>：为什么访问节点这么贵</td>
+    </tr>
+    <tr>
+      <td>"多线程下这些结构还成立吗？"</td>
+      <td><em>不涉及</em>（全部结论假设单线程）</td>
+      <td><strong>第 14 章</strong>：同步、性能、缓存一致性、线程安全</td>
+    </tr>
+  </table>
+
+  <div class="card">
+    <h3>一个具体的读法建议</h3>
+    <p><strong>先读 algs4 的第 1.4 节（算法分析）</strong>——它给你"代价模型"这个概念和一个可证伪的方法论。</p>
+    <p><strong>然后读这本书的第 11.3 节（局部性）</strong>——它会告诉你，你刚学的那个代价模型<em>遗漏了什么</em>。</p>
+    <p><strong>这个顺序很重要</strong>：先建立"理论上多快"的框架，再看到它的边界。<em>反过来先读这本书，你会觉得 algs4 太天真；先读 algs4，你会觉得这本书是在补上一个真实但可管理的缺口。</em></p>
+  </div>
+
+  <div class="footer">
+    Dive into Systems 整体架构 · Matthews, Newhall, Webb<br>
+    记忆层级 · 局部性 · 缓存设计 · 代码优化 · 与 OSTEP 的 LRU 连接<br>
+    <em>"用过去预测未来"</em>
+  </div>
+
+</div>
+</body>
+</html>

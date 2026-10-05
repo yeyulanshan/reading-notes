@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>《Algorithms》第4版 整体架构 —— 一本把"分析算法"做成科学方法的书</title>
+<style>
+  :root{
+    --paper:#0f1418; --card:#161d23; --edge:#26313a;
+    --ink:#e4edf2; --ink-mid:#a8bcc8; --ink-soft:#6d8494;
+    --core:#4ec9b0; --core-soft:#122a27;      /* 主色：青 */
+    --api:#5aa9e6; --api-soft:#12202c;         /* API/抽象 */
+    --mech:#e6a54e; --mech-soft:#2a2114;      /* 机制 */
+    --perf:#c76ee0; --perf-soft:#241a2b;       /* 性能 */
+    --strat:#7ec96e; --strat-soft:#1a2417;     /* 策略 */
+    --warn:#ee6c5a; --warn-soft:#2b1a18;
+    --key:#d9c26a; --key-soft:#2a2517;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--paper);color:var(--ink);padding:36px 20px 48px;line-height:1.85;-webkit-font-smoothing:antialiased;}
+  .container{max-width:1000px;margin:0 auto;}
+
+  .header{text-align:center;margin-bottom:26px;padding:46px 24px 40px;background:var(--card);
+    border:1px solid var(--edge);border-top:5px solid var(--core);border-radius:4px;}
+  .header .kicker{font-size:11.5px;letter-spacing:2.5px;color:var(--ink-soft);margin-bottom:14px;font-family:Consolas,monospace;}
+  .header h1{font-size:25px;color:var(--ink);margin-bottom:14px;letter-spacing:.5px;line-height:1.5;}
+  .header .subtitle{font-size:14.5px;color:var(--ink-mid);}
+  .header .author{margin-top:16px;font-size:12.5px;color:var(--ink-soft);}
+
+  .guide{background:var(--core-soft);border:1px solid #1d3d38;border-left:4px solid var(--core);
+    border-radius:3px;padding:20px 24px;margin-bottom:28px;font-size:14.5px;color:var(--ink-mid);}
+  .guide .t{color:var(--core);font-weight:700;margin-bottom:10px;font-size:13.5px;letter-spacing:.5px;}
+  .guide p+p{margin-top:8px;} .guide strong{color:var(--ink);}
+  .guide code{font-family:Consolas,monospace;color:var(--core);background:#0d1f1c;padding:1px 5px;border-radius:2px;font-size:12.5px;}
+
+  .section-title{font-size:20px;font-weight:700;color:var(--ink);margin:46px 0 8px;padding-left:13px;
+    border-left:4px solid var(--core);letter-spacing:.3px;}
+  .section-sub{color:var(--ink-soft);font-size:13.5px;margin:0 0 18px 17px;}
+
+  .card{background:var(--card);border:1px solid var(--edge);border-radius:3px;padding:22px 26px;margin-bottom:16px;}
+  .card h3{color:var(--core);margin-bottom:10px;font-size:16.5px;}
+  .card p{color:var(--ink-mid);font-size:14.5px;} .card p+p{margin-top:9px;}
+  .card strong{color:var(--ink);}
+  .card code{font-family:Consolas,monospace;color:var(--core);background:#0d1f1c;padding:1px 5px;border-radius:2px;font-size:12.5px;}
+
+  /* 四层解剖 */
+  .anat{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:12px;margin:18px 0;}
+  .anat .it{background:var(--card);border:1px solid var(--edge);border-top:4px solid;border-radius:3px;padding:16px 18px;}
+  .anat .it.api{border-top-color:var(--api);} .anat .it.mech{border-top-color:var(--mech);}
+  .anat .it.perf{border-top-color:var(--perf);} .anat .it.strat{border-top-color:var(--strat);}
+  .anat .it .n{font-size:11px;letter-spacing:1.5px;font-weight:700;font-family:Consolas,monospace;}
+  .anat .it.api .n{color:var(--api);} .anat .it.mech .n{color:var(--mech);}
+  .anat .it.perf .n{color:var(--perf);} .anat .it.strat .n{color:var(--strat);}
+  .anat .it h4{font-size:15.5px;color:var(--ink);margin:5px 0 7px;}
+  .anat .it p{font-size:12.5px;color:var(--ink-mid);line-height:1.65;}
+
+  table{width:100%;border-collapse:collapse;margin:13px 0;font-size:13px;}
+  th,td{padding:9px 11px;border:1px solid var(--edge);text-align:left;vertical-align:top;}
+  th{background:#1b242b;color:var(--core);font-weight:700;font-size:12.5px;}
+  td{color:var(--ink-mid);} td strong{color:var(--ink);}
+  td code,th code{font-family:Consolas,monospace;color:var(--core);font-size:12px;}
+  td em{color:var(--warn);font-style:normal;font-weight:600;}
+
+  .chain{display:flex;flex-direction:column;gap:0;margin:20px 0;}
+  .chain .step{background:var(--card);border:1px solid var(--edge);border-left:5px solid var(--core);padding:15px 20px;}
+  .chain .step:not(:last-child){border-bottom:none;}
+  .chain .step:first-child{border-radius:3px 3px 0 0;} .chain .step:last-child{border-radius:0 0 3px 3px;}
+  .chain .step .n{font-size:11px;letter-spacing:1.2px;font-weight:700;color:var(--ink-soft);margin-bottom:4px;font-family:Consolas,monospace;}
+  .chain .step h4{font-size:15px;color:var(--ink);margin-bottom:5px;}
+  .chain .step p{font-size:13.5px;color:var(--ink-mid);}
+
+  .quote{background:var(--key-soft);border:1px solid #3d3520;border-left:4px solid var(--key);
+    border-radius:3px;padding:18px 22px;margin:22px 0;}
+  .quote p{font-size:15px;color:#e8dca0;font-style:italic;line-height:1.8;}
+  .quote .src{margin-top:10px;font-size:12.5px;color:var(--ink-soft);text-align:right;font-style:normal;}
+
+  .pit{background:var(--warn-soft);border-left:4px solid var(--warn);border-radius:0 3px 3px 0;
+    padding:15px 19px;margin-bottom:12px;font-size:14px;color:#f0b3a9;}
+  .pit .lbl{color:var(--warn);font-weight:700;display:block;margin-bottom:6px;font-size:12.5px;}
+  .pit strong{color:#ffd0c7;}
+
+  .lab{background:var(--perf-soft);border:1px solid #3a2a44;border-left:4px solid var(--perf);
+    border-radius:3px;padding:18px 22px;margin-bottom:14px;font-size:14px;color:var(--ink-mid);}
+  .lab .t{color:var(--perf);font-weight:700;margin-bottom:8px;font-size:13.5px;letter-spacing:.4px;}
+  .lab strong{color:var(--ink);}
+  .lab code{font-family:Consolas,monospace;color:var(--perf);background:#1a1220;padding:1px 5px;border-radius:2px;font-size:12.5px;}
+  .lab ol,.lab ul{margin:8px 0 0 20px;} .lab li{margin-bottom:5px;}
+
+  .footer{text-align:center;margin-top:44px;padding:22px;color:var(--ink-soft);font-size:12.5px;line-height:1.9;}
+
+  @media(max-width:640px){
+    .header h1{font-size:20px;} .section-title{font-size:17.5px;}
+    body{padding:20px 14px 32px;} table{font-size:11.5px;}
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="kicker">ALGORITHMS · 4TH EDITION · SEDGEWICK &amp; WAYNE</div>
+    <h1>一本把"分析算法"做成科学方法的书</h1>
+    <div class="subtitle">algs4 整体架构 · 6 章 30 节 · 作者官方免费在线教材</div>
+    <div class="author">Robert Sedgewick &amp; Kevin Wayne · 普林斯顿 · Java 实现</div>
+  </div>
+
+  <div class="guide">
+    <div class="t">📖 这本书在 07 域补的是哪一块</div>
+    <p>07 域已有 <code>OSTEP</code>（系统）和图像处理（工具）。缺的是<strong>计算的基础</strong>——而"计算基础"其实是四层不同的东西，这本书覆盖其中三层：</p>
+    <table>
+      <tr><th>层</th><th>内容</th><th>本书覆盖</th></tr>
+      <tr><td><strong>① 算法</strong></td><td>怎么把问题变成可计算的步骤，代价怎么算</td><td>✅ 全 6 章</td></tr>
+      <tr><td><strong>② 数据结构</strong></td><td>数据怎么组织，决定哪些操作便宜</td><td>✅ 第 3 章是主体</td></tr>
+      <tr><td><strong>③ 真实硬件上的性能</strong></td><td>缓存、内存层级、访问模式</td><td>⚠️ <em>本书不管</em> → 由 <code>Dive into Systems</code> 补</td></tr>
+      <tr><td><strong>④ 不可解性</strong></td><td>有些问题没有高效解法</td><td>✅ 第 6.6 节（全书最长的一节，1533 行）</td></tr>
+    </table>
+    <p><strong>所以这两本书是配对的</strong>：algs4 告诉你"理论上多快"，Dive into Systems 告诉你"实际上为什么不是那么快"。</p>
+  </div>
+
+  <!-- ============ 四层解剖 ============ -->
+  <div class="section-title">这本书的真正方法论：每个数据结构都按四层解剖</div>
+  <div class="section-sub">这才是它比"算法大全"更值得读的地方——它给你一个可以套用到任何数据结构的检查表</div>
+
+  <div class="anat">
+    <div class="it api">
+      <div class="n">LAYER 1</div>
+      <h4>API · 抽象</h4>
+      <p><strong>它对使用者承诺什么？</strong>这本书教每个数据结构都从定义 API 开始——先约定能力，再谈实现。比如符号表："把键映射到值"，就这么一句话。</p>
+    </div>
+    <div class="it mech">
+      <div class="n">LAYER 2</div>
+      <h4>实现 · 机制</h4>
+      <p><strong>数据放在哪、操作怎么做？</strong>数组还是链表，有序还是无序，哈希还是比较。机制决定了下面那两层的全部。</p>
+    </div>
+    <div class="it perf">
+      <div class="n">LAYER 3</div>
+      <h4>性能 · 代价</h4>
+      <p><strong>代价多高、在什么条件下成立？</strong>这是本书最严谨的一层——每个数据结构都配 <strong>Proposition</strong>（命题），标明增长率、常数、前提。</p>
+    </div>
+    <div class="it strat">
+      <div class="n">LAYER 4</div>
+      <h4>策略 · 选择</h4>
+      <p><strong>什么时候用它、什么时候不用？</strong>为什么是这本书而不是那本，取决于你的访问模式。这一层决定工程判断。</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>和 OSTEP 那套"抽象 → 机制 → 策略"是同一个套路</h3>
+    <p>OSTEP 用这个三段式讲操作系统。algs4 的四层是它加上"<strong>代价</strong>"这一层——因为在算法里，代价不是附带信息，<strong>它就是选择依据本身</strong>。</p>
+    <p>所以这一域两本书合起来给你的是同一条链的两个版本：</p>
+    <table>
+      <tr><th></th><th>OSTEP（系统）</th><th>algs4（算法）</th></tr>
+      <tr><td>抽象</td><td>进程、地址空间、文件</td><td>栈、队列、符号表、图</td></tr>
+      <tr><td>机制</td><td>上下文切换、页表、inode</td><td>数组、链表、树、哈希</td></tr>
+      <tr><td>策略</td><td>调度算法、置换算法</td><td>选哪种结构对付哪种访问模式</td></tr>
+      <tr><td><strong>代价</strong></td><td>（分散在各章）</td><td><strong>Proposition：每个操作的增长级</strong></td></tr>
+    </table>
+  </div>
+
+  <!-- ============ 科学方法 ============ -->
+  <div class="section-title">第 1.4 节：它把"分析算法"做成了科学方法</div>
+  <div class="section-sub">这是全书方法论的心脏，也是我认为最值得单独拿出来讲的一节</div>
+
+  <div class="card">
+    <p>这一节从一个很朴素的问题开始：</p>
+    <p style="padding:12px 18px;background:#1b242b;border-left:3px solid var(--core);border-radius:0 3px 3px 0;color:var(--ink);font-family:Consolas,monospace;font-size:14px;">
+       How long will my program take?<br>
+       Why does my program run out of memory?
+    </p>
+    <p>然后它的回答方式不是"给你公式"，是<strong>把科学方法搬过来</strong>：</p>
+  </div>
+
+  <div class="chain">
+    <div class="step"><div class="n">STEP 1</div><h4>观察</h4><p>"Observe some feature of the natural world, generally with precise measurements."</p></div>
+    <div class="step"><div class="n">STEP 2</div><h4>假设</h4><p>"Hypothesize a model that is consistent with the observations."</p></div>
+    <div class="step"><div class="n">STEP 3</div><h4>预测</h4><p>"Predict events using the hypothesis."</p></div>
+    <div class="step"><div class="n">STEP 4</div><h4>验证</h4><p>"Verify the predictions by making further observations."</p></div>
+    <div class="step"><div class="n">STEP 5</div><h4>重复至吻合</h4><p>"Validate by repeating until the hypothesis and observations agree."</p></div>
+  </div>
+
+  <div class="card">
+    <p><strong>而它给这个类比加了一个硬条件</strong>——这一句是整节的关键：</p>
+    <p style="padding:12px 18px;background:var(--key-soft);border-left:3px solid var(--key);border-radius:0 3px 3px 0;color:#e8dca0;font-style:italic;">
+      "The experiments we design must be reproducible and the hypotheses that we formulate must be <strong>falsifiable</strong>."
+    </p>
+    <p>——<strong>实验必须可复现，假设必须可证伪。</strong>这就是为什么这一域和其他域不同：在别的域你只能说"这个说法有道理"，在这里你必须说"这个说法能不能被测量推翻"。</p>
+  </div>
+
+  <div class="card">
+    <h3>它给的具体工具：倍增测试</h3>
+    <p>观察怎么变成数据？靠三个类：</p>
+    <table>
+      <tr><th>类</th><th>作用</th></tr>
+      <tr><td><code>Stopwatch.java</code></td><td>测一段程序的实际运行时间</td></tr>
+      <tr><td><code>DoublingTest.java</code></td><td>把输入规模<b>每次翻倍</b>，打印各规模下的耗时</td></tr>
+      <tr><td><code>DoublingRatio.java</code></td><td>同上，但额外输出<b>相邻规模的耗时比值</b></td></tr>
+    </table>
+    <p><strong>为什么要输出比值</strong>——这是全书最聪明的一个设计。因为如果你测出：</p>
+    <table>
+      <tr><th>N</th><th>耗时</th><th>比值（翻倍后）</th><th>推断</th></tr>
+      <tr><td>1000</td><td>0.1 s</td><td>—</td><td>—</td></tr>
+      <tr><td>2000</td><td>0.8 s</td><td><strong>8</strong></td><td>≈ N³（2³ = 8）</td></tr>
+      <tr><td>4000</td><td>6.4 s</td><td><strong>8</strong></td><td>确认 N³</td></tr>
+    </table>
+    <p>——<strong>翻倍后的比值本身就直接指向增长级</strong>：比值≈2 是线性，≈4 是 N²，≈8 是 N³，≈2 且略大于 2 是 N log N。你不需要先知道公式，<em>你能从数据里把公式读出来。</em></p>
+  </div>
+
+  <div class="quote">
+    <p>"The total running time of a program is determined by two primary factors: the cost of executing each statement and the frequency of execution of each statement."</p>
+    <div class="src">—— 1.4 节，数学建模的出发点</div>
+  </div>
+
+  <div class="card">
+    <h3>从"耗时"到"公式"的四个约定</h3>
+    <table>
+      <tr><th>约定</th><th>内容</th><th>为什么需要它</th></tr>
+      <tr><td><strong>波浪号近似</strong>（tilde approximation）</td><td>写成 <code>g(N) ~ f(N)</code>，意思是 g(N)/f(N) → 1</td><td>扔掉低阶项——它们让公式变复杂但不改变结论</td></tr>
+      <tr><td><strong>增长级</strong>（order of growth）</td><td>取 <code>f(N) = N^b log^c N</code> 的形式</td><td>因为实现算法的结构原件只有几种（语句、条件、循环、嵌套、调用），所以增长级只可能是少数几个函数</td></tr>
+      <tr><td><strong>代价模型</strong>（cost model）</td><td><b>明确定义什么是"基本操作"</b>。例如 3-sum 问题的代价模型是"访问数组元素的次数"</td><td>不谈代价模型就谈复杂度是含糊的</td></tr>
+      <tr><td><strong>Proposition</strong></td><td>精确的命题，含增长级与常数</td><td>例如："The brute-force 3-sum algorithm uses ~ N³/2 array accesses"</td></tr>
+    </table>
+    <p style="margin-top:10px;"><strong>注意"代价模型"那一条的严谨性</strong>：它不说"3-sum 是 O(N³)"，它说"<em>3-sum 在'数组访问次数'这个代价模型下是 ~N³/2</em>"。换一个代价模型，命题就要重写。<em>这种精确性是这本书的性格。</em></p>
+  </div>
+
+  <!-- ============ 输入依赖 ============ -->
+  <div class="section-title">四种对付"输入依赖"的办法</div>
+  <div class="section-sub">同一段程序，不同输入耗时可能差几个数量级——这一节讲怎么办</div>
+
+  <table>
+    <tr><th style="width:22%">办法</th><th>内容</th><th>什么时候用</th></tr>
+    <tr><td><strong>输入模型</strong></td><td>"We can carefully model the kind of input to be processed."</td><td>作者自己标了它的弱点：<em>"This approach is challenging because the model may be unrealistic."</em></td></tr>
+    <tr><td><strong>最坏情况保证</strong></td><td>无论什么输入，耗时都小于某个界</td><td>作者的原话很具体：<em>"might be appropriate for the software that runs a nuclear reactor or a pacemaker or the brakes in your car."</em></td></tr>
+    <tr><td><strong>随机化算法</strong></td><td>引入随机性（快排、哈希）。每次运行时间不同，但<strong>保证失效的概率比你被闪电击中的概率还低</strong></td><td>作者对它的评价：<em>"Thus, such guarantees are as useful in practice as worst-case guarantees."</em></td></tr>
+    <tr><td><strong>摊还分析</strong></td><td>输入不只是数据，而是<b>客户端操作的序列</b>。摊还分析对操作<b>序列</b>给出最坏情况保证</td><td>最典型的例子是可扩容数组</td></tr>
+  </table>
+
+  <div class="card">
+    <h3>摊还分析那两条命题，值得逐字读</h3>
+    <table>
+      <tr><th>实现</th><th>命题</th></tr>
+      <tr><td><strong>链表</strong>实现的 Bag / Stack / Queue</td><td>"all operations take <strong>constant time in the worst case</strong>"</td></tr>
+      <tr><td><strong>可扩容数组</strong>实现的 Bag / Stack / Queue</td><td>"starting from an empty data structure, <strong>any sequence of N operations takes time proportional to N</strong> in the worst case (<em>amortized constant time per operation</em>)"</td></tr>
+    </table>
+    <p><strong>这两条的差别是这一节最重要的东西</strong>：</p>
+    <ul style="margin:9px 0 0 20px;color:var(--ink-mid);font-size:14px;">
+      <li>链表的承诺是<strong>每一次操作都快</strong>（真正的最坏情况常数）</li>
+      <li>可扩容数组的承诺是<strong>平均下来快</strong>——某一次扩容操作会慢，但它不常发生</li>
+    </ul>
+    <p style="margin-top:10px;"><em>这就是"摊还"这个词的全部意思：不是每次都快，是序列总体快。</em>而这两者能不能互换，取决于你的应用能否容忍偶发的延迟尖峰——<strong>这是一个策略问题，不是机制问题。</strong></p>
+  </div>
+
+  <!-- ============ 内存 ============ -->
+  <div class="section-title">内存核算：它把"内存"也做成了可计算的</div>
+  <div class="section-sub">这是很多算法书跳过的部分，而它恰好是通往"真实硬件"那一层的桥</div>
+
+  <div class="card">
+    <p>它的方法是：<strong>数变量个数，按类型加权字节数。</strong>在 64 位机器上：</p>
+    <table>
+      <tr><th>对象</th><th>开销</th><th>含义</th></tr>
+      <tr><td><strong>对象本身</strong></td><td><strong>16 字节</strong>开销，且总量<b>补齐到 8 的倍数</b></td><td>一个空对象也要 16 字节</td></tr>
+      <tr><td><strong>引用</strong></td><td><strong>8 字节</strong></td><td>对象引用就是一个内存地址</td></tr>
+      <tr><td><strong>嵌套内部类</strong>（如链表 <code>Node</code>）</td><td><b>额外 8 字节</b></td><td>指向外围实例的引用</td></tr>
+      <tr><td><strong>数组</strong></td><td><strong>24 字节</strong>头部（16 对象开销 + 4 长度 + 4 补齐）</td><td>Java 里数组是对象</td></tr>
+      <tr><td><strong>字符串</strong>（长度 N）</td><td><strong>32 + (24 + 2N) = 56 + 2N 字节</strong></td><td>String 对象 + 字符数组</td></tr>
+    </table>
+    <p><strong>这里有一个很实用的记账约定</strong>，值得单独记：</p>
+    <p style="padding:12px 18px;background:#1b242b;border-left:3px solid var(--perf);border-radius:0 3px 3px 0;color:var(--ink-mid);font-size:13.5px;">
+      我们<b>算</b> String 对象里的 char[] 数组（因为它是创建字符串时分配的），但<b>不算</b> StackOfStrings 里那些 String 对象（因为它们是客户端创建的）。
+    </p>
+    <p>——<strong>算谁分配的内存，不算谁引用的内存。</strong>这条约定让内存核算变得可判定。</p>
+  </div>
+
+  <div class="lab">
+    <div class="t">🔬 可跑的验证环节 · 这是这一域独有的</div>
+    <p>这一节的每一条都可以自己验证。<strong>而且这是全项目唯一能这样检验自己理解的地方</strong>——你说"这段代码是 O(N²)"，跑一下就知道对不对。</p>
+    <ol>
+      <li><strong>验证倍增比值</strong>：自己写一个 O(N²) 和一个 O(N log N) 的函数，用翻倍输入测比值。你应该看到 ≈4 和 ≈2（略大于 2）。<em>如果看到 4 和 2，说明你学会了从数据反推公式。</em></li>
+      <li><strong>验证摊还 vs 最坏</strong>：分别用链表和可扩容数组实现栈，压入 10⁶ 个元素。记录<b>每一次操作</b>的耗时并画出来——链表应该是一条平的线；数组应该大部分平、偶发尖峰。<em>这个图就是"摊还"这个词的可视化。</em></li>
+      <li><strong>验证内存核算</strong>：用你所用语言的运行时工具（Java 的 <code>-Xmx</code> 试探、Python 的 <code>sys.getsizeof</code>）实测一个 N 元素字符串数组，和上面算出来的 <code>56 + 2N</code> 对一下。<em>误差来自补齐与对齐——那本身就是下一层（硬件）的内容。</em></li>
+    </ol>
+  </div>
+
+  <!-- ============ 全书结构 ============ -->
+  <div class="section-title">30 节的实际覆盖面</div>
+  <div class="section-sub">注意它把"数据结构"和"算法"放在同一本书里，而且第 6 章是别处少见的</div>
+
+  <table>
+    <tr><th style="width:20%">章</th><th>节</th><th>补的是哪一层</th></tr>
+    <tr>
+      <td><strong>1 Fundamentals</strong><br>基础</td>
+      <td>1.1 编程模型 · 1.2 数据抽象 · <strong>1.3 栈与队列</strong> · <strong>1.4 算法分析</strong> · 1.5 并查集</td>
+      <td>① 算法（方法论）<br>② 数据结构（入门）</td>
+    </tr>
+    <tr>
+      <td><strong>2 Sorting</strong><br>排序</td>
+      <td>2.1 初级排序 · 2.2 归并 · 2.3 快速 · <strong>2.4 优先队列</strong> · 2.5 排序应用</td>
+      <td>① 算法<br>（四个经典排序 + 一个结构）</td>
+    </tr>
+    <tr>
+      <td><strong>3 Searching</strong><br>查找</td>
+      <td><strong>3.1 符号表</strong> · <strong>3.2 二叉搜索树</strong> · <strong>3.3 平衡树（2-3 树/红黑树）</strong> · <strong>3.4 哈希表</strong> · 3.5 查找应用</td>
+      <td>② 数据结构<br><em>这是全书的主体</em></td>
+    </tr>
+    <tr>
+      <td><strong>4 Graphs</strong><br>图</td>
+      <td>4.1 无向图 · 4.2 有向图 · 4.3 最小生成树 · 4.4 最短路径</td>
+      <td>① 算法<br>（图上的经典问题）</td>
+    </tr>
+    <tr>
+      <td><strong>5 Strings</strong><br>字符串</td>
+      <td>5.1 字符串排序（基数排序） · <strong>5.2 Trie</strong> · 5.3 子串查找 · 5.4 正则表达式 · <strong>5.5 数据压缩</strong></td>
+      <td>②③ 数据结构的字符串特化<br><em>5.5 接 03 域的信息论</em></td>
+    </tr>
+    <tr>
+      <td><strong>6 Context</strong><br>语境</td>
+      <td>6.1 事件驱动模拟 · <strong>6.2 B 树</strong> · 6.3 后缀数组 · 6.4 最大流 · <strong>6.5 归约</strong> · <strong>6.6 不可解性</strong></td>
+      <td>④ <strong>不可解性</strong><br><em>全书最长的一节就在这里</em></td>
+    </tr>
+  </table>
+
+  <div class="card">
+    <h3>第 6 章为什么特殊</h3>
+    <p>前五章都在讲"<strong>怎么做</strong>"，第 6 章讲"<strong>什么时候做不到</strong>"。而它把两件事放在一起：</p>
+    <ul style="margin:9px 0 0 20px;color:var(--ink-mid);font-size:14px;">
+      <li><strong>6.5 归约</strong>——怎么把一个新问题"化"成一个已知问题</li>
+      <li><strong>6.6 不可解性</strong>——怎么证明一个问题<b>不可能</b>有高效解法（1533 行，全书最长）</li>
+    </ul>
+    <p style="margin-top:10px;">这两节合起来给的是<strong>工程判断的边界</strong>：<em>在动手之前，先判断这个问题该不该找精确解。</em></p>
+    <p>——这是这一域最缺的一课。OSTEP 讲的是"怎么把它做对"，图像处理讲的是"怎么把它做好"，而这里讲的是"<strong>有些事压根别指望做快</strong>"。</p>
+  </div>
+
+  <!-- ============ 边界 ============ -->
+  <div class="section-title">这本书不承诺什么</div>
+
+  <div class="pit">
+    <span class="lbl">边界一 · 它是 Java 的，而这个项目其他材料偏 C / Python</span>
+    作者另外有《Algorithms in C》，但<strong>那本没有免费在线版</strong>。所以要么接受 Java，要么把代码当伪代码读——<em>后者其实完全可行，因为这本书的重点是结构与代价，不是语言细节。</em>
+  </div>
+
+  <div class="pit">
+    <span class="lbl">边界二 · 它不碰真实硬件</span>
+    它给你的复杂度是<strong>纸上的</strong>。两个都是 O(N) 的遍历，一个用数组一个用链表，在真实机器上可能差 10 倍——<strong>因为缓存</strong>。这本书不管这件事，这是它必须由 <code>Dive into Systems</code> 补的原因。
+  </div>
+
+  <div class="pit">
+    <span class="lbl">边界三 · 它不是参考手册，别当字典用</span>
+    想查"这个问题的标准解法是什么"，该用 CLRS 或 Skiena。这本书是<strong>教进去的</strong>，不是<strong>查出来的</strong>——它的每一节都在讲"为什么是这个结构而不是那个"。
+  </div>
+
+  <div class="pit">
+    <span class="lbl">边界四 · 它假设你会写代码</span>
+    30 节里大量写着"实现这个 API"。<strong>不跑代码是学不会这本书的</strong>——这和其他域不同。反过来这也是好处：这一域有明确的成败判据。
+  </div>
+
+  <div class="quote">
+    <p>"The experiments we design must be <strong>reproducible</strong> and the hypotheses that we formulate must be <strong>falsifiable</strong>."</p>
+    <div class="src">—— 1.4 节。这一句可以当整个 07 域的方法论座右铭</div>
+  </div>
+
+  <!-- ============ 位置 ============ -->
+  <div class="section-title">这本书在项目里的位置</div>
+
+  <table>
+    <tr><th>接口</th><th>内容</th></tr>
+    <tr>
+      <td><strong>↔ OSTEP</strong>（同域）</td>
+      <td><strong>同一套"抽象→机制→策略"，algs4 多给一层"代价"。</strong>而且两本在第 6 章会接上：B 树是文件系统索引的核心，就是 OSTEP 里那个 B 树</td>
+    </tr>
+    <tr>
+      <td><strong>→ 图像处理</strong>（同域）</td>
+      <td>图像处理的每个算子都在这些结构上跑。滤波是卷积（数组访问模式），形态学是集合运算，压缩是 5.5 节的内容</td>
+    </tr>
+    <tr>
+      <td><strong>→ <code>03_自然与数学</code></strong></td>
+      <td><strong>5.5 数据压缩直接接 MacKay 的信息论</strong>——哈夫曼编码、LZW 都在那里。这是这一域与 03 域最硬的一条连接</td>
+    </tr>
+    <tr>
+      <td><strong>→ Dive into Systems</strong>（配对）</td>
+      <td>algs4 给理论代价，Dive into Systems 给实际代价。<strong>两本对着读才完整</strong>：一个说 O(N)，一个说为什么跑出来差 10 倍</td>
+    </tr>
+    <tr>
+      <td><strong>→ <code>02_心智与认知</code></strong></td>
+      <td>"代价模型"这个概念可以迁移：<strong>你选什么当"基本操作"，决定了你算出来的结论。</strong>这与认知心理学讲"你用什么框架看问题"是同一件事的两个版本</td>
+    </tr>
+  </table>
+
+  <div class="footer">
+    《Algorithms》第 4 版 整体架构 · Sedgewick &amp; Wayne<br>
+    四层解剖 · 科学方法 · 四种输入依赖对策 · 30 节覆盖面<br>
+    <em>"实验必须可复现，假设必须可证伪"</em>
+  </div>
+
+</div>
+</body>
+</html>

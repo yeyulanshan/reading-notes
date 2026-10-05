@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dive into Systems 问题手册 —— 16 题，练到能解释"为什么慢"</title>
+<style>
+  :root{
+    --paper:#131318; --card:#1b1b23; --edge:#2e2e3a;
+    --ink:#e8e8f0; --ink-mid:#b0b0c0; --ink-soft:#787888;
+    --core:#9b59b6; --core-soft:#221828;
+    --hw:#c0392b; --sys:#2980b9; --perf:#e67e22; --par:#16a085;
+    --warn:#e74c3c; --key:#d4b83c;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--paper);color:var(--ink);padding:36px 20px 48px;line-height:1.85;-webkit-font-smoothing:antialiased;}
+  .container{max-width:960px;margin:0 auto;}
+
+  .header{text-align:center;margin-bottom:26px;padding:46px 24px 40px;background:var(--card);
+    border:1px solid var(--edge);border-top:5px solid var(--core);border-radius:4px;}
+  .header .kicker{font-size:11.5px;letter-spacing:2.5px;color:var(--ink-soft);margin-bottom:14px;font-family:Consolas,monospace;}
+  .header h1{font-size:24px;color:var(--ink);margin-bottom:14px;letter-spacing:.5px;line-height:1.5;}
+  .header .subtitle{font-size:14.5px;color:var(--ink-mid);}
+  .header .author{margin-top:16px;font-size:12.5px;color:var(--ink-soft);}
+
+  .guide{background:var(--core-soft);border:1px solid #34243d;border-left:4px solid var(--core);
+    border-radius:3px;padding:20px 24px;margin-bottom:26px;font-size:14.5px;color:var(--ink-mid);}
+  .guide .t{color:var(--core);font-weight:700;margin-bottom:10px;font-size:13.5px;letter-spacing:.5px;}
+  .guide ol{margin-left:20px;} .guide li{margin-bottom:6px;} .guide strong{color:var(--ink);}
+  .guide code{font-family:Consolas,monospace;color:var(--core);background:#180f1e;padding:1px 5px;border-radius:2px;font-size:12.5px;}
+
+  .level-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:30px;}
+  .level-bar .lv{flex:1;min-width:170px;background:var(--card);border:1px solid var(--edge);border-top:4px solid;border-radius:3px;padding:14px 16px;}
+  .level-bar .lv.l1{border-top-color:#7aa05c;} .level-bar .lv.l2{border-top-color:#c9a227;}
+  .level-bar .lv.l3{border-top-color:#d98a3f;} .level-bar .lv.l4{border-top-color:var(--core);}
+  .level-bar .lv .n{font-size:11.5px;font-weight:700;letter-spacing:1px;margin-bottom:5px;}
+  .level-bar .lv.l1 .n{color:#8fbf6a;} .level-bar .lv.l2 .n{color:#e0b93f;}
+  .level-bar .lv.l3 .n{color:#d98a3f;} .level-bar .lv.l4 .n{color:var(--core);}
+  .level-bar .lv p{font-size:12.5px;color:var(--ink-mid);line-height:1.6;}
+
+  .section-title{font-size:20px;font-weight:700;color:var(--ink);margin:46px 0 8px;padding-left:13px;
+    border-left:4px solid var(--core);letter-spacing:.3px;}
+  .section-sub{color:var(--ink-soft);font-size:13.5px;margin:0 0 18px 17px;}
+
+  .q{background:var(--card);border:1px solid var(--edge);border-radius:3px;margin-bottom:16px;overflow:hidden;}
+  .q-head{padding:16px 22px;display:flex;gap:13px;align-items:flex-start;border-bottom:1px solid var(--edge);}
+  .q-head .num{font-size:13px;font-weight:700;color:#131318;background:var(--core);padding:3px 10px;border-radius:2px;flex-shrink:0;margin-top:2px;font-family:Consolas,monospace;}
+  .q-head .txt{font-size:15.5px;color:var(--ink);font-weight:600;line-height:1.7;}
+  .q-head .lvtag{font-size:10.5px;padding:2px 8px;border-radius:20px;font-weight:700;white-space:nowrap;margin-left:auto;flex-shrink:0;margin-top:3px;}
+  .lvtag.l1{background:#1e2a19;color:#8fbf6a;} .lvtag.l2{background:#2a2517;color:#e0b93f;}
+  .lvtag.l3{background:#2a1f14;color:#d98a3f;} .lvtag.l4{background:#221828;color:var(--core);}
+  .q-body{padding:18px 22px;font-size:14px;color:var(--ink-mid);}
+  .q-body p+p{margin-top:8px;} .q-body strong{color:var(--ink);}
+  .q-body code{font-family:Consolas,monospace;color:var(--core);background:#180f1e;padding:1px 5px;border-radius:2px;font-size:12.5px;}
+
+  details{margin-top:12px;border:1px solid var(--edge);border-radius:3px;background:#16161d;}
+  summary{cursor:pointer;padding:11px 16px;font-size:13.5px;font-weight:700;color:var(--core);
+    background:var(--core-soft);border-radius:3px 3px 0 0;list-style:none;}
+  summary::-webkit-details-marker{display:none;}
+  summary::before{content:"▸ ";font-size:12px;}
+  details[open] summary::before{content:"▾ ";}
+  details[open] summary{border-bottom:1px solid var(--edge);}
+  .ans{padding:16px 18px;font-size:14px;color:var(--ink-mid);line-height:1.85;}
+  .ans p+p{margin-top:9px;} .ans strong{color:var(--ink);}
+  .ans ol,.ans ul{margin:9px 0 0 20px;} .ans li{margin-bottom:6px;}
+  .ans code{font-family:Consolas,monospace;color:var(--core);font-size:12.5px;}
+
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13px;}
+  th,td{padding:8px 10px;border:1px solid var(--edge);text-align:left;vertical-align:top;}
+  th{background:#22222c;color:var(--core);font-weight:700;font-size:12.5px;}
+  td{color:var(--ink-mid);} td strong{color:var(--ink);}
+  th code,td code{font-family:Consolas,monospace;color:var(--core);font-size:12px;}
+
+  .pit{background:#2a1615;border-left:4px solid var(--warn);border-radius:0 3px 3px 0;
+    padding:13px 17px;margin-top:12px;font-size:13.5px;color:#f0b0aa;}
+  .pit .lbl{color:var(--warn);font-weight:700;display:block;margin-bottom:5px;font-size:12px;letter-spacing:.4px;}
+  .pit strong{color:#ffd5d0;}
+
+  .lab{background:#2a1e12;border:1px solid #3d2e1c;border-left:4px solid var(--perf);border-radius:3px;
+    padding:12px 16px;margin-top:12px;font-size:13px;color:#e8d0b0;}
+  .lab .t{color:var(--perf);font-weight:700;margin-bottom:6px;font-size:12px;letter-spacing:.4px;}
+  .lab strong{color:#f8e8d0;} .lab code{font-family:Consolas,monospace;color:var(--perf);}
+
+  .checklist{background:var(--card);border:1px solid var(--edge);border-radius:3px;padding:26px;}
+  .checklist h3{color:var(--core);font-size:16.5px;margin-bottom:16px;}
+  .checklist ul{list-style:none;}
+  .checklist li{padding:5px 0 5px 28px;position:relative;color:var(--ink-mid);font-size:13.5px;}
+  .checklist li::before{content:"☐";position:absolute;left:4px;color:#3d3d48;font-size:15px;}
+
+  .footer{text-align:center;margin-top:44px;padding:22px;color:var(--ink-soft);font-size:12.5px;line-height:1.9;}
+
+  @media(max-width:640px){
+    .header h1{font-size:19px;} .section-title{font-size:17.5px;}
+    .q-head{flex-wrap:wrap;} .q-head .lvtag{margin-left:0;}
+    body{padding:20px 14px 32px;} table{font-size:11.5px;}
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="kicker">PROBLEM MANUAL · DIVE INTO SYSTEMS</div>
+    <h1>16 题，练到能解释"为什么慢"</h1>
+    <div class="subtitle">Dive into Systems 问题手册 · Matthews, Newhall, Webb</div>
+    <div class="author">L1 基础 3 题 · L2 理解 6 题 · L3 应用 4 题 · L4 批判 3 题 · 32 项自测</div>
+  </div>
+
+  <div class="guide">
+    <div class="t">📖 怎么用这本手册</div>
+    <ol>
+      <li><strong>它的定位是 algs4 的补集。</strong>algs4 教"理论上多快"，这本教"<strong>为什么实际上不是那么快</strong>"。<em>所以不要把两本的题混着背——它们回答的是不同的问题。</em></li>
+      <li><strong>重点在第 11–12 章（记忆层级与代码优化）。</strong>第 13 章（操作系统）与 OSTEP 高度重叠，本手册只出了 1 题。</li>
+      <li><strong>带「🔬 可跑验证」的题一定要跑。</strong>这一层的结论全都是<strong>可以在你自己机器上测出来的</strong>，而且——<em>你机器上的数字会和书里的不同，那正是你要理解的东西。</em></li>
+      <li><strong>每题都问"这能解释 algs4 解释不了的什么"。</strong>这是这两本书配对的意义所在。</li>
+    </ol>
+  </div>
+
+  <div class="level-bar">
+    <div class="lv l1"><div class="n">L1 · 基础</div><p>能说出层级与两种局部性。</p></div>
+    <div class="lv l2"><div class="n">L2 · 理解</div><p>能解释缓存怎么工作、为什么快。</p></div>
+    <div class="lv l3"><div class="n">L3 · 应用</div><p>能重排代码提高速度，并用工具测量。</p></div>
+    <div class="lv l4"><div class="n">L4 · 批判</div><p>能指出这一层的边界与代价。</p></div>
+  </div>
+
+  <!-- ============ L1 ============ -->
+  <div class="section-title">L1 · 基础（3 题）</div>
+
+  <div class="q">
+    <div class="q-head"><span class="num">1</span><span class="txt">记忆层级有哪几层？为什么它必须存在？</span><span class="lvtag l1">L1</span></div>
+    <div class="q-body">
+      <p>从快到慢列出，并说出这个层级存在的根本原因。</p>
+      <details><summary>展开答案</summary><div class="ans">
+        <table>
+          <tr><th>层</th><th>速度</th><th>容量</th></tr>
+          <tr><td><strong>CPU 寄存器</strong></td><td>最快</td><td>最小</td></tr>
+          <tr><td><strong>CPU 缓存（L1/L2/L3）</strong></td><td>快</td><td>小</td></tr>
+          <tr><td><strong>主存（RAM）</strong></td><td>慢</td><td>大</td></tr>
+          <tr><td><strong>磁盘 / 固态</strong></td><td>最慢</td><td>最大</td></tr>
+        </table>
+        <p><strong>为什么必须存在</strong>：因为<strong>快的存储器做不大，大的存储器做不快</strong>——这是物理与成本的双重约束。</p>
+        <p><strong>书里用的类比很直观</strong>：Fiona 的书桌只能放三本书，门外有书架，校园里有图书馆。<em>她当然希望所有书都在桌上，但桌上放不下。</em></p>
+        <p>所以层级的目的是：<strong>把"经常用的"放在快的层，把"偶尔用的"放在慢的层</strong>——而这个"经常/偶尔"的判断，就是下一题的内容。</p>
+        <div class="pit"><span class="lbl">⚠️ 失败模式</span>以为这是"工程偷懒"的结果。<strong>如果能把 RAM 做到和寄存器一样快，早就不需要缓存了。</strong><em>层级不是设计上的妥协，是物理约束下的最优解。</em></div>
+      </div></details>
+    </div>
+  </div>
+
+  <div class="q">
+    <div class="q-head"><span class="num">2</span><span class="txt">时间局部性和空间局部性分别是什么？它们各自决定了缓存的什么设计？</span><span class="lvtag l1">L1</span></div>
+    <div class="q-body">
+      <p>说出两者的定义，并指出它们对应缓存的两个不同决策。</p>
+      <details><summary>展开答案</summary><div class="ans">
+        <table>
+          <tr><th>类型</th><th>含义</th><th>决定</th></tr>
+          <tr>
+            <td><strong>时间局部性</strong></td>
+            <td>刚用过的东西，很可能马上再用</td>
+            <td><strong>淘汰策略</strong>（把谁踢出去）</td>
+          </tr>
+          <tr>
+            <td><strong>空间局部性</strong></td>
+            <td>用了某个地址，附近的地址很可能也要用</td>
+            <td><strong>块大小</strong>（一次搬多少）</td>
+          </tr>
+        </table>
+        <p><strong>而这一层设计只有一个依据</strong>，书里的原话是：</p>
+        <p style="padding:11px 15px;background:#2a2517;border-left:3px solid var(--key);color:#e8dca0;font-style:italic;border-radius:0 3px 3px 0;">
+          "systems look to the <strong>past</strong> as a predictor of what will likely happen in the <strong>future</strong>."
+        </p>
+        <p><strong>为什么只能靠过去</strong>：书里说得直接——<em>"hardware designers haven't discovered how to build circuits that can predict the future."</em> 而让程序员提前声明访问模式，对通用系统来说负担太大。</p>
+        <div class="pit"><span class="lbl">⚠️ 失败模式</span>把两种局部性当成一回事。<strong>它们是两个不同的问题</strong>：一个管"留谁"，一个管"搬多少"。<em>理解这个区分，才能理解为什么缓存要同时有"块大小"和"替换策略"这两个参数。</em></div>
+      </div></details>
+    </div>
+  </div>
+
+  <div class="q">
+    <div class="q-head"><span class="num">3</span><span class="txt">一个函数遍历数组求和——它同时利用了两种局部性吗？</span><span class="lvtag l1">L1</span></div>
+    <div class="q-body">
+      <p>用那个 <code>sum_array</code> 的例子说明哪些变量利用时间局部性、哪些利用空间局部性。</p>
+      <details><summary>展开答案</summary><div class="ans">
+        <p>看这段代码：</p>
+        <pre style="background:#16161d;border:1px solid var(--edge);border-radius:3px;padding:12px;font-family:Consolas,monospace;font-size:12.5px;color:var(--ink);overflow-x:auto;">int sum_array(int *array, int len) {
+    int i, sum = 0;
+    for (i = 0; i &lt; len; i++) {
+        sum += array[i];
+    }
+    return sum;
+}</pre>
+        <table>
+          <tr><th>变量</th><th>利用什么局部性</th><th>为什么</th></tr>
+          <tr><td><code>i</code> · <code>len</code> · <code>sum</code> · <code>array</code>（基地址）</td><td><strong>时间局部性</strong></td><td>循环每次迭代都访问它们 → 只需从内存载入一次</td></tr>
+          <tr><td><code>array[i]</code> 的元素</td><td><strong>空间局部性</strong></td><td>每个元素只访问一次，但<strong>它们是连续的地址</strong></td></tr>
+        </table>
+        <p><strong>空间局部性那一条的具体机制</strong>（书里的原话）：<em>"accessing the first array index fills the cache with not only the first integer, but also the next few integers after it, too."</em></p>
+        <p><strong>而它给了一个具体数字</strong>：假设块大小是 16 字节，系统一次搬 4 个 <code>int</code>。所以<strong>访问第一个元素付一次内存的代价，后面三个都从缓存出</strong>——<em>即使程序之前从未访问过它们。</em></p>
+        <div class="pit"><span class="lbl">⚠️ 失败模式</span>以为"只访问一次就不会有缓存收益"。<strong>恰恰相反：即使每个元素只读一次，顺序访问依然能从缓存获益——因为一次搬了一整块。</strong><em>这是最容易忽略的一点，也是下一题那个 5 倍差距的根源。</em></div>
+      </div></details>
+    </div>
+  </div>
+
+  <!-- ============ L2 ============ -->
+  <div class="section-title">L2 · 理解（6 题）</div>
+
+  <div class="q">
+    <div class="q-head"><span class="num">4</span><span class="txt">为什么同一个矩阵遍历，只换索引顺序就快约 5 倍？</span><span class="lvtag l2">L2</span></div>
+    <div class="q-body">
+      <p>这是全书最重要的一个例子。请解释两个版本在<strong>内存访问层面</strong>的实际差别。</p>
+      <details><summary>展开答案</summary><div class="ans">
+        <table>
+          <tr><th>版本 1（快约 5 倍）</th><th>版本 2</th></tr>
+          <tr><td><code>total += mat[i][j];</code></td><td><code>total += mat[j][i];</code></td></tr>
+        </table>
+        <p><strong>书里的解释</strong>：</p>
+        <p><strong>版本 1</strong>：<em>"accesses the matrix's values <strong>sequentially in memory</strong>… it pays the cost of going to memory <strong>only once for every block of values</strong>."</em></p>
+        <p><strong>版本 2</strong>：<em>"accesses the matrix's values by <strong>repeatedly jumping between rows across nonsequential memory addresses</strong>. It <strong>never reads from the same cache block in subsequent memory accesses</strong>… Thus, it pays the cost of going to memory <strong>for every matrix value</strong> it reads."</em></p>
+        <p><strong>关键在这里</strong>：C 的二维数组是<strong>行优先（row-major）</strong>存储的——<code>mat[i][0]</code>、<code>mat[i][1]</code>、<code>mat[i][2]</code> 在内存里是连续的。</p>
+        <table>
+          <tr><th></th><th>版本 1</th><th>版本 2</th></tr>
+          <tr><td>访问顺序</td><td>沿内存连续前进</td><td>在行之间反复跳跃</td></tr>
+          <tr><td>每块搬进来用几次</td><td><strong>全部用上</strong></td><td><strong>只用 1 次就丢</strong></td></tr>
+          <tr><td>去内存的次数</td><td><code>N²/每块元素数</code></td><td><code>N²</code></td></tr>
+        </table>
+        <p><strong>而最关键的一点是</strong>：<em>两个版本的工作量完全一样</em>——都是 N² 次加法、N² 次数组访问。<strong>在 algs4 的代价模型下，它们是一样快的。</strong></p>
+        <div class="lab"><div class="t">🔬 可跑验证 · 这个实验值得亲手做一遍</div>
+        建一个矩阵，总大小远超缓存（比如 4096×4096 的 <code>float</code>，约 64 MB）。用行优先和列优先两种顺序各遍历求和一次，计时。<br>
+        <strong>预期：行优先明显更快（这个规模上常见 3–10 倍）。</strong><br>
+        <em>建议再做一步：把矩阵缩小到能装进缓存（比如 256×256），重测——<strong>差距会大幅缩小甚至消失</strong>。这一步能让你亲眼看到"差距来自缓存，不是来自代码结构"。</em></div>
+        <div class="pit"><span class="lbl">⚠️ 失败模式</span>以为"编译器会帮我重排循环"。<strong>它常常不能</strong>——因为重排可能改变语义（如果循环体有副作用），编译器不敢做。<em>而 <code>mat[i][j]</code> 与 <code>mat[j][i]</code> 这种"看起来等价"的改动，在指针与别名存在的情况下编译器往往<b>无法证明</b>它安全。</em></div>
+      </div></details>
+    </div>
+  </div>
+
+  <div class="q">
+    <div class="q-head"><span class="num">5</span><span class="txt">直接映射缓存的地址分成哪三段？各决定什么？</span><span class="lvtag l2">L2</span></div>
+    <div class="q-body">
+      <p>说出三段的名字与各自的作用，并解释"直接映射"这个名字的含义。</p>
+      <details><summary>展开答案</summary><div class="ans">
+        <table>
+          <tr><th>段</th><th>决定什么</th></tr>
+          <tr><td><strong>标签（tag）</strong></td><td>这个位置里<b>是不是</b>我要的那块数据</td></tr>
+          <tr><td><strong>索引（index）</strong></td><td>放到缓存的<b>哪一组</b></td></tr>
+          <tr><td><strong>块内偏移（offset）</strong></td><td>在块内的<b>哪个字节</b></td></tr>
+        </table>
+        <p><strong>"直接映射"的含义</strong>：每个内存块只能放到缓存里<strong>唯一一个</strong>位置——由索引段直接算出，不需要搜索。</p>
+        <p><strong>它的优点是快</strong>（一次比较就知道命中与否）；<strong>代价是冲突缺失</strong>——如果两个热点数据恰好映射到同一位置，它们会不停地把对方踢出去，即使缓存里有很多空位置。</p>
+        <div class="pit"><span class="lbl">⚠️ 失败模式</span>以为"缓存大就不会冲突"。<strong>直接映射下，冲突与缓存大小无关，只与地址的索引位是否相同有关。</strong><em>这就是为什么会发展出组相联缓存——用一点硬件复杂度换取冲突的减少。</em></div>
+      </div></details>
+    </div>
+  </div>
+
+  <div class="q">
+    <div class="q-head"><span class="num">6</span><span class="txt">直接映射、组相联、全相联三者的取舍是什么？</span><span class="lvtag l2">L2</span></div>
+    <div class="q-body">
+      <p>说出三者的机制差别，以及这个取舍的本质。</p>
+      <details><summary>展开答案</summary><div class="ans">
+        <table>
+          <tr><th>设计</th><th>块能放哪</th><th>冲突</th><th>硬件复杂度</th></tr>
+          <tr><td><strong>直接映射</strong></td><td><b>唯一一个位置</b></td><td><em>高</em></td><td><strong>最低</strong>（一次比较）</td></tr>
+          <tr><td><strong>组相联</strong>（N 路）</td><td>组内 <b>N 个位置任选</b></td><td>中</td><td>中（并行比较 N 个标签）</td></tr>
+          <tr><td><strong>全相联</strong></td><td><b>任何位置</b></td><td><strong>最低</strong></td><td><em>最高</em>（要搜整个缓存）</td></tr>
+        </table>
+        <p><strong>取舍的本质</strong>：<em>灵活性换硬件复杂度。</em>越灵活 → 冲突越少 → 命中率越高；但每次访问要比较的标签越多 → 越慢、越贵、越费电。</p>
+        <p><strong>所以实践中用的是折中</strong>：现代 CPU 的 L1 常用 4–8 路组相联，<em>而全相联只用在小到可以接受的缓存上（比如 TLB）。</em></p>
+        <div class="pit"><span class="lbl">⚠️ 失败模式</span>以为"路数越多越好"。<strong>路数增加会拉长命中判断的时间——而缓存的全部价值就在于"快"。</strong><em>如果判断命中要花 5 个周期，那不如直接去内存。</em></div>
+      </div></details>
+    </div>
+  </div>
+
+  <div class="q">
+    <div class="q-head"><span class="num">7</span><span class="txt">写回（write-back）和写直达（write-through）的取舍是什么？</span><span class="lvtag l2">L2</span></div>
+    <div class="q-body">
+      <p>说出两种策略的做法、代价，以及各自适合的场景。</p>
+      <details><summary>展开答案</summary><div class="ans">
+        <table>
+          <tr><th>策略</th><th>做法</th><th>代价</th></tr>
+          <tr>
+            <td><strong>写回</strong></td>
+            <td>只改缓存，标"脏"；被淘汰时才写回内存</td>
+            <td>内存写次数少；但要维护脏位，且多核下一致性更复杂</td>
+          </tr>
+          <tr>
+            <td><strong>写直达</strong></td>
+            <td>每次写都同时写缓存和内存</td>
+            <td>内存写次数多；但简单、一致性好</td>
+          </tr>
+        </table>
+        <p><strong>这个取舍与 OSTEP 里"页表项要维护脏位"是同一类问题</strong>——都是"用一点元信息换取更少的慢速写"。</p>
+        <p><strong>写回在多核下会引出新的问题</strong>：如果两个核各有一份同一个地址的副本，其中一个改了，另一个的副本就过期了。<em>这正是第 11.6 节"缓存一致性"要解决的问题，也是第 14 章"缓存一致性"的开端。</em></p>
+        <div class="pit"><span class="lbl">⚠️ 失败模式</span>以为"写直达更安全所以更好"。<strong>它的一致性优势是真的，但代价是内存带宽被大量浪费在重复写上。</strong><em>现代 CPU 默认是写回——一致性由专门的协议（如 MESI）在硬件层面保证。</em></div>
+      </div></details>
+    </div>
+  </div>
+
+  <div class="q">
+    <div class="q-head"><span class="num">8</span><span class="txt">为什么硬件用 LRU 淘汰？它和 OSTEP 里的 LRU 是什么关系？</span><span class="lvtag l2">L2</span></div>
+    <div class="q-body">
+      <p>说出 LRU 的依据，并说明这一域两本书在这个点上的衔接。</p>
+      <details><summary>展开答案</summary><div class="ans">
+        <p><strong>依据就是那句话</strong>：<em>"systems look to the past as a predictor of what will likely happen in the future."</em>——用过去的访问顺序预测未来。</p>
+        <p><strong>LRU = Least Recently Used（最近最少使用）</strong>：淘汰最久没被访问的那一块。</p>
+        <p><strong>书里用书本类比讲得很清楚</strong>：桌子满了，就把"最久没碰过的那本"收回书架。<em>它抓住了时间局部性的两个目标</em>：常用的留在近处；不常用的终究会成为"最久没用"而被移走。</p>
+        <p><strong>而这个策略在系统里出现了两次</strong>——我核对了两本书的原文：</p>
+        <table>
+          <tr><th></th><th>OSTEP（操作系统）</th><th>Dive into Systems</th></tr>
+          <tr><td>问题</td><td>物理内存满了，换出哪一页？</td><td>缓存满了，淘汰哪一块？</td></tr>
+          <tr><td>答案</td><td><strong>LRU</strong> 及其近似</td><td><strong>LRU</strong></td></tr>
+          <tr><td>在体系里的层</td><td><b>策略</b>——软件可换</td><td><b>机制</b>——硬件固定</td></tr>
+          <tr><td>提到 LRU 的次数</td><td><strong>44 次</strong></td><td><strong>19 次</strong></td></tr>
+        </table>
+        <p><strong>这个连接的价值</strong>：<em>同一个策略（用过去预测未来）在从寄存器到磁盘的每一层都被使用。</em>而两本书从两端逼近它——一本从软件策略，一本从硬件机制。</p>
+        <p><strong>而它正好印证了"抽象→机制→策略"那个框架</strong>：在缓存层，机制和策略都由硬件定死（<strong>软件改不了</strong>）；在虚拟内存层，两者都在操作系统手里（<strong>可调</strong>）。<em>同一件事在不同层级的可调整程度不同。</em></p>
+        <div class="pit"><span class="lbl">⚠️ 失败模式</span>以为硬件能实现完美的 LRU。<strong>精确 LRU 需要维护访问顺序，代价高</strong>——所以实际硬件用的是近似（如时钟算法、伪 LRU）。<em>而 OSTEP 里也讲了同样的道理：精确 LRU 在软件里也难实现，所以操作系统也用近似。</em></div>
+      </div></details>
+    </div>
+  </div>
+
+  <div class="q">
+    <div class="q-head"><span class="num">9</span><span class="txt">用 Cachegrind 能量到什么？为什么"可测量"这件事很重要？</span><span class="lvtag l2">L2</span></div>
+    <div class="q-body">
+      <p>说出这个工具的位置与作用，以及它和 algs4 那个方法论的关系。</p>
+      <details><summary>展开答案</summary><div class="ans">
+        <p><strong>Cachegrind</strong>（第 11.5 节）给出<strong>缓存缺失次数</strong>的统计。<strong>Massif</strong>（第 12.3.3 节）给出<strong>内存使用曲线</strong>——程序在什么时候用了多少内存。</p>
+        <p><strong>两个工具合起来，把"内存"从一个模糊概念变成两个可量化的数</strong>：</p>
+        <table>
+          <tr><th>工具</th><th>量化的东西</th></tr>
+          <tr><td><code>cachegrind</code></td><td>缓存缺失次数（按 L1/L2/L3 分别统计）</td></tr>
+          <tr><td><code>massif</code></td><td>峰值内存占用 + 时间曲线</td></tr>
+        </table>
+        <p><strong>为什么"可测量"很重要</strong>——这是本题的核心。回想 algs4 第 1.4 节那句：</p>
+        <p style="padding:11px 15px;background:#2a2517;border-left:3px solid var(--key);color:#e8dca0;font-style:italic;border-radius:0 3px 3px 0;">
+          "The experiments we design must be <strong>reproducible</strong> and the hypotheses that we formulate must be <strong>falsifiable</strong>."
+        </p>
+        <p><strong>这一层同样遵守这条纪律。</strong>你不需要"相信"局部性理论——<em>你可以测。你可以造两个版本的代码，让 cachegrind 告诉你缺失次数差多少。</em></p>
+        <p><strong>而这正是这一域最有价值的地方</strong>：<strong>在别的域你只能说服自己，在这里你能被数据纠正。</strong></p>
+        <div class="lab"><div class="t">🔬 可跑验证 · 用 cachegrind 量出那个 5 倍</div>
+        对第 4 题的两个矩阵遍历版本各跑一次 <code>valgrind --tool=cachegrind</code>。<br>
+        <strong>你会看到两个版本的数据缺失次数差异巨大</strong>——而指令数几乎相同。<em>这个对比比计时更有说服力：它直接指出了差异的来源，而不只是差异的大小。</em></div>
+        <div class="pit"><span class="lbl">⚠️ 失败模式</span>把 cachegrind 的数字当成"绝对真相"。<strong>它模拟的是某种缓存配置</strong>——反映的是<em>相对</em>差异，不是真机上的绝对次数。<em>用它比较两个版本的优劣是可靠的；用它预测绝对耗时不可靠。</em></div>
+      </div></details>
+    </div>
+  </div>
+
+  <!-- ============ L3 ============ -->
+  <div class="section-title">L3 · 应用（4 题）</div>
+
+  <div class="q">
+    <div class="q-head"><span class="num">10</span><span class="txt">"循环交换"是怎么起作用的？什么情况下不能做？</span><span class="lvtag l3">L3</span></div>
+    <div class="q-body">
+      <p>说明这个手法的原理、收益，以及它的限制。</p>
+      <details><summary>展开答案</summary><div class="ans">
+        <p><strong>原理</strong>：交换嵌套循环的顺序，<strong>让最内层循环访问连续内存</strong>。这正是第 4 题那个例子的通用化。</p>
+        <p><strong>收益</strong>：把"每读一个值去一次内存"变成"每读一个块去一次内存"。<em>在最理想的情况下，速度提升等于一个缓存块能装下的元素数（常见 4–16 倍）。</em></p>
+        <p><strong>限制（三条）</strong>：</p>
+        <ol>
+          <li><strong>循环体不能有跨迭代的依赖</strong>——如果第 <code>i</code> 次迭代依赖于第 <code>i-1</code> 次的结果，交换顺序会改变语义</li>
+          <li><strong>别名问题</strong>——如果两个指针可能指向同一块内存，编译器无法证明交换安全</li>
+          <li><strong>不是所有循环都值得交换</strong>——如果内层循环本身已经很长，或者数据能全部装进缓存，收益会消失</li>
+        </ol>
+        <p><strong>而第 12.2 节还讲了两个相关手法</strong>：</p>
+        <table>
+          <tr><th>手法</th><th>做法</th><th>目的</th></tr>
+          <tr><td><strong>循环分裂</strong>（fission）</td><td>把一个循环拆成多个</td><td>让每次遍历的工作集更小、更集中</td></tr>
+          <tr><td><strong>循环合并</strong>（fusion）</td><td>把多个循环合成一个</td><td>减少重复遍历、提高时间局部性</td></tr>
+        </table>
+        <p><em>注意这两个是相反的方向——所以"哪个更好"取决于你的数据规模与缓存大小。</em></p>
+        <div class="pit"><span class="lbl">⚠️ 失败模式</span>手工做编译器已经会做的优化。<strong>第 12 章的基础部分就是讲这个的</strong>——先确认编译器没做，再手工做。<em>而且手工重排会让代码更难读，这是有代价的。</em></div>
+      </div></details>
+    </div>
+  </div>
+
+  <div class="q">
+    <div class="q-head"><span class="num">11</span><span class="txt">algs4 说"数组和链表遍历都是 O(N)"，这本书会怎么补这句话？</span><span class="lvtag l3">L3</span></div>
+    <div class="q-body">
+      <p>说出两者的真实差距、原因，以及在什么情况下这个差距会消失。</p>
+      <details><summary>展开答案</summary><div class="ans">
+        <p><strong>差距</strong>：数组遍历通常明显快于链表遍历（常见 3–10 倍，元素更大时差距更大）。</p>
+        <p><strong>原因</strong>：</p>
+        <table>
+          <tr><th></th><th>数组</th><th>链表</th></tr>
+          <tr><td>元素位置</td><td><b>连续</b></td><td>分散在堆上</td></tr>
+          <tr><td>访问一个元素时</td><td><strong>同一块里的后续元素也被载入</strong></td><td>只载入这一个节点</td></tr>
+          <tr><td>缓存缺失</td><td>每块一次</td><td><em>每个节点一次</em></td></tr>
+        </table>
+        <p><strong>而且链表还有一个额外的代价</strong>：每个节点要存一个"下一个"指针——<em>这既占空间（8 字节），又意味着有效载荷占比更低（每个缓存块能装的有效数据更少）。</em></p>
+        <p><strong>什么情况下差距消失</strong>：</p>
+        <ol>
+          <li><strong>数据能全部装进缓存</strong>——那就没有缺失，数组的空间局部性优势用不上</li>
+          <li><strong>访问模式变成随机的</strong>——数组的"下一块预取"失去作用</li>
+          <li><strong>需要频繁中间插入/删除</strong>——那时链表反而赢（数组每次插入要搬移 <code>O(N)</code> 个元素）</li>
+        </ol>
+        <div class="lab"><div class="t">🔬 可跑验证 · 量出差距，然后让它消失</div>
+        ① 数组和链表各存 N 个整数，<b>顺序</b>遍历求和，计时；② 改成<b>随机</b>顺序访问，再计时；③ 把 N 缩小到能装进缓存，再计时。<br>
+        <strong>预期：① 数组明显快；② 差距缩小；③ 差距基本消失。</strong><br>
+        <em>这个三步实验的价值是让你看见：<strong>优势来自访问模式，不是来自数组本身。</strong></em></div>
+        <div class="pit"><span class="lbl">⚠️ 失败模式</span>得出"数组总是更好"。<strong>一旦访问模式变成频繁中间插入/删除，链表的优势就出来了。</strong><em>真实工程里常用的折中是"分块链表"——把两者的优点各拿一半。</em></div>
+      </div></details>
+    </div>
+  </div>
+
+  <div class="q">
+    <div class="q-head"><span class="num">12</span><span class="txt">为什么 B 树在磁盘上重要，而在内存里没那么重要？</span><span class="lvtag l3">L3</span></div>
+    <div class="q-body">
+      <p>用记忆层级的框架回答，并指出一个现代的转折。</p>
+      <details><summary>展开答案</summary><div class="ans">
+        <p><strong>用层级框架看很清楚</strong>：B 树的节点大小是"<strong>一整页</strong>"——这正好匹配磁盘以页为单位读写。</p>
+        <table>
+          <tr><th></th><th>红黑树</th><th>B 树</th></tr>
+          <tr><td>节点大小</td><td>1 个键</td><td><b>一整页</b></td></tr>
+          <tr><td>高度（N=10⁹）</td><td>约 <strong>60</strong></td><td>约 <strong>3</strong></td></tr>
+          <tr><td>每次节点访问的代价</td><td>一次内存访问（纳秒）</td><td><strong>一次磁盘 I/O（毫秒）</strong></td></tr>
+        </table>
+        <p><strong>在磁盘上</strong>：60 次 I/O vs 3 次 I/O = <em>几秒 vs 几毫秒</em>。<strong>这个差距是决定性的。</strong></p>
+        <p><strong>在内存里</strong>：algs4 的命题告诉你红黑树是 <code>2 lg N</code>——而 B 树的高度更小但每个节点内的搜索更贵。<em>在纯内存、纯比较次数的代价模型下，B 树没有明显优势。</em></p>
+        <p><strong>但有一个现代的转折</strong>：现代 CPU 的缓存层级<strong>让"缓存行"也变成了一种"页"</strong>——一次缓存缺失要几十到几百个周期。<em>所以 B 树（及其变体 B+ 树、B* 树）在内存数据库里重新获得了优势。这是"硬件改变，结论改变"的又一个例子。</em></p>
+        <div class="pit"><span class="lbl">⚠️ 失败模式</span>把"B 树适合磁盘"当成永久结论。<strong>正确的说法是"B 树适合访问节点很贵的环境"</strong>——而"多贵"取决于硬件。这个表述比前者更耐久。</div>
+      </div></details>
+    </div>
+  </div>
+
+  <div class="q">
+    <div class="q-head"><span class="num">13</span><span class="txt">多核下为什么"复杂度分析"更不够用了？</span><span class="lvtag l3">L3</span></div>
+    <div class="q-body">
+      <p>说出第 14 章揭示的三类新代价。</p>
+      <details><summary>展开答案</summary><div class="ans">
+        <p><strong>algs4 的全部结论都假设单线程。</strong>多核引入三类它不管的代价：</p>
+        <table>
+          <tr><th>代价</th><th>机制</th></tr>
+          <tr><td><strong>同步开销</strong></td><td>加锁、解锁、等待。而锁的争用会随核数增加而恶化</td></tr>
+          <tr><td><strong>缓存一致性流量</strong></td><td>一个核写了共享数据，其他核的副本要失效——这产生大量跨核通信</td></tr>
+          <tr><td><strong>伪共享</strong>（false sharing）</td><td><em>两个核改的是<b>不同的变量</b>，但它们落在同一个缓存块里 → 系统仍要来回同步这个块</em></td></tr>
+        </table>
+        <p><strong>伪共享是最反直觉的一个</strong>：两个线程明明操作的是两个独立变量，逻辑上毫无关系，<strong>但因为它们在内存里挨着</strong>，性能可能比单线程还差。</p>
+        <p><strong>这直接解释了为什么"数组比链表快"在多线程下可能反转</strong>：数组的密集布局在单线程时是优点，在多线程下可能变成伪共享的来源。</p>
+        <div class="lab"><div class="t">🔬 可跑验证 · 制造一次伪共享</div>
+        写一个包含两个相邻 <code>int</code> 的结构体数组，让两个线程各更新其中一个字段（互不相干）。<br>
+        然后把这两个字段<b>用填充隔开</b>（各占一个缓存行），重跑。<br>
+        <strong>预期：有填充的版本明显更快。</strong><em>这就是伪共享——它是"逻辑上无关的变量因为物理上相邻而互相干扰"。</em></div>
+        <div class="pit"><span class="lbl">⚠️ 失败模式</span>用单线程的复杂度分析去预测多线程性能。<strong>核数越多，偏差越大。</strong><em>而且这不是常数因子的问题——伪共享能让"加了线程反而更慢"。</em></div>
+      </div></details>
+    </div>
+  </div>
+
+  <!-- ============ L4 ============ -->
+  <div class="section-title">L4 · 批判（3 题）</div>
+
+  <div class="q">
+    <div class="q-head"><span class="num">14</span><span class="txt">这本书的结论在什么条件下会失效？</span><span class="lvtag l4">L4</span></div>
+    <div class="q-body">
+      <p>给出三个具体的失效场景。</p>
+      <details><summary>展开答案</summary><div class="ans">
+        <table>
+          <tr><th>失效场景</th><th>为什么</th></tr>
+          <tr>
+            <td><strong>① 书里的缓存参数与你机器不同</strong></td>
+            <td>书用具体块大小（如 16 字节）、具体路数举例。而<em>现代 CPU 有多级缓存、每级参数不同</em></td>
+          </tr>
+          <tr>
+            <td><strong>② 数据规模小于缓存</strong></td>
+            <td>没有缺失，就没有局部性收益——<em>局部性只在"装不下"时才起作用</em></td>
+          </tr>
+          <tr>
+            <td><strong>③ 优化被别的瓶颈淹没</strong></td>
+            <td>如果程序 90% 时间在 I/O 或网络等待，<strong>把剩下 10% 优化两倍只省 5%</strong></td>
+          </tr>
+        </table>
+        <p><strong>而最要紧的一条是第二条</strong>：它意味着<em>很多"应该更快"的优化在小数据上测不出来</em>。</p>
+        <p><strong>这给了一个很实用的实验纪律</strong>：测性能优化时，<strong>必须让数据规模超过缓存</strong>——否则你测的是噪声。<em>这也是为什么"我本地跑挺快的"经常没有说服力。</em></p>
+        <div class="pit"><span class="lbl">⚠️ 失败模式</span>在小数据上做性能优化实验然后得出错误结论。<strong>这一层的一切都依赖"数据装不下缓存"这个前提。</strong></div>
+      </div></details>
+    </div>
+  </div>
+
+  <div class="q">
+    <div class="q-head"><span class="num">15</span><span class="txt">"用过去预测未来"这个策略什么时候会错？</span><span class="lvtag l4">L4</span></div>
+    <div class="q-body">
+      <p>说出 LRU 类策略的失效情形，以及这说明了什么。</p>
+      <details><summary>展开答案</summary><div class="ans">
+        <p><strong>失效情形</strong>：</p>
+        <ol>
+          <li><strong>顺序扫描大数组</strong>——每个元素只用一次，"最近使用"与"将来使用"毫无关系。LRU 会不停地把有用数据踢出去装没用的数据。<em>这被称为"缓存污染"。</em></li>
+          <li><strong>循环工作集大于缓存</strong>——如果循环遍历的数据比缓存大，每次循环都会全部缺失（<em>而如果用小一点的工作集，命中率会突然变得很好——这是"缓存悬崖"</em>）</li>
+          <li><strong>访问模式突变</strong>——程序从"反复读 A"切换到"反复读 B"，LRU 需要一段时间才能适应</li>
+        </ol>
+        <p><strong>这说明什么</strong>：<strong>"用过去预测未来"是一个启发式，不是定理。</strong>它在<em>访问模式有规律且稳定</em>时有效；在顺序扫描、模式突变、工作集过大时失效。</p>
+        <p><strong>而这一点与 algs4 里的"随机化算法"形成一个有趣的对照</strong>：两者都是"保证不是绝对的"。<em>但随机化保证失效的概率极低（比被闪电击中还低），而 LRU 失效是<b>确定性</b>的——只要访问模式是顺序扫描，它就一定失效。</em></p>
+        <div class="pit"><span class="lbl">⚠️ 失败模式</span>以为"硬件设计得很好所以不用担心访问模式"。<strong>恰恰相反——你对访问模式的了解，是你能对性能做的最大影响。</strong><em>第 11.3.1 节那个 5 倍的例子就是证明：同样的工作量，只因为访问顺序不同。</em></div>
+      </div></details>
+    </div>
+  </div>
+
+  <div class="q">
+    <div class="q-head"><span class="num">16</span><span class="txt">algs4 + 这本书合起来，你对"程序为什么快或慢"的认识完整了吗？</span><span class="lvtag l4">L4</span></div>
+    <div class="q-body">
+      <p>说出三块合起来的完整性，以及仍然缺的部分。</p>
+      <details><summary>展开答案</summary><div class="ans">
+        <p><strong>三块合起来给出的完整图景</strong>：</p>
+        <table>
+          <tr><th>来源</th><th>回答什么</th><th>由谁覆盖</th></tr>
+          <tr>
+            <td><strong>算法层</strong></td>
+            <td>增长级对不对、数据结构选对没有</td>
+            <td><strong>algs4</strong>（代价模型、Proposition）</td>
+          </tr>
+          <tr>
+            <td><strong>内存层</strong></td>
+            <td>访问模式、缓存、局部性</td>
+            <td><strong>Dive into Systems 第 11–12 章</strong></td>
+          </tr>
+          <tr>
+            <td><strong>并发层</strong></td>
+            <td>同步、一致性、伪共享</td>
+            <td><strong>Dive into Systems 第 14 章 + OSTEP 并发部分</strong></td>
+          </tr>
+        </table>
+        <p><strong>而这三层的诊断顺序很重要</strong>：</p>
+        <p style="padding:12px 18px;background:#22222c;border-left:3px solid var(--core);color:var(--ink-mid);font-size:13.5px;border-radius:0 3px 3px 0;">
+          ① 先看<strong>规模 N</strong>（太小则一切无意义）→ ② 再看<strong>增长级</strong>（错了则优化常数无用）→ ③ 再看<strong>数据结构</strong>（换一个可能省掉一个 log）→ ④ 然后才是<strong>访问模式</strong>（这一层）→ ⑤ 最后是<strong>常数与微优化</strong>
+        </p>
+        <p><strong>仍然缺的部分</strong>（诚实列出）：</p>
+        <ul>
+          <li><strong>GPU 与分布式性能</strong>——Dive into Systems 第 15 章只有三节，是导论</li>
+          <li><strong>编译器优化的深处</strong>——第 12 章讲了"编译器会做什么"，但不深入</li>
+          <li><strong>JIT 与动态语言</strong>——本书是 C/汇编视角，对托管运行时（JVM/CPython）覆盖有限</li>
+          <li><strong>特定领域的性能</strong>——数据库、机器学习框架、网络栈各有自己的层级</li>
+        </ul>
+        <div class="pit"><span class="lbl">⚠️ 最后的提醒</span><strong>知道这三层，不等于会优化。</strong>真正决定优化成败的是<em>测量</em>——你得知道瓶颈在哪一层。<br><em>所以这一域最该养成的习惯是：<strong>先测，再改，改完再测。</strong>而这两本书给你的所有理论，都是用来"读懂测量结果"的。</em></div>
+      </div></details>
+    </div>
+  </div>
+
+  <!-- ============ 自测 ============ -->
+  <div class="section-title">收尾自测</div>
+
+  <div class="checklist">
+    <h3>✅ 32 项自测</h3>
+    <ul>
+      <li>能从快到慢列出记忆层级的四层</li>
+      <li>知道层级存在的根本原因是物理与成本约束</li>
+      <li>能说出书里那个"书桌/书架/图书馆"的类比</li>
+      <li>能区分时间局部性与空间局部性</li>
+      <li>知道时间局部性决定淘汰策略、空间局部性决定块大小</li>
+      <li>能说出"用过去预测未来"这句话</li>
+      <li>能说明为什么硬件不能预知未来</li>
+      <li>能用 sum_array 说明哪些变量靠时间局部性、哪些靠空间局部性</li>
+      <li>知道块大小是 16 字节时一次搬 4 个 int</li>
+      <li>能解释那个矩阵遍历为什么差 5 倍</li>
+      <li>知道 C 的二维数组是行优先存储</li>
+      <li>能说出直接映射缓存地址的三段</li>
+      <li>知道"直接映射"意味着每个块只能放一个位置</li>
+      <li>能说出直接映射的冲突问题</li>
+      <li>能对比直接映射/组相联/全相联的取舍</li>
+      <li>知道全相联只用于很小的缓存</li>
+      <li>能说出写回与写直达的取舍</li>
+      <li>知道写回在多核下引出缓存一致性问题</li>
+      <li>能说出 LRU 的依据与两个目标</li>
+      <li>知道 OSTEP 提 LRU 44 次、本书 19 次</li>
+      <li>知道精确 LRU 在硬件里也是近似的</li>
+      <li>能说出 cachegrind 与 massif 各量什么</li>
+      <li>知道这一层也遵守"可复现、可证伪"的纪律</li>
+      <li>能说出循环交换的原理与收益量级</li>
+      <li>能说出循环交换的三条限制</li>
+      <li>能区分循环分裂与循环合并的方向</li>
+      <li>能解释数组与链表遍历的真实差距及原因</li>
+      <li>知道链表还有指针开销这个额外代价</li>
+      <li>能说出数组优势消失的三种情况</li>
+      <li>能用层级框架解释 B 树在磁盘与内存的不同</li>
+      <li>能说出多核引入的三类新代价</li>
+      <li>能解释伪共享，并知道它能让"加线程更慢"</li>
+    </ul>
+  </div>
+
+  <div class="footer">
+    Dive into Systems 问题手册 · Matthews, Newhall, Webb<br>
+    16 题（L1 3 / L2 6 / L3 4 / L4 3）· 32 项自测 · 核心在 11–12 章<br>
+    <em>先测，再改，改完再测</em>
+  </div>
+
+</div>
+</body>
+</html>

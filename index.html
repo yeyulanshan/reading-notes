@@ -4,572 +4,582 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>读书笔记知识库 · 底层</title>
+<meta name="description" content="按域组织的读书笔记：整体架构、问题手册、助人手册、精读笔记。">
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  :root {
-    --bg-primary: #0a0e1a;
-    --bg-secondary: #111827;
-    --bg-card: #1a2236;
-    --bg-card-hover: #1f2a42;
-    --text-primary: #f1f5f9;
-    --text-secondary: #94a3b8;
-    --text-muted: #64748b;
-    --border: #1e293b;
-    --accent: #3b82f6;
+  :root{
+    --bg:#080b12; --bg-2:#0d1119; --card:#121826; --card-2:#171f31;
+    --edge:#1f2a3d; --edge-lit:#2d3f5c;
+    --ink:#eef2f8; --ink-2:#9fadc2; --ink-3:#63718a;
+    --accent:#4d8df6; --accent-2:#8b6ef0; --gold:#d9b45a;
+    --rule:rgba(77,141,246,.14);
   }
-
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
-    background: var(--bg-primary);
-    color: var(--text-primary);
-    line-height: 1.6;
-    overflow-x: hidden;
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--bg); color:var(--ink); line-height:1.8;
+    -webkit-font-smoothing:antialiased; overflow-x:hidden;
   }
-
-  /* Hero区域 */
-  .hero {
-    position: relative;
-    padding: 80px 24px 60px;
-    text-align: center;
-    background: radial-gradient(ellipse at top, #1e3a5f 0%, transparent 60%),
-                radial-gradient(ellipse at bottom right, #3b0764 0%, transparent 50%),
-                var(--bg-primary);
-    overflow: hidden;
+  body::before{
+    content:""; position:fixed; inset:0; z-index:-2; pointer-events:none;
+    background:
+      radial-gradient(900px 520px at 12% -8%, rgba(77,141,246,.16), transparent 62%),
+      radial-gradient(760px 460px at 92% 4%, rgba(139,110,240,.13), transparent 60%),
+      radial-gradient(680px 420px at 50% 108%, rgba(217,180,90,.07), transparent 62%);
   }
-  .hero::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
+  body::after{
+    content:""; position:fixed; inset:0; z-index:-1; pointer-events:none; opacity:.5;
     background-image:
-      radial-gradient(circle at 20% 30%, rgba(59,130,246,0.08) 0%, transparent 50%),
-      radial-gradient(circle at 80% 70%, rgba(168,85,247,0.08) 0%, transparent 50%);
-    pointer-events: none;
+      linear-gradient(var(--rule) 1px, transparent 1px),
+      linear-gradient(90deg, var(--rule) 1px, transparent 1px);
+    background-size:64px 64px;
+    mask-image:radial-gradient(circle at 50% 22%, #000 0%, transparent 76%);
+    -webkit-mask-image:radial-gradient(circle at 50% 22%, #000 0%, transparent 76%);
   }
-  .hero-content { position: relative; z-index: 1; max-width: 800px; margin: 0 auto; }
-  .hero h1 {
-    font-size: 42px;
-    font-weight: 800;
-    background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 50%, #f472b6 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    margin-bottom: 16px;
-    letter-spacing: -0.5px;
+  .wrap{max-width:1180px; margin:0 auto; padding:0 24px 88px;}
+
+  .hero{padding:104px 0 52px; text-align:center;}
+  .hero .eyebrow{
+    display:inline-block; font-size:11.5px; letter-spacing:.34em; color:var(--ink-3);
+    font-family:ui-monospace,Consolas,monospace; margin-bottom:24px;
+    border:1px solid var(--edge); border-radius:999px; padding:5px 16px;
+    background:rgba(18,24,38,.6);
   }
-  .hero .subtitle {
-    font-size: 17px;
-    color: var(--text-secondary);
-    margin-bottom: 32px;
+  .hero h1{
+    font-size:clamp(30px,5.2vw,54px); font-weight:800; letter-spacing:-.02em;
+    line-height:1.24; margin-bottom:20px;
+    background:linear-gradient(96deg,#ffffff 8%,#bcd3ff 42%,#a58cff 76%,#d9b45a 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
   }
-  .hero-stats {
-    display: flex;
-    justify-content: center;
-    gap: 40px;
-    flex-wrap: wrap;
+  .hero .lede{max-width:660px; margin:0 auto; color:var(--ink-2); font-size:15.2px; line-height:2;}
+  .hero .lede b{color:var(--ink); font-weight:600;}
+
+  .stats{
+    display:flex; justify-content:center; margin:44px auto 0; max-width:660px;
+    border:1px solid var(--edge); border-radius:16px; overflow:hidden;
+    background:linear-gradient(180deg, rgba(23,31,49,.85), rgba(18,24,38,.6));
+    backdrop-filter:blur(8px);
   }
-  .stat { text-align: center; }
-  .stat-num {
-    font-size: 32px;
-    font-weight: 700;
-    color: var(--text-primary);
+  .stat{flex:1 1 130px; padding:22px 12px; position:relative;}
+  .stat+.stat::before{
+    content:""; position:absolute; left:0; top:22%; height:56%; width:1px; background:var(--edge);
   }
-  .stat-label {
-    font-size: 13px;
-    color: var(--text-muted);
-    margin-top: 4px;
+  .stat .n{
+    display:block; font-size:30px; font-weight:800; letter-spacing:-.02em;
+    font-variant-numeric:tabular-nums;
+    background:linear-gradient(180deg,#fff,#9fc0ff); -webkit-background-clip:text;
+    background-clip:text; color:transparent;
+  }
+  .stat .k{display:block; font-size:12px; color:var(--ink-3); margin-top:5px; letter-spacing:.06em;}
+
+  .nav{
+    position:sticky; top:0; z-index:50; margin:34px 0 8px; padding:11px 0;
+    background:rgba(8,11,18,.82); backdrop-filter:blur(14px);
+    border-top:1px solid var(--edge); border-bottom:1px solid var(--edge);
+  }
+  .nav-inner{
+    max-width:1180px; margin:0 auto; padding:0 24px;
+    display:flex; gap:8px; overflow-x:auto; scrollbar-width:none;
+  }
+  .nav-inner::-webkit-scrollbar{display:none;}
+  .nav a{
+    flex:0 0 auto; font-size:13px; color:var(--ink-2); text-decoration:none;
+    padding:6px 13px; border-radius:999px; border:1px solid transparent;
+    transition:color .18s, background .18s, border-color .18s;
+  }
+  .nav a:hover{color:var(--ink); background:rgba(77,141,246,.12); border-color:var(--edge-lit);}
+
+  .domain{padding:52px 0 6px;}
+  .domain-head{display:flex; align-items:flex-start; gap:16px; margin-bottom:24px;}
+  .domain-icon{
+    font-size:22px; line-height:1; width:46px; height:46px; flex:0 0 46px;
+    display:grid; place-items:center; border-radius:13px;
+    background:linear-gradient(150deg, rgba(77,141,246,.18), rgba(139,110,240,.12));
+    border:1px solid var(--edge-lit);
+  }
+  .domain-meta{flex:1; min-width:0;}
+  .domain-title{font-size:20px; font-weight:700; letter-spacing:-.01em; margin-bottom:4px;}
+  .domain-desc{font-size:13.4px; color:var(--ink-3); line-height:1.8; max-width:760px;}
+  .domain-count{
+    flex:0 0 auto; font-size:11.5px; color:var(--ink-3); font-family:ui-monospace,Consolas,monospace;
+    border:1px solid var(--edge); border-radius:999px; padding:3px 11px; margin-top:12px;
   }
 
-  /* 导航锚点 */
-  .nav-bar {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background: rgba(10, 14, 26, 0.85);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border);
-    padding: 12px 24px;
-    overflow-x: auto;
-    white-space: nowrap;
-    -webkit-overflow-scrolling: touch;
+  .books-grid{display:grid; gap:16px; grid-template-columns:repeat(auto-fill, minmax(300px, 1fr));}
+
+  .book-card{
+    position:relative; padding:22px 22px 18px; border-radius:15px;
+    background:var(--card); border:1px solid var(--edge);
+    transition:transform .3s cubic-bezier(.22,.61,.36,1),
+               border-color .3s, background .3s, box-shadow .3s;
   }
-  .nav-bar::-webkit-scrollbar { height: 0; }
-  .nav-inner {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: flex;
-    gap: 8px;
+  .book-card::after{
+    content:""; position:absolute; inset:-1px; border-radius:16px; pointer-events:none;
+    background:linear-gradient(140deg, rgba(77,141,246,.55), rgba(139,110,240,.35) 45%, transparent 72%);
+    opacity:0; transition:opacity .3s;
+    -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite:xor; mask-composite:exclude; padding:1px;
   }
-  .nav-link {
-    display: inline-block;
-    padding: 6px 14px;
-    border-radius: 20px;
-    font-size: 13px;
-    color: var(--text-secondary);
-    text-decoration: none;
-    transition: all 0.2s;
-    border: 1px solid transparent;
+  .book-card:hover{
+    transform:translateY(-4px); background:var(--card-2);
+    border-color:transparent;
+    box-shadow:0 14px 34px -14px rgba(0,0,0,.75), 0 0 0 1px rgba(77,141,246,.22);
   }
-  .nav-link:hover {
-    color: var(--text-primary);
-    background: var(--bg-card);
-    border-color: var(--border);
+  .book-card:hover::after{opacity:1;}
+  .book-title{font-size:16.2px; font-weight:700; letter-spacing:-.005em; margin-bottom:5px;}
+  .book-author{font-size:12.4px; color:var(--ink-3); margin-bottom:15px; line-height:1.7;}
+  .book-links{display:flex; flex-wrap:wrap; gap:7px;}
+  .book-link{
+    font-size:12.4px; text-decoration:none; color:var(--ink-2);
+    padding:4px 11px; border-radius:7px;
+    background:rgba(77,141,246,.07); border:1px solid var(--edge);
+    transition:color .18s, background .18s, border-color .18s, transform .18s;
+  }
+  .book-link:hover{
+    color:#fff; background:rgba(77,141,246,.22);
+    border-color:rgba(77,141,246,.5); transform:translateY(-1px);
   }
 
-  /* 主内容 */
-  .main {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 40px 24px 80px;
+  .site-foot{
+    margin-top:74px; padding-top:30px; border-top:1px solid var(--edge);
+    text-align:center; color:var(--ink-3); font-size:12.4px; line-height:2;
   }
+  .site-foot .sep{color:var(--edge-lit); margin:0 9px;}
+  .site-foot a{color:var(--ink-2); text-decoration:none;}
+  .site-foot a:hover{color:var(--accent);}
 
-  /* 分类区块 */
-  .category {
-    margin-bottom: 48px;
-    scroll-margin-top: 70px;
+  .reveal{opacity:0; transform:translateY(18px);
+    transition:opacity .6s ease, transform .6s cubic-bezier(.22,.61,.36,1);}
+  .reveal.is-in{opacity:1; transform:none;}
+  @media(prefers-reduced-motion:reduce){
+    .reveal{opacity:1; transform:none; transition:none;}
+    .book-card{transition:none;} .book-card:hover{transform:none;}
+    html{scroll-behavior:auto;}
   }
-  .category-header {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    margin-bottom: 24px;
-    padding-bottom: 14px;
-    border-bottom: 1px solid var(--border);
-  }
-  .category-icon {
-    width: 44px;
-    height: 44px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 22px;
-    flex-shrink: 0;
-  }
-  .category-title {
-    font-size: 22px;
-    font-weight: 700;
-    color: var(--text-primary);
-  }
-  .category-count {
-    font-size: 13px;
-    color: var(--text-muted);
-    margin-left: auto;
-    background: var(--bg-card);
-    padding: 4px 12px;
-    border-radius: 20px;
-    border: 1px solid var(--border);
-  }
-
-  /* 书籍网格 */
-  .books-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-    gap: 20px;
-  }
-
-  /* 书籍卡片 */
-  .book-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 22px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-    overflow: hidden;
-  }
-  .book-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 3px;
-    border-radius: 14px 14px 0 0;
-    opacity: 0;
-    transition: opacity 0.3s;
-  }
-  .book-card:hover {
-    background: var(--bg-card-hover);
-    border-color: #334155;
-    transform: translateY(-2px);
-    box-shadow: 0 12px 40px rgba(0,0,0,0.3);
-  }
-  .book-card:hover::before { opacity: 1; }
-
-  .book-title {
-    font-size: 17px;
-    font-weight: 600;
-    color: var(--text-primary);
-    margin-bottom: 6px;
-    line-height: 1.4;
-  }
-  .book-author {
-    font-size: 13px;
-    color: var(--text-muted);
-    margin-bottom: 16px;
-  }
-  .book-links {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-  .book-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    padding: 7px 13px;
-    border-radius: 8px;
-    font-size: 12.5px;
-    text-decoration: none;
-    transition: all 0.2s;
-    border: 1px solid var(--border);
-    color: var(--text-secondary);
-    background: rgba(255,255,255,0.02);
-  }
-  .book-link:hover {
-    color: var(--text-primary);
-    background: rgba(255,255,255,0.06);
-    border-color: #475569;
-    transform: translateY(-1px);
-  }
-  .book-link .dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-
-  /* 分类颜色 */
-  .cat-01 .category-icon { background: rgba(139,92,246,0.15); }
-  .cat-01 .book-card::before { background: linear-gradient(90deg, #8b5cf6, #a78bfa); }
-  .cat-01 .dot { background: #8b5cf6; }
-
-  .cat-02 .category-icon { background: rgba(59,130,246,0.15); }
-  .cat-02 .book-card::before { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
-  .cat-02 .dot { background: #3b82f6; }
-
-  .cat-03 .category-icon { background: rgba(16,185,129,0.15); }
-  .cat-03 .book-card::before { background: linear-gradient(90deg, #10b981, #34d399); }
-  .cat-03 .dot { background: #10b981; }
-
-  .cat-04 .category-icon { background: rgba(249,115,22,0.15); }
-  .cat-04 .book-card::before { background: linear-gradient(90deg, #f97316, #fb923c); }
-  .cat-04 .dot { background: #f97316; }
-
-  .cat-05 .category-icon { background: rgba(234,179,8,0.15); }
-  .cat-05 .book-card::before { background: linear-gradient(90deg, #eab308, #facc15); }
-  .cat-05 .dot { background: #eab308; }
-
-  .cat-06 .category-icon { background: rgba(236,72,153,0.15); }
-  .cat-06 .book-card::before { background: linear-gradient(90deg, #ec4899, #f472b6); }
-  .cat-06 .dot { background: #ec4899; }
-
-  .cat-07 .category-icon { background: rgba(6,182,212,0.15); }
-  .cat-07 .book-card::before { background: linear-gradient(90deg, #06b6d4, #22d3ee); }
-  .cat-07 .dot { background: #06b6d4; }
-
-  .cat-08 .category-icon { background: rgba(244,63,94,0.15); }
-  .cat-08 .book-card::before { background: linear-gradient(90deg, #f43f5e, #fb7185); }
-  .cat-08 .dot { background: #f43f5e; }
-
-  .cat-09 .category-icon { background: rgba(100,116,139,0.15); }
-  .cat-09 .book-card::before { background: linear-gradient(90deg, #64748b, #94a3b8); }
-  .cat-09 .dot { background: #64748b; }
-
-  /* 页脚 */
-  .footer {
-    text-align: center;
-    padding: 40px 24px;
-    border-top: 1px solid var(--border);
-    color: var(--text-muted);
-    font-size: 13px;
-  }
-  .footer a { color: var(--accent); text-decoration: none; }
-
-  /* 响应式 */
-  @media (max-width: 640px) {
-    .hero { padding: 50px 20px 40px; }
-    .hero h1 { font-size: 30px; }
-    .hero .subtitle { font-size: 15px; }
-    .hero-stats { gap: 24px; }
-    .stat-num { font-size: 24px; }
-    .books-grid { grid-template-columns: 1fr; }
-    .category-title { font-size: 18px; }
+  @media(max-width:640px){
+    .wrap{padding:0 16px 64px;}
+    .hero{padding:64px 0 36px;}
+    .stat .n{font-size:24px;}
+    .domain-head{gap:12px;}
+    .domain-icon{width:40px; height:40px; flex-basis:40px; font-size:19px;}
+    .books-grid{grid-template-columns:1fr;}
   }
 </style>
 </head>
 <body>
 
-<!-- Hero -->
-<header class="hero">
-  <div class="hero-content">
+<div class="wrap">
+  <header class="hero">
+    <span class="eyebrow">READING NOTES · 底层</span>
     <h1>读书笔记知识库</h1>
-    <p class="subtitle">整体架构 · 问题手册 · 助人手册 · 精读笔记 · 专业问题</p>
-    <div class="hero-stats">
-      <div class="stat"><div class="stat-num">15</div><div class="stat-label">本精读书籍</div></div>
-      <div class="stat"><div class="stat-num">9</div><div class="stat-label">个知识领域</div></div>
-      <div class="stat"><div class="stat-num">50+</div><div class="stat-label">份读书笔记</div></div>
+    <p class="lede">
+      每一个域由一个<strong>问题</strong>定义，而不是由一个学科。<br>
+      每本书给四样东西：<strong>整体架构</strong> · <strong>问题手册</strong> · <strong>助人手册</strong> · <strong>精读笔记</strong>。
+    </p>
+    <div class="stats">
+      <div class="stat"><span class="n">26</span><span class="k">书目</span></div>
+      <div class="stat"><span class="n">10</span><span class="k">板块</span></div>
+      <div class="stat"><span class="n">78</span><span class="k">份笔记</span></div>
     </div>
-  </div>
-</header>
+  </header>
+</div>
 
-<!-- 导航 -->
-<nav class="nav-bar">
-  <div class="nav-inner">
-    <a class="nav-link" href="#cat-01">哲学与思维</a>
-    <a class="nav-link" href="#cat-02">心智与认知</a>
-    <a class="nav-link" href="#cat-03">自然与数学</a>
-    <a class="nav-link" href="#cat-04">社会与制度</a>
-    <a class="nav-link" href="#cat-05">历史与地理</a>
-    <a class="nav-link" href="#cat-06">文学与生命</a>
-    <a class="nav-link" href="#cat-07">技术</a>
-    <a class="nav-link" href="#cat-08">性与亲密关系</a>
-  </div>
-</nav>
+<nav class="nav"><div class="nav-inner"><a href="#00_中文原典">中国智慧</a> <a href="#01_哲学与思维地基">哲学与思维地基</a> <a href="#02_心智与认知">心智与认知</a> <a href="#03_自然与数学">自然与数学</a> <a href="#04_社会与制度">社会与制度</a> <a href="#05_历史与地理">历史与地理</a> <a href="#06_文学与生命书写">文学与生命书写</a> <a href="#07_技术">技术</a> <a href="#08_性与亲密关系">性与亲密关系</a> <a href="#10_专业知识库">专业知识库</a></div></nav>
 
-<main class="main">
-
-  <!-- 01 哲学与思维地基 -->
-  <section class="category cat-01" id="cat-01">
-    <div class="category-header">
-      <div class="category-icon">🧠</div>
-      <h2 class="category-title">哲学与思维地基</h2>
-      <span class="category-count">2 本书</span>
-    </div>
-    <div class="books-grid">
-
-      <div class="book-card">
-        <div class="book-title">科技想要什么</div>
-        <div class="book-author">凯文·凯利 · What Technology Wants</div>
-        <div class="book-links">
-          <a class="book-link" href="01_%E5%93%B2%E5%AD%A6%E4%B8%8E%E6%80%9D%E7%BB%B4%E5%9C%B0%E5%9F%BA/technium-wants-what-architecture.html"><span class="dot"></span>整体架构</a>
-          <a class="book-link" href="01_%E5%93%B2%E5%AD%A6%E4%B8%8E%E6%80%9D%E7%BB%B4%E5%9C%B0%E5%9F%BA/technium-wants-what-questions.html"><span class="dot"></span>问题手册</a>
-          <a class="book-link" href="01_%E5%93%B2%E5%AD%A6%E4%B8%8E%E6%80%9D%E7%BB%B4%E5%9C%B0%E5%9F%BA/technium-wants-wath-helping.html"><span class="dot"></span>助人手册</a>
+<div class="wrap">
+    <section class="domain" id="00_中文原典">
+      <header class="domain-head">
+        <span class="domain-icon">🀄</span>
+        <div class="domain-meta">
+          <h2 class="domain-title">中国智慧 · 关系性自我</h2>
+          <p class="domain-desc">项目唯一的中文古典板块。这一轴补的是所有域都默认掉的前提：自我是独立的个体。</p>
         </div>
+        <span class="domain-count">4 种</span>
+      </header>
+      <div class="books-grid">
+        <article class="book-card">
+          <h3 class="book-title">《論語》</h3>
+          <p class="book-author">孔子及弟子 · 底本 18,613 字 · 20 篇 493 章</p>
+          <div class="book-links">
+            <a class="book-link" href="00_%E4%B8%AD%E6%96%87%E5%8E%9F%E5%85%B8/%E8%AB%96%E8%AA%9E/%E8%AB%96%E8%AA%9E-%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84.html">整体架构</a>
+            <a class="book-link" href="00_%E4%B8%AD%E6%96%87%E5%8E%9F%E5%85%B8/%E8%AB%96%E8%AA%9E/%E8%AB%96%E8%AA%9E-%E9%97%AE%E9%A2%98%E6%89%8B%E5%86%8C.html">问题手册</a>
+            <a class="book-link" href="00_%E4%B8%AD%E6%96%87%E5%8E%9F%E5%85%B8/%E8%AB%96%E8%AA%9E/%E5%BA%95%E6%9C%AC%E8%80%83%E8%AE%A2.md">底本考订</a>
+          </div>
+        </article>
+        <article class="book-card">
+          <h3 class="book-title">儒家加法 vs 道家减法</h3>
+          <p class="book-author">《論語》×《道德經》· 三处正面冲突</p>
+          <div class="book-links">
+            <a class="book-link" href="00_%E4%B8%AD%E6%96%87%E5%8E%9F%E5%85%B8/%E5%84%92%E5%AE%B6%E5%8A%A0%E6%B3%95%E4%B8%8E%E9%81%93%E5%AE%B6%E5%87%8F%E6%B3%95.html">对照</a>
+          </div>
+        </article>
+        <article class="book-card">
+          <h3 class="book-title">关系性自我 · 助人手册</h3>
+          <p class="book-author">12 个「你和他的自我模型不一样」的场景</p>
+          <div class="book-links">
+            <a class="book-link" href="00_%E4%B8%AD%E6%96%87%E5%8E%9F%E5%85%B8/%E5%85%B3%E7%B3%BB%E6%80%A7%E8%87%AA%E6%88%91-%E5%8A%A9%E4%BA%BA%E6%89%8B%E5%86%8C.html">助人手册</a>
+          </div>
+        </article>
+        <article class="book-card">
+          <h3 class="book-title">中国智慧 · 精读笔记</h3>
+          <p class="book-author">精读笔记 + 24 个专业问题 + 文本考订</p>
+          <div class="book-links">
+            <a class="book-link" href="00_%E4%B8%AD%E6%96%87%E5%8E%9F%E5%85%B8/%E4%B8%AD%E5%9B%BD%E6%99%BA%E6%85%A7-%E7%B2%BE%E5%8D%8E%E7%AC%94%E8%AE%B0%E4%B8%8E%E4%B8%93%E4%B8%9A%E9%97%AE%E9%A2%98.html">精读笔记</a>
+          </div>
+        </article>
       </div>
+    </section>
 
-      <div class="book-card">
-        <div class="book-title">非对称风险</div>
-        <div class="book-author">纳西姆·塔勒布 · Skin in the Game</div>
-        <div class="book-links">
-          <a class="book-link" href="01_%E5%93%B2%E5%AD%A6%E4%B8%8E%E6%80%9D%E7%BB%B4%E5%9C%B0%E5%9F%BA/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E9%A3%8E%E9%99%A9-%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84.html"><span class="dot"></span>整体架构</a>
-          <a class="book-link" href="01_%E5%93%B2%E5%AD%A6%E4%B8%8E%E6%80%9D%E7%BB%B4%E5%9C%B0%E5%9F%BA/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E9%A3%8E%E9%99%A9-%E9%97%AE%E9%A2%98%E6%89%8B%E5%86%8C.html"><span class="dot"></span>问题手册</a>
-          <a class="book-link" href="01_%E5%93%B2%E5%AD%A6%E4%B8%8E%E6%80%9D%E7%BB%B4%E5%9C%B0%E5%9F%BA/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E9%A3%8E%E9%99%A9-%E5%8A%A9%E4%BA%BA%E6%89%8B%E5%86%8C.html"><span class="dot"></span>助人手册</a>
-          <a class="book-link" href="01_%E5%93%B2%E5%AD%A6%E4%B8%8E%E6%80%9D%E7%BB%B4%E5%9C%B0%E5%9F%BA/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E9%A3%8E%E9%99%A9-%E7%B2%BE%E5%8D%8E%E7%AC%94%E8%AE%B0%E4%B8%8E%E4%B8%93%E4%B8%9A%E9%97%AE%E9%A2%98.html"><span class="dot"></span>精读笔记</a>
+    <section class="domain" id="01_哲学与思维地基">
+      <header class="domain-head">
+        <span class="domain-icon">🧠</span>
+        <div class="domain-meta">
+          <h2 class="domain-title">哲学与思维地基</h2>
+          <p class="domain-desc">在认识任何东西之前，先弄清认识本身怎么才可能、会在哪里出错。</p>
         </div>
+        <span class="domain-count">3 种</span>
+      </header>
+      <div class="books-grid">
+        <article class="book-card">
+          <h3 class="book-title">非对称风险</h3>
+          <p class="book-author">纳西姆·塔勒布 · Skin in the Game</p>
+          <div class="book-links">
+            <a class="book-link" href="01_%E5%93%B2%E5%AD%A6%E4%B8%8E%E6%80%9D%E7%BB%B4%E5%9C%B0%E5%9F%BA/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E9%A3%8E%E9%99%A9-%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84.html">整体架构</a>
+            <a class="book-link" href="01_%E5%93%B2%E5%AD%A6%E4%B8%8E%E6%80%9D%E7%BB%B4%E5%9C%B0%E5%9F%BA/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E9%A3%8E%E9%99%A9-%E9%97%AE%E9%A2%98%E6%89%8B%E5%86%8C.html">问题手册</a>
+            <a class="book-link" href="01_%E5%93%B2%E5%AD%A6%E4%B8%8E%E6%80%9D%E7%BB%B4%E5%9C%B0%E5%9F%BA/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E9%A3%8E%E9%99%A9-%E5%8A%A9%E4%BA%BA%E6%89%8B%E5%86%8C.html">助人手册</a>
+            <a class="book-link" href="01_%E5%93%B2%E5%AD%A6%E4%B8%8E%E6%80%9D%E7%BB%B4%E5%9C%B0%E5%9F%BA/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E9%A3%8E%E9%99%A9-%E7%B2%BE%E5%8D%8E%E7%AC%94%E8%AE%B0%E4%B8%8E%E4%B8%93%E4%B8%9A%E9%97%AE%E9%A2%98.html">精读笔记</a>
+          </div>
+        </article>
+        <article class="book-card">
+          <h3 class="book-title">无穷的开始</h3>
+          <p class="book-author">戴维·多伊奇 · The Beginning of Infinity</p>
+          <div class="book-links">
+            <a class="book-link" href="01_%E5%93%B2%E5%AD%A6%E4%B8%8E%E6%80%9D%E7%BB%B4%E5%9C%B0%E5%9F%BA/%E6%97%A0%E7%A9%B7%E7%9A%84%E5%BC%80%E5%A7%8B/%E6%97%A0%E7%A9%B7%E7%9A%84%E5%BC%80%E5%A7%8B-%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84.html">整体架构</a>
+            <a class="book-link" href="01_%E5%93%B2%E5%AD%A6%E4%B8%8E%E6%80%9D%E7%BB%B4%E5%9C%B0%E5%9F%BA/%E6%97%A0%E7%A9%B7%E7%9A%84%E5%BC%80%E5%A7%8B/%E6%97%A0%E7%A9%B7%E7%9A%84%E5%BC%80%E5%A7%8B_%E5%85%A8%E6%96%87.txt">全文</a>
+            <a class="book-link" href="01_%E5%93%B2%E5%AD%A6%E4%B8%8E%E6%80%9D%E7%BB%B4%E5%9C%B0%E5%9F%BA/%E6%97%A0%E7%A9%B7%E7%9A%84%E5%BC%80%E5%A7%8B/%E5%90%84%E7%AB%A0%E5%B0%8F%E7%BB%93%E6%B1%87%E7%BC%96.txt">各章小结</a>
+          </div>
+        </article>
+        <article class="book-card">
+          <h3 class="book-title">科技想要什么</h3>
+          <p class="book-author">凯文·凯利 · What Technology Wants</p>
+          <div class="book-links">
+            <a class="book-link" href="01_%E5%93%B2%E5%AD%A6%E4%B8%8E%E6%80%9D%E7%BB%B4%E5%9C%B0%E5%9F%BA/technium-wants-what-architecture.html">整体架构</a>
+            <a class="book-link" href="01_%E5%93%B2%E5%AD%A6%E4%B8%8E%E6%80%9D%E7%BB%B4%E5%9C%B0%E5%9F%BA/technium-wants-what-questions.html">问题手册</a>
+            <a class="book-link" href="01_%E5%93%B2%E5%AD%A6%E4%B8%8E%E6%80%9D%E7%BB%B4%E5%9C%B0%E5%9F%BA/technium-wants-wath-helping.html">助人手册</a>
+          </div>
+        </article>
       </div>
+    </section>
 
-    </div>
-  </section>
-
-  <!-- 02 心智与认知 -->
-  <section class="category cat-02" id="cat-02">
-    <div class="category-header">
-      <div class="category-icon">💭</div>
-      <h2 class="category-title">心智与认知</h2>
-      <span class="category-count">2 本书</span>
-    </div>
-    <div class="books-grid">
-
-      <div class="book-card">
-        <div class="book-title">思考，快与慢</div>
-        <div class="book-author">丹尼尔·卡尼曼 · Thinking, Fast and Slow</div>
-        <div class="book-links">
-          <a class="book-link" href="02_%E5%BF%83%E6%99%BA%E4%B8%8E%E8%AE%A4%E7%9F%A5/thinking-fast-slow-diagram.html"><span class="dot"></span>整体架构</a>
-          <a class="book-link" href="02_%E5%BF%83%E6%99%BA%E4%B8%8E%E8%AE%A4%E7%9F%A5/thinking-fast-slow-reflection.html"><span class="dot"></span>认知反思手册</a>
-          <a class="book-link" href="02_%E5%BF%83%E6%99%BA%E4%B8%8E%E8%AE%A4%E7%9F%A5/thinking-fast-slow-helping.html"><span class="dot"></span>助人手册</a>
+    <section class="domain" id="02_心智与认知">
+      <header class="domain-head">
+        <span class="domain-icon">💭</span>
+        <div class="domain-meta">
+          <h2 class="domain-title">心智与认知</h2>
+          <p class="domain-desc">「我以为的世界」和「实际的世界」之间，隔着什么。</p>
         </div>
+        <span class="domain-count">3 种</span>
+      </header>
+      <div class="books-grid">
+        <article class="book-card">
+          <h3 class="book-title">毛泽东选集（全四卷）</h3>
+          <p class="book-author">底本 73.6 万汉字 · 已重排为可读文本</p>
+          <div class="book-links">
+            <a class="book-link" href="02_%E5%BF%83%E6%99%BA%E4%B8%8E%E8%AE%A4%E7%9F%A5/%E6%AF%9B%E9%80%89/%E5%A5%BD%E8%A7%A3%E9%87%8A%E4%B8%8E%E5%AE%9E%E8%B7%B5%E8%AE%BA-%E5%AF%B9%E7%85%A7.html">好解释 × 实践论</a>
+            <a class="book-link" href="02_%E5%BF%83%E6%99%BA%E4%B8%8E%E8%AE%A4%E7%9F%A5/%E6%AF%9B%E9%80%89/%E9%98%B6%E7%BA%A7%E5%9C%B0%E4%BD%8D%E4%B8%8E%E9%80%9A%E7%94%A8%E8%A7%A3%E9%87%8A%E8%80%85-%E5%AF%B9%E7%85%A7.html">阶级地位 × 通用解释者</a>
+            <a class="book-link" href="02_%E5%BF%83%E6%99%BA%E4%B8%8E%E8%AE%A4%E7%9F%A5/%E6%AF%9B%E9%80%89/%E8%AE%BA%E6%8C%81%E4%B9%85%E6%88%98-%E5%A5%BD%E8%A7%A3%E9%87%8A%E7%9A%84%E5%AE%8C%E6%95%B4%E5%AE%9E%E4%BE%8B.html">论持久战 · 完整实例</a>
+          </div>
+        </article>
+        <article class="book-card">
+          <h3 class="book-title">思考，快与慢</h3>
+          <p class="book-author">丹尼尔·卡尼曼 · Thinking, Fast and Slow</p>
+          <div class="book-links">
+            <a class="book-link" href="02_%E5%BF%83%E6%99%BA%E4%B8%8E%E8%AE%A4%E7%9F%A5/%E6%80%9D%E8%80%83%E5%BF%AB%E4%B8%8E%E6%85%A2-%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84.html">整体架构</a>
+            <a class="book-link" href="02_%E5%BF%83%E6%99%BA%E4%B8%8E%E8%AE%A4%E7%9F%A5/%E6%80%9D%E8%80%83%E5%BF%AB%E4%B8%8E%E6%85%A2-%E5%8F%8D%E6%80%9D%E6%89%8B%E5%86%8C.html">认知反思手册</a>
+            <a class="book-link" href="02_%E5%BF%83%E6%99%BA%E4%B8%8E%E8%AE%A4%E7%9F%A5/%E6%80%9D%E8%80%83%E5%BF%AB%E4%B8%8E%E6%85%A2-%E5%8A%A9%E4%BA%BA%E6%89%8B%E5%86%8C.html">助人手册</a>
+          </div>
+        </article>
+        <article class="book-card">
+          <h3 class="book-title">当呼吸化为空气</h3>
+          <p class="book-author">保罗·卡拉尼什 · When Breath Becomes Air</p>
+          <div class="book-links">
+            <a class="book-link" href="02_%E5%BF%83%E6%99%BA%E4%B8%8E%E8%AE%A4%E7%9F%A5/%E5%BD%93%E5%91%BC%E5%90%B8%E5%8C%96%E4%B8%BA%E7%A9%BA%E6%B0%94-%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84.html">整体架构</a>
+            <a class="book-link" href="02_%E5%BF%83%E6%99%BA%E4%B8%8E%E8%AE%A4%E7%9F%A5/%E5%BD%93%E5%91%BC%E5%90%B8%E5%8C%96%E4%B8%BA%E7%A9%BA%E6%B0%94-%E9%97%AE%E9%A2%98%E6%89%8B%E5%86%8C.html">问题手册</a>
+            <a class="book-link" href="02_%E5%BF%83%E6%99%BA%E4%B8%8E%E8%AE%A4%E7%9F%A5/%E5%BD%93%E5%91%BC%E5%90%B8%E5%8C%96%E4%B8%BA%E7%A9%BA%E6%B0%94-%E5%8A%A9%E4%BA%BA%E6%89%8B%E5%86%8C.html">助人手册</a>
+          </div>
+        </article>
       </div>
+    </section>
 
-      <div class="book-card">
-        <div class="book-title">当呼吸化为空气</div>
-        <div class="book-author">保罗·卡拉尼什 · When Breath Becomes Air</div>
-        <div class="book-links">
-          <a class="book-link" href="02_%E5%BF%83%E6%99%BA%E4%B8%8E%E8%AE%A4%E7%9F%A5/when-breath-becomes-air-architecture.html"><span class="dot"></span>整体架构</a>
-          <a class="book-link" href="02_%E5%BF%83%E6%99%BA%E4%B8%8E%E8%AE%A4%E7%9F%A5/when-breath-becomes-air-questions.html"><span class="dot"></span>问题手册</a>
-          <a class="book-link" href="02_%E5%BF%83%E6%99%BA%E4%B8%8E%E8%AE%A4%E7%9F%A5/when-breath-becomes-air-helping.html"><span class="dot"></span>助人手册</a>
+    <section class="domain" id="03_自然与数学">
+      <header class="domain-head">
+        <span class="domain-icon">🔬</span>
+        <div class="domain-meta">
+          <h2 class="domain-title">自然与数学</h2>
+          <p class="domain-desc">唯一不涉及人的部分——正因如此，它是其他一切的校准基准。</p>
         </div>
+        <span class="domain-count">2 种</span>
+      </header>
+      <div class="books-grid">
+        <article class="book-card">
+          <h3 class="book-title">盲眼钟表匠</h3>
+          <p class="book-author">理查德·道金斯 · The Blind Watchmaker</p>
+          <div class="book-links">
+            <a class="book-link" href="03_%E8%87%AA%E7%84%B6%E4%B8%8E%E6%95%B0%E5%AD%A6/Dawkins_%E7%9B%B2%E7%9C%BC%E9%92%9F%E8%A1%A8%E5%8C%A0-%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84.html">整体架构</a>
+            <a class="book-link" href="03_%E8%87%AA%E7%84%B6%E4%B8%8E%E6%95%B0%E5%AD%A6/Dawkins_%E7%9B%B2%E7%9C%BC%E9%92%9F%E8%A1%A8%E5%8C%A0-%E9%97%AE%E9%A2%98%E6%89%8B%E5%86%8C.html">问题手册</a>
+            <a class="book-link" href="03_%E8%87%AA%E7%84%B6%E4%B8%8E%E6%95%B0%E5%AD%A6/Dawkins_%E7%9B%B2%E7%9C%BC%E9%92%9F%E8%A1%A8%E5%8C%A0-%E6%A6%82%E5%BF%B5%E8%AF%AF%E7%94%A8%E4%B8%8E%E5%A4%B1%E6%95%88%E8%BE%B9%E7%95%8C%E6%89%8B%E5%86%8C.html">概念误用手册</a>
+            <a class="book-link" href="03_%E8%87%AA%E7%84%B6%E4%B8%8E%E6%95%B0%E5%AD%A6/Dawkins_%E7%9B%B2%E7%9C%BC%E9%92%9F%E8%A1%A8%E5%8C%A0-%E7%B2%BE%E5%8D%8E%E7%AC%94%E8%AE%B0%E4%B8%8E%E4%B8%93%E4%B8%9A%E9%97%AE%E9%A2%98.html">精读笔记</a>
+          </div>
+        </article>
+        <article class="book-card">
+          <h3 class="book-title">信息论</h3>
+          <p class="book-author">大卫·麦凯 · Information Theory, Inference, and Learning Algorithms</p>
+          <div class="book-links">
+            <a class="book-link" href="03_%E8%87%AA%E7%84%B6%E4%B8%8E%E6%95%B0%E5%AD%A6/MacKay_%E4%BF%A1%E6%81%AF%E8%AE%BA-%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84.html">整体架构</a>
+            <a class="book-link" href="03_%E8%87%AA%E7%84%B6%E4%B8%8E%E6%95%B0%E5%AD%A6/MacKay_%E4%BF%A1%E6%81%AF%E8%AE%BA-%E9%97%AE%E9%A2%98%E6%89%8B%E5%86%8C.html">问题手册</a>
+            <a class="book-link" href="03_%E8%87%AA%E7%84%B6%E4%B8%8E%E6%95%B0%E5%AD%A6/MacKay_%E4%BF%A1%E6%81%AF%E8%AE%BA-%E6%A6%82%E5%BF%B5%E8%AF%AF%E7%94%A8%E4%B8%8E%E5%A4%B1%E6%95%88%E8%BE%B9%E7%95%8C%E6%89%8B%E5%86%8C.html">概念误用手册</a>
+            <a class="book-link" href="03_%E8%87%AA%E7%84%B6%E4%B8%8E%E6%95%B0%E5%AD%A6/MacKay_%E4%BF%A1%E6%81%AF%E8%AE%BA-%E7%B2%BE%E5%8D%8E%E7%AC%94%E8%AE%B0%E4%B8%8E%E4%B8%93%E4%B8%9A%E9%97%AE%E9%A2%98.html">精读笔记</a>
+          </div>
+        </article>
       </div>
+    </section>
 
-    </div>
-  </section>
-
-  <!-- 03 自然与数学 -->
-  <section class="category cat-03" id="cat-03">
-    <div class="category-header">
-      <div class="category-icon">🔬</div>
-      <h2 class="category-title">自然与数学</h2>
-      <span class="category-count">2 本书</span>
-    </div>
-    <div class="books-grid">
-
-      <div class="book-card">
-        <div class="book-title">盲眼钟表匠</div>
-        <div class="book-author">理查德·道金斯 · The Blind Watchmaker</div>
-        <div class="book-links">
-          <a class="book-link" href="03_%E8%87%AA%E7%84%B6%E4%B8%8E%E6%95%B0%E5%AD%A6/Dawkins_%E7%9B%B2%E7%9C%BC%E9%92%9F%E8%A1%A8%E5%8C%A0-%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84.html"><span class="dot"></span>整体架构</a>
-          <a class="book-link" href="03_%E8%87%AA%E7%84%B6%E4%B8%8E%E6%95%B0%E5%AD%A6/Dawkins_%E7%9B%B2%E7%9C%BC%E9%92%9F%E8%A1%A8%E5%8C%A0-%E9%97%AE%E9%A2%98%E6%89%8B%E5%86%8C.html"><span class="dot"></span>问题手册</a>
-          <a class="book-link" href="03_%E8%87%AA%E7%84%B6%E4%B8%8E%E6%95%B0%E5%AD%A6/Dawkins_%E7%9B%B2%E7%9C%BC%E9%92%9F%E8%A1%A8%E5%8C%A0-%E6%A6%82%E5%BF%B5%E8%AF%AF%E7%94%A8%E4%B8%8E%E5%A4%B1%E6%95%88%E8%BE%B9%E7%95%8C%E6%89%8B%E5%86%8C.html"><span class="dot"></span>概念误用手册</a>
-          <a class="book-link" href="03_%E8%87%AA%E7%84%B6%E4%B8%8E%E6%95%B0%E5%AD%A6/Dawkins_%E7%9B%B2%E7%9C%BC%E9%92%9F%E8%A1%A8%E5%8C%A0-%E7%B2%BE%E5%8D%8E%E7%AC%94%E8%AE%B0%E4%B8%8E%E4%B8%93%E4%B8%9A%E9%97%AE%E9%A2%98.html"><span class="dot"></span>精读笔记</a>
+    <section class="domain" id="04_社会与制度">
+      <header class="domain-head">
+        <span class="domain-icon">🏛️</span>
+        <div class="domain-meta">
+          <h2 class="domain-title">社会与制度</h2>
+          <p class="domain-desc">人与人之间那些不由感情决定的关系——产权、契约、税收、权力、组织。</p>
         </div>
+        <span class="domain-count">1 种</span>
+      </header>
+      <div class="books-grid">
+        <article class="book-card">
+          <h3 class="book-title">置身事内</h3>
+          <p class="book-author">兰小欢 · 中国政府与经济发展</p>
+          <div class="book-links">
+            <a class="book-link" href="04_%E7%A4%BE%E4%BC%9A%E4%B8%8E%E5%88%B6%E5%BA%A6/%E7%BD%AE%E8%BA%AB%E4%BA%8B%E5%86%85-%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84.html">整体架构</a>
+            <a class="book-link" href="04_%E7%A4%BE%E4%BC%9A%E4%B8%8E%E5%88%B6%E5%BA%A6/%E7%BD%AE%E8%BA%AB%E4%BA%8B%E5%86%85-%E9%97%AE%E9%A2%98%E6%89%8B%E5%86%8C.html">问题手册</a>
+            <a class="book-link" href="04_%E7%A4%BE%E4%BC%9A%E4%B8%8E%E5%88%B6%E5%BA%A6/%E7%BD%AE%E8%BA%AB%E4%BA%8B%E5%86%85-%E5%8A%A9%E4%BA%BA%E6%89%8B%E5%86%8C.html">助人手册</a>
+            <a class="book-link" href="04_%E7%A4%BE%E4%BC%9A%E4%B8%8E%E5%88%B6%E5%BA%A6/%E7%BD%AE%E8%BA%AB%E4%BA%8B%E5%86%85-%E7%B2%BE%E8%AF%BB%E7%AC%94%E8%AE%B0%E4%B8%8E%E4%B8%93%E4%B8%9A%E9%97%AE%E9%A2%98.html">精读笔记</a>
+          </div>
+        </article>
       </div>
+    </section>
 
-      <div class="book-card">
-        <div class="book-title">信息论</div>
-        <div class="book-author">大卫·麦凯 · Information Theory, Inference, and Learning Algorithms</div>
-        <div class="book-links">
-          <a class="book-link" href="03_%E8%87%AA%E7%84%B6%E4%B8%8E%E6%95%B0%E5%AD%A6/MacKay_%E4%BF%A1%E6%81%AF%E8%AE%BA-%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84.html"><span class="dot"></span>整体架构</a>
-          <a class="book-link" href="03_%E8%87%AA%E7%84%B6%E4%B8%8E%E6%95%B0%E5%AD%A6/MacKay_%E4%BF%A1%E6%81%AF%E8%AE%BA-%E9%97%AE%E9%A2%98%E6%89%8B%E5%86%8C.html"><span class="dot"></span>问题手册</a>
-          <a class="book-link" href="03_%E8%87%AA%E7%84%B6%E4%B8%8E%E6%95%B0%E5%AD%A6/MacKay_%E4%BF%A1%E6%81%AF%E8%AE%BA-%E6%A6%82%E5%BF%B5%E8%AF%AF%E7%94%A8%E4%B8%8E%E5%A4%B1%E6%95%88%E8%BE%B9%E7%95%8C%E6%89%8B%E5%86%8C.html"><span class="dot"></span>概念误用手册</a>
-          <a class="book-link" href="03_%E8%87%AA%E7%84%B6%E4%B8%8E%E6%95%B0%E5%AD%A6/MacKay_%E4%BF%A1%E6%81%AF%E8%AE%BA-%E7%B2%BE%E5%8D%8E%E7%AC%94%E8%AE%B0%E4%B8%8E%E4%B8%93%E4%B8%9A%E9%97%AE%E9%A2%98.html"><span class="dot"></span>精读笔记</a>
+    <section class="domain" id="05_历史与地理">
+      <header class="domain-head">
+        <span class="domain-icon">🌍</span>
+        <div class="domain-meta">
+          <h2 class="domain-title">历史与地理</h2>
+          <p class="domain-desc">为什么世界长成现在这个样子——长时段与大尺度的因果解释。</p>
         </div>
+        <span class="domain-count">1 种</span>
+      </header>
+      <div class="books-grid">
+        <article class="book-card">
+          <h3 class="book-title">枪炮、病菌与钢铁</h3>
+          <p class="book-author">贾雷德·戴蒙德 · Guns, Germs, and Steel</p>
+          <div class="book-links">
+            <a class="book-link" href="05_%E5%8E%86%E5%8F%B2%E4%B8%8E%E5%9C%B0%E7%90%86/%E6%9E%AA%E7%82%AE%E7%97%85%E8%8F%8C%E4%B8%8E%E9%92%A2%E9%93%81-%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84.html">整体架构</a>
+            <a class="book-link" href="05_%E5%8E%86%E5%8F%B2%E4%B8%8E%E5%9C%B0%E7%90%86/%E6%9E%AA%E7%82%AE%E7%97%85%E8%8F%8C%E4%B8%8E%E9%92%A2%E9%93%81-%E9%97%AE%E9%A2%98%E6%89%8B%E5%86%8C.html">问题手册</a>
+            <a class="book-link" href="05_%E5%8E%86%E5%8F%B2%E4%B8%8E%E5%9C%B0%E7%90%86/%E6%9E%AA%E7%82%AE%E7%97%85%E8%8F%8C%E4%B8%8E%E9%92%A2%E9%93%81-%E5%8A%A9%E4%BA%BA%E6%89%8B%E5%86%8C.html">助人手册</a>
+            <a class="book-link" href="05_%E5%8E%86%E5%8F%B2%E4%B8%8E%E5%9C%B0%E7%90%86/%E6%9E%AA%E7%82%AE%E7%97%85%E8%8F%8C%E4%B8%8E%E9%92%A2%E9%93%81-%E7%B2%BE%E5%8D%8E%E7%AC%94%E8%AE%B0%E4%B8%8E%E4%B8%93%E4%B8%9A%E9%97%AE%E9%A2%98.html">精读笔记</a>
+          </div>
+        </article>
       </div>
+    </section>
 
-    </div>
-  </section>
-
-  <!-- 04 社会与制度 -->
-  <section class="category cat-04" id="cat-04">
-    <div class="category-header">
-      <div class="category-icon">🏛️</div>
-      <h2 class="category-title">社会与制度</h2>
-      <span class="category-count">1 本书</span>
-    </div>
-    <div class="books-grid">
-
-      <div class="book-card">
-        <div class="book-title">置身事内：中国政府与经济发展</div>
-        <div class="book-author">兰小欢</div>
-        <div class="book-links">
-          <a class="book-link" href="04_%E7%A4%BE%E4%BC%9A%E4%B8%8E%E5%88%B6%E5%BA%A6/%E7%BD%AE%E8%BA%AB%E4%BA%8B%E5%86%85-%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84.html"><span class="dot"></span>整体架构</a>
-          <a class="book-link" href="04_%E7%A4%BE%E4%BC%9A%E4%B8%8E%E5%88%B6%E5%BA%A6/%E7%BD%AE%E8%BA%AB%E4%BA%8B%E5%86%85-%E9%97%AE%E9%A2%98%E6%89%8B%E5%86%8C.html"><span class="dot"></span>问题手册</a>
-          <a class="book-link" href="04_%E7%A4%BE%E4%BC%9A%E4%B8%8E%E5%88%B6%E5%BA%A6/%E7%BD%AE%E8%BA%AB%E4%BA%8B%E5%86%85-%E5%8A%A9%E4%BA%BA%E6%89%8B%E5%86%8C.html"><span class="dot"></span>助人手册</a>
-          <a class="book-link" href="04_%E7%A4%BE%E4%BC%9A%E4%B8%8E%E5%88%B6%E5%BA%A6/%E7%BD%AE%E8%BA%AB%E4%BA%8B%E5%86%85-%E7%B2%BE%E8%AF%BB%E7%AC%94%E8%AE%B0%E4%B8%8E%E4%B8%93%E4%B8%9A%E9%97%AE%E9%A2%98.html"><span class="dot"></span>精读笔记</a>
+    <section class="domain" id="06_文学与生命书写">
+      <header class="domain-head">
+        <span class="domain-icon">📖</span>
+        <div class="domain-meta">
+          <h2 class="domain-title">文学与生命书写</h2>
+          <p class="domain-desc">那些无法被机制化的部分——记录一个具体的人在他具体处境里实际经历了什么。</p>
         </div>
+        <span class="domain-count">1 种</span>
+      </header>
+      <div class="books-grid">
+        <article class="book-card">
+          <h3 class="book-title">视觉</h3>
+          <p class="book-author">大卫·马尔 · Vision</p>
+          <div class="book-links">
+            <a class="book-link" href="06_%E6%96%87%E5%AD%A6%E4%B8%8E%E7%94%9F%E5%91%BD%E4%B9%A6%E5%86%99/%E8%A7%86%E8%A7%89-%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84.html">整体架构</a>
+            <a class="book-link" href="06_%E6%96%87%E5%AD%A6%E4%B8%8E%E7%94%9F%E5%91%BD%E4%B9%A6%E5%86%99/%E8%A7%86%E8%A7%89-%E9%97%AE%E9%A2%98%E6%89%8B%E5%86%8C.html">问题手册</a>
+            <a class="book-link" href="06_%E6%96%87%E5%AD%A6%E4%B8%8E%E7%94%9F%E5%91%BD%E4%B9%A6%E5%86%99/%E8%A7%86%E8%A7%89-%E5%8A%A9%E4%BA%BA%E6%89%8B%E5%86%8C.html">助人手册</a>
+          </div>
+        </article>
       </div>
+    </section>
 
-    </div>
-  </section>
-
-  <!-- 05 历史与地理 -->
-  <section class="category cat-05" id="cat-05">
-    <div class="category-header">
-      <div class="category-icon">🌍</div>
-      <h2 class="category-title">历史与地理</h2>
-      <span class="category-count">1 本书</span>
-    </div>
-    <div class="books-grid">
-
-      <div class="book-card">
-        <div class="book-title">枪炮、病菌与钢铁</div>
-        <div class="book-author">贾雷德·戴蒙德 · Guns, Germs, and Steel</div>
-        <div class="book-links">
-          <a class="book-link" href="05_%E5%8E%86%E5%8F%B2%E4%B8%8E%E5%9C%B0%E7%90%86/%E6%9E%AA%E7%82%AE%E7%97%85%E8%8F%8C%E4%B8%8E%E9%92%A2%E9%93%81-%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84.html"><span class="dot"></span>整体架构</a>
-          <a class="book-link" href="05_%E5%8E%86%E5%8F%B2%E4%B8%8E%E5%9C%B0%E7%90%86/%E6%9E%AA%E7%82%AE%E7%97%85%E8%8F%8C%E4%B8%8E%E9%92%A2%E9%93%81-%E9%97%AE%E9%A2%98%E6%89%8B%E5%86%8C.html"><span class="dot"></span>问题手册</a>
-          <a class="book-link" href="05_%E5%8E%86%E5%8F%B2%E4%B8%8E%E5%9C%B0%E7%90%86/%E6%9E%AA%E7%82%AE%E7%97%85%E8%8F%8C%E4%B8%8E%E9%92%A2%E9%93%81-%E5%8A%A9%E4%BA%BA%E6%89%8B%E5%86%8C.html"><span class="dot"></span>助人手册</a>
-          <a class="book-link" href="05_%E5%8E%86%E5%8F%B2%E4%B8%8E%E5%9C%B0%E7%90%86/%E6%9E%AA%E7%82%AE%E7%97%85%E8%8F%8C%E4%B8%8E%E9%92%A2%E9%93%81-%E7%B2%BE%E5%8D%8E%E7%AC%94%E8%AE%B0%E4%B8%8E%E4%B8%93%E4%B8%9A%E9%97%AE%E9%A2%98.html"><span class="dot"></span>精读笔记</a>
+    <section class="domain" id="07_技术">
+      <header class="domain-head">
+        <span class="domain-icon">💻</span>
+        <div class="domain-meta">
+          <h2 class="domain-title">技术</h2>
+          <p class="domain-desc">唯一能亲手验证「抽象 → 机制 → 策略」这条链的地方。</p>
         </div>
+        <span class="domain-count">6 种</span>
+      </header>
+      <div class="books-grid">
+        <article class="book-card">
+          <h3 class="book-title">操作系统导论</h3>
+          <p class="book-author">Remzi 与 Andrea Arpaci-Dusseau · OSTEP</p>
+          <div class="book-links">
+            <a class="book-link" href="07_%E6%8A%80%E6%9C%AF/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%AF%BC%E8%AE%BA-%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84.html">整体架构</a>
+            <a class="book-link" href="07_%E6%8A%80%E6%9C%AF/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%AF%BC%E8%AE%BA-%E9%97%AE%E9%A2%98%E6%89%8B%E5%86%8C.html">问题手册</a>
+            <a class="book-link" href="07_%E6%8A%80%E6%9C%AF/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%AF%BC%E8%AE%BA-%E5%8A%A9%E4%BA%BA%E6%89%8B%E5%86%8C.html">助人手册</a>
+            <a class="book-link" href="07_%E6%8A%80%E6%9C%AF/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%AF%BC%E8%AE%BA-%E7%B2%BE%E5%8D%8E%E7%AC%94%E8%AE%B0%E4%B8%8E%E4%B8%93%E4%B8%9A%E9%97%AE%E9%A2%98.html">精读笔记</a>
+          </div>
+        </article>
+        <article class="book-card">
+          <h3 class="book-title">数字图像处理</h3>
+          <p class="book-author">Gonzalez 与 Woods · Digital Image Processing</p>
+          <div class="book-links">
+            <a class="book-link" href="07_%E6%8A%80%E6%9C%AF/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86-%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84.html">整体架构</a>
+            <a class="book-link" href="07_%E6%8A%80%E6%9C%AF/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86-%E9%97%AE%E9%A2%98%E6%89%8B%E5%86%8C.html">问题手册</a>
+            <a class="book-link" href="07_%E6%8A%80%E6%9C%AF/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86-%E5%8A%A9%E4%BA%BA%E6%89%8B%E5%86%8C.html">助人手册</a>
+            <a class="book-link" href="07_%E6%8A%80%E6%9C%AF/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86-%E7%B2%BE%E5%8D%8E%E7%AC%94%E8%AE%B0%E4%B8%8E%E4%B8%93%E4%B8%9A%E9%97%AE%E9%A2%98.html">精读笔记</a>
+          </div>
+        </article>
+        <article class="book-card">
+          <h3 class="book-title">Algorithms 第 4 版</h3>
+          <p class="book-author">Sedgewick 与 Wayne · algs4</p>
+          <div class="book-links">
+            <a class="book-link" href="07_%E6%8A%80%E6%9C%AF/Sedgewick_Algorithms4-%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84.html">整体架构</a>
+            <a class="book-link" href="07_%E6%8A%80%E6%9C%AF/Sedgewick_Algorithms4-%E9%97%AE%E9%A2%98%E6%89%8B%E5%86%8C.html">问题手册</a>
+            <a class="book-link" href="07_%E6%8A%80%E6%9C%AF/Sedgewick_Algorithms4-%E5%8A%A9%E4%BA%BA%E6%89%8B%E5%86%8C.html">助人手册</a>
+            <a class="book-link" href="07_%E6%8A%80%E6%9C%AF/Sedgewick_Algorithms4-%E7%B2%BE%E5%8D%8E%E7%AC%94%E8%AE%B0%E4%B8%8E%E4%B8%93%E4%B8%9A%E9%97%AE%E9%A2%98.html">精读笔记</a>
+          </div>
+        </article>
+        <article class="book-card">
+          <h3 class="book-title">Dive into Systems</h3>
+          <p class="book-author">Matthews, Newhall, Webb</p>
+          <div class="book-links">
+            <a class="book-link" href="07_%E6%8A%80%E6%9C%AF/DiveIntoSystems-%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84.html">整体架构</a>
+            <a class="book-link" href="07_%E6%8A%80%E6%9C%AF/DiveIntoSystems-%E9%97%AE%E9%A2%98%E6%89%8B%E5%86%8C.html">问题手册</a>
+          </div>
+        </article>
+        <article class="book-card">
+          <h3 class="book-title">计算基础</h3>
+          <p class="book-author">algs4 与 Dive into Systems 的合并产出</p>
+          <div class="book-links">
+            <a class="book-link" href="07_%E6%8A%80%E6%9C%AF/%E8%AE%A1%E7%AE%97%E5%9F%BA%E7%A1%80-%E7%B2%BE%E5%8D%8E%E7%AC%94%E8%AE%B0%E4%B8%8E%E4%B8%93%E4%B8%9A%E9%97%AE%E9%A2%98.html">精读笔记</a>
+          </div>
+        </article>
+        <article class="book-card">
+          <h3 class="book-title">动手学深度学习</h3>
+          <p class="book-author">李沐等 · d2l 中文版</p>
+          <div class="book-links">
+            <a class="book-link" href="07_%E6%8A%80%E6%9C%AF/%E5%8A%A8%E6%89%8B%E5%AD%A6%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0-%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84.html">整体架构</a>
+            <a class="book-link" href="07_%E6%8A%80%E6%9C%AF/%E5%8A%A8%E6%89%8B%E5%AD%A6%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0-%E9%97%AE%E9%A2%98%E6%89%8B%E5%86%8C.html">问题手册</a>
+            <a class="book-link" href="07_%E6%8A%80%E6%9C%AF/%E5%8A%A8%E6%89%8B%E5%AD%A6%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0-%E5%8A%A9%E4%BA%BA%E6%89%8B%E5%86%8C.html">助人手册</a>
+            <a class="book-link" href="07_%E6%8A%80%E6%9C%AF/%E5%8A%A8%E6%89%8B%E5%AD%A6%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0-%E7%BB%8F%E9%AA%8C%E7%BB%93%E8%AE%BA%E9%80%82%E7%94%A8%E8%BE%B9%E7%95%8C%E6%89%8B%E5%86%8C.html">适用边界手册</a>
+            <a class="book-link" href="07_%E6%8A%80%E6%9C%AF/%E5%8A%A8%E6%89%8B%E5%AD%A6%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0-%E7%B2%BE%E5%8D%8E%E7%AC%94%E8%AE%B0%E4%B8%8E%E4%B8%93%E4%B8%9A%E9%97%AE%E9%A2%98.html">精读笔记</a>
+          </div>
+        </article>
       </div>
+    </section>
 
-    </div>
-  </section>
-
-  <!-- 06 文学与生命书写 -->
-  <section class="category cat-06" id="cat-06">
-    <div class="category-header">
-      <div class="category-icon">📖</div>
-      <h2 class="category-title">文学与生命书写</h2>
-      <span class="category-count">1 本书</span>
-    </div>
-    <div class="books-grid">
-
-      <div class="book-card">
-        <div class="book-title">视觉</div>
-        <div class="book-author">大卫·马尔 · Vision (David Marr)</div>
-        <div class="book-links">
-          <a class="book-link" href="06_%E6%96%87%E5%AD%A6%E4%B8%8E%E7%94%9F%E5%91%BD%E4%B9%A6%E5%86%99/%E8%A7%86%E8%A7%89-%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84.html"><span class="dot"></span>整体架构</a>
-          <a class="book-link" href="06_%E6%96%87%E5%AD%A6%E4%B8%8E%E7%94%9F%E5%91%BD%E4%B9%A6%E5%86%99/%E8%A7%86%E8%A7%89-%E9%97%AE%E9%A2%98%E6%89%8B%E5%86%8C.html"><span class="dot"></span>问题手册</a>
-          <a class="book-link" href="06_%E6%96%87%E5%AD%A6%E4%B8%8E%E7%94%9F%E5%91%BD%E4%B9%A6%E5%86%99/%E8%A7%86%E8%A7%89-%E5%8A%A9%E4%BA%BA%E6%89%8B%E5%86%8C.html"><span class="dot"></span>助人手册</a>
+    <section class="domain" id="08_性与亲密关系">
+      <header class="domain-head">
+        <span class="domain-icon">❤️</span>
+        <div class="domain-meta">
+          <h2 class="domain-title">性与亲密关系</h2>
+          <p class="domain-desc">你大部分的生命质量，取决于这个域。</p>
         </div>
+        <span class="domain-count">2 种</span>
+      </header>
+      <div class="books-grid">
+        <article class="book-card">
+          <h3 class="book-title">爱的艺术</h3>
+          <p class="book-author">艾里希·弗洛姆 · The Art of Loving</p>
+          <div class="book-links">
+            <a class="book-link" href="08_%E6%80%A7%E4%B8%8E%E4%BA%B2%E5%AF%86%E5%85%B3%E7%B3%BB/Fromm_%E7%88%B1%E7%9A%84%E8%89%BA%E6%9C%AF-%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84.html">整体架构</a>
+            <a class="book-link" href="08_%E6%80%A7%E4%B8%8E%E4%BA%B2%E5%AF%86%E5%85%B3%E7%B3%BB/Fromm_%E7%88%B1%E7%9A%84%E8%89%BA%E6%9C%AF-%E9%97%AE%E9%A2%98%E6%89%8B%E5%86%8C.html">问题手册</a>
+            <a class="book-link" href="08_%E6%80%A7%E4%B8%8E%E4%BA%B2%E5%AF%86%E5%85%B3%E7%B3%BB/Fromm_%E7%88%B1%E7%9A%84%E8%89%BA%E6%9C%AF-%E8%A7%84%E8%8C%83%E6%80%A7%E4%B8%BB%E5%BC%A0%E6%89%8B%E5%86%8C.html">规范性主张手册</a>
+            <a class="book-link" href="08_%E6%80%A7%E4%B8%8E%E4%BA%B2%E5%AF%86%E5%85%B3%E7%B3%BB/Fromm_%E7%88%B1%E7%9A%84%E8%89%BA%E6%9C%AF-%E7%B2%BE%E5%8D%8E%E7%AC%94%E8%AE%B0%E4%B8%8E%E4%B8%93%E4%B8%9A%E9%97%AE%E9%A2%98.html">精读笔记</a>
+          </div>
+        </article>
+        <article class="book-card">
+          <h3 class="book-title">亲密关系</h3>
+          <p class="book-author">罗兰·米勒 · Intimate Relationships (6th Ed.)</p>
+          <div class="book-links">
+            <a class="book-link" href="08_%E6%80%A7%E4%B8%8E%E4%BA%B2%E5%AF%86%E5%85%B3%E7%B3%BB/Miller_%E4%BA%B2%E5%AF%86%E5%85%B3%E7%B3%BB-%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84.html">整体架构</a>
+            <a class="book-link" href="08_%E6%80%A7%E4%B8%8E%E4%BA%B2%E5%AF%86%E5%85%B3%E7%B3%BB/Miller_%E4%BA%B2%E5%AF%86%E5%85%B3%E7%B3%BB-%E9%97%AE%E9%A2%98%E6%89%8B%E5%86%8C.html">问题手册</a>
+            <a class="book-link" href="08_%E6%80%A7%E4%B8%8E%E4%BA%B2%E5%AF%86%E5%85%B3%E7%B3%BB/Miller_%E4%BA%B2%E5%AF%86%E5%85%B3%E7%B3%BB-%E6%A6%82%E5%BF%B5%E8%AF%AF%E7%94%A8%E4%B8%8E%E8%AF%81%E6%8D%AE%E7%AD%89%E7%BA%A7%E6%89%8B%E5%86%8C.html">概念误用手册</a>
+            <a class="book-link" href="08_%E6%80%A7%E4%B8%8E%E4%BA%B2%E5%AF%86%E5%85%B3%E7%B3%BB/Miller_%E4%BA%B2%E5%AF%86%E5%85%B3%E7%B3%BB-%E8%87%AA%E6%88%91%E8%AF%8A%E6%96%AD%E6%89%8B%E5%86%8C.html">自我诊断手册</a>
+          </div>
+        </article>
       </div>
+    </section>
 
-    </div>
-  </section>
-
-  <!-- 07 技术 -->
-  <section class="category cat-07" id="cat-07">
-    <div class="category-header">
-      <div class="category-icon">💻</div>
-      <h2 class="category-title">技术</h2>
-      <span class="category-count">2 本书</span>
-    </div>
-    <div class="books-grid">
-
-      <div class="book-card">
-        <div class="book-title">操作系统导论</div>
-        <div class="book-author">Remzi & Andrea Arpaci-Dusseau · OSTEP</div>
-        <div class="book-links">
-          <a class="book-link" href="07_%E6%8A%80%E6%9C%AF/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%AF%BC%E8%AE%BA-%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84.html"><span class="dot"></span>整体架构</a>
-          <a class="book-link" href="07_%E6%8A%80%E6%9C%AF/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%AF%BC%E8%AE%BA-%E9%97%AE%E9%A2%98%E6%89%8B%E5%86%8C.html"><span class="dot"></span>问题手册</a>
-          <a class="book-link" href="07_%E6%8A%80%E6%9C%AF/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%AF%BC%E8%AE%BA-%E5%8A%A9%E4%BA%BA%E6%89%8B%E5%86%8C.html"><span class="dot"></span>助人手册</a>
-          <a class="book-link" href="07_%E6%8A%80%E6%9C%AF/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%AF%BC%E8%AE%BA-%E7%B2%BE%E5%8D%8E%E7%AC%94%E8%AE%B0%E4%B8%8E%E4%B8%93%E4%B8%9A%E9%97%AE%E9%A2%98.html"><span class="dot"></span>精读笔记</a>
+    <section class="domain" id="10_专业知识库">
+      <header class="domain-head">
+        <span class="domain-icon">⚙️</span>
+        <div class="domain-meta">
+          <h2 class="domain-title">专业知识库</h2>
+          <p class="domain-desc">这不是「底层」的延续，是另一个项目——组织单位是能力，不是书。</p>
         </div>
+        <span class="domain-count">3 种</span>
+      </header>
+      <div class="books-grid">
+        <article class="book-card">
+          <h3 class="book-title">结构决策</h3>
+          <p class="book-author">三种缺口 · 三种产出形态 · 优先级 P0 到 P4</p>
+          <div class="book-links">
+            <a class="book-link" href="10_%E4%B8%93%E4%B8%9A%E7%9F%A5%E8%AF%86%E5%BA%93/%E7%BB%93%E6%9E%84%E5%86%B3%E7%AD%96.md">结构决策</a>
+          </div>
+        </article>
+        <article class="book-card">
+          <h3 class="book-title">能力 01 · 电路仿真工具迁移</h3>
+          <p class="book-author">Multisim 到 LTspice · 4 个可跑网表</p>
+          <div class="book-links">
+            <a class="book-link" href="10_%E4%B8%93%E4%B8%9A%E7%9F%A5%E8%AF%86%E5%BA%93/%E8%83%BD%E5%8A%9B01_%E7%94%B5%E8%B7%AF%E4%BB%BF%E7%9C%9F%E5%B7%A5%E5%85%B7%E8%BF%81%E7%A7%BB/README.md">能力说明</a>
+            <a class="book-link" href="10_%E4%B8%93%E4%B8%9A%E7%9F%A5%E8%AF%86%E5%BA%93/%E8%83%BD%E5%8A%9B01_%E7%94%B5%E8%B7%AF%E4%BB%BF%E7%9C%9F%E5%B7%A5%E5%85%B7%E8%BF%81%E7%A7%BB/%E8%BF%81%E7%A7%BB%E9%80%9F%E6%9F%A5%E8%A1%A8.md">迁移速查表</a>
+            <a class="book-link" href="10_%E4%B8%93%E4%B8%9A%E7%9F%A5%E8%AF%86%E5%BA%93/%E8%83%BD%E5%8A%9B01_%E7%94%B5%E8%B7%AF%E4%BB%BF%E7%9C%9F%E5%B7%A5%E5%85%B7%E8%BF%81%E7%A7%BB/%E6%95%85%E9%9A%9C%E6%8E%92%E6%9F%A5%E8%A1%A8.md">故障排查表</a>
+          </div>
+        </article>
+        <article class="book-card">
+          <h3 class="book-title">能力 02 · 信号与系统地基</h3>
+          <p class="book-author">同一个系统的五张脸 · 数值互证</p>
+          <div class="book-links">
+            <a class="book-link" href="10_%E4%B8%93%E4%B8%9A%E7%9F%A5%E8%AF%86%E5%BA%93/%E8%83%BD%E5%8A%9B02_%E4%BF%A1%E5%8F%B7%E4%B8%8E%E7%B3%BB%E7%BB%9F%E5%9C%B0%E5%9F%BA/README.md">能力说明</a>
+            <a class="book-link" href="10_%E4%B8%93%E4%B8%9A%E7%9F%A5%E8%AF%86%E5%BA%93/%E8%83%BD%E5%8A%9B02_%E4%BF%A1%E5%8F%B7%E4%B8%8E%E7%B3%BB%E7%BB%9F%E5%9C%B0%E5%9F%BA/%E8%AF%8A%E6%96%AD%E4%B8%8E%E7%BF%BB%E8%AF%91%E8%A1%A8.md">诊断与翻译表</a>
+          </div>
+        </article>
       </div>
+    </section>
 
-      <div class="book-card">
-        <div class="book-title">数字图像处理</div>
-        <div class="book-author">Gonzalez & Woods · Digital Image Processing (4th Ed.)</div>
-        <div class="book-links">
-          <a class="book-link" href="07_%E6%8A%80%E6%9C%AF/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86-%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84.html"><span class="dot"></span>整体架构</a>
-          <a class="book-link" href="07_%E6%8A%80%E6%9C%AF/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86-%E9%97%AE%E9%A2%98%E6%89%8B%E5%86%8C.html"><span class="dot"></span>问题手册</a>
-          <a class="book-link" href="07_%E6%8A%80%E6%9C%AF/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86-%E5%8A%A9%E4%BA%BA%E6%89%8B%E5%86%8C.html"><span class="dot"></span>助人手册</a>
-          <a class="book-link" href="07_%E6%8A%80%E6%9C%AF/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86-%E7%B2%BE%E5%8D%8E%E7%AC%94%E8%AE%B0%E4%B8%8E%E4%B8%93%E4%B8%9A%E9%97%AE%E9%A2%98.html"><span class="dot"></span>精读笔记</a>
-        </div>
-      </div>
+  <footer class="site-foot">
+    读书笔记知识库 · 持续更新中<span class="sep">|</span>内容由清单自动生成
+    <br>
+    整体架构<span class="sep">·</span>问题手册<span class="sep">·</span>助人手册<span class="sep">·</span>精读笔记
+    <br>
+    <a href="https://github.com/yeyulanshan/reading-notes">GitHub</a>
+  </footer>
+</div>
 
-    </div>
-  </section>
-
-  <!-- 08 性与亲密关系 -->
-  <section class="category cat-08" id="cat-08">
-    <div class="category-header">
-      <div class="category-icon">❤️</div>
-      <h2 class="category-title">性与亲密关系</h2>
-      <span class="category-count">2 本书</span>
-    </div>
-    <div class="books-grid">
-
-      <div class="book-card">
-        <div class="book-title">爱的艺术</div>
-        <div class="book-author">艾里希·弗洛姆 · The Art of Loving</div>
-        <div class="book-links">
-          <a class="book-link" href="08_%E6%80%A7%E4%B8%8E%E4%BA%B2%E5%AF%86%E5%85%B3%E7%B3%BB/Fromm_%E7%88%B1%E7%9A%84%E8%89%BA%E6%9C%AF-%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84.html"><span class="dot"></span>整体架构</a>
-          <a class="book-link" href="08_%E6%80%A7%E4%B8%8E%E4%BA%B2%E5%AF%86%E5%85%B3%E7%B3%BB/Fromm_%E7%88%B1%E7%9A%84%E8%89%BA%E6%9C%AF-%E9%97%AE%E9%A2%98%E6%89%8B%E5%86%8C.html"><span class="dot"></span>问题手册</a>
-          <a class="book-link" href="08_%E6%80%A7%E4%B8%8E%E4%BA%B2%E5%AF%86%E5%85%B3%E7%B3%BB/Fromm_%E7%88%B1%E7%9A%84%E8%89%BA%E6%9C%AF-%E8%A7%84%E8%8C%83%E6%80%A7%E4%B8%BB%E5%BC%A0%E6%89%8B%E5%86%8C.html"><span class="dot"></span>规范性主张手册</a>
-          <a class="book-link" href="08_%E6%80%A7%E4%B8%8E%E4%BA%B2%E5%AF%86%E5%85%B3%E7%B3%BB/Fromm_%E7%88%B1%E7%9A%84%E8%89%BA%E6%9C%AF-%E7%B2%BE%E5%8D%8E%E7%AC%94%E8%AE%B0%E4%B8%8E%E4%B8%93%E4%B8%9A%E9%97%AE%E9%A2%98.html"><span class="dot"></span>精读笔记</a>
-        </div>
-      </div>
-
-      <div class="book-card">
-        <div class="book-title">亲密关系</div>
-        <div class="book-author">罗兰·米勒 · Intimate Relationships (6th Ed.)</div>
-        <div class="book-links">
-          <a class="book-link" href="08_%E6%80%A7%E4%B8%8E%E4%BA%B2%E5%AF%86%E5%85%B3%E7%B3%BB/Miller_%E4%BA%B2%E5%AF%86%E5%85%B3%E7%B3%BB-%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84.html"><span class="dot"></span>整体架构</a>
-          <a class="book-link" href="08_%E6%80%A7%E4%B8%8E%E4%BA%B2%E5%AF%86%E5%85%B3%E7%B3%BB/Miller_%E4%BA%B2%E5%AF%86%E5%85%B3%E7%B3%BB-%E9%97%AE%E9%A2%98%E6%89%8B%E5%86%8C.html"><span class="dot"></span>问题手册</a>
-          <a class="book-link" href="08_%E6%80%A7%E4%B8%8E%E4%BA%B2%E5%AF%86%E5%85%B3%E7%B3%BB/Miller_%E4%BA%B2%E5%AF%86%E5%85%B3%E7%B3%BB-%E6%A6%82%E5%BF%B5%E8%AF%AF%E7%94%A8%E4%B8%8E%E8%AF%81%E6%8D%AE%E7%AD%89%E7%BA%A7%E6%89%8B%E5%86%8C.html"><span class="dot"></span>概念误用手册</a>
-          <a class="book-link" href="08_%E6%80%A7%E4%B8%8E%E4%BA%B2%E5%AF%86%E5%85%B3%E7%B3%BB/Miller_%E4%BA%B2%E5%AF%86%E5%85%B3%E7%B3%BB-%E8%87%AA%E6%88%91%E8%AF%8A%E6%96%AD%E6%89%8B%E5%86%8C.html"><span class="dot"></span>自我诊断手册</a>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-</main>
-
-<footer class="footer">
-  <p>读书笔记知识库 · 持续更新中</p>
-  <p style="margin-top:8px;">整体架构 · 问题手册 · 助人手册 · 精读笔记 · 专业问题</p>
-</footer>
+<script>
+(function(){
+  var els = document.querySelectorAll('.domain, .book-card');
+  els.forEach(function(el, i){
+    el.classList.add('reveal');
+    el.style.transitionDelay = (Math.min(i, 8) * 45) + 'ms';
+  });
+  if (!('IntersectionObserver' in window)) {
+    els.forEach(function(el){ el.classList.add('is-in'); });
+    return;
+  }
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); }
+    });
+  }, { rootMargin: '0px 0px -8% 0px', threshold: 0.04 });
+  els.forEach(function(el){ io.observe(el); });
+})();
+</script>
 
 </body>
 </html>

@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>关系性自我 · 助人手册 —— 12 个"你和他的自我模型不一样"的场景</title>
+<style>
+  :root{
+    --paper:#14100c; --card:#1c1712; --edge:#332a20;
+    --ink:#ece4d8; --ink-mid:#b3a693; --ink-soft:#7a6f5f;
+    --core:#c9a227; --core-soft:#241d10;
+    --ask:#d98c3f; --why:#6b9fc9; --stop:#c96b6b; --ok:#8fae6b;
+    --key:#e0c46a; --key-soft:#2a2415;
+    --warn:#d9694f; --warn-soft:#2a1712;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--paper);color:var(--ink);padding:36px 20px 52px;line-height:1.9;-webkit-font-smoothing:antialiased;}
+  .container{max-width:1000px;margin:0 auto;}
+  .header{text-align:center;margin-bottom:24px;padding:44px 24px 38px;background:var(--card);
+    border:1px solid var(--edge);border-top:5px solid var(--core);border-radius:4px;}
+  .header .kicker{font-size:11.5px;letter-spacing:2.5px;color:var(--ink-soft);margin-bottom:14px;font-family:Consolas,monospace;}
+  .header h1{font-size:23px;color:var(--ink);margin-bottom:12px;letter-spacing:1px;line-height:1.5;}
+  .header .subtitle{font-size:14.5px;color:var(--ink-mid);}
+  .header .meta{margin-top:16px;font-size:12.5px;color:var(--ink-soft);line-height:1.9;}
+  .guide{background:var(--core-soft);border:1px solid #3d3218;border-left:4px solid var(--core);
+    border-radius:3px;padding:22px 26px;margin-bottom:26px;font-size:14.4px;color:var(--ink-mid);}
+  .guide .t{color:var(--core);font-weight:700;margin-bottom:11px;font-size:14px;}
+  .guide p+p{margin-top:9px;} .guide strong{color:var(--ink);}
+  .guide em{color:var(--ask);font-style:normal;}
+  table{width:100%;border-collapse:collapse;margin:13px 0;font-size:13.4px;}
+  th,td{padding:9px 12px;border:1px solid var(--edge);text-align:left;vertical-align:top;}
+  th{background:#231d16;color:var(--core);font-weight:700;font-size:12.5px;}
+  td{color:var(--ink-mid);} td strong{color:var(--ink);}
+  td em{color:var(--ask);font-style:normal;}
+  h2{font-size:19.5px;font-weight:700;color:var(--ink);margin:40px 0 6px;padding-left:14px;
+    border-left:4px solid var(--core);letter-spacing:.5px;}
+  .sub{color:var(--ink-soft);font-size:13.5px;margin:0 0 18px 18px;}
+  .sc{background:var(--card);border:1px solid var(--edge);border-radius:3px;margin-bottom:15px;overflow:hidden;}
+  .sc-head{padding:14px 22px;display:flex;gap:12px;align-items:baseline;
+    background:var(--core-soft);border-bottom:1px solid var(--edge);}
+  .sc-head .id{font-family:Consolas,monospace;font-size:11px;font-weight:700;color:#14100c;
+    background:var(--core);padding:2px 9px;border-radius:2px;flex-shrink:0;}
+  .sc-head .tt{font-size:15.5px;font-weight:700;color:var(--ink);line-height:1.65;}
+  .sc-body{padding:16px 22px;}
+  .row{padding:10px 0;border-bottom:1px dashed var(--edge);font-size:13.5px;color:var(--ink-mid);}
+  .row:last-child{border-bottom:none;}
+  .row .lb{font-weight:700;font-size:11.5px;letter-spacing:.4px;display:block;margin-bottom:5px;}
+  .row.say .lb{color:var(--ask);} .row.why .lb{color:var(--why);}
+  .row.stop .lb{color:var(--stop);} .row.ok .lb{color:var(--ok);}
+  .row strong{color:var(--ink);} .row em{color:var(--ask);font-style:normal;}
+  .quote{background:var(--key-soft);border:1px solid #3d3520;border-left:4px solid var(--key);
+    border-radius:3px;padding:16px 22px;margin:18px 0;}
+  .quote .cn{font-size:15.5px;color:#efe3b8;letter-spacing:.5px;line-height:2;}
+  .quote .src{margin-top:8px;font-size:12.5px;color:var(--ink-soft);text-align:right;}
+  .quote .gloss{margin-top:9px;font-size:13.4px;color:var(--ink-mid);border-top:1px dashed #4a4028;padding-top:9px;}
+  .warn{background:var(--warn-soft);border:1px solid #3a2019;border-left:4px solid var(--warn);
+    border-radius:0 3px 3px 0;padding:16px 22px;margin:18px 0;font-size:13.8px;color:#eab5a6;}
+  .warn strong{color:var(--warn);}
+  ul,ol{margin:10px 0 0 22px;} li{margin-bottom:6px;color:var(--ink-mid);font-size:13.6px;}
+  li strong{color:var(--ink);}
+  .footer{text-align:center;margin-top:44px;padding:22px;color:var(--ink-soft);font-size:12.5px;line-height:1.95;}
+  @media(max-width:680px){
+    .header h1{font-size:19px;} h2{font-size:17px;} body{padding:20px 14px 34px;}
+    table{font-size:11.5px;} .sc-head .tt{font-size:13.8px;} .quote .cn{font-size:14px;}
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="kicker">HELPING MANUAL · RELATIONAL SELF</div>
+    <h1>关系性自我 · 助人手册</h1>
+    <div class="subtitle">12 个「你和他的自我模型不一样」的场景</div>
+    <div class="meta">
+      底本：《論語》Gutenberg #4094 ·《道德經》Gutenberg #7337<br>
+      所有引文已逐句核对底本原文 · 解释部分为待议读法
+    </div>
+  </div>
+
+  <div class="guide">
+    <div class="t">⚠️ 这份助人手册和项目里其他助人手册都不一样 —— 必须先说清</div>
+    <p>项目里已有的助人手册（01 塔勒布、05、07 OSTEP/algs4/d2l、08 Miller）都是这个形式：
+    <strong>别人遇到一个困境，你可以用什么话帮他看清。</strong></p>
+    <p><strong>但这份不同。它的场景不是"他遇到了困难"，而是"<em>你和他的自我模型不一样</em>"。</strong></p>
+    <p>具体说：你和一个人起了分歧，而分歧的根<strong>不在事实，不在利益，甚至不在价值观</strong> ——
+    而在你们对"人是什么"这件事的默认假设不同：</p>
+    <ul>
+      <li>你认为<strong>他是个独立的个体</strong>，他的选择是他的事</li>
+      <li>他认为<strong>他是由他的关系定义的</strong>，所以"他的事"不可能只是他的事</li>
+    </ul>
+    <p><strong>这种分歧最难处理，因为双方都不觉得自己在主张什么特殊的东西 ——
+    对自己那套模型，他们都觉得"这不是明摆着的吗"。</strong></p>
+    <p><em>所以这份手册不教你"怎么说服他"。它教你：先认出这是模型冲突，而不是对错冲突。</em>
+    认出这一点之后，很多争执会从"谁对"变成"我们在用两套坐标"。</p>
+    <div class="warn" style="margin-top:16px;margin-bottom:0;">
+      <p><strong>一条自我限制</strong></p>
+      <p>本手册<strong>没有任何实证支持</strong> —— 它是一个<em>阅读两份文本之后的推演</em>，
+      不是心理学研究结论。<strong>而 `02_心智与认知` 域已经提醒过：这个领域有复现危机。</strong></p>
+      <p>所以请把它当<strong>一套提问工具</strong>，不是一套事实。<em>凡是它让你更武断的地方，都用错了。</em></p>
+    </div>
+  </div>
+
+  <!-- ============ 先做三步判断 ============ -->
+  <h2>开口之前先做三步判断</h2>
+  <div class="sub">这是整份手册最有用的部分 —— 三步做完，很多冲突会自动降级</div>
+
+  <table>
+    <tr><th style="width:6%">步</th><th style="width:30%">先问自己</th><th>为什么</th></tr>
+    <tr>
+      <td><strong>1</strong></td>
+      <td><strong>这是"事实分歧"还是"模型分歧"？</strong></td>
+      <td>事实分歧可以摆证据；<em>模型分歧摆证据没用</em> —— 因为证据本身要被模型解释。
+      <strong>九成的长期争执是后者被当成前者在吵。</strong></td>
+    </tr>
+    <tr>
+      <td><strong>2</strong></td>
+      <td><strong>他反对的是我的结论，还是我的前提？</strong></td>
+      <td>如果他连我的前提都不接受，<em>那我的论证再严密也没用</em>。
+      <strong>这时该做的是把前提亮出来，而不是加强论证。</strong></td>
+    </tr>
+    <tr>
+      <td><strong>3</strong></td>
+      <td><strong>我自己那套模型，是不是也有它的盲区？</strong></td>
+      <td>这一步最难，也最必要。<em>如果你从不怀疑自己那套，那你就不是在做判断，是在捍卫。</em></td>
+    </tr>
+  </table>
+
+  <div class="quote">
+    <div class="cn">子絕四、毋意、毋必、毋固、毋我。</div>
+    <div class="src">《論語·子罕》「子絕四」章</div>
+    <div class="gloss">
+      <strong>毋意</strong>（不凭空猜测）· <strong>毋必</strong>（不绝对肯定）·
+      <strong>毋固</strong>（不固执己见）· <strong>毋我</strong>（不自我中心）<br>
+      <em>这十二个字就是三步判断的原文版本 —— 而"毋我"是最难的那一步。</em>
+    </div>
+  </div>
+
+  <!-- ============ 场景 ============ -->
+  <h2>12 个场景</h2>
+  <div class="sub">每个场景给四样东西：该问什么 · 为什么这么问 · 怎么读答案 · <strong>什么时候该停</strong></div>
+
+  <div class="sc">
+    <div class="sc-head"><span class="id">S1</span><span class="tt">他说"这是我家里的事，你别插手"</span></div>
+    <div class="sc-body">
+      <div class="row say"><span class="lb">该问什么</span>"你说的'家里的事'——是指它的结果由你们承担，还是指它本来就不该被外人评论？"</div>
+      <div class="row why"><span class="lb">为什么这么问</span>这两者完全不同。前者是<strong>边界主张</strong>（这是我们的责任范围），
+      后者是<strong>本体主张</strong>（这件事的性质就不是个人的事）。<em>用"关系性自我"看，他认为家庭是他的构成部分，
+      所以"家里的事"就是"他的事"——不是隐私，是同一性。</em></div>
+      <div class="row ok"><span class="lb">怎么读答案</span>
+        说"结果由我们承担"→ 边界问题，可以谈。<br>
+        说"你根本不懂"→ 模型问题，<strong>这时不要试图用道理进入</strong>。</div>
+      <div class="row stop"><span class="lb">什么时候该停</span>如果他的回答里出现"你不懂"这类<em>资格否定</em>，
+      <strong>就停</strong>。继续讲道理只会加深"你确实不懂"这个判断。</div>
+    </div>
+  </div>
+
+  <div class="sc">
+    <div class="sc-head"><span class="id">S2</span><span class="tt">他为了家里的安排，放弃了一个很好的机会</span></div>
+    <div class="sc-body">
+      <div class="row say"><span class="lb">该问什么</span>"你自己想要的是哪个？" —— 然后<strong>认真听他怎么回答</strong>。</div>
+      <div class="row why"><span class="lb">为什么这么问</span>因为你的预设是"他牺牲了"，
+      而他的模型里<strong>可能根本没有"牺牲"这个类别</strong> —— <em>因为"他自己想要的"和"家里需要的"在他那里不是两个可比较的东西。</em></div>
+      <div class="row ok"><span class="lb">怎么读答案</span>
+        如果他说"我没觉得是牺牲"→ <strong>他的话可能是真的，不是自我安慰</strong>。<br>
+        如果他说"我也想要那个机会，但是…"→ 那他确实在承担代价，<em>这时的帮助方式完全不同</em>。</div>
+      <div class="row stop"><span class="lb">什么时候该停</span><strong>不要替他判定"你其实是被绑架了"。</strong>
+      这是最容易犯的错 —— 用"独立自我"的标准去诊断一个用"关系性自我"生活的人，
+      <em>会把他描述成受害者，而他不认为自己是。</em></div>
+    </div>
+  </div>
+
+  <div class="sc">
+    <div class="sc-head"><span class="id">S3</span><span class="tt">你说"你要为自己活"，他说"你说得轻巧"</span></div>
+    <div class="sc-body">
+      <div class="row say"><span class="lb">该问什么</span>"'为自己活'这句话，在你听来是什么意思？"</div>
+      <div class="row why"><span class="lb">为什么这么问</span>因为"为自己活"在<strong>独立自我模型</strong>里是解放，
+      在<strong>关系性自我模型</strong>里可能等于"让我变成一个只顾自己的人" —— <em>那不是解放，那是自我毁灭。</em></div>
+      <div class="row ok"><span class="lb">怎么读答案</span>
+        如果他认为"为自己活"＝自私 → <em>你用的词在他那里是贬义</em>，需要换词。<br>
+        如果他也想"为自己活"但做不到 → 那这是<strong>真困境</strong>，不是模型冲突。</div>
+      <div class="row stop"><span class="lb">什么时候该停</span>如果你发现自己在重复"你应该为自己活"，
+      <strong>停</strong>。<em>重复一个他已经在拒绝的框架，只会让他确认你听不懂他。</em></div>
+    </div>
+  </div>
+
+  <div class="sc">
+    <div class="sc-head"><span class="id">S4</span><span class="tt">他做了件你认为"不讲原则"的事，为了帮一个亲戚</span></div>
+    <div class="sc-body">
+      <div class="row say"><span class="lb">该问什么</span>"如果那个人不是你的亲戚，你会怎么做？"</div>
+      <div class="row why"><span class="lb">为什么这么问</span>这个问题在<strong>两种模型下都有意义</strong>，
+      所以它不预设谁对。它把"关系"这个变量单独拿出来了 ——
+      <em>然后你们可以谈"关系应该占多少权重"，而不是"你讲不讲原则"。</em></div>
+      <div class="row ok"><span class="lb">怎么读答案</span>
+        "不会"（坦承区别对待）→ <strong>诚实</strong>，可以就权重谈。<br>
+        "会"（说没区别）→ <em>他可能没意识到自己的双重标准，或者不承认</em>。</div>
+      <div class="row stop"><span class="lb">什么时候该停</span><strong>如果这件事已经产生实际损害，就跳过模型讨论，先处理损害。</strong>
+      <em>模型分析是在没有代价的时候做的；有代价时先止损。</em></div>
+    </div>
+  </div>
+
+  <div class="sc">
+    <div class="sc-head"><span class="id">S5</span><span class="tt">他说"我这么做是为了我爸妈"，而你认为这理由不成立</span></div>
+    <div class="sc-body">
+      <div class="row say"><span class="lb">该问什么</span>"他们希望你这么做，还是你觉得他们希望？"</div>
+      <div class="row why"><span class="lb">为什么这么问</span>因为这句话有两个版本：
+      <strong>① 他们真的要求了</strong>（那是外部约束）；<strong>② 他把"他们会怎么想"内化成了自己的意愿</strong>
+      （那是他的自我结构的一部分）。<em>第二种情况下，"为了爸妈"和"为了自己"不是两件事。</em></div>
+      <div class="row ok"><span class="lb">怎么读答案</span>
+        如果他说不清区别 → <strong>大概率是第二种</strong>。这时和他争论"这理由成不成立"是无效的，
+        <em>因为对他来说那不是理由，那是他的构成。</em></div>
+      <div class="row stop"><span class="lb">什么时候该停</span>如果他确实分不清，
+      <strong>不要逼他分清</strong>。<em>逼一个人把自己和关系切开，是一件有真实伤害的事 ——
+      而你没有资格判断那个切开对他是不是好事。</em></div>
+    </div>
+  </div>
+
+  <div class="sc">
+    <div class="sc-head"><span class="id">S6</span><span class="tt">你和他争论"什么是背叛"</span></div>
+    <div class="sc-body">
+      <div class="row say"><span class="lb">该问什么</span>"对你来说，这件事之所以是背叛，是因为你答应了什么，还是因为你本不该那样想？"</div>
+      <div class="row why"><span class="lb">为什么这么问</span>因为<strong>"背叛"在两种模型里定义不同</strong>：
+      独立自我模型里它是<strong>违约</strong>（破了承诺）；关系性自我模型里它可以是<strong>分离</strong>（你不再是我们的一部分）。
+      <em>前者能补救（重新承诺），后者不能（因为它触及同一性）。</em></div>
+      <div class="row ok"><span class="lb">怎么读答案</span>
+        "因为答应了" → <strong>可补救</strong>，谈条件。<br>
+        "因为你变了" → <strong>触及同一性</strong>，谈条件没用。</div>
+      <div class="row stop"><span class="lb">什么时候该停</span>如果是后者，
+      <strong>别再试图用"我并没有违约"来辩护</strong> —— <em>你在答一个他没问的问题。</em>
+      这时能做的是承认："我明白在你的标准里这比违约更重。"</div>
+    </div>
+  </div>
+
+  <div class="sc">
+    <div class="sc-head"><span class="id">S7</span><span class="tt">他问你"我该不该去外地工作"</span></div>
+    <div class="sc-body">
+      <div class="row say"><span class="lb">该问什么</span>先别回答。问："你觉得去了之后，什么会变？"</div>
+      <div class="row why"><span class="lb">为什么这么问</span>因为他的清单里<strong>可能有"和父母的距离"这一项</strong> ——
+      而这一项在你的清单里也许根本没出现过。<em>《論語》里有一句直接相关：</em></div>
+      <div class="row quote" style="padding-top:0;">
+        <div class="quote" style="margin:8px 0;">
+          <div class="cn">父母在、不遠游、游必有方。</div>
+          <div class="src">《論語·里仁》「父母在」章</div>
+        </div>
+      </div>
+      <div class="row ok"><span class="lb">怎么用这一句</span><strong>注意它的后半句："游必有方"</strong> ——
+      它不是禁止远行，是要求<strong>有交代、有安排</strong>。<em>所以它给的不是禁令，是一个条件。</em>
+      <strong>这正是可以把两种模型接上的地方。</strong></div>
+      <div class="row stop"><span class="lb">什么时候该停</span>如果你发现自己开始评估"他父母的期待合不合理"，
+      <strong>停</strong>。<em>你被问的是他的选择，不是对他父母的审判。</em></div>
+    </div>
+  </div>
+
+  <div class="sc">
+    <div class="sc-head"><span class="id">S8</span><span class="tt">他说"做人不能只想着自己"，你觉得这是道德绑架</span></div>
+    <div class="sc-body">
+      <div class="row say"><span class="lb">该问什么</span>"你说这句话的时候，是在要求我，还是在描述一个事实？"</div>
+      <div class="row why"><span class="lb">为什么这么问</span>因为这句话有<strong>两种用法</strong>：
+      ① 规范用法（你应该考虑别人）→ <em>可以反驳</em>；
+      ② 描述用法（人本来就是在关系里的）→ <em>这不是要求，是一个世界观陈述</em>。
+      <strong>后者无法反驳，但也不需要服从 —— 它只是一个描述。</strong></div>
+      <div class="row ok"><span class="lb">怎么读答案</span>区分开之后，"道德绑架"就消解了一半 ——
+      <em>因为一个描述不构成绑架，只有规范才构成。</em></div>
+      <div class="row stop"><span class="lb">什么时候该停</span>如果对方坚持"这就是事实，所以你必须…"，
+      <strong>从事实推不出必须</strong> —— <em>这是一个逻辑错误，可以直接指出来</em>。</div>
+    </div>
+  </div>
+
+  <div class="sc">
+    <div class="sc-head"><span class="id">S9</span><span class="tt">你劝他"别管那么多，先把自己过好"</span></div>
+    <div class="sc-body">
+      <div class="row say"><span class="lb">该问什么</span>"如果不管，对你来说会发生什么？"</div>
+      <div class="row why"><span class="lb">为什么这么问</span>因为《論語》里已经有过<strong>同一场争论</strong>：</div>
+      <div class="row">
+        <div class="quote" style="margin:8px 0;">
+          <div class="cn">或曰、以德報怨、何如。子曰、何以報德。以直報怨、以德報德。</div>
+          <div class="src">《論語·憲問》「或曰以德報怨」章</div>
+          <div class="gloss">孔子的反驳是一个<strong>逻辑论证</strong>：如果对怨恨和恩德都给同样的回报，"德"就没有意义了。
+          <em>他没有说"你不该那样做"，他说"那样做会让一个概念失效"。</em></div>
+        </div>
+      </div>
+      <div class="row ok"><span class="lb">可以借用这个结构</span>与其说"你该为自己活"，
+      不如问：<strong>"如果你对所有人的需要都给同样的回应，那'你自己想要的'还剩什么意义？"</strong>
+      <em>这是论证，不是劝说。而论证他可以回应。</em></div>
+      <div class="row stop"><span class="lb">什么时候该停</span>如果他说"那就不剩什么，也无所谓"，
+      <strong>这是他的选择，不是他的错误</strong> —— 停。<em>你可以不同意，但你没有驳倒他。</em></div>
+    </div>
+  </div>
+
+  <div class="sc">
+    <div class="sc-head"><span class="id">S10</span><span class="tt">你们对一个共同朋友的做法评价完全不同</span></div>
+    <div class="sc-body">
+      <div class="row say"><span class="lb">该问什么</span>"如果那个人不是他的家人，你还会觉得他错吗？"</div>
+      <div class="row why"><span class="lb">为什么这么问</span>因为你可能<strong>把"关系"当成了不相关变量</strong>（"这不该影响判断"），
+      而他<strong>把关系当成了构成变量</strong>（"不考虑关系，这个人就不是这个人了"）。
+      <em>用《論語》的话说：他大概会认为"孝弟也者、其為仁之本與"——本变了，整个判断都变了。</em></div>
+      <div class="row ok"><span class="lb">怎么读答案</span>如果确实是这个差别，
+      <strong>那你们不是在评价同一个人</strong> —— 你们在评价两个不同的对象（一个带关系的，一个不带的）。
+      <em>认识到这一点，争论可以从"谁对"转向"我们在评价谁"。</em></div>
+      <div class="row stop"><span class="lb">什么时候该停</span><strong>不要在背后评判朋友的家人。</strong>
+      <em>这一条不是从文本推出来的，是常识 —— 但它比本手册所有内容都重要。</em></div>
+    </div>
+  </div>
+
+  <div class="sc">
+    <div class="sc-head"><span class="id">S11</span><span class="tt">他问你"我是不是太在意别人的看法了"</span></div>
+    <div class="sc-body">
+      <div class="row say"><span class="lb">该问什么</span>"你在意的是他们的看法，还是在意他们？"</div>
+      <div class="row why"><span class="lb">为什么这么问</span>这两者完全不同：
+      <strong>在意看法</strong>是评价焦虑（可以被 `02_心智与认知` 的偏误框架处理）；
+      <strong>在意他们</strong>是关系本身（不是病，是构成）。
+      <em>而"你是不是太在意别人"这个问题，混了这两者。</em></div>
+      <div class="row ok"><span class="lb">怎么读答案</span>
+        分得清 → 那焦虑部分可以处理。<br>
+        分不清 → <strong>先不要把它当焦虑处理</strong>，否则你会让他觉得"我的关系是毛病"。</div>
+      <div class="row stop"><span class="lb">什么时候该停</span>如果他的情况已经影响正常生活，
+      <strong>停在这里，建议找专业帮助</strong> ——
+      <em>本手册没有任何实证支持，不适用于临床范围。这一条是硬边界。</em></div>
+    </div>
+  </div>
+
+  <div class="sc">
+    <div class="sc-head"><span class="id">S12</span><span class="tt">最后：你发现自己的模型也在变</span></div>
+    <div class="sc-body">
+      <div class="row say"><span class="lb">该问什么</span>问自己："我在这件事上，是更想弄清，还是更想赢？"</div>
+      <div class="row why"><span class="lb">为什么这么问</span>因为读《論語》和《道德經》之后<strong>最容易产生的一个副作用</strong>是：
+      你开始用"关系性自我"这个框架去分析别人 —— <em>而分析别人本身是一种权力动作。</em></div>
+      <div class="row ok"><span class="lb">两处文本都给了警告</span>
+        <div class="quote" style="margin:8px 0;">
+          <div class="cn">毋意、毋必、毋固、毋我。</div>
+          <div class="src">《論語·子罕》</div>
+        </div>
+        <div class="quote" style="margin:8px 0;">
+          <div class="cn">知者不言，言者不知。</div>
+          <div class="src">《道德經》第五十六章</div>
+        </div>
+        <strong>两句话说的是同一件事：说出一个框架，就已经在用它划分世界了。</strong>
+        <em>而这份手册本身就是这样的东西。</em>
+      </div>
+      <div class="row stop"><span class="lb">什么时候该停</span><strong>任何时候你发现自己在用这套框架"诊断"亲近的人，就停。</strong>
+      <em>它的正当用法是理解分歧，不是给人定性。这两者之间的界线很细，而它值得一再检查。</em></div>
+    </div>
+  </div>
+
+  <!-- ============ 收尾 ============ -->
+  <h2>这份手册自己的一条纪律</h2>
+
+  <div class="warn">
+    <p><strong>「底层」项目整体是"加法"性质的。而这份手册加了一件危险的东西。</strong></p>
+    <p>项目里其他的助人手册帮你"看清一个机制"。<strong>这份帮你"看清一个人的自我模型"——
+    而后者离"给人定性"只有一步。</strong></p>
+    <p><em>《道德經》第四十八章说："為學日益，為道日損。"</em>
+    本手册是"日益"的产物。它加了一种视角，而这个视角<strong>会让人更想说、更想分析、更想判断</strong> ——
+    恰恰是《論語》"毋我"和《道德經》"知者不言"警告的方向。</p>
+    <p><strong>所以这份手册在使用上有一条限制：</strong>
+    <em>它可以用来理解已经发生的分歧，<strong>不可以</strong>用来预先判断一个人。</em></p>
+    <p>—— 这是我能为自己加的这个东西设的唯一一道闸。而它是不是够，我不知道。</p>
+  </div>
+
+  <div class="quote">
+    <div class="cn">其出彌遠，其知彌少。</div>
+    <div class="src">《道德經》第四十七章</div>
+    <div class="gloss">走出去越远，知道的越少。<br>
+    <strong>而"底层"项目正在做的就是不断往外走。</strong>
+    <em>这句话是不是适用于它，取决于"知"指的是哪一种知 —— 而两份文本都没有给出这个区分。</em></div>
+  </div>
+
+  <div class="footer">
+    关系性自我 · 助人手册 · 「底层」项目 `00_中文原典`<br>
+    12 个场景 · 三步判断 · 每个场景都标明"什么时候该停"<br>
+    底本：《論語》Gutenberg #4094 ·《道德經》Gutenberg #7337（均属公共领域）<br>
+    <em>⚠️ 本手册无实证支持，是阅读两份文本后的推演 —— 请当提问工具，不要当事实</em>
+  </div>
+
+</div>
+</body>
+</html>

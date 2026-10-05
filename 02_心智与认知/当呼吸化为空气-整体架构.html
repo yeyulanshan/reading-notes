@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>《当呼吸化为空气》整体架构 —— 一个医生与死神同行的人生</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: #0f172a;
+    color: #e2e8f0;
+    padding: 32px 20px;
+    line-height: 1.7;
+  }
+  .container { max-width: 900px; margin: 0 auto; }
+
+  /* 顶部 */
+  .header {
+    text-align: center;
+    margin-bottom: 48px;
+    padding: 48px 24px;
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    border-radius: 20px;
+    border: 1px solid #334155;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(251,191,36,0.08) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .header h1 {
+    font-size: 30px;
+    font-weight: 700;
+    color: #f8fafc;
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+  }
+  .header .subtitle {
+    font-size: 15px;
+    color: #94a3b8;
+    max-width: 560px;
+    margin: 0 auto;
+  }
+  .header .author {
+    margin-top: 20px;
+    font-size: 13px;
+    color: #fbbf24;
+    font-style: italic;
+  }
+
+  /* 章节标题 */
+  .section-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #fbbf24;
+    margin: 40px 0 20px;
+    padding-left: 16px;
+    border-left: 3px solid #fbbf24;
+  }
+
+  /* 时间线 */
+  .timeline {
+    position: relative;
+    padding-left: 32px;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 8px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(180deg, #fbbf24 0%, #3b82f6 50%, #ef4444 100%);
+  }
+  .timeline-item {
+    position: relative;
+    margin-bottom: 32px;
+    background: #1e293b;
+    border-radius: 14px;
+    padding: 24px;
+    border: 1px solid #334155;
+  }
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -30px;
+    top: 28px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #fbbf24;
+    border: 3px solid #0f172a;
+    z-index: 1;
+  }
+  .timeline-item.docter::before { background: #3b82f6; }
+  .timeline-item.patient::before { background: #ef4444; }
+
+  .timeline-stage {
+    font-size: 12px;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+  }
+  .timeline-item h3 {
+    font-size: 18px;
+    color: #f8fafc;
+    margin-bottom: 12px;
+  }
+  .timeline-item .event {
+    font-size: 14px;
+    color: #cbd5e1;
+    margin-bottom: 12px;
+  }
+
+  /* 震撼瞬间 */
+  .shock-moment {
+    background: rgba(251,191,36,0.08);
+    border-left: 3px solid #fbbf24;
+    padding: 12px 16px;
+    border-radius: 0 8px 8px 0;
+    margin-top: 12px;
+  }
+  .shock-moment .label {
+    font-size: 11px;
+    color: #fbbf24;
+    font-weight: 600;
+    margin-bottom: 4px;
+    letter-spacing: 1px;
+  }
+  .shock-moment .quote {
+    font-size: 14px;
+    color: #fde68a;
+    font-style: italic;
+    line-height: 1.6;
+  }
+
+  /* 核心思考 */
+  .insights-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+    margin-top: 20px;
+  }
+  .insight-card {
+    background: #1e293b;
+    border-radius: 14px;
+    padding: 24px;
+    border: 1px solid #334155;
+  }
+  .insight-card .icon {
+    font-size: 28px;
+    margin-bottom: 12px;
+  }
+  .insight-card h4 {
+    font-size: 16px;
+    color: #fbbf24;
+    margin-bottom: 10px;
+  }
+  .insight-card p {
+    font-size: 13px;
+    color: #cbd5e1;
+    line-height: 1.7;
+  }
+
+  /* 金句 */
+  .quote-block {
+    background: linear-gradient(135deg, #1e293b 0%, #1e3a5f 100%);
+    border-radius: 16px;
+    padding: 32px;
+    margin-top: 40px;
+    text-align: center;
+    border: 1px solid #3b82f6;
+  }
+  .quote-block blockquote {
+    font-size: 18px;
+    color: #f8fafc;
+    font-style: italic;
+    line-height: 1.8;
+    max-width: 640px;
+    margin: 0 auto;
+  }
+  .quote-block .author-line {
+    margin-top: 16px;
+    font-size: 13px;
+    color: #94a3b8;
+  }
+
+  /* 底部 */
+  .footer {
+    text-align: center;
+    margin-top: 48px;
+    font-size: 12px;
+    color: #475569;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- 顶部 -->
+  <div class="header">
+    <h1>当呼吸化为空气</h1>
+    <div class="subtitle">一个神经外科医生，在36岁确诊晚期肺癌后，重新理解生命、死亡与爱的故事</div>
+    <div class="author">—— 保罗·卡拉尼什（Paul Kalanithi）</div>
+  </div>
+
+  <!-- 第一部分：主线行文时间线 -->
+  <div class="section-title">主线行文：从医生到病人的人生轨迹</div>
+
+  <div class="timeline">
+
+    <!-- 阶段1：文学青年 -->
+    <div class="timeline-item docter">
+      <div class="timeline-stage">斯坦福时期 · 2000年代初</div>
+      <h3>文学与科学的双重青年</h3>
+      <div class="event">
+        斯坦福英语文学学士+硕士，同时修人体生物学。迷恋维特根斯坦、塞缪尔·约翰逊，在文学中追问"人为什么活着"，在科学中寻找答案。
+      </div>
+      <div class="shock-moment">
+        <div class="label">震撼瞬间</div>
+        <div class="quote">"我读文学，是为了寻找生命的意义；但文学告诉我，意义需要身体去活出来。"</div>
+      </div>
+    </div>
+
+    <!-- 阶段2：医学生 -->
+    <div class="timeline-item docter">
+      <div class="timeline-stage">医学院 → 住院医生 · 2007-2013</div>
+      <h3>神经外科住院医生：直面死亡的人</h3>
+      <div class="event">
+        医学院毕业后，成为斯坦福神经外科住院医生。每天面对脑瘤、脑出血、瘫痪——这些在生死边缘挣扎的病人。他从"救死扶伤"的理想主义，逐渐理解医生真正的职责。
+      </div>
+      <div class="shock-moment">
+        <div class="label">震撼瞬间</div>
+        <div class="quote">"医生的职责，不是延缓死亡，而是在病人和家属的生活分崩离析时，给他们庇护与看顾，直到他们可以重新站起来，想清楚今后何去何从。"</div>
+      </div>
+    </div>
+
+    <!-- 阶段3：确诊 -->
+    <div class="timeline-item patient">
+      <div class="timeline-stage">确诊时刻 · 2013年5月</div>
+      <h3>36岁：CT片上的白色沙漠</h3>
+      <div class="event">
+        体重骤降，咳嗽不止。自己看CT片——肺部布满肿瘤。从医生瞬间变成病人。精心规划的未来（终身教授、家庭、事业）轰然崩塌。
+      </div>
+      <div class="shock-moment">
+        <div class="label">震撼瞬间</div>
+        <div class="quote">"我在工作中那么熟悉的死神，现在亲自来做私人拜访了。我们终于狭路相逢，正面交锋。然而，我似乎一点也认不出面前这位死神。"</div>
+      </div>
+    </div>
+
+    <!-- 阶段4：重返手术台 -->
+    <div class="timeline-item patient">
+      <div class="timeline-stage">治疗后 · 2013下半年</div>
+      <h3>重返手术台：寻找自我的人</h3>
+      <div class="event">
+        靶向药起效，病情缓解。他决定重返神经外科岗位——不是为了事业，而是因为"外科医生"是他身份认同的核心。他需要知道自己还是不是那个能拿起手术刀的人。
+      </div>
+      <div class="shock-moment">
+        <div class="label">震撼瞬间</div>
+        <div class="quote">"人一旦遭遇顽疾，最需要小心的，是价值观的不断变化。你努力思考自己到底看重些什么，答案也会接踵而至。"</div>
+      </div>
+    </div>
+
+    <!-- 阶段5：复发 -->
+    <div class="timeline-item patient">
+      <div class="timeline-stage">复发 · 2014年</div>
+      <h3>新月形肿瘤：新的未来</h3>
+      <div class="event">
+        CT片上出现新的肿瘤——"像一轮几乎照亮了整个地平线的满月"。他知道自己再也做不了神经外科医生了。但就在这时，他开始写作。妻子露西怀孕了。
+      </div>
+      <div class="shock-moment">
+        <div class="label">震撼瞬间</div>
+        <div class="quote">"别因为你要死了才去做或者不去做某件事情，而是要找到自己认为重要的事情，不管什么时候，死亡都会降临。"</div>
+      </div>
+    </div>
+
+    <!-- 阶段6：父亲 -->
+    <div class="timeline-item patient">
+      <div class="timeline-stage">女儿出生 · 2014年7月</div>
+      <h3>卡迪的出生：新的意义</h3>
+      <div class="event">
+        女儿卡迪出生。他从"病人"变成了"父亲"。在生命的最后阶段，他抱着女儿，给她唱歌，在轮椅上写这本书。
+      </div>
+      <div class="shock-moment">
+        <div class="label">震撼瞬间</div>
+        <div class="quote">"就算身患绝症，保罗也活得非常充实。就算身体已然垮掉，他还是精力充沛，开朗大方，充满希望——不是奢望能病愈，而是希望充实地度过目标明确、意义深远的每一天。"</div>
+      </div>
+    </div>
+
+    <!-- 阶段7：离世 -->
+    <div class="timeline-item patient">
+      <div class="timeline-stage">离世 · 2015年3月9日</div>
+      <h3>最后的呼吸：在家人身边</h3>
+      <div class="event">
+        呼吸衰竭，选择舒适护理（不插管、不心肺复苏）。在妻子、父母、兄弟和8个月大的女儿陪伴下，最后一次呼吸。这本书未完成，但他知道它会出版。
+      </div>
+      <div class="shock-moment">
+        <div class="label">震撼瞬间</div>
+        <div class="quote">"他用轻柔而坚定的声音，清楚明白地说：'我准备好了。'——准备好了撤除呼吸辅助设备，准备好了注射吗啡，准备好了去世了。"</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 第二部分：他的思考 -->
+  <div class="section-title">他的思考：五个用生命验证的命题</div>
+
+  <div class="insights-grid">
+
+    <div class="insight-card">
+      <div class="icon">⚕️</div>
+      <h4>医学的本质不是治愈</h4>
+      <p>当手术无能为力时，医生唯一的工具就是言语。真正的治愈不是把人变回原来的样子，而是在他们破碎之后，陪伴他们找到新的活法。</p>
+    </div>
+
+    <div class="insight-card">
+      <div class="icon">🔄</div>
+      <h4>身份不是固定的</h4>
+      <p>他是医生、是病人、是丈夫、是父亲——身份不是一个标签，而是你不断选择的结果。癌症打碎了旧的自我，但也给了他创造新自我的自由。</p>
+    </div>
+
+    <div class="insight-card">
+      <div class="icon">💛</div>
+      <h4>希望不是"活下去"</h4>
+      <p>希望不是相信奇迹发生，而是在有限的时间里，找到值得做的事。他的希望不是治愈癌症，而是写完这本书、看着女儿长大、和露西好好告别。</p>
+    </div>
+
+    <div class="insight-card">
+      <div class="icon">❤️</div>
+      <h4>爱需要脆弱</h4>
+      <p>确诊前他和露西的婚姻已经走到边缘。直面死亡让他们重新学会袒露脆弱——不是假装坚强，而是承认"我需要你"。</p>
+    </div>
+
+    <div class="insight-card">
+      <div class="icon">🌅</div>
+      <h4>死亡不是禁忌</h4>
+      <p>我们的文化回避死亡，但死亡是每个人的终点。直面它，不是为了悲观，而是为了想清楚：什么才是真正重要的。</p>
+    </div>
+
+  </div>
+
+  <!-- 金句 -->
+  <div class="quote-block">
+    <blockquote>
+      "你永远无法到达完美的境地，但通过不懈的努力奋斗和追求，你能看见那无限接近完美的渐进曲线。"
+    </blockquote>
+    <div class="author-line">—— 保罗·卡拉尼什</div>
+  </div>
+
+  <div class="footer">
+    《当呼吸化为空气》整体架构 · 基于全书内容整理
+  </div>
+
+</div>
+</body>
+</html>

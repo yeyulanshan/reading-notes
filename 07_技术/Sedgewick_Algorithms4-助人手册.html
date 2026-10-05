@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>algs4 助人手册 —— 12 个"帮他看性能问题"的场景</title>
+<style>
+  :root{
+    --paper:#0f1418; --card:#161d23; --edge:#26313a;
+    --ink:#e4edf2; --ink-mid:#a8bcc8; --ink-soft:#6d8494;
+    --core:#4ec9b0; --core-soft:#122a27;
+    --scen:#5aa9e6; --scen-soft:#12202c;
+    --ask:#e6a54e; --ask-soft:#2a2114;
+    --warn:#ee6c5a; --warn-soft:#2b1a18;
+    --perf:#c76ee0; --perf-soft:#241a2b;
+    --key:#d9c26a;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--paper);color:var(--ink);padding:36px 20px 48px;line-height:1.85;-webkit-font-smoothing:antialiased;}
+  .container{max-width:940px;margin:0 auto;}
+
+  .header{text-align:center;margin-bottom:26px;padding:46px 24px 40px;background:var(--card);
+    border:1px solid var(--edge);border-top:5px solid var(--scen);border-radius:4px;}
+  .header .kicker{font-size:11.5px;letter-spacing:2.5px;color:var(--ink-soft);margin-bottom:14px;font-family:Consolas,monospace;}
+  .header h1{font-size:25px;color:var(--ink);margin-bottom:14px;letter-spacing:.5px;line-height:1.5;}
+  .header .subtitle{font-size:14.5px;color:var(--ink-mid);}
+  .header .author{margin-top:16px;font-size:12.5px;color:var(--ink-soft);}
+
+  .guide{background:var(--scen-soft);border:1px solid #1d3140;border-left:4px solid var(--scen);
+    border-radius:3px;padding:20px 24px;margin-bottom:28px;font-size:14.5px;color:var(--ink-mid);}
+  .guide .t{color:var(--scen);font-weight:700;margin-bottom:10px;font-size:13.5px;letter-spacing:.5px;}
+  .guide p+p{margin-top:8px;} .guide strong{color:var(--ink);}
+  .guide ol{margin:8px 0 0 20px;} .guide li{margin-bottom:5px;}
+  .guide code{font-family:Consolas,monospace;color:var(--scen);background:#0d1820;padding:1px 5px;border-radius:2px;font-size:12.5px;}
+
+  .section-title{font-size:20px;font-weight:700;color:var(--ink);margin:44px 0 8px;padding-left:13px;
+    border-left:4px solid var(--scen);letter-spacing:.3px;}
+  .section-sub{color:var(--ink-soft);font-size:13.5px;margin:0 0 18px 17px;}
+
+  .sc{background:var(--card);border:1px solid var(--edge);border-radius:3px;margin-bottom:16px;overflow:hidden;}
+  .sc-head{padding:15px 22px;display:flex;gap:12px;align-items:baseline;background:var(--scen-soft);border-bottom:1px solid var(--edge);}
+  .sc-head .id{font-size:11.5px;font-weight:700;color:#0f1418;background:var(--scen);padding:2px 9px;border-radius:2px;font-family:Consolas,monospace;flex-shrink:0;}
+  .sc-head .tt{font-size:15.5px;font-weight:700;color:var(--ink);line-height:1.6;}
+  .sc-body{padding:18px 22px;}
+  .row{padding:9px 0;border-bottom:1px dashed var(--edge);font-size:13.5px;color:var(--ink-mid);}
+  .row:last-child{border-bottom:none;}
+  .row .lb{font-weight:700;font-size:11.5px;letter-spacing:.3px;display:block;margin-bottom:3px;}
+  .row.say .lb{color:var(--ask);} .row.why .lb{color:var(--core);} .row.stop .lb{color:var(--warn);}
+  .row strong{color:var(--ink);}
+  .row code{font-family:Consolas,monospace;color:var(--core);background:#0d1f1c;padding:1px 5px;border-radius:2px;font-size:12.5px;}
+  .row em{color:var(--perf);font-style:normal;font-weight:600;}
+
+  .quote{background:#2a2517;border:1px solid #3d3520;border-left:4px solid var(--key);
+    border-radius:3px;padding:18px 22px;margin:22px 0;}
+  .quote p{font-size:15px;color:#e8dca0;font-style:italic;line-height:1.8;}
+  .quote .src{margin-top:10px;font-size:12.5px;color:var(--ink-soft);text-align:right;font-style:normal;}
+
+  .checklist{background:var(--card);border:1px solid var(--edge);border-radius:3px;padding:26px;}
+  .checklist h3{color:var(--scen);font-size:16.5px;margin-bottom:16px;}
+  .checklist ul{list-style:none;}
+  .checklist li{padding:5px 0 5px 28px;position:relative;color:var(--ink-mid);font-size:13.5px;}
+  .checklist li::before{content:"☐";position:absolute;left:4px;color:#3d4a54;font-size:15px;}
+
+  .footer{text-align:center;margin-top:44px;padding:22px;color:var(--ink-soft);font-size:12.5px;line-height:1.9;}
+
+  @media(max-width:640px){
+    .header h1{font-size:20px;} .section-title{font-size:17.5px;}
+    body{padding:20px 14px 32px;}
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="kicker">HELPING MANUAL · ALGORITHMS 4TH ED.</div>
+    <h1>12 个"帮他看性能问题"的场景</h1>
+    <div class="subtitle">algs4 助人手册 · Sedgewick &amp; Wayne</div>
+    <div class="author">每一个场景给三样东西：该问什么 · 为什么这么问 · 什么时候该停</div>
+  </div>
+
+  <div class="guide">
+    <div class="t">📖 这份手册和前两本助人手册不同</div>
+    <p>OSTEP 和图像处理的助人手册是"<strong>别人卡住时你可以这样问</strong>"。这一本针对的是一个更具体也更常见的情形：<strong>有人拿着一份跑得很慢的代码来找你。</strong></p>
+    <p>算法性能问题的特殊之处在于——<strong>它的诊断有明确的顺序，而且顺序错了会浪费时间</strong>。先优化常数、最后才发现用错了数据结构，是极常见的浪费。</p>
+    <p>所以我给每个场景三个固定栏目：</p>
+    <ol>
+      <li><strong>该问什么</strong>——具体的问题，可直接用</li>
+      <li><strong>为什么这么问</strong>——这个问题在排除什么</li>
+      <li><strong>什么时候该停</strong>——<em>诊断的成本也要算。有些问题不值得继续查</em></li>
+    </ol>
+    <p>最后一条是这个域特有的纪律：<strong>性能优化的边际收益递减，而可读性的损失是不可逆的。</strong></p>
+  </div>
+
+  <!-- ============ 诊断顺序 ============ -->
+  <div class="section-title">先记住诊断顺序</div>
+  <div class="section-sub">顺序错了会浪费大量时间——这是这份手册最有用的一页</div>
+
+  <table style="width:100%;border-collapse:collapse;font-size:13.5px;margin:13px 0;">
+    <tr>
+      <th style="padding:9px 11px;border:1px solid var(--edge);background:#1b242b;color:var(--core);text-align:left;">步</th>
+      <th style="padding:9px 11px;border:1px solid var(--edge);background:#1b242b;color:var(--core);text-align:left;">先看什么</th>
+      <th style="padding:9px 11px;border:1px solid var(--edge);background:#1b242b;color:var(--core);text-align:left;">为什么必须先看</th>
+    </tr>
+    <tr>
+      <td style="padding:9px 11px;border:1px solid var(--edge);color:var(--ink);"><strong>1</strong></td>
+      <td style="padding:9px 11px;border:1px solid var(--edge);color:var(--ink-mid);"><strong>输入规模 N 是多少</strong></td>
+      <td style="padding:9px 11px;border:1px solid var(--edge);color:var(--ink-mid);">N 小的时候一切增长级都没意义——<em>插入排序在 N=50 时可能比快排快</em></td>
+    </tr>
+    <tr>
+      <td style="padding:9px 11px;border:1px solid var(--edge);color:var(--ink);"><strong>2</strong></td>
+      <td style="padding:9px 11px;border:1px solid var(--edge);color:var(--ink-mid);"><strong>增长级对不对</strong>（用翻倍测试）</td>
+      <td style="padding:9px 11px;border:1px solid var(--edge);color:var(--ink-mid);">如果增长级错了，优化常数毫无意义——<em>O(N²) 再优化也追不上 O(N log N)</em></td>
+    </tr>
+    <tr>
+      <td style="padding:9px 11px;border:1px solid var(--edge);color:var(--ink);"><strong>3</strong></td>
+      <td style="padding:9px 11px;border:1px solid var(--edge);color:var(--ink-mid);"><strong>数据结构选对没有</strong></td>
+      <td style="padding:9px 11px;border:1px solid var(--edge);color:var(--ink-mid);">换成哈希表可能直接省掉一个 <code>log N</code>——<em>比任何常数优化都值</em></td>
+    </tr>
+    <tr>
+      <td style="padding:9px 11px;border:1px solid var(--edge);color:var(--ink);"><strong>4</strong></td>
+      <td style="padding:9px 11px;border:1px solid var(--edge);color:var(--ink-mid);"><strong>访问模式</strong>（内存层面）</td>
+      <td style="padding:9px 11px;border:1px solid var(--edge);color:var(--ink-mid);">这一层 algs4 不管——<strong>需要 Dive into Systems</strong></td>
+    </tr>
+    <tr>
+      <td style="padding:9px 11px;border:1px solid var(--edge);color:var(--ink);"><strong>5</strong></td>
+      <td style="padding:9px 11px;border:1px solid var(--edge);color:var(--ink-mid);">最后才看<strong>常数因子和微优化</strong></td>
+      <td style="padding:9px 11px;border:1px solid var(--edge);color:var(--ink-mid);">这一层收益最小、代价最大（可读性）</td>
+    </tr>
+  </table>
+
+  <div class="quote">
+    <p>"The experiments we design must be reproducible and the hypotheses that we formulate must be falsifiable."</p>
+    <div class="src">—— 1.4 节。诊断也一样：先造一个能<b>推翻</b>你猜测的实验，而不是先改代码</div>
+  </div>
+
+  <!-- ============ 场景 ============ -->
+  <div class="section-title">12 个场景</div>
+
+  <div class="sc">
+    <div class="sc-head"><span class="id">S1</span><span class="tt">"这个程序跑得太慢了"——还没说是多慢、在什么规模上慢</span></div>
+    <div class="sc-body">
+      <div class="row say"><span class="lb">该问什么</span>"你的输入规模 N 大概是多少？慢是指在什么规模下慢？N 翻一倍，时间大概变成几倍？"</div>
+      <div class="row why"><span class="lb">为什么这么问</span>第一个问题排除"N 太小所以增长级无意义"；第三个问题直接把增长级问出来——<strong>不用看代码就能缩小一半范围</strong>。<em>"N 翻倍时间变 4 倍"和"变 2 倍"是完全不同的两个问题。</em></div>
+      <div class="row stop"><span class="lb">什么时候该停</span>如果他答不出 N（比如"就是感觉慢"），<strong>先让他测一次</strong>再谈。凭感觉的性能问题有一半是伪问题——<em>可能慢的不是这段代码，可能是启动时间或者 I/O。</em></div>
+    </div>
+  </div>
+
+  <div class="sc">
+    <div class="sc-head"><span class="id">S2</span><span class="tt">"我优化了内层循环，快了一点但还是不够"</span></div>
+    <div class="sc-body">
+      <div class="row say"><span class="lb">该问什么</span>"你改的是常数，还是增长级？先做一次翻倍测试看看比值。"</div>
+      <div class="row why"><span class="lb">为什么这么问</span>这是最常见的浪费：<strong>在错误的增长级上优化常数</strong>。如果程序是 <code>O(N²)</code> 而本可以是 <code>O(N log N)</code>，那把内层循环优化到极限也只是把常数从 10 降到 5——<em>而换算法能把 N=10⁶ 时的耗时从几小时降到几秒。</em></div>
+      <div class="row stop"><span class="lb">什么时候该停</span>如果翻倍比值已经是 ≈2（线性）而且业务能接受，<strong>就停</strong>。<em>不是所有程序都需要更快——"够快"是一个业务判断，不是技术判断。</em></div>
+    </div>
+  </div>
+
+  <div class="sc">
+    <div class="sc-head"><span class="id">S3</span><span class="tt">"测试环境很快，上线就慢"</span></div>
+    <div class="sc-body">
+      <div class="row say"><span class="lb">该问什么</span>"测试数据和线上数据在<b>分布</b>上一样吗？特别是——线上数据是有序的吗？有大量重复键吗？"</div>
+      <div class="row why"><span class="lb">为什么这么问</span>这是 algs4 里两类前提失效的典型症状：</div>
+      <div class="row"><span class="lb" style="color:var(--perf);">失效一</span><strong>BST 退化</strong>：书里的 <code>~2 ln N</code> <em>要求"随机键"</em>。如果线上数据有序（时间戳、自增 ID），未平衡的 BST 会退化成链表，变成 <code>O(N)</code>。<strong>测试环境用随机数据全过，上线就挂。</strong></div>
+      <div class="row"><span class="lb" style="color:var(--perf);">失效二</span><strong>哈希碰撞</strong>：书里的哈希表性能依赖 <em>Assumption J（均匀散列）</em>。如果键的分布集中，或者对手能构造键，哈希表会退化。<strong>这是真实发生过的 DoS 攻击类别。</strong></div>
+      <div class="row stop"><span class="lb">什么时候该停</span>如果确认是分布问题，<strong>改数据结构，不要改代码</strong>——把 BST 换红黑树，或者给散列加随机种子。这两处改动都是"买保险"，不是"提速"。</div>
+    </div>
+  </div>
+
+  <div class="sc">
+    <div class="sc-head"><span class="id">S4</span><span class="tt">"我们用了哈希表，理论上 O(1)，但还是很慢"</span></div>
+    <div class="sc-body">
+      <div class="row say"><span class="lb">该问什么</span>"负载因子 α 是多少？散列函数是什么？键的类型是什么？"</div>
+      <div class="row why"><span class="lb">为什么这么问</span>书里的公式直接指出了问题所在——线性探测的探测次数是 <code>~½(1 + 1/(1−α))</code>：</div>
+      <div class="row"><span class="lb" style="color:var(--perf);">关键数字</span>α = 0.5 时约 1.5 次探测；α = 0.9 时约 <strong>5.5 次</strong>；α → 1 时趋向无穷。<strong>表越满，代价不是线性上升，是急剧上升。</strong></div>
+      <div class="row"><span class="lb">第二问的理由</span>如果散列函数是"把 ASCII 值相加"这类简单形式，<em>Assumption J 直接被违反</em>——不同排列的相同字符集会产生相同散列。</div>
+      <div class="row stop"><span class="lb">什么时候该停</span>把 α 降到 1/2 以下（或 1/8）、换一个像样的散列函数，通常就够了。<strong>如果还不行，说明瓶颈不在哈希表</strong>——回去做 S1 的翻倍测试。</div>
+    </div>
+  </div>
+
+  <div class="sc">
+    <div class="sc-head"><span class="id">S5</span><span class="tt">"我们要支持范围查询，但用的是哈希表"</span></div>
+    <div class="sc-body">
+      <div class="row say"><span class="lb">该问什么</span>"你需要哪些操作？除了查找，还要"找出所有在 [a,b] 之间的键"吗？"</div>
+      <div class="row why"><span class="lb">为什么这么问</span>这是 API 层面的错误，不是性能问题。<strong>哈希表不提供有序操作，因为键被散列打散了——"顺序"这个概念在它里面不存在。</strong>书里的命题说得很清楚：<em>floor / ceiling / rank / select / 范围查询这些操作"take time proportional to the height in a BST"</em>——它们压根没有哈希表的版本。</div>
+      <div class="row"><span class="lb" style="color:var(--ask);">改什么</span>换红黑树（保证 <code>2 lg N</code>）或者用有序数组（如果几乎不插入）。<strong>注意：这不是"把哈希表优化一下"能解决的。</strong></div>
+      <div class="row stop"><span class="lb">什么时候该停</span>如果范围查询很少见（比如只在月末报表时用一次），<strong>可以保留哈希表 + 定期排序</strong>。这取决于查询频率——<em>是策略问题，问业务，不是问代码。</em></div>
+    </div>
+  </div>
+
+  <div class="sc">
+    <div class="sc-head"><span class="id">S6</span><span class="tt">"每次都取最小元素，所以我每次都对数组排一次序"</span></div>
+    <div class="sc-body">
+      <div class="row say"><span class="lb">该问什么</span>"这个'取最小'是在循环里反复做的吗？插入和取最小的频率各是多少？"</div>
+      <div class="row why"><span class="lb">为什么这么问</span>这是典型的"<strong>用错误的结构做对了事</strong>"。每次排序是 <code>O(N log N)</code>，做 N 次就是 <code>O(N² log N)</code>；而<strong>优先队列</strong>让插入和取最小各只要 <code>O(log N)</code>。</div>
+      <div class="row"><span class="lb" style="color:var(--core);">书里的命题</span><code>1 + lg n</code> 次比较插入、<code>2 lg n</code> 次比较取最大。而且<strong>堆的构造是线性的</strong>（从下往上 sink）。</div>
+      <div class="row stop"><span class="lb">什么时候该停</span>如果只需要"最小"而不需要"第 k 小"，堆就够了。<strong>但如果还要"第 k 小"或"中位数"，堆不够</strong>——（可）用平衡 BST 带子树计数。</div>
+    </div>
+  </div>
+
+  <div class="sc">
+    <div class="sc-head"><span class="id">S7</span><span class="tt">"这个函数大部分时候很快，偶尔卡一下"</span></div>
+    <div class="sc-body">
+      <div class="row say"><span class="lb">该问什么</span>"卡顿有规律吗？是不是在数据量达到某个阈值时出现？这个结构是动态扩容的吗？"</div>
+      <div class="row why"><span class="lb">为什么这么问</span>这几乎肯定是<strong>摊还代价的尖峰</strong>。书里的命题：可扩容数组"any sequence of N operations takes time proportional to N"——<em>注意说的是<b>序列</b>，不是<b>单次操作</b>。</em>所以扩容那一次会花掉几百倍的时间。</div>
+      <div class="row"><span class="lb" style="color:var(--ask);">怎么确认</span>让他<b>记录每一次操作的耗时</b>并画出来。链表实现是一条平线，数组实现是"平 + 偶发尖峰"。<strong>这张图能让他在五分钟内理解"摊还"这个词。</strong></div>
+      <div class="row stop"><span class="lb">什么时候该停</span>看业务能不能容忍尖峰。能容忍就<b>什么都别改</b>；不能容忍（实时音视频、交互界面）才换链表或者<b>预分配足够容量</b>。<em>后者的成本通常最低。</em></div>
+    </div>
+  </div>
+
+  <div class="sc">
+    <div class="sc-head"><span class="id">S8</span><span class="tt">"我用二分查找，但插入很慢"</span></div>
+    <div class="sc-body">
+      <div class="row say"><span class="lb">该问什么</span>"插入频繁吗？查找和插入的比例大概是多少？"</div>
+      <div class="row why"><span class="lb">为什么这么问</span>因为这两件事的代价正好是反的：</div>
+      <div class="row"><span class="lb" style="color:var(--core);">书里的数据</span>二分查找 <code>lg N + 1</code> 次比较（很快）；但<strong>有序数组插入要 <code>~2N</code> 次数组访问</strong>（很慢，因为要搬移元素）。</div>
+      <div class="row"><span class="lb" style="color:var(--ask);">怎么选</span>看比例：<em>插入少 → 有序数组；插入多 → 红黑树（<code>2 lg N</code> 查、<code>2 lg N</code> 插）；只要"在不在" → 哈希表。</em></div>
+      <div class="row stop"><span class="lb">什么时候该停</span>如果插入其实很少（比如配置表，启动时加载一次），<strong>那 <code>~2N</code> 根本不重要</strong>——每次插入 2N 次访问，插入 100 次也就 200N，相比后续的百万次查找可以忽略。<em>先问比例，再谈优化。</em></div>
+    </div>
+  </div>
+
+  <div class="sc">
+    <div class="sc-head"><span class="id">S9</span><span class="tt">"图算法跑不动，我们有 10⁶ 个节点"</span></div>
+    <div class="sc-body">
+      <div class="row say"><span class="lb">该问什么</span>"图是稀疏的还是稠密的？边数 E 大概是多少？用的邻接表还是邻接矩阵？"</div>
+      <div class="row why"><span class="lb">为什么这么问</span>因为<strong>图算法的复杂度必须同时用 V 和 E 表示</strong>。书里的命题：DFS 的预处理时间与空间"proportional to V + E"。</div>
+      <div class="row"><span class="lb" style="color:var(--warn);">最常见的坑</span><strong>用邻接矩阵实现 DFS</strong>——那会让遍历变成 <code>O(V²)</code>，即使图是稀疏的。<em>10⁶ 个节点的 V² 是 10¹²，完全跑不动。</em></div>
+      <div class="row stop"><span class="lb">什么时候该停</span>换邻接表通常就解决了。如果换完还是慢，<strong>去看是不是 V 或 E 比你以为的大一个数量级</strong>——很多人对自己的数据规模估计是错的。</div>
+    </div>
+  </div>
+
+  <div class="sc">
+    <div class="sc-head"><span class="id">S10</span><span class="tt">"这段排序结果不稳定，业务出错了"</span></div>
+    <div class="sc-body">
+      <div class="row say"><span class="lb">该问什么</span>"你的业务依赖'相等元素的原始顺序'吗？如果是，为什么？"</div>
+      <div class="row why"><span class="lb">为什么这么问</span>这是<strong>先确认需求是否合理</strong>再动手。而且如果确实需要稳定，答案是确定的：<strong>用归并排序</strong>（稳定）；快排不稳定、堆排序不稳定。<em>而书里又说"Quicksort is the fastest general-purpose sort"——所以这是一个真实的取舍，不是白拿的。</em></div>
+      <div class="row"><span class="lb" style="color:var(--ask);">替代方案</span>更常见的做法是<strong>让比较键带上原始序号作为次要键</strong>——这样任何排序都"稳定"了，代价是比较稍慢。<em>这通常比换排序算法更好，因为它不牺牲速度。</em></div>
+      <div class="row stop"><span class="lb">什么时候该停</span>如果只是"结果看起来顺序不对"而不是业务逻辑依赖它，<strong>那就什么都不用改</strong>——不稳定不等于错误。</div>
+    </div>
+  </div>
+
+  <div class="sc">
+    <div class="sc-head"><span class="id">S11</span><span class="tt">"我们在优化一个 NP 完全问题的精确解"</span></div>
+    <div class="sc-body">
+      <div class="row say"><span class="lb">该问什么</span>"这真的是 NP 完全问题吗？还是只是我们现在的算法慢？规模到底要多大？"</div>
+      <div class="row why"><span class="lb">为什么这么问</span>因为这两者的应对完全不同。<strong>如果只是"现在的算法慢"，改进算法有用；如果是 NP 完全，改进算法只能改善常数，突破不了指数墙。</strong></div>
+      <div class="row"><span class="lb" style="color:var(--core);">书里的位置</span>第 6.5 节（归约）教你<strong>怎么判断</strong>——把问题归约到一个已知难的问题；6.6 节（不可解性，全书最长）讲<strong>边界在哪</strong>。</div>
+      <div class="row"><span class="lb" style="color:var(--ask);">如果是 NP 完全，该怎么办</span>换目标，不是换算法：<em>① 求近似解（且知道近似比）；② 用启发式（快但不保证）；③ 把问题限制在一个可解的规模上；④ 用随机化得到一个"比被闪电击中更不可能失效"的保证。</em></div>
+      <div class="row stop"><span class="lb">什么时候该停</span>这一条最需要早点说：<strong>在花三个月优化一个指数算法之前，先花一天确认它是不是指数算法。</strong><em>这是这一域最缺的一课，也是最省钱的一课。</em></div>
+    </div>
+  </div>
+
+  <div class="sc">
+    <div class="sc-head"><span class="id">S12</span><span class="tt">"我们已经很快了，但还想再快 20%"</span></div>
+    <div class="sc-body">
+      <div class="row say"><span class="lb">该问什么</span>"这 20% 是业务要求，还是技术上的追求？现在的瓶颈在算法、内存，还是 I/O？"</div>
+      <div class="row why"><span class="lb">为什么这么问</span>因为到了这一步，<strong>algs4 能提供的帮助已经用完了</strong>。如果增长级对了、数据结构选对了，剩下的瓶颈通常在两处：</div>
+      <div class="row"><span class="lb" style="color:var(--perf);">剩下的两个来源</span><strong>① 内存层级</strong>——访问模式、缓存友好性（<em>Dive into Systems 的 C11/C12</em>）；<strong>② 并发</strong>——多线程、锁争用（<em>C14 + OSTEP</em>）。<strong>这两块都不在 algs4 的范围里。</strong></div>
+      <div class="row stop"><span class="lb">什么时候该停</span><strong>这一条我想说得直接一点：为了 20% 而牺牲可读性，通常是坏交易。</strong><em>性能优化的边际收益递减，而可读性的损失是不可逆的——三年后没人能读懂那些为了 20% 写出来的代码，而硬件已经快了三倍。</em></div>
+    </div>
+  </div>
+
+  <!-- ============ 收尾 ============ -->
+  <div class="section-title">这份手册自己的一条纪律</div>
+
+  <div style="background:var(--warn-soft);border-left:4px solid var(--warn);border-radius:0 3px 3px 0;padding:18px 22px;font-size:14.5px;color:#f0b3a9;">
+    <p style="margin-bottom:10px;"><strong style="color:var(--warn);">诊断的成本也要算。</strong></p>
+    <p>性能优化有一个很容易被忽略的性质：<strong>投入产出比是递减的，而且前期投入远远小于后期。</strong></p>
+    <p style="margin-top:9px;">按这份手册的顺序，第 1–3 步（规模、增长级、数据结构）通常只需要<em>几分钟到几小时</em>，能带来<strong>数量级</strong>的提升；第 4–5 步（内存、常数）需要<em>几天到几周</em>，通常只能带来<strong>百分之几十</strong>。</p>
+    <p style="margin-top:9px;">——所以<strong>正确的策略是在第 3 步做完之后就问一句"够了吗"。</strong>如果够了，就停。<em>这不是偷懒，这是把工程判断用在该用的地方。</em></p>
+  </div>
+
+  <div class="quote">
+    <p>"Quicksort is the fastest general-purpose sort."</p>
+    <div class="src">—— 书里把它标为 <strong>Property</strong> 而不是 Proposition。这个区别很重要：<em>"最快"取决于常数因子、缓存、具体机器——它不是一个可以被证明的数学结论。</em></div>
+  </div>
+
+  <div class="checklist" style="margin-top:26px;">
+    <h3>✅ 12 项诊断自测（面向帮你自己的情况）</h3>
+    <ul>
+      <li>我能说出诊断的正确顺序（规模 → 增长级 → 数据结构 → 内存 → 常数）</li>
+      <li>我知道为什么"先看常数因子"是浪费</li>
+      <li>我会用翻倍测试测增长级，而不是靠猜</li>
+      <li>我知道 N 太小时增长级无意义</li>
+      <li>我能说出 BST 退化的条件（有序输入）</li>
+      <li>我能说出哈希表失效的条件（Assumption J 被违反）</li>
+      <li>我知道哈希表不支持范围查询，而且这不是性能问题</li>
+      <li>我能解释"摊还 O(1)"为什么不能用在单次操作上</li>
+      <li>我知道二分查找的代价优势与有序数组插入的代价劣势</li>
+      <li>我知道图算法必须同时看 V 和 E，以及邻接矩阵的陷阱</li>
+      <li>我知道稳定排序选归并，以及"加次要键"这个更好的替代</li>
+      <li>我知道遇到 NP 完全问题时该换目标而不是换算法</li>
+    </ul>
+  </div>
+
+  <div class="footer">
+    algs4 助人手册 · Sedgewick &amp; Wayne《Algorithms》第 4 版<br>
+    12 个场景 · 诊断顺序 · 每个场景都标明"什么时候该停"<br>
+    <em>先问规模，再问增长级，最后才问常数</em>
+  </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>阶级地位 × 通用解释者 —— 解释能力是否受社会位置限制</title>
+<style>
+  :root{
+    --paper:#0d1116; --card:#151b22; --edge:#27313b;
+    --ink:#e6ecf2; --ink-mid:#a3b1bf; --ink-soft:#6b7a8a;
+    --mao:#d9694f; --mao-soft:#2a1712;
+    --dd:#5aa9e6;  --dd-soft:#0f2029;
+    --both:#5cc98f; --both-soft:#11251b;
+    --gap:#e0a13c; --gap-soft:#2a2113;
+    --key:#e0c46a; --key-soft:#2a2517;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--paper);color:var(--ink);padding:36px 20px 52px;line-height:1.95;-webkit-font-smoothing:antialiased;}
+  .container{max-width:1020px;margin:0 auto;}
+  .header{text-align:center;margin-bottom:24px;padding:44px 24px 38px;background:var(--card);
+    border:1px solid var(--edge);border-radius:4px;position:relative;overflow:hidden;}
+  .header::before{content:"";position:absolute;top:0;left:0;width:50%;height:5px;background:var(--mao);}
+  .header::after{content:"";position:absolute;top:0;right:0;width:50%;height:5px;background:var(--dd);}
+  .header .kicker{font-size:11.5px;letter-spacing:2.5px;color:var(--ink-soft);margin-bottom:14px;font-family:Consolas,monospace;}
+  .header h1{font-size:23px;color:var(--ink);margin-bottom:13px;letter-spacing:.5px;line-height:1.5;}
+  .header .subtitle{font-size:14.4px;color:var(--ink-mid);}
+  .header .meta{margin-top:16px;font-size:12.5px;color:var(--ink-soft);line-height:1.9;}
+  .header .meta b{color:var(--mao);font-weight:600;}
+  .header .meta i{color:var(--dd);font-style:normal;font-weight:600;}
+  .lead{background:var(--card);border:1px solid var(--edge);border-radius:3px;
+    padding:22px 26px;margin-bottom:26px;font-size:14.6px;color:var(--ink-mid);}
+  .lead .t{color:var(--key);font-weight:700;margin-bottom:11px;font-size:14px;}
+  .lead p+p{margin-top:9px;} .lead strong{color:var(--ink);}
+  .lead em{color:var(--both);font-style:normal;}
+  h2{font-size:19.5px;font-weight:700;color:var(--ink);margin:42px 0 6px;padding-left:14px;
+    border-left:4px solid var(--key);letter-spacing:.4px;}
+  .sub{color:var(--ink-soft);font-size:13.5px;margin:0 0 18px 18px;}
+  h3{font-size:15.6px;color:var(--ink);margin:26px 0 8px;}
+  .vs{display:grid;grid-template-columns:1fr 1fr;gap:0;margin:16px 0;
+    border:1px solid var(--edge);border-radius:3px;overflow:hidden;}
+  .vs-a{background:var(--mao-soft);padding:16px 19px;border-right:1px solid var(--edge);}
+  .vs-b{background:var(--dd-soft);padding:16px 19px;}
+  .vs-h{font-size:11.5px;font-weight:700;letter-spacing:1.2px;margin-bottom:10px;font-family:Consolas,monospace;}
+  .vs-a .vs-h{color:var(--mao);} .vs-b .vs-h{color:var(--dd);}
+  .vs-cn{font-size:14.4px;line-height:2;color:var(--ink);}
+  .vs-src{font-size:11.5px;color:var(--ink-soft);margin-top:8px;}
+  .quote{border-radius:3px;padding:16px 22px;margin:16px 0;
+    background:var(--key-soft);border:1px solid #3d3520;border-left:4px solid var(--key);}
+  .quote .cn{font-size:15.2px;color:#efe3b8;line-height:2.05;letter-spacing:.4px;}
+  .quote .src{margin-top:8px;font-size:12.5px;color:var(--ink-soft);text-align:right;}
+  .quote .gloss{margin-top:9px;font-size:13.4px;color:var(--ink-mid);border-top:1px dashed #4a4028;padding-top:9px;}
+  .q-mao{border-left-color:var(--mao);background:#241512;border-color:#3d231c;}
+  .q-mao .cn{color:#f0cfc4;} .q-mao .gloss{border-top-color:#4a2c24;}
+  .q-dd{border-left-color:var(--dd);background:#0f2029;border-color:#1d3646;}
+  .q-dd .cn{color:#c8e2f5;} .q-dd .gloss{border-top-color:#1d3646;}
+  .box{border-radius:3px;padding:16px 22px;margin:18px 0;font-size:13.8px;}
+  .box.good{background:var(--both-soft);border:1px solid #1d3a2a;border-left:4px solid var(--both);color:#a8dcc0;}
+  .box.good strong{color:var(--both);}
+  .box.gap{background:var(--gap-soft);border:1px solid #3d3220;border-left:4px solid var(--gap);color:#e8c99a;}
+  .box.gap strong{color:var(--gap);}
+  .box.key{background:var(--key-soft);border:1px solid #3d3520;border-left:4px solid var(--key);color:#e8dca0;}
+  .box.key strong{color:var(--key);}
+  .box em{font-style:normal;color:var(--ink);}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.4px;}
+  th,td{padding:9px 12px;border:1px solid var(--edge);text-align:left;vertical-align:top;}
+  th{background:#18212a;color:var(--key);font-weight:700;font-size:12.5px;}
+  td{color:var(--ink-mid);} td strong{color:var(--ink);}
+  td.a{color:#eab5a6;} td.b{color:#a8d2ee;}
+  ul,ol{margin:10px 0 0 22px;} li{margin-bottom:6px;color:var(--ink-mid);font-size:13.6px;}
+  li strong{color:var(--ink);}
+  .footer{text-align:center;margin-top:46px;padding:22px;color:var(--ink-soft);font-size:12.5px;line-height:1.95;}
+  @media(max-width:700px){
+    .vs{grid-template-columns:1fr;} .vs-a{border-right:none;border-bottom:1px solid var(--edge);}
+    .header h1{font-size:18.5px;} h2{font-size:17px;} body{padding:20px 14px 34px;}
+    table{font-size:11.5px;} .quote .cn{font-size:14px;}
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="kicker">CLASS POSITION × UNIVERSAL EXPLAINER</div>
+    <h1>阶级地位 × 通用解释者</h1>
+    <div class="subtitle">解释能力是否受社会位置限制 —— 两份文本最尖锐的一处对立</div>
+    <div class="meta">
+      <b>《实践论》《矛盾论》</b>《毛泽东选集》第一卷 p285–342（<b>9,700 + 23,735 汉字</b>）<br>
+      <i>《无穷的开始》</i> 第 3、9、15、16 章（<i>595 页底本，全 18 章已分章落盘</i>）<br>
+      全部引文摘自两书原文，已逐句核对
+    </div>
+  </div>
+
+  <div class="lead">
+    <div class="t">先说这份文档要避开的一个陷阱</div>
+    <p>这一处对立看起来很简单：<strong>一方说思想带阶级烙印，一方说人是通用解释者。</strong></p>
+    <p><strong>但直接对撞是错的</strong>，因为两份文本说的根本不是同一种"限制"：</p>
+    <ul>
+      <li><strong>毛选说的是实际的认识状况</strong> —— 在某个社会里，<em>人们事实上</em>能不能看清事情</li>
+      <li><strong>多伊奇说的是原则上的可能性</strong> —— 人类的解释能力<em>有没有上限</em></li>
+    </ul>
+    <p><strong>"事实上受限"和"原则上无上限"并不矛盾</strong> —— 后者说的是"没有不可跨越的天花板"，
+    它不否认当下有很多障碍。</p>
+    <p><em>所以这份文档要做的是：先把两种限制分清，再看它们在哪一处<strong>真的</strong>撞上。</em></p>
+    <p><strong>⚠️ 边界</strong>：只做文本层面的对照，不涉及对历史过程与政治实践的评价。</p>
+  </div>
+
+  <!-- ==================== 一 ==================== -->
+  <h2>一 · 双方原文</h2>
+
+  <h3>甲方 · 毛泽东：思想打上阶级的烙印</h3>
+
+  <div class="quote q-mao">
+    <div class="cn">在阶级社会中，每一个人都在一定的阶级地位中生活，<strong>各种思想无不打上阶级的烙印。</strong><br><br>
+    在很长的历史时期内，大家对于社会的历史只能限于片面的了解，
+    这一方面是由于<strong>剥削阶级的偏见经常歪曲社会的历史</strong>，
+    另方面，则由于<strong>生产规模的狭小，限制了人们的眼界</strong>。</div>
+    <div class="src">《实践论》</div>
+    <div class="gloss">注意这一段给了<strong>两个不同的原因</strong>：<br>
+    ① <strong>偏见</strong>（认识被立场所歪曲）② <strong>眼界的物质限制</strong>（生产规模小，看不到）<br>
+    <em>这两个原因的性质完全不同 —— 后面第五节会用到这个区分。</em></div>
+  </div>
+
+  <div class="quote q-mao">
+    <div class="cn">马克思以前的唯物论，<strong>离开人的社会性，离开人的历史发展</strong>，去观察认识问题，
+    因此不能了解认识对社会实践的依赖关系。</div>
+    <div class="src">《实践论》开篇</div>
+    <div class="gloss"><strong>这是它的方法论立场</strong>：认识问题不能脱离社会性来谈。
+    <em>而这一句正是对多伊奇式"抽象的认识主体"的预先批评 —— 尽管多伊奇晚于他半个多世纪。</em></div>
+  </div>
+
+  <div class="quote q-mao">
+    <div class="cn">我们的教条主义者是懒汉，他们拒绝对于具体事物做任何艰苦的研究工作，
+    他们把一般真理看成是凭空出现的东西，<strong>把它变成为人们所不能够捉摸的纯粹抽象的公式。</strong></div>
+    <div class="src">《矛盾论》「矛盾的特殊性」</div>
+  </div>
+
+  <h3>乙方 · 多伊奇：人是通用解释者</h3>
+
+  <div class="quote q-dd">
+    <div class="cn">人类和其他物种之间的差异，在于人类所运用的知识类型（<strong>解释性知识</strong>而不是经验法则）
+    以及创造知识的方法（<strong>猜想和批评的传统</strong>，而不是基因的变异和选择）。<br><br>
+    所有其他生物都只能在适合它们栖息的特定环境中活动，而<strong>人类可以把生物圈这样不宜栖居的环境
+    转变成自身的生命支持系统</strong>……人类的身体（包括大脑）<strong>可以把任意事物转换成任意事物，
+    只要自然法则允许</strong>。他们是"<strong>通用建造者</strong>"。</div>
+    <div class="src">《无穷的开始》第 3 章</div>
+    <div class="gloss">注意它的限定：<strong>"只要自然法则允许"</strong>。
+    <em>所以它主张的不是"人能做成任何事"，而是"没有自然法则之外的障碍"。</em></div>
+  </div>
+
+  <div class="quote q-dd">
+    <div class="cn">乐观主义原则：<strong>所有的恶是知识不足造成的。</strong><br><br>
+    它认为，<strong>没有什么根本性的障碍、自然规律或超自然法令能阻碍进步。</strong>
+    每当我们改善事物的努力失败……<strong>永远都是因为我们没有及时知道得够多。</strong></div>
+    <div class="src">《无穷的开始》第 9 章</div>
+    <div class="gloss"><strong>这就是那个把双方推到对立面的断言。</strong><br>
+    毛选说"各种思想无不打上阶级的烙印"——那是一种<em>结构性的</em>限制；
+    多伊奇说"所有失败都是知识不足"——那是把<em>一切</em>限制都归结为知识。</div>
+  </div>
+
+  <!-- ==================== 二 ==================== -->
+  <h2>二 · 关键：这是两种不同的「限制」</h2>
+  <div class="sub">不先分清这个，后面的对照会全部跑偏</div>
+
+  <table>
+    <tr><th style="width:20%">限制的类型</th><th style="width:40%">它说的是什么</th><th>多伊奇承认吗</th></tr>
+    <tr>
+      <td class="b"><strong>原则上不可逾越</strong><br>（自然法则、逻辑不可能）</td>
+      <td>不管你知道多少，这件事都不能被理解或做到</td>
+      <td><strong>承认</strong>——他说"只要自然法则允许"，并明确说"物理规律所禁止的事物未必就是恶的"</td>
+    </tr>
+    <tr>
+      <td class="a"><strong>实际上的限制</strong><br>（偏见、眼界、缺知识）</td>
+      <td>当下看不到、想不到、做不到，但原则上可以克服</td>
+      <td><strong>当然承认这是"限制"，但他说它属于"知识不足"</strong>——
+      所以它<b>不是</b>根本障碍</td>
+    </tr>
+  </table>
+
+  <div class="box gap">
+    <p><strong>★ 于是真正的问题变成了这个：</strong></p>
+    <p style="font-size:15.5px;color:var(--ink);">"被打上阶级烙印"这件事，属于哪一种限制？</p>
+    <p><strong>如果属于第一种</strong>（原则上不可逾越）→ 那它和"通用解释者"<strong>直接矛盾</strong>。</p>
+    <p><strong>如果属于第二种</strong>（实际上的、可克服的）→ 那它<strong>不矛盾</strong>，
+    而多伊奇会把它归类为"知识不足"。</p>
+    <p><em>而毛选的原文……我认为两种读法都支持一点。这就是它的张力所在。</em></p>
+  </div>
+
+  <!-- ==================== 三 ==================== -->
+  <h2>三 · 第一处真对立：限制能不能被自己解除？</h2>
+  <div class="sub">这一处我认为是真的撞上了，而且毛选有胜势</div>
+
+  <p style="color:var(--ink-mid);font-size:14px;">毛选给的那两个原因里，<strong>第二个是纯物质的</strong>：
+  "生产规模的狭小，限制了人们的眼界"。</p>
+
+  <p style="color:var(--ink-mid);font-size:14px;">而多伊奇对这类限制的处理是（第 3 章）：人类"可以把任意事物转换成任意事物"，
+  "可以把生物圈这样不宜栖居的环境转变成自身的生命支持系统"。</p>
+
+  <div class="box gap">
+    <p><strong>多伊奇的回答是：物质条件不是限制，是待解决的问题。</strong></p>
+    <p style="font-size:15.5px;color:var(--ink);text-align:center;line-height:2;">
+      人类不是被环境支持的，是靠创造知识自我支持的。
+    </p>
+    <p><strong>所以"生产规模小"不构成认识上的根本限制</strong>——只要知识够，可以扩大生产规模。</p>
+    <p><em>这一处他赢了。而且这正好是他第 3 章"宇宙飞船地球号"那一段的要点。</em></p>
+  </div>
+
+  <div class="box gap">
+    <p><strong>★ 但毛选的第一个原因，多伊奇没有直接处理：偏见。</strong></p>
+    <p>"<strong>剥削阶级的偏见经常歪曲社会的历史</strong>"——这不是"缺知识"，是<strong>错误的利益结构在系统性地生产错误的认识</strong>。</p>
+    <p>多伊奇的框架里有"坏解释"这个概念，但坏解释的来源是什么？他主要归因于<strong>缺少批评传统</strong>（第 15 章"反理性谜米"）。</p>
+    <p><em>而毛选说得更具体：不只是没有批评传统，而是<b>有人从错误的认识中获利</b>，
+    所以会主动去压制批评、生产偏见。</em></p>
+    <p><strong>这是一个多伊奇框架里没有的机制。</strong> —— 而它至少是值得考虑的：</p>
+    <p>如果反理性谜米的传播不只是"因为没有批评"，而是<em>"因为有人的利益依赖于它不被批评"</em>，
+    那么"建立批评的传统"就不是一个中立的技术动作，<strong>而会遭遇有组织的抵抗。</strong></p>
+    <p><em>多伊奇第 15 章讲静态社会的"残酷斗争"时隐约碰到了这一点，但没有把它概念化。</em></p>
+  </div>
+
+  <!-- ==================== 四 ==================== -->
+  <h2>四 · 第二处真对立：解释者是谁？</h2>
+  <div class="sub">这一处是结构性的，比第一处更深</div>
+
+  <div class="vs">
+    <div class="vs-a">
+      <div class="vs-h">毛选 · 解释者是一个阶级</div>
+      <div class="vs-cn">人们能够对于社会历史的发展作全面的历史的了解，把对于社会的认识变成了科学，这只<strong>是到了伴随巨大生产力——大工业而出现近代无产阶级的时候</strong>，这就是马克思主义的科学。</div>
+      <div class="vs-src">《实践论》</div>
+      <div class="vs-cn" style="margin-top:12px;">所以<strong>能作出全面认识</strong>，本身是有<b>社会条件</b>的，而且和<b>特定的阶级位置</b>相关。</div>
+    </div>
+    <div class="vs-b">
+      <div class="vs-h">多伊奇 · 解释者是「人类」</div>
+      <div class="vs-cn">我已经知道，除人类以外，还有几个物种有能力拥有文化知识……<strong>因为这些生物都不能创造或运用解释性知识。</strong></div>
+      <div class="vs-src">第 3 章</div>
+      <div class="vs-cn" style="margin-top:12px;">以及："<strong>宇宙中可能存在的其他人都应当有着同样的特性</strong>"——
+      解释能力属于<b>物种层面</b>，不属于阶级。</div>
+    </div>
+  </div>
+
+  <div class="box key">
+    <p><strong>★ 这一处的分歧是：解释能力的载体是什么？</strong></p>
+    <table style="margin-top:10px;">
+      <tr><th style="width:22%"></th><th>载体</th><th>后果</th></tr>
+      <tr><td class="a"><strong>毛选</strong></td><td><strong>阶级</strong></td>
+        <td>所以"谁能得到正确的认识"是一个<b>社会结构问题</b>；不是人人同等具备</td></tr>
+      <tr><td class="b"><strong>多伊奇</strong></td><td><strong>物种（大脑）</strong></td>
+        <td>所以"原则上每个人都能理解任何可理解的事物"；差别只在<b>是否已有那个知识/批评传统</b></td></tr>
+    </table>
+    <p style="margin-top:10px;"><em>而这一处分歧有一个双方都必须回答的问题：
+    <strong>如果解释能力属于物种，那么为什么历史上大多数人、在大多数时候，都没有作出好解释？</strong>
+    多伊奇的答案是"缺少批评的传统"（第 1、15 章）。
+    毛选的答案是"阶级地位"。</em></p>
+    <p><strong>两个答案都能解释那个现象。而它们对"怎么办"给出的处方完全不同</strong> ——
+    一个说建立批评传统，一个说改变阶级结构。</p>
+  </div>
+
+  <!-- ==================== 五 ==================== -->
+  <h2>五 · 但有一处它们其实在同一侧</h2>
+  <div class="sub">而这一处我认为是两份文本各自最有力的部分</div>
+
+  <div class="quote q-mao">
+    <div class="cn">我们的教条主义者是懒汉，他们拒绝对于具体事物做任何艰苦的研究工作，
+    他们把一般真理看成是凭空出现的东西，把它变成为<strong>人们所不能够捉摸的纯粹抽象的公式</strong>，
+    完全否认了并且颠倒了这个人类认识真理的正常秩序。</div>
+    <div class="src">《矛盾论》「矛盾的特殊性」</div>
+  </div>
+
+  <div class="quote q-dd">
+    <div class="cn">好解释是难以改变的，<strong>改变细节会毁掉整个解释</strong>。</div>
+    <div class="src">《无穷的开始》第 1 章</div>
+  </div>
+
+  <div class="box good">
+    <p><strong>这两个说法针对的是同一种坏东西：</strong></p>
+    <p><strong>一个可以套到任何地方的公式。</strong></p>
+    <p>毛选说它"纯粹抽象"、"人们不能够捉摸"——<em>意思是它不指向任何具体事物，所以也验证不了。</em><br>
+    多伊奇说好解释"改变细节会毁掉整个解释"——<em>意思正相反：它的细节是被锁住的。</em></p>
+    <p><strong>而"能套到任何地方"和"细节可以被随意替换"是同一件事。</strong></p>
+    <p><em>所以两人批评教条主义/坏解释时，用的是<strong>同一个判据</strong>：
+    <b>它没有承担后果的细节。</b></em></p>
+  </div>
+
+  <h3>★ 而这一条可以用来检验双方自己的主张</h3>
+
+  <div class="box gap">
+    <p><strong>按这个判据，两个主张各自要被问一句：</strong></p>
+    <p><strong>问多伊奇：</strong>"所有失败都是知识不足"——<em>什么样的失败能推翻它？</em>
+    如果答"没有"（任何失败都能归因为知识不足），那按他自己的判据，它<strong>太容易成立了</strong>。</p>
+    <p><strong>问毛选：</strong>"各种思想无不打上阶级的烙印"——<em>什么样的思想能推翻它？</em>
+    如果一个明显不是来自阶级地位的思想（比如数学定理），也可以被解释成"打上了烙印"，
+    那同样的问题出现。</p>
+    <p><em>这一处我没有答案。但它是这两个主张唯一的共同弱点 —— 而且弱点是一样的。</em></p>
+  </div>
+
+  <!-- ==================== 六 ==================== -->
+  <h2>六 · 我的判断</h2>
+
+  <table>
+    <tr><th style="width:28%">问题</th><th>判断</th></tr>
+    <tr><td><strong>两者直接矛盾吗？</strong></td>
+      <td><strong>不完全是。</strong>"事实上受限制"和"原则上无上限"可以并存。
+      <em>所以把它们当成"一个对一个错"来处理是错的。</em></td></tr>
+    <tr><td><strong>那真正撞上的是哪一处？</strong></td>
+      <td><strong>两处：</strong>① <b>偏见</b>这一机制（有人从错误认识中获利，所以主动压制批评）——
+      <em>多伊奇的框架里没有这个</em>；② <b>解释能力的载体</b>是阶级还是物种 ——
+      <em>这一处是真的不能同时成立</em>。</td></tr>
+    <tr><td><strong>谁的框架更有力？</strong></td>
+      <td><strong>各有一处对方没有的。</strong>
+      多伊奇有"可反驳性"这个清晰的判据（毛选没有给出"怎样算一个好解释"的形式标准）；
+      毛选有"利益的歪曲"这个机制（多伊奇把坏解释的来源主要归于"缺少批评传统"，偏技术性）。</td></tr>
+    <tr><td><strong>最该追问的是什么？</strong></td>
+      <td><strong>"为什么历史上大多数人没有作出好解释"这个问题，两个答案都不完整。</strong>
+      "缺少批评传统"和"阶级地位"都只是描述，都不是机制。
+      <em>而这正好是"好解释有多难"这个问题的实质。</em></td></tr>
+  </table>
+
+  <div class="box gap">
+    <p><strong>⚠️ 我这一份做不了的</strong></p>
+    <p>这份对照只在<strong>概念层面</strong>。它无法判断"阶级地位到底在多大程度上限制认识"——
+    <strong>那是一个经验问题，需要历史材料，而不是两份哲学文本。</strong></p>
+    <p><em>而你的项目里恰好有那个材料：`05_历史与地理` 域。只是那个域现在只有戴蒙德，
+    而多伊奇第 17 章又反对戴蒙德。三条线在这里交汇了。</em></p>
+  </div>
+
+  <!-- ==================== 七 ==================== -->
+  <h2>七 · 三个给你自己的问题</h2>
+
+  <ol>
+    <li><strong>你能举出一个"明显不是来自阶级地位"的思想吗？</strong><br>
+    如果举得出，那"各种思想无不打上阶级的烙印"就需要限定词；
+    <em>如果举不出，那要小心——不是因为它对，而是因为它可能无法被反驳。</em></li>
+
+    <li><strong>你读《实践论》时，读到的是"认识论"还是"政治论证"？</strong><br>
+    文本里两者交织。<em>而"能作出全面认识的是近代无产阶级"这一句，
+    是认识论结论，还是对某个阶级的历史位置的判断？</em>这个区分会影响你用它来做什么。</li>
+
+    <li><strong>你自己那些感悟——它们是"好解释"吗？</strong><br>
+    用第 1 章的判据测一遍：<strong>你能说出"什么观察会让它站不住"吗？</strong><br>
+    <em>你在 `思/0.txt` 里写的引力弹弓，我试过——它是好解释（能说出反例：如果某个"脱离"其实完全是自己算好的，
+    那"被势推着走"就不成立）。而在 `思/行为.txt` 里那个模型，目前还不是——因为缺了"触发"这一环，
+    所以还不清楚什么能推翻它。</em></li>
+  </ol>
+
+  <div class="quote">
+    <div class="cn">知识的问题是一个科学问题，<strong>来不得半点的虚伪和骄傲</strong>，
+    决定地需要的倒是其反面——诚实和谦逊的态度。</div>
+    <div class="src">《实践论》</div>
+    <div class="gloss">这一句和《无穷的开始》第 1 章的<strong>"易谬主义"</strong>几乎是同一句话：<br>
+    多伊奇：<em>"易谬主义让我们不要寻求权威，而是承认我们可能一直在犯错，并努力纠正错误。"</em><br>
+    <strong>两本在其他地方对立很深的书，在这一点上完全一致。</strong></div>
+  </div>
+
+  <div class="footer">
+    阶级地位 × 通用解释者 · 「底层」项目<br>
+    底本：《毛泽东选集》第一卷 p285–342 ·《无穷的开始》第 3、9、15、16 章<br>
+    <em>全部引文已逐句核对原文；对照与判断部分为待议读法，不涉及历史与政治评价</em>
+  </div>
+
+</div>
+</body>
+</html>

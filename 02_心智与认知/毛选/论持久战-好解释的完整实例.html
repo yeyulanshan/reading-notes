@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>《论持久战》—— 一份「好解释」的完整实例</title>
+<style>
+  :root{
+    --paper:#0e1114; --card:#161b20; --edge:#28313a;
+    --ink:#e7ecf1; --ink-mid:#a4b1bd; --ink-soft:#6c7a86;
+    --mao:#d9694f; --mao-soft:#2a1712;
+    --dd:#5aa9e6;  --dd-soft:#0f2029;
+    --key:#e0c46a; --key-soft:#2a2517;
+    --good:#5cc98f; --good-soft:#11251b;
+    --gap:#e0a13c; --gap-soft:#2a2113;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--paper);color:var(--ink);padding:36px 20px 52px;line-height:1.95;-webkit-font-smoothing:antialiased;}
+  .container{max-width:1020px;margin:0 auto;}
+  .header{text-align:center;margin-bottom:24px;padding:44px 24px 38px;background:var(--card);
+    border:1px solid var(--edge);border-top:5px solid var(--mao);border-radius:4px;}
+  .header .kicker{font-size:11.5px;letter-spacing:2.5px;color:var(--ink-soft);margin-bottom:14px;font-family:Consolas,monospace;}
+  .header h1{font-size:24px;color:var(--ink);margin-bottom:13px;letter-spacing:.5px;}
+  .header .subtitle{font-size:14.6px;color:var(--ink-mid);}
+  .header .meta{margin-top:16px;font-size:12.5px;color:var(--ink-soft);line-height:1.9;}
+  .header .meta b{color:var(--mao);font-weight:600;}
+  .lead{background:var(--card);border:1px solid var(--edge);border-radius:3px;
+    padding:22px 26px;margin-bottom:26px;font-size:14.6px;color:var(--ink-mid);}
+  .lead .t{color:var(--key);font-weight:700;margin-bottom:11px;font-size:14px;}
+  .lead p+p{margin-top:9px;} .lead strong{color:var(--ink);}
+  .lead em{color:var(--good);font-style:normal;}
+  h2{font-size:19.5px;font-weight:700;color:var(--ink);margin:42px 0 6px;padding-left:14px;
+    border-left:4px solid var(--key);letter-spacing:.4px;}
+  .sub{color:var(--ink-soft);font-size:13.5px;margin:0 0 18px 18px;}
+  h3{font-size:15.6px;color:var(--ink);margin:26px 0 8px;}
+  .quote{border-radius:3px;padding:16px 22px;margin:16px 0;
+    background:var(--key-soft);border:1px solid #3d3520;border-left:4px solid var(--key);}
+  .quote .cn{font-size:15.1px;color:#efe3b8;line-height:2.05;letter-spacing:.4px;}
+  .quote .src{margin-top:8px;font-size:12.5px;color:var(--ink-soft);text-align:right;}
+  .quote .gloss{margin-top:9px;font-size:13.4px;color:var(--ink-mid);border-top:1px dashed #4a4028;padding-top:9px;}
+  .q-mao{border-left-color:var(--mao);background:#241512;border-color:#3d231c;}
+  .q-mao .cn{color:#f0cfc4;} .q-mao .gloss{border-top-color:#4a2c24;}
+  .q-dd{border-left-color:var(--dd);background:#0f2029;border-color:#1d3646;}
+  .q-dd .cn{color:#c8e2f5;} .q-dd .gloss{border-top-color:#1d3646;}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.4px;}
+  th,td{padding:9px 12px;border:1px solid var(--edge);text-align:left;vertical-align:top;}
+  th{background:#18212a;color:var(--key);font-weight:700;font-size:12.5px;}
+  td{color:var(--ink-mid);} td strong{color:var(--ink);}
+  .box{border-radius:3px;padding:16px 22px;margin:18px 0;font-size:13.8px;}
+  .box.good{background:var(--good-soft);border:1px solid #1d3a2a;border-left:4px solid var(--good);color:#a8dcc0;}
+  .box.good strong{color:var(--good);}
+  .box.gap{background:var(--gap-soft);border:1px solid #3d3220;border-left:4px solid var(--gap);color:#e8c99a;}
+  .box.gap strong{color:var(--gap);}
+  .box.key{background:var(--key-soft);border:1px solid #3d3520;border-left:4px solid var(--key);color:#e8dca0;}
+  .box.key strong{color:var(--key);}
+  .box em{font-style:normal;color:var(--ink);}
+  .flow{background:var(--card);border:1px solid var(--edge);border-radius:3px;padding:18px 22px;margin:18px 0;}
+  .flow .step{display:flex;gap:14px;padding:11px 0;border-bottom:1px dashed var(--edge);}
+  .flow .step:last-child{border-bottom:none;}
+  .flow .n{font-family:Consolas,monospace;font-size:11.5px;font-weight:700;color:#0e1114;
+    background:var(--mao);padding:2px 9px;border-radius:2px;flex-shrink:0;height:fit-content;margin-top:4px;}
+  .flow .c{font-size:13.6px;color:var(--ink-mid);}
+  .flow .c strong{color:var(--ink);} .flow .c em{color:var(--good);font-style:normal;}
+  ul,ol{margin:10px 0 0 22px;} li{margin-bottom:6px;color:var(--ink-mid);font-size:13.6px;}
+  li strong{color:var(--ink);}
+  .footer{text-align:center;margin-top:46px;padding:22px;color:var(--ink-soft);font-size:12.5px;line-height:1.95;}
+  @media(max-width:700px){
+    .header h1{font-size:19px;} h2{font-size:17px;} body{padding:20px 14px 34px;}
+    table{font-size:11.5px;} .quote .cn{font-size:14px;}
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="kicker">ON PROTRACTED WAR · A COMPLETE CASE</div>
+    <h1>《论持久战》</h1>
+    <div class="subtitle">一份「好解释」的完整实例 —— 以及它和《无穷的开始》的互证</div>
+    <div class="meta">
+      底本：《毛泽东选集》第二卷，PDF 物理页 109–188（印刷页 439–518）<br>
+      <b>46,305 汉字</b> · 1938 年 5 月 26 日至 6 月 3 日在延安抗日战争研究会的讲演<br>
+      全部引文摘自原文，已逐句核对
+    </div>
+  </div>
+
+  <div class="lead">
+    <div class="t">为什么这一篇值得单独做一份</div>
+    <p>前面两份对照（好解释×实践论、阶级地位×通用解释者）都在<strong>概念层面</strong>——
+    比较两个判据说了什么。</p>
+    <p>而《论持久战》不同：<strong>它是一份把"解释"整个走完的实例</strong>——
+    从一句话的根据出发，推出三阶段、推出战术、并且<em>事先说出什么会推翻它</em>。</p>
+    <p><strong>所以这一份的用法是：拿《无穷的开始》第 1 章的判据，去量一篇真实的论证。</strong>
+    这比抽象比较有用，因为判据只有在能用来量东西的时候才算真的掌握。</p>
+    <p><strong>⚠️ 边界</strong>：只做论证结构分析——它怎样成立、哪里可被推翻、reach 到哪里。
+    <em>不涉及历史过程与政治评价。</em></p>
+  </div>
+
+  <!-- ==================== 一 ==================== -->
+  <h2>一 · 它的第一步：把全部根据压到一个句子上</h2>
+  <div class="sub">这是全篇最关键的一步，也是它区别于"空喊口号"的地方</div>
+
+  <div class="quote q-mao">
+    <div class="cn">抗日战争为什么是持久战？最后胜利为什么是中国的呢？根据在什么地方呢？<br><br>
+    中日战争不是任何别的战争，乃是<strong>半殖民地半封建的中国和帝国主义的日本之间
+    在二十世纪三十年代进行的一个决死的战争</strong>。<strong>全部问题的根据就在这里。</strong></div>
+    <div class="src">《论持久战》「问题的根据」</div>
+    <div class="gloss"><strong>注意那个句式</strong>：先问三个"为什么"，然后给出<em>一句</em>话，
+    再断言"全部问题的根据就在这里"。<br>
+    <em>这不是修辞 —— 它在主张：后面所有结论都从这一句推出来，不需要额外假设。</em></div>
+  </div>
+
+  <div class="box key">
+    <p><strong>★ 用《无穷的开始》的判据量一下</strong></p>
+    <p>多伊奇说好解释"<strong>改变细节会毁掉整个解释</strong>"。那么这一句能改吗？</p>
+    <table style="margin-top:10px;">
+      <tr><th style="width:34%">改动</th><th>后果</th></tr>
+      <tr><td>把「半殖民地半封建的中国」改成「强大的中国」</td>
+        <td><strong>整篇塌掉</strong> —— 强对强就是速决战，不是持久战</td></tr>
+      <tr><td>把「帝国主义的日本」改成「一般敌国」</td>
+        <td>就推不出"退步性、野蛮性、失道寡助"那条链</td></tr>
+      <tr><td>把「三十年代」去掉</td>
+        <td>就带不出"日本已到最后崩溃的前夜"这个时间判断</td></tr>
+      <tr><td>把「决死的战争」改成「一次冲突」</td>
+        <td>推不出"三个阶段"这种长过程</td></tr>
+    </table>
+    <p style="margin-top:10px;"><em>每一个限定词都在承担后果。所以按多伊奇的判据，</em>
+    <strong>这是一个好解释的起点</strong>——它不是一个可以随便替换的公式。</p>
+  </div>
+
+  <!-- ==================== 二 ==================== -->
+  <h2>二 · 它怎样从那一句推出三阶段</h2>
+  <div class="sub">这是全篇最像"演绎"的部分，也是最值得学的部分</div>
+
+  <div class="flow">
+    <div class="step"><span class="n">根据</span><span class="c">
+      中日战争 = <strong>半殖民地半封建的中国</strong> × <strong>帝国主义的日本</strong> × <strong>二十世纪三十年代</strong> × <strong>决死的战争</strong>
+    </span></div>
+    <div class="step"><span class="n">分解</span><span class="c">
+      日方四个特点：① 军力经济力政治组织力强 ② <strong>战争退步、野蛮</strong>
+      ③ <strong>人力物力财力不足，经不起长期战争</strong> ④ <strong>国际寡助</strong><br>
+      中方四个特点：① 弱 ② <strong>近百年的进步因素</strong> ③ <strong>地大物博人多</strong> ④ <strong>得道多助</strong>
+    </span></div>
+    <div class="step"><span class="n">交叉</span><span class="c">
+      ①② 并存 → <strong>敌强我弱，故我不能速胜</strong><br>
+      ③④ 并存 → <strong>敌小我大、敌退步我进步，故敌不能速胜</strong>
+    </span></div>
+    <div class="step"><span class="n">推出</span><span class="c">
+      <em>双方都不能速胜 → 战争必然是长期的</em><br>
+      而长期战争中，<strong>强的一方会被消耗、退步的一方会失道</strong> →
+      <em>优劣形势会随时间发生转变</em>
+    </span></div>
+    <div class="step"><span class="n">结论</span><span class="c">
+      <strong>所以必然分三个阶段</strong>：<br>
+      ① 敌之战略进攻 / 我之战略防御<br>
+      ② 敌之战略保守 / 我之准备反攻（相持）<br>
+      ③ 我之战略反攻 / 敌之战略退却
+    </span></div>
+  </div>
+
+  <div class="quote q-mao">
+    <div class="cn">中日战争既然是持久战，最后胜利又将是属于中国的，那末，
+    <strong>就可以合理地设想</strong>，这种持久战，将具体地表现于三个阶段之中。</div>
+    <div class="src">《论持久战》「持久战的三个阶段」</div>
+    <div class="gloss"><strong>三个阶段各自的表述（原文）</strong>：<br>
+    「第一个阶段，是敌之战略进攻、我之战略防御的时期。」<br>
+    「第二个阶段，是敌之战略保守、我之准备反攻的时期。」<br>
+    「第三个阶段，是我之战略反攻、敌之战略退却的时期。」</div>
+  </div>
+
+  <div class="box good">
+    <p><strong>★ 为什么这算"好解释"而不是"口号"</strong></p>
+    <p>因为<strong>它不是"我们必胜"这类结论，而是一条可检验的链条</strong>：
+    具体到每一环——哪些特点、怎样交叉、为什么这样推出。<br>
+    <em>任何一环被证伪，整条链就断。</em></p>
+  </div>
+
+  <!-- ==================== 三 ==================== -->
+  <h2>三 · 它自己标出了「什么会推翻它」</h2>
+  <div class="sub">这一处我认为是全篇最像多伊奇的地方</div>
+
+  <div class="quote q-mao">
+    <div class="cn">三个阶段的具体情况不能预断，但依目前条件来看，战争趋势中的某些大端是可以指出的。<br><br>
+    客观现实的行程将是异常丰富和曲折变化的，<strong>谁也不能造出一本中日战争的"流年"来</strong>；
+    然而给战争趋势<strong>描画一个轮廓</strong>，却为战略指导所必需。<br><br>
+    所以，尽管描画的东西<strong>不能尽合将来的事实，而将为事实所校正</strong>，
+    但是为着坚定地有目的地进行持久战的战略指导起见，描画轮廓的事仍然是需要的。</div>
+    <div class="src">《论持久战》「持久战的三个阶段」</div>
+    <div class="gloss">这几句做了三件事，而三件事都很难：<br>
+    <strong>① 声明限度</strong>：具体情况"不能预断"，谁也不能造一本"流年"（历书）。<br>
+    <strong>② 声明它可被推翻</strong>："不能尽合将来的事实，<b>而将为事实所校正</b>"。<br>
+    <strong>③ 但仍然主张它有指导价值</strong>——因为它描的是"趋势"和"轮廓"，不是具体日程。<br>
+    <em>用多伊奇的话说：它明确承认了这个解释会被现实修正 —— 也就是承认了它可能失败。</em></div>
+  </div>
+
+  <div class="box key">
+    <p><strong>★ 这一步是关键：它把"可被推翻"当成了优点而不是弱点</strong></p>
+    <p>按《无穷的开始》第 1 章："好解释是难以改变的，<strong>改变细节会毁掉整个解释</strong>"。</p>
+    <p>但它没有说好解释"不会错"。恰恰相反 —— <em>正因为它锁定了细节，现实才能指出它错在哪。</em></p>
+    <p><strong>所以"将为事实所校正"这句话不是谦辞，是这份解释属于"好解释"一类的证据。</strong></p>
+    <p style="margin-top:10px;"><em>对照一下：如果一篇东西说"我们必胜"并且拒绝给出任何可被检验的中间环节，
+    那它无论怎么被现实打脸都可以继续成立。而那样一来，它也就不能指导任何事。</em></p>
+  </div>
+
+  <!-- ==================== 四 ==================== -->
+  <h2>四 · 它怎样反驳两边（这是"可检验"的用法）</h2>
+
+  <div class="quote q-mao">
+    <div class="cn">抗战十个月以来，一切经验都证明下述两种观点的不对：
+    一种是中国必亡论，一种是中国速胜论。前者产生妥协倾向，后者产生轻敌倾向。
+    <strong>他们看问题的方法都是主观的和片面的，一句话，非科学的。</strong></div>
+    <div class="src">《论持久战》开篇</div>
+  </div>
+
+  <div class="box good">
+    <p><strong>★ 注意它给两边的诊断是同一个：片面。</strong></p>
+    <table style="margin-top:10px;">
+      <tr><th style="width:24%">主张</th><th>它抓住了什么</th><th>它漏掉了什么</th></tr>
+      <tr><td><strong>亡国论</strong></td><td>敌强我弱（真）</td>
+        <td><strong>敌小我大、敌退步我进步、敌寡助我多助</strong></td></tr>
+      <tr><td><strong>速胜论</strong></td><td>我进步、我多助（真）</td>
+        <td><strong>敌强我弱、我须经长期消耗才能转变形势</strong></td></tr>
+    </table>
+    <p style="margin-top:10px;"><em>两者都各抓住了一半真实情况，而结论相反 ——
+    这正是"只看一半"的典型后果：<strong>同一个现实可以支持两个相反的口号，因为都没有把另一半算进去。</strong></em></p>
+    <p>而"持久战"这个结论之所以不是第三种口号，是因为它<strong>把两边的事实都收进来了</strong>：
+    正因为敌强我弱 ⇒ 不能速胜；正因为敌小我大、敌退步 ⇒ 不会亡国。</p>
+  </div>
+
+  <div class="quote q-mao">
+    <div class="cn">"卢沟桥事变以来，四万万人一齐努力，最后胜利是中国的。"
+    这样一种公式，在广大的人们中流行着。<strong>这个公式是对的，但有加以充实的必要。</strong></div>
+    <div class="src">《论持久战》开篇</div>
+    <div class="gloss"><strong>这半句是全篇的方法论自白。</strong><br>
+    "这个公式是对的" —— 它不否定那个口号；<br>
+    "<strong>但有加以充实的必要</strong>" —— 它要说的是：<em>一个不能被充实（也就是不能被检验）的公式，
+    无论多正确都不能指导行动。</em></div>
+  </div>
+
+  <!-- ==================== 五 ==================== -->
+  <h2>五 · 它的 reach 延伸到哪里</h2>
+  <div class="sub">这是与《无穷的开始》最直接可比的一处</div>
+
+  <p style="color:var(--ink-mid);font-size:14px;">多伊奇说的"延伸"是：
+  <strong>一个解释能解决的问题超出它被提出来要解决的范围。</strong></p>
+
+  <p style="color:var(--ink-mid);font-size:14px;">《论持久战》的问题是<strong>"中日战争会怎样"</strong>。
+  但从它推导出的东西，明显超出了这个范围：</p>
+
+  <table>
+    <tr><th style="width:26%">从文中推出的</th><th>它的适用对象</th></tr>
+    <tr><td><strong>强弱大小进退</strong>四对矛盾的交叉分析</td>
+      <td>任何<strong>不对称冲突</strong>——不只是中日战争</td></tr>
+    <tr><td><strong>"自觉的能动性"</strong>：客观条件只给可能性，胜负还须主观努力</td>
+      <td>原文直接上升到一般：「<strong>自觉的能动性是人类的特点</strong>」</td></tr>
+    <tr><td><strong>"战争是政治的继续"</strong>（「战争和政治」一节）</td>
+      <td>超出军事，进入政治分析</td></tr>
+    <tr><td><strong>"兵民是胜利之本"</strong></td>
+      <td>后来反复被引用的组织原则</td></tr>
+  </table>
+
+  <div class="quote q-mao">
+    <div class="cn">战争的胜负，固然决定于双方军事、政治、经济、地理、战争性质、国际援助诸条件，
+    然而不仅仅决定于这些；<strong>仅有这些，还只是有了胜负的可能性，它本身没有分胜负。</strong>
+    要分胜负，还须加上主观的努力，这就是指导战争和实行战争，这就是战争中的<strong>自觉的能动性</strong>。</div>
+    <div class="src">《论持久战》「能动性在战争中」</div>
+    <div class="gloss">这一段的结构和《实践论》里"客观规律 + 主观能动"是同一个架子，
+    <em>但它在这里是作为<strong>推导结论</strong>出现的</em>——因为前面已经证明了双方都不能速胜，
+    所以"谁做得更好"就成了决定性的变量。</div>
+  </div>
+
+  <div class="box key">
+    <p><strong>★ 这就是"解释的延伸"的一个具体形态</strong></p>
+    <p>多伊奇说的延伸是<strong>内在属性</strong>——不是"我们外推了一下"，而是这个解释<em>本身就</em>覆盖那么广。</p>
+    <p>《论持久战》的延伸正是如此：<strong>因为它是从"半殖民地 vs 帝国主义"这个结构性不对称推出来的，
+    所以凡是有同类不对称的场合，它都适用</strong>——而作者并没有为那些场合单独论证。</p>
+    <p><em>多伊奇原话："解释的延伸是一种内在属性，不是经验主义和归纳主义所说的那种由我们提出的假设。"</em></p>
+  </div>
+
+  <!-- ==================== 六 ==================== -->
+  <h2>六 · 但有一处《论持久战》和多伊奇不同</h2>
+  <div class="sub">必须标出来，否则这份对照会变成单方向的印证</div>
+
+  <table>
+    <tr><th style="width:24%"></th><th>《论持久战》</th><th>《无穷的开始》</th></tr>
+    <tr>
+      <td><strong>好解释够不够</strong></td>
+      <td class="b">不够。原文：客观条件"仅有这些，还只是有了胜负的可能性，
+        <strong>它本身没有分胜负</strong>"，还须加上主观努力</td>
+      <td class="a">解释本身就是决定性的 ——
+        "这才是科学革命的决定性因素"</td>
+    </tr>
+    <tr>
+      <td><strong>解释之外还要什么</strong></td>
+      <td class="b"><strong>组织与动员</strong>：「兵民是胜利之本」；
+        专设「抗日的政治动员」一节</td>
+      <td class="a"><strong>批评的传统</strong> —— 但落点在认识层面</td>
+    </tr>
+  </table>
+
+  <div class="box gap">
+    <p><strong>★ 差别在哪</strong></p>
+    <p>多伊奇的框架里，<strong>有了好解释，剩下的是知识增长本身的问题</strong>。</p>
+    <p>而《论持久战》明确说：<strong>好的分析只给出"可能性"，把可能性变成结果还需要另一件事</strong>——
+    动员、组织、执行。<em>而这件事有它自己的困难，不是"知道得更多"就能解决的。</em></p>
+    <p>用我们前两份对照的语言说：<strong>多伊奇处理"怎样知道"，毛选处理"知道之后怎样做到"。</strong>
+    而后者正是《实践论》里"从理性的认识到革命的实践这一个飞跃"那一环。</p>
+  </div>
+
+  <!-- ==================== 七 ==================== -->
+  <h2>七 · 一份诚实的判断</h2>
+
+  <table>
+    <tr><th style="width:26%">维度</th><th>判断</th></tr>
+    <tr><td><strong>它是不是好解释</strong></td>
+      <td><strong>是</strong>，按多伊奇的判据：每个限定词都承担后果；它自己声明会被事实校正；
+      它从一句根据推出整条链。<em>而这三条我都能指着原文说。</em></td></tr>
+    <tr><td><strong>它有没有被校正过</strong></td>
+      <td><strong>超出这份文档的范围</strong>。我只做结构分析。
+      《实践论》说"真理的标准只能是社会的实践"——<em>那需要历史材料来判断，不是文本分析。</em></td></tr>
+    <tr><td><strong>它最值得学的是什么</strong></td>
+      <td><strong>两个动作</strong>：① 把全部根据压到一句可检验的话上；
+      ② <strong>自己标出"什么会推翻我"</strong>。<br>
+      <em>第二个动作尤其少见 —— 大多数论证在努力让自己不可被推翻。</em></td></tr>
+    <tr><td><strong>最大的不确定</strong></td>
+      <td>它推出三阶段用的是"<strong>合理地设想</strong>"，而具体内容"不能预断"。
+      <strong>那"合理设想"和"猜测"的界线在哪？</strong>
+      <em>原文没有给标准。这一处我认为是它的薄弱环节 —— 也是最容易被后人滥用的地方。</em></td></tr>
+  </table>
+
+  <div class="box gap">
+    <p><strong>⚠️ 我要特别标出那个薄弱环节，因为它和你的问题直接相关</strong></p>
+    <p>《论持久战》的力量来自"从一句根据推出全部"。<strong>但这个方法的反面是：一旦那句根据被接受，
+    后面的推论就都像是不需要检验的。</strong></p>
+    <p><em>"合理设想"这个词，在原文里承担了从根据到三阶段的过渡。而它不是一个判据 ——
+    它没有告诉你什么样的设想算"合理"。</em></p>
+    <p>用多伊奇的判据补一句：<strong>一个"合理设想"至少应该是"说得出什么会推翻它"的设想。</strong>
+    而《论持久战》在这一点上是自觉的（"将为事实所校正"）——<strong>所以问题不在这一篇，
+    在于后来引用它的人往往只取结论，不取那个"可被校正"的声明。</strong></p>
+  </div>
+
+  <!-- ==================== 八 ==================== -->
+  <h2>八 · 三个给你自己的问题</h2>
+
+  <ol>
+    <li><strong>你能把你自己最看重的一个判断，压到一句"全部根据就在这里"的话上吗？</strong><br>
+    压不出来，往往说明那个判断还没有根据，只有结论。<em>而压出来了，接下来就该问第二问。</em></li>
+
+    <li><strong>那一句话里，哪个词是"改了整条链就塌"的？</strong><br>
+    这一问是《无穷的开始》第 1 章的判据的实操版。
+    <em>如果每个词都能随便换，那你手上的是口号，不是解释。</em></li>
+
+    <li><strong>你敢不敢写一句"这将为事实所校正"？</strong><br>
+    这一问最难。它的意思是：<strong>你说出的话，将来可以被现实指出错在哪里。</strong><br>
+    <em>而这一条正好可以拿去量你在 `思/` 里的那些感悟 ——
+    凡是写不出"什么会推翻它"的，就还停在"感悟"这一层，没有到"解释"。</em></li>
+  </ol>
+
+  <div class="quote">
+    <div class="cn">我们反对主观地看问题，说的是一个人的思想，不根据和不符合于客观事实，是空想，是假道理，
+    如果照了做去，就要失败，故须反对它。<br><br>
+    <strong>但是一切事情是要人做的，持久战和最后胜利没有人做就不会出现。</strong></div>
+    <div class="src">《论持久战》「能动性在战争中」</div>
+    <div class="gloss">这两句放在一起，就是全篇的完整立场：<br>
+    <strong>反对空想，但不认为想清楚了就够了。</strong><br>
+    <em>——而这一条，正好补上了《无穷的开始》没处理的那一半。</em></div>
+  </div>
+
+  <div class="footer">
+    《论持久战》· 一份「好解释」的完整实例 · 「底层」项目 `02_心智与认知/毛选/`<br>
+    底本：《毛泽东选集》第二卷 PDF 物理页 109–188（印刷页 439–518）· 46,305 汉字<br>
+    <em>全部引文已逐句核对原文；结构分析与判断部分为待议读法，不涉及历史与政治评价</em>
+  </div>
+
+</div>
+</body>
+</html>

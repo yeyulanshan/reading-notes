@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>一个问题，一条判据，两个误差</title>
+<style>
+  :root{
+    --paper:#f7f4ed;
+    --card:#fffdf8;
+    --edge:#ded6c8;
+    --ink:#2b2721;
+    --ink-mid:#5c5449;
+    --ink-soft:#8c8175;
+    --teal:#166060;
+    --teal-soft:#e6efee;
+    --rust:#b1442a;
+    --rust-soft:#f7e9e4;
+    --gold:#9a7420;
+    --gold-soft:#f5eeda;
+    --sage:#55703c;
+    --sage-soft:#ecf0e2;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--paper);color:var(--ink);padding:36px 20px 48px;line-height:1.88;
+    -webkit-font-smoothing:antialiased;
+  }
+  .container{max-width:920px;margin:0 auto;}
+
+  .header{
+    text-align:center;margin-bottom:30px;padding:44px 24px 40px;
+    background:var(--card);border:1px solid var(--edge);border-top:5px solid var(--teal);
+    border-radius:4px;
+  }
+  .header h1{font-size:27px;color:var(--ink);margin-bottom:12px;letter-spacing:.5px;}
+  .header .subtitle{font-size:14.5px;color:var(--ink-mid);}
+  .header .author{margin-top:16px;font-size:12.5px;color:var(--ink-soft);letter-spacing:.5px;}
+
+  main{
+    background:var(--card);border:1px solid var(--edge);border-radius:4px;
+    padding:34px 38px;
+  }
+
+  h1{font-size:23px;color:var(--ink);margin:8px 0 18px;}
+  h2{
+    font-size:20px;color:var(--ink);margin:40px 0 16px;
+    padding-left:13px;border-left:4px solid var(--teal);letter-spacing:.3px;
+  }
+  h2:first-child{margin-top:0;}
+  h3{font-size:16.5px;color:var(--teal);margin:28px 0 12px;font-weight:700;}
+  h4{font-size:15px;color:var(--ink-mid);margin:18px 0 8px;}
+
+  p{color:var(--ink-mid);font-size:14.5px;margin-bottom:12px;}
+  strong{color:var(--ink);}
+  em{color:var(--rust);font-style:normal;font-weight:600;}
+
+  ul,ol{margin:8px 0 14px 24px;}
+  li{color:var(--ink-mid);font-size:14.5px;margin-bottom:6px;}
+
+  hr{border:none;border-top:1px solid var(--edge);margin:26px 0;}
+
+  table{width:100%;border-collapse:collapse;margin:14px 0 18px;font-size:13.5px;}
+  th,td{padding:10px 12px;border:1px solid var(--edge);text-align:left;vertical-align:top;}
+  th{background:var(--teal-soft);color:var(--teal);font-weight:700;}
+  td{color:var(--ink-mid);}
+
+  blockquote{
+    background:var(--gold-soft);border:1px solid #e6dcc0;border-left:4px solid var(--gold);
+    border-radius:0 3px 3px 0;padding:16px 20px;margin:14px 0;
+  }
+  blockquote p{color:#6d5011;font-size:14px;font-style:italic;margin-bottom:8px;}
+  blockquote p:last-child{margin-bottom:0;}
+  blockquote strong{color:#5a420d;}
+
+  code{
+    background:var(--paper);padding:1.5px 6px;border-radius:3px;
+    font-family:Consolas,Monaco,monospace;font-size:13px;color:var(--teal);
+  }
+  pre{
+    background:var(--paper);border:1px solid var(--edge);border-radius:3px;
+    padding:14px 16px;overflow-x:auto;margin:12px 0 16px;
+  }
+  pre code{background:none;padding:0;line-height:1.65;}
+
+  /* 专业问题标题 */
+  .q-title{
+    background:var(--teal-soft);border-left:4px solid var(--teal);
+    border-radius:0 3px 3px 0;padding:13px 18px;margin:28px 0 12px;
+    color:var(--ink);font-size:15.5px;font-weight:700;line-height:1.7;
+  }
+
+  .footer{
+    text-align:center;margin-top:38px;padding:20px;color:var(--ink-soft);font-size:12.5px;line-height:1.9;
+  }
+
+  @media(max-width:640px){
+    .header h1{font-size:20px;}
+    h2{font-size:17.5px;}
+    body{padding:20px 14px 32px;}
+    main{padding:22px 18px;}
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <h1>一个问题，一条判据，两个误差</h1>
+    <div class="subtitle">《动手学深度学习》精华笔记与专业问题 · 20 个专业问题 + 文本考订</div>
+    <div class="author">Aston Zhang · Zachary C. Lipton · 李沐 · Alexander J. Smola · Release 2.0.0</div>
+  </div>
+
+  <main>
+<blockquote>
+<p>这是 07_技术 域「机器学习」缺口的主答。它是<strong>作者官方免费发布的中文完整版</strong>——全 18 章、全中文、每章配可运行代码。</p>
+<p></p>
+<p>一起的还有四份产出：</p>
+<p>- <strong>整体架构</strong>——判断框架、章节地图、与 algs4 的同构</p>
+<p>- <strong>问题手册</strong>——20 题（L1 4 / L2 5 / L3 5 / L4 6），44 项自测，<strong>每题都标「适用边界」</strong></p>
+<p>- <strong>经验结论的适用边界手册</strong>——18 条主张逐条逼问三个问题</p>
+<p>- <strong>助人手册</strong>——12 个"模型不工作时该问什么"的场景</p>
+<p></p>
+<p>以及 <code>动手实验/实验8~12</code>：五个<strong>能真跑的模型实验</strong>（本机 <code>torch 2.8.0+cpu</code> 验证通过）。</p>
+</blockquote>
+<hr>
+<h2>第一部分：精读笔记</h2>
+<h3>一、这本书的地基：一个问题，一条判据</h3>
+<p>全书真正的地基是<strong>第 4.4 节</strong>，而它只做了一件事：把"模型到底学到东西了没有"变成一个可判断的问题。</p>
+<p>它问的（第 6958 行）：</p>
+<blockquote>
+<p>"作为机器学习科学家，我们的目标是发现模式。但是，<strong>我们如何才能确定模型是真正发现了一种泛化的模式，而不是简单地记住了数据呢？</strong>"</p>
+</blockquote>
+<p>它举的例子极好——用基因数据预测痴呆状态：</p>
+<blockquote>
+<p>"因为基因可以唯一确定每个个体（不考虑双胞胎），所以在这个任务中是<strong>有可能记住整个数据集的</strong>。我们不想让模型只会做这样的事情：<strong>'那是鲍勃！我记得他！他有痴呆症！'</strong>"</p>
+</blockquote>
+<p><strong>这句话把"过拟合"从一个技术词变成了你一眼能认出的荒谬行为。</strong></p>
+<h4>两个误差的定义</h4>
+<table><thead><tr><th>概念</th><th>书里的定义</th></tr></thead><tbody>
+<tr><td><strong>训练误差</strong></td><td>"模型在训练数据集上计算得到的误差"</td></tr>
+<tr><td><strong>泛化误差</strong></td><td>"模型应用在<strong>同样从原始样本的分布中抽取的无限多数据样本</strong>时，模型误差的期望"</td></tr>
+</tbody></table>
+<p><strong>而它立刻补了一句最诚实的话</strong>（第 6984 行）：</p>
+<blockquote>
+<p>"问题是，<strong>我们永远不能准确地计算出泛化误差。</strong>这是因为无限多的数据样本是一个虚构的对象。在实际中，我们只能通过将模型应用于一个<strong>独立的测试集</strong>来估计泛化误差，该测试集由<strong>随机选取的、未曾在训练集中出现的数据样本</strong>构成。"</p>
+</blockquote>
+<p>——<strong>这一句是整本书的诚实之处。</strong> 它没有声称你能算出真实的泛化误差，它只说你能<em>估计</em>。而这个"估计"的质量，取决于那两句话里的每个限定词：<em>独立</em>、<em>随机选取</em>、<em>未曾在训练集中出现</em>。</p>
+<h3>二、那条判据：看两条误差的相对位置</h3>
+<table><thead><tr><th>情况</th><th>训练误差</th><th>验证误差</th><th>结论</th></tr></thead><tbody>
+<tr><td><strong>欠拟合</strong></td><td>高</td><td>高</td><td>两者都高且<strong>差距小</strong> → 模型太简单</td></tr>
+<tr><td><strong>过拟合</strong></td><td>低</td><td>高</td><td>训练误差<strong>明显低于</strong>验证误差</td></tr>
+</tbody></table>
+<p><strong>而书里对"过拟合"有一个反直觉的宽容</strong>（第 7093 行）：</p>
+<blockquote>
+<p>"注意，<strong>过拟合并不总是一件坏事。</strong>特别是在深度学习领域，众所周知，最好的预测模型在训练数据上的表现往往比在保留（验证）数据上好得多。<strong>最终，我们通常更关心验证误差，而不是训练误差和验证误差之间的差距。</strong>"</p>
+</blockquote>
+<p><strong>这个立场很重要</strong>：它意味着<strong>目标是验证误差低，不是两条曲线贴在一起</strong>。你可以通过削弱模型来消除分叉，但代价往往是验证误差反而变高。</p>
+<h4>我实测的第一个反例：那条"单调性"</h4>
+<p>书里说（第 7104 行）：</p>
+<blockquote>
+<p>"因此在固定训练数据集的情况下，高阶多项式函数相对于低阶多项式的训练误差<strong>应该始终更低（最坏也是相等）</strong>。"</p>
+</blockquote>
+<p><strong>而我的实验 8 实测：n=100 时 5 阶的训练误差 0.078797 高于 4 阶的 0.078498 —— 不单调。</strong></p>
+<p><strong>这不是书错了，是它的前提没写出来</strong>：那句话假设<strong>你能把模型优化到最优解</strong>。容量大的模型损失曲面更复杂，在固定迭代次数下可能还没走到最优。</p>
+<blockquote>
+<p>书里其实知道这件事——它用第 11 章「优化算法」一整章讲优化为什么难，只是在第 4.4 节把优化当成了已解决的问题。</p>
+</blockquote>
+<h3>三、影响过拟合的两个因素（以及我实测的修正）</h3>
+<p>书里给了两个：</p>
+<table><thead><tr><th>因素</th><th>规律</th></tr></thead><tbody>
+<tr><td><strong>模型复杂度</strong></td><td>阶数越高 → 训练误差单调下降 → 但验证误差呈 U 形</td></tr>
+<tr><td><strong>数据集大小</strong></td><td>"训练数据集中的样本越少，我们就越有可能（且更严重地）过拟合"</td></tr>
+</tbody></table>
+<p><strong>而实验 8 给出的表述更准确</strong>：过拟合由<strong>「容量 ÷ 样本量」这个比值</strong>决定，不是由容量单独决定。</p>
+<table><thead><tr><th>训练样本</th><th>最优阶数</th><th>20 阶验证误差</th></tr></thead><tbody>
+<tr><td><strong>100</strong></td><td><strong>≥20（不出现过拟合）</strong></td><td>0.1075</td></tr>
+<tr><td><strong>20</strong></td><td><strong>4</strong>（4 阶后停滞）</td><td>0.5268</td></tr>
+</tbody></table>
+<p>——<strong>同一个真函数、同一组阶数、同一个验证集，只把训练样本从 100 降到 20，过拟合就出现了。</strong></p>
+<p><strong>而这解释了一个很常见的事故</strong>：同一个模型在 A 公司数据上表现好、在 B 公司（数据少得多）就崩了——<em>不是模型不好，是配对错了。</em></p>
+<h3>四、i.i.d. 假设：书里主动拆穿了自己</h3>
+<p><strong>它先声明依赖什么</strong>（第 7015 行）：</p>
+<blockquote>
+<p>"我们假设训练数据和测试数据都是<strong>从相同的分布中独立提取的</strong>。这通常被称为<strong>独立同分布假设（i.i.d. assumption）</strong>，这意味着对数据进行采样的过程没有进行'记忆'。"</p>
+</blockquote>
+<p><strong>然后立刻拆台</strong>（第 7019 行）：</p>
+<blockquote>
+<p>"要成为一名优秀的机器学习科学家需要具备<strong>批判性思考能力</strong>。假设是存在漏洞的，即很容易找出假设失效的情况。</p>
+<p></p>
+<p>如果我们根据从加州大学旧金山分校医学中心的患者数据训练死亡风险预测模型，并将其应用于马萨诸塞州综合医院的患者数据，结果会怎么样？<strong>这两个数据的分布可能不完全一样。</strong>"</p>
+</blockquote>
+<p><strong>还有时间维度的违反</strong>：</p>
+<blockquote>
+<p>"当我们对微博的主题进行分类时，<strong>新闻周期</strong>会使得正在讨论的话题产生时间依赖性，从而违反独立性假设。"</p>
+</blockquote>
+<p><strong>而它的结论是务实而非教条的</strong>（第 7024 行）：</p>
+<blockquote>
+<p>"有时候我们即使<strong>轻微违背</strong>独立同分布假设，模型仍将继续运行得非常好。……毕竟，几乎所有现实的应用都至少涉及到一些违背独立同分布假设的情况。"</p>
+</blockquote>
+<h4>我把这个变成了可测量的东西（实验 11）</h4>
+<p>训练用 <code>x~N(0,1)</code>，测试用 <code>x~N(shift,1)</code>——<strong>真函数不变，只让输入分布平移</strong>：</p>
+<table><thead><tr><th>输入均值平移</th><th>验证误差</th><th>相对同分布</th></tr></thead><tbody>
+<tr><td>0.00σ</td><td>0.0206</td><td>0.27×</td></tr>
+<tr><td><strong>0.25σ</strong></td><td>0.0200</td><td><strong>0.27×（几乎没变）</strong></td></tr>
+<tr><td>0.50σ</td><td>0.0353</td><td>0.47×</td></tr>
+<tr><td><strong>1.00σ</strong></td><td>0.1925</td><td><strong>2.57×</strong></td></tr>
+<tr><td>1.50σ</td><td>1.0226</td><td>13.63×</td></tr>
+<tr><td>2.00σ</td><td>4.6512</td><td>62.01×</td></tr>
+<tr><td><strong>3.00σ</strong></td><td>65.2348</td><td><strong>869.74×</strong></td></tr>
+</tbody></table>
+<p><strong>而训练误差从头到尾是 0.0101 —— 看起来完全健康。</strong></p>
+<blockquote>
+<p><strong>边界在 0.5σ~1.0σ 之间，而且形状是非线性的</strong>：小幅平移误差几乎不动（模型还能外推），越过某点后<strong>急剧上升</strong>（外推失效）。</p>
+<p></p>
+<p>所以"轻微违背没关系"这句话<strong>在一个区间内成立，越界就完全不成立</strong>——而那个边界只能测出来。</p>
+</blockquote>
+<h3>五、那个 <code>1/i!</code> 特征缩放：两个作用，书里只写了一个</h3>
+<p><strong>书里写的理由</strong>（第 7146 行）：</p>
+<blockquote>
+<p>"在优化的过程中，我们通常希望避免非常大的梯度值或损失值。这就是我们将特征从 <code>x^i</code> 调整为 <code>x^i/i!</code> 的原因，这样可以<strong>避免很大的 i 带来的特别大的指数值</strong>。"</p>
+</blockquote>
+<p><strong>我实测确认了</strong>：不缩放时训练<strong>直接 NaN</strong>。因为 <code>x~N(0,1)</code> 时 <code>x^19</code> 的量级能到 1e4 以上，平方损失爆炸。<strong>那个 <code>1/i!</code> 不是装饰，是数值稳定的必要条件。</strong></p>
+<p><strong>但还有一个书里没强调的副作用</strong>——它让各阶特征尺度差异巨大：</p>
+<table><thead><tr><th>阶数</th><th>特征标准差</th></tr></thead><tbody>
+<tr><td>2</td><td>3.99e-01</td></tr>
+<tr><td>6</td><td>1.59e-02</td></tr>
+<tr><td>10</td><td>5.99e-05</td></tr>
+<tr><td>14</td><td>5.04e-08</td></tr>
+<tr><td>18</td><td><strong>1.42e-11</strong></td></tr>
+</tbody></table>
+<p><strong>于是 20 阶模型虽然名义上有 20 个参数，有效自由度只有 6 个。</strong> 18 阶以上的权重再大也几乎不影响输出。</p>
+<blockquote>
+<p><strong>这就是"参数个数 ≠ 有效容量"。</strong> 而这个区分解释了一个反直觉的结果——见下一节。</p>
+</blockquote>
+<h3>六、权重衰减：我实测只看到 U 形的一半</h3>
+<p><strong>书里的做法</strong>：在损失上加 L2 惩罚，把最优解从</p>
+<p><code>ŵ = (XᵀX)⁻¹Xᵀy</code> 变成 <code>ŵ = (XᵀX + λI)⁻¹Xᵀy</code></p>
+<p>——<strong>就是在矩阵对角线上加一个 λ</strong>。这就是"衰减"这个词的来处。</p>
+<p><strong>我原本预期看到完整的 U 形曲线</strong>（λ 太小过拟合 / λ 适中刚好 / λ 太大欠拟合）。<strong>实测只有右半边</strong>：</p>
+<table><thead><tr><th>配置</th><th>λ=0 验证误差</th><th>最优 λ</th><th>惩罚有用吗</th></tr></thead><tbody>
+<tr><td><strong>12 阶</strong>（容量大）</td><td>0.2785</td><td><strong>0</strong></td><td><strong>没用</strong></td></tr>
+<tr><td><strong>3 阶</strong>（容量小）</td><td>2.9235</td><td><strong>0.05</strong></td><td><strong>有用</strong>（→ 2.5553，改善 12.6%）</td></tr>
+</tbody></table>
+<p><strong>两组用的是同一份数据、同样的样本量，只改了阶数。</strong></p>
+<p><strong>为什么 12 阶反而没用？</strong> 因为它的有效自由度只有 5-6 个（上一节那个 <code>1/i!</code> 的副作用）——<em>它本来就没有"多余容量可浪费"，惩罚它只是把有用的信号一起压小了。</em></p>
+<p><strong>所以真实的形状是不对称的</strong>：</p>
+<ul>
+<li><strong>λ 太小</strong> → 看不出效果（和 λ=0 差不多）</li>
+<li><strong>λ 合适</strong> → <strong>只有在你确实过拟合时才有用</strong></li>
+<li><strong>λ 太大</strong> → <strong>一定有害</strong>（12 阶时 λ=10 让验证误差从 0.2785 升到 16.3766）</li>
+</ul>
+<blockquote>
+<p>和教科书那条对称的 U 形相比：<strong>右边的惩罚是确定的，左边的好处是有条件的。</strong></p>
+</blockquote>
+<h3>七、学习率：可用区间很宽，好用区间很窄</h3>
+<p>这是第三个变量，而且它在实践中最常出问题。</p>
+<table><thead><tr><th>学习率</th><th>最后一步损失</th><th>验证误差</th><th>症状</th></tr></thead><tbody>
+<tr><td>1e-5</td><td>23.43</td><td>37.02</td><td>几乎不动</td></tr>
+<tr><td>1e-3</td><td>4.13</td><td>18.34</td><td>太慢</td></tr>
+<tr><td>0.03</td><td>0.22</td><td>0.91</td><td>接近收敛</td></tr>
+<tr><td><strong>0.3</strong></td><td><strong>0.006</strong></td><td><strong>0.038</strong></td><td><strong>最优</strong></td></tr>
+<tr><td><strong>1.0</strong></td><td>第 12 步发散到 2.7e12</td><td>无法评估</td><td>太大</td></tr>
+<tr><td><strong>3.0</strong></td><td>第 7 步发散到 1.1e14</td><td>无法评估</td><td>太大</td></tr>
+</tbody></table>
+<p><strong>而且它不对称</strong>：太小只是慢（还能救），太大直接崩（救不回来）。</p>
+<blockquote>
+<p><strong>所以调参时的安全做法是从小往大试，而不是从大往小收。</strong></p>
+</blockquote>
+<h3>八、深度学习为什么是现在才起来</h3>
+<p>书里给了一个非技术解释（第 7140 行）：</p>
+<blockquote>
+<p>"对于许多任务，<strong>深度学习只有在有数千个训练样本时才优于线性模型。</strong>从一定程度上来说，深度学习目前的生机要归功于<strong>廉价存储、互联设备以及数字化经济带来的海量数据集</strong>。"</p>
+</blockquote>
+<p><strong>这个观察值得单独记</strong>——它说：不是算法突然变好了，是<strong>数据突然变多了</strong>。</p>
+<p><strong>而书里还给了一个量级论证</strong>（第 6995 行）：</p>
+<blockquote>
+<p>"考虑 28×28 的灰度图像。如果每个像素可以取 256 个灰度值中的一个，则有 <code>256^784</code> 个可能的图像。这意味着指甲大小的低分辨率灰度图像的数量<strong>比宇宙中的原子要多得多</strong>。"</p>
+</blockquote>
+<p>——<strong>它想说明的是：输入空间太大，查表法在物理上不可能</strong>。所以模型必须"泛化"，而不能"记住"。</p>
+<hr>
+<h2>第二部分：20个专业问题（附通俗解释）</h2>
+<hr>
+<div class="q-title">1. 训练误差和泛化误差的定义是什么？为什么"永远不能准确计算泛化误差"？</div>
+<p><strong>专业回答</strong></p>
+<table><thead><tr><th>概念</th><th>定义</th></tr></thead><tbody>
+<tr><td><strong>训练误差</strong></td><td>模型在训练数据集上计算得到的误差</td></tr>
+<tr><td><strong>泛化误差</strong></td><td>模型应用在<strong>同样从原始样本的分布中抽取的无限多数据样本</strong>时，模型误差的期望</td></tr>
+</tbody></table>
+<p><strong>书里的理由</strong>（第 6984 行）：<em>"这是因为无限多的数据样本是一个虚构的对象。"</em></p>
+<p><strong>实践中只能估计</strong>：用一个<strong>独立的测试集</strong>，它必须满足两个条件——<strong>随机选取</strong> + <strong>未曾在训练集中出现</strong>。</p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p>泛化误差是一个"期望"，而期望需要无限样本才能精确求出。你手上永远只有一个有限样本的估计。<strong>所以它的可信度完全取决于那个测试集的质量。</strong></p>
+</blockquote>
+<hr>
+<div class="q-title">2. 怎么判断欠拟合还是过拟合？</div>
+<p><strong>专业回答</strong></p>
+<p>看<strong>训练误差和验证误差的相对位置</strong>：</p>
+<table><thead><tr><th>情况</th><th>训练误差</th><th>验证误差</th></tr></thead><tbody>
+<tr><td>欠拟合</td><td>高</td><td>高（差距小）</td></tr>
+<tr><td>过拟合</td><td>低</td><td>高</td></tr>
+</tbody></table>
+<p><strong>而书里对过拟合有一个反直觉的宽容</strong>（第 7093 行）：<em>"过拟合并不总是一件坏事……最终，我们通常更关心验证误差，而不是训练误差和验证误差之间的差距。"</em></p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p><strong>目标是验证误差低，不是两条线贴近。</strong> 你可以通过把模型变弱来消除分叉，但验证误差往往会变高。</p>
+</blockquote>
+<hr>
+<div class="q-title">3. 影响过拟合的两个因素是什么？</div>
+<p><strong>专业回答</strong></p>
+<table><thead><tr><th>因素</th><th>规律</th></tr></thead><tbody>
+<tr><td><strong>模型复杂度</strong></td><td>越高 → 训练误差单调降 → 验证误差先降后升</td></tr>
+<tr><td><strong>数据集大小</strong></td><td>样本越少 → 越容易过拟合</td></tr>
+</tbody></table>
+<p><strong>而实验 8 给出的表述更准确</strong>：过拟合由<strong>「容量 ÷ 样本量」</strong>决定。同一组阶数，样本 100 时不过拟合，样本 20 时最优只有 4 阶。</p>
+<p><strong>书里关于深度的现实判断</strong>：<em>"深度学习只有在有数千个训练样本时才优于线性模型。"</em></p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p>"该用多复杂的模型"没有固定答案，<strong>它取决于你有多少数据</strong>。</p>
+</blockquote>
+<hr>
+<div class="q-title">4. 权重衰减是怎么实现的？</div>
+<p><strong>专业回答</strong></p>
+<p>在损失上加 L2 惩罚：<code>L = 原损失 + (λ/2)·‖w‖²</code>，把最优解从 <code>(XᵀX)⁻¹Xᵀy</code> 变成 <code>(XᵀX + λI)⁻¹Xᵀy</code>。</p>
+<p><strong>一个实现细节</strong>：权重衰减通常<strong>不加在偏置上</strong>（偏置只影响平移，不控制"曲线多弯"）。</p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p>数学上就是<strong>在矩阵对角线上加一个 λ</strong>——把权重往 0 拉。但<strong>它在 12 阶上完全没用、3 阶上有用</strong>（实验 9），所以它不是一个可以无脑照做的动作。</p>
+</blockquote>
+<hr>
+<div class="q-title">5. 为什么"记住整个训练集"泛化一定差？</div>
+<p><strong>专业回答</strong></p>
+<p>因为"记住"<strong>没有提取任何可迁移的规律</strong>，它把"输入→标签"的映射硬背下来，而其中绝大部分是<strong>噪声</strong>。</p>
+<p><strong>换一个新个体（新基因组合），查表查不到，模型就完全失效。</strong></p>
+<p><strong>量级论证</strong>：28×28 图像有 <code>256^784</code> 种可能，"比宇宙中的原子要多得多"——存储整个查找表在物理上不可能。</p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p>书里那句"'那是鲍勃！我记得他！'"把这件事说透了：<strong>记住不等于学到。</strong></p>
+</blockquote>
+<hr>
+<div class="q-title">6. 书里为什么用三个"思维实验"讲泛化误差？</div>
+<p><strong>专业回答</strong></p>
+<table><thead><tr><th>实验</th><th>在说明什么</th></tr></thead><tbody>
+<tr><td><strong>① 准备考试的学生</strong></td><td>在往年考题上拿高分，不保证真考得好（死记硬背 vs 理解）</td></tr>
+<tr><td><strong>② 查表法模型</strong></td><td>输入空间太大，不可能记住每个可能输入</td></tr>
+<tr><td><strong>③ 掷硬币</strong></td><td>公平硬币的泛化误差永远是 1/2，但训练误差可能更低（取决于运气）</td></tr>
+</tbody></table>
+<p><strong>第三个最关键</strong>：它给出了"训练误差低于泛化误差"的<strong>最纯粹的例子</strong>——连模型都没有，只是一个有限样本的统计涨落。</p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p><strong>训练误差低本身不构成任何证据。</strong> 你需要在独立数据上再测一次。</p>
+</blockquote>
+<hr>
+<div class="q-title">7. 为什么书里说"假设是存在漏洞的"？</div>
+<p><strong>专业回答</strong></p>
+<p><strong>i.i.d. 假设</strong>：训练数据和测试数据"从相同的分布中独立提取"。</p>
+<p><strong>书里给的两类失效</strong>：</p>
+<table><thead><tr><th>类型</th><th>例子</th></tr></thead><tbody>
+<tr><td><strong>分布不同</strong></td><td>用旧金山医学中心的数据训练，用到马萨诸塞综合医院</td></tr>
+<tr><td><strong>不独立（时间相关）</strong></td><td>微博主题分类时，"新闻周期"造成时间依赖性</td></tr>
+</tbody></table>
+<p><strong>而它的结论是务实的</strong>：<em>"有时候我们即使轻微违背……仍将继续运行得非常好。"</em></p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p>那句话方向是对的，<strong>但"轻微"必须自己测</strong>。实验 11 实测：平移 0.5σ 以内误差几乎不动，1.0σ 就翻 2.57 倍，3.0σ 是 <strong>870 倍</strong>。</p>
+</blockquote>
+<hr>
+<div class="q-title">8. 为什么"1/i! 特征缩放"是必要的？</div>
+<p><strong>专业回答</strong></p>
+<p><strong>书里的理由</strong>：避免"很大的 i 带来的特别大的指数值"。<strong>我实测确认</strong>：不缩放时训练直接 <strong>NaN</strong>。</p>
+<p><strong>而它的副作用（书里没强调）</strong>：各阶特征尺度差异巨大——18 阶特征标准差只剩 <strong>1.42e-11</strong>。于是 20 阶模型的<strong>有效自由度只有 6 个</strong>。</p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p><strong>"参数个数"不等于"有效容量"。</strong> 这解释了实验 9 里"12 阶加权重衰减完全没用"——它本来就没有多余容量可浪费。</p>
+</blockquote>
+<hr>
+<div class="q-title">9. 为什么"过拟合并不总是一件坏事"？</div>
+<p><strong>专业回答</strong></p>
+<p>因为它改变了你的<strong>优化目标</strong>：</p>
+<table><thead><tr><th>错误目标</th><th>正确目标</th></tr></thead><tbody>
+<tr><td>让两条误差<strong>尽量接近</strong></td><td>让<strong>验证误差尽量低</strong></td></tr>
+</tbody></table>
+<p><strong>实验 9 展示了这个陷阱</strong>：在 12 阶模型上加大 λ，训练误差从 0.0126 升到 12.42（"分叉"消失了），但验证误差也从 0.2785 升到 16.38。</p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p><strong>"消除了过拟合"这个成就本身没有价值。</strong> 书里说得很清楚：<em>"最终，我们通常更关心验证误差。"</em></p>
+</blockquote>
+<hr>
+<div class="q-title">10. 你有 500 个样本，该用多复杂的模型？</div>
+<p><strong>专业回答</strong></p>
+<p><strong>先给方向</strong>：500 个属于"数百"量级，而书里说深度学习"只有在有数千个训练样本时才优于线性模型"——<strong>所以起点应该是简单模型</strong>。</p>
+<p><strong>六步流程</strong>：</p>
+<ol>
+<li>先划一份<strong>不动的测试集</strong>（20%），在最后之前绝不碰</li>
+<li>在剩下的里做<strong>交叉验证</strong>（400 个样本太少，单次划分噪声大）</li>
+<li>从<strong>最简单</strong>的模型开始，记录验证误差</li>
+<li><strong>逐步增加容量</strong>，每次记录</li>
+<li>找到验证误差开始变差的点就停</li>
+<li>最后在测试集上报告一次</li>
+</ol>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p><strong>第 0 步应该是：先确认你的样本能代表目标环境。</strong> 这一步比选模型重要得多（实验 11）。</p>
+</blockquote>
+<hr>
+<div class="q-title">11. 验证误差 0.005，噪声方差 0.01。这说明什么？</div>
+<p><strong>专业回答</strong></p>
+<p><strong>说明有数据泄漏，而不是模型特别好。</strong></p>
+<p>因为 <code>y = f(x) + ε</code>，而 <code>ε</code> <strong>不可预测</strong>——你的预测再准也无法预测噪声本身。所以<strong>泛化误差的下限就是噪声方差</strong>。</p>
+<p><strong>五种常见泄漏</strong>：重复样本 / 时间泄漏 / 特征泄漏 / <strong>预处理泄漏</strong>（用了全量数据的统计量做标准化）/ 分组泄漏。</p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p>现实中噪声方差通常<strong>未知</strong>。所以这条更常见的用法是反向的：<strong>看到异常低的验证误差，先去查泄漏，而不是先庆祝。</strong></p>
+</blockquote>
+<hr>
+<div class="q-title">12. 离线指标 0.95，上线后很差。最可能的原因？</div>
+<p><strong>专业回答</strong></p>
+<p>按概率排序：① <strong>分布不一致</strong> ② 数据泄漏 ③ 特征不可得/计算方式不同 ④ 评估指标与业务目标不一致。</p>
+<p><strong>实验 11 给了最关键的证据</strong>：同一个模型，同分布验证误差 0.0750，跨分布（平移 1.0σ）跳到 0.1813，平移 3.0σ 跳到 <strong>65.23（870 倍）</strong>。<strong>而训练误差是 0.0101，从头到尾都"看起来很健康"。</strong></p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p><strong>排查的第一件事不是看模型，是看数据分布。</strong> 拿不到线上数据时，唯一可靠的办法是<strong>按来源或时间切分做验证</strong>。</p>
+</blockquote>
+<hr>
+<div class="q-title">13. 学习率太大和太小，症状有什么不同？</div>
+<p><strong>专业回答</strong></p>
+<table><thead><tr><th></th><th>太小</th><th>太大</th></tr></thead><tbody>
+<tr><td>症状</td><td>损失<strong>几乎不动</strong></td><td><strong>震荡</strong>甚至<strong>发散</strong>（NaN/爆炸）</td></tr>
+<tr><td>能否救</td><td><strong>能</strong></td><td>已发散就救不回来</td></tr>
+</tbody></table>
+<p><strong>实验 12 实测</strong>：1e-5 → 23.43；0.3 → 0.006（最优）；1.0 → 第 12 步发散到 <strong>2.7e12</strong>。</p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p><strong>可用区间（0.01~0.3）很宽，但"好用区间"很窄，而且不对称。</strong> 所以安全做法是<strong>从小往大试</strong>。</p>
+</blockquote>
+<hr>
+<div class="q-title">14. "只看最终损失"为什么不够？</div>
+<p><strong>专业回答</strong></p>
+<p>因为同一个"最终损失"可能是三件不同的事：</p>
+<table><thead><tr><th>曲线形状</th><th>含义</th><th>该怎么办</th></tr></thead><tbody>
+<tr><td>平坦且低</td><td>已收敛</td><td>可以停</td></tr>
+<tr><td><strong>仍在下降</strong></td><td><strong>还没训完</strong></td><td><strong>继续训（成本最低的改进）</strong></td></tr>
+<tr><td>上下跳</td><td>学习率偏大</td><td>降学习率</td></tr>
+<tr><td>平坦但高</td><td>容量不足 或 学习率太小</td><td>先排除学习率</td></tr>
+</tbody></table>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p>只看一个数字，你<strong>无法区分"收敛了"和"还在慢慢爬"</strong>——而后者只需要多训一会儿就好了。</p>
+</blockquote>
+<hr>
+<div class="q-title">15. 这本书的结论是什么性质？和 algs4 的 Proposition 有什么根本区别？</div>
+<p><strong>专业回答</strong></p>
+<table><thead><tr><th></th><th>algs4</th><th>d2l</th></tr></thead><tbody>
+<tr><td>结论类型</td><td><strong>Proposition</strong>：可证明</td><td><strong>经验观察</strong>：某组数据某组超参下的事实</td></tr>
+<tr><td>可信度标记</td><td><strong>有</strong>（Proposition / Property / <strong>Assumption</strong>）</td><td><strong>没有</strong></td></tr>
+<tr><td>引用方式</td><td>带前提即可</td><td><strong>必须自己补三个限定</strong></td></tr>
+</tbody></table>
+<p><strong>三个限定</strong>：① 在什么数据分布上 ② 样本量多大 ③ 超参调过没有。</p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p>d2l 里几乎所有"X 更好"都用同样的语气说出来，而读者接收它们的方式也一样。<strong>这就是「经验结论适用边界手册」存在的理由。</strong></p>
+</blockquote>
+<hr>
+<div class="q-title">16. "深度学习只有在有数千个训练样本时才优于线性模型"——这句话有什么问题？</div>
+<p><strong>专业回答</strong></p>
+<p><strong>三个不严谨处</strong>：</p>
+<ol>
+<li><strong>"数千"是量级不是阈值</strong>，而且没说清是"每类数千"还是"总共数千"</li>
+<li><strong>"优于"没有说明指标、幅度和统计显著性</strong></li>
+<li><strong>"许多任务"没有列举</strong>——从语境看指高维感知类任务；换成表格数据，结论可能反过来</li>
+</ol>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p>引用时补上任务类型："对于高维感知类任务，通常需要数千到数万样本；<strong>对表格类任务，简单模型的性价比往往更高</strong>。"</p>
+</blockquote>
+<hr>
+<div class="q-title">17. "过拟合并不总是一件坏事"——会不会被误用？</div>
+<p><strong>专业回答</strong></p>
+<p><strong>会。</strong> 危险误读是"过拟合没关系"。</p>
+<table><thead><tr><th></th><th>正确读法</th><th>危险误读</th></tr></thead><tbody>
+<tr><td>关注</td><td>验证误差</td><td>训练误差</td></tr>
+<tr><td>后果</td><td>模型可用</td><td><strong>离线好看、上线崩</strong></td></tr>
+</tbody></table>
+<p><strong>为什么危险</strong>：一旦把训练误差当优化目标，你会系统性选择<strong>容量更大</strong>的模型——而实验 8 实测 20 阶的训练误差最低（0.0347），但验证误差比 4 阶差。</p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p>书里那句话有一个隐含前提：<strong>你已经在盯着验证误差了</strong>。离开这个前提，它就从"别本末倒置"变成了"别管泛化"。</p>
+</blockquote>
+<hr>
+<div class="q-title">18. "更多数据不会有什么坏处"——什么情况下不成立？</div>
+<p><strong>专业回答</strong></p>
+<p>至少五种反例：</p>
+<table><thead><tr><th>反例</th><th>机制</th></tr></thead><tbody>
+<tr><td>分布不同</td><td>污染训练集（实验 11）</td></tr>
+<tr><td>标签噪声</td><td>拟合错误标签</td></tr>
+<tr><td>数据泄漏</td><td>与测试集重叠，评估被污染</td></tr>
+<tr><td>成本收益</td><td>实验 10：8 倍数据几乎无改善（0.0302→0.0334）</td></tr>
+<tr><td>时间漂移</td><td>旧数据可能有害</td></tr>
+</tbody></table>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p>引用时补前提："<strong>在分布一致、标注可靠的前提下</strong>，更多数据通常降低泛化误差，但<strong>收益递减</strong>。"</p>
+</blockquote>
+<hr>
+<div class="q-title">19. "轻微违背 i.i.d. 也没关系"——边界在哪？</div>
+<p><strong>专业回答</strong></p>
+<p><strong>实验 11 实测</strong>（以"误差翻倍"为判据，边界在 <strong>0.5σ~1.0σ</strong> 之间）：</p>
+<table><thead><tr><th>平移量</th><th>相对同分布</th></tr></thead><tbody>
+<tr><td>0.25σ</td><td>0.27×（几乎没变）</td></tr>
+<tr><td>0.50σ</td><td>0.47×</td></tr>
+<tr><td><strong>1.00σ</strong></td><td><strong>2.57×</strong></td></tr>
+<tr><td>3.00σ</td><td><strong>869.74×</strong></td></tr>
+</tbody></table>
+<p><strong>形状是非线性的</strong>：小幅平移几乎不动，越过某点后指数级恶化。</p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p>"轻微违背没关系"<strong>在一个区间内成立，越界就完全不成立</strong>——而那个边界只能测出来，不能猜出来。</p>
+</blockquote>
+<hr>
+<div class="q-title">20. 书里说"容量越大训练误差越低"，我实测不成立。谁错了？</div>
+<p><strong>专业回答</strong></p>
+<p><strong>都没错，但书里那句话有一个未言明的前提：你能把模型优化到最优解。</strong></p>
+<p><strong>实验 8 实测</strong>：n=100 时 5 阶训练误差 0.078797 &gt; 4 阶的 0.078498。</p>
+<p><strong>原因</strong>：容量大的模型损失曲面更复杂（更多局部极小、更病态的海森矩阵），在<strong>固定迭代次数</strong>下可能还没走到最优。</p>
+<p><strong>实践判断</strong>：如果观察到"容量更大但训练误差更高"，<strong>先排除数值问题（NaN/爆炸），再怀疑优化（加大迭代次数重试），最后才怀疑理论</strong>。</p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p>这个顺序很重要。我在实验 8 里试过不缩放特征，直接 NaN——<strong>那时候调迭代次数没用，得改数值方案。</strong></p>
+</blockquote>
+<hr>
+<h2>第三部分：文本考订与使用说明</h2>
+<h3>一、底本说明</h3>
+<p><strong>这是作者官方免费发布的中文完整版</strong>，不是扫描件。</p>
+<table><thead><tr><th>项</th><th>情况</th></tr></thead><tbody>
+<tr><td>页数</td><td><strong>797 页</strong></td></tr>
+<tr><td>书签</td><td><strong>832 条</strong>（完整目录结构）</td></tr>
+<tr><td>文本层</td><td><strong>完好</strong>（抽查 62 页，0 页无文本）</td></tr>
+<tr><td>语言</td><td><strong>全中文</strong>，代码注释也是中文</td></tr>
+<tr><td>版本</td><td>Release 2.0.0，2023-08-18，PyTorch 实现</td></tr>
+</tbody></table>
+<h3>二、⚠️ 一个必须标注的限制：PDF 里的数学公式被拍平了</h3>
+<p>我核对了原文：公式被提取成文本时<strong>根号拆行、上下标错位</strong>。</p>
+<p>例如第 3.1 节的原文在 txt 里长这样：</p>
+<pre><code>
+y = w⊤x + b + ϵ,
+其中，ϵ ∼N(0, σ2)。
+</code></pre>
+<p>以及：</p>
+<pre><code>
+P(y | x) =
+1
+√
+2πσ2 exp
+ −1
+2σ2 (y −w⊤x −b)2
+
+</code></pre>
+<p>——<strong>引用公式时必须核对原书 PDF，不能只信全文 txt。</strong></p>
+<p><strong>这是一种通用问题</strong>：所有从 PDF 提取的数学内容都有这个风险。所以本笔记与问题手册在引用数学时，都尽量用文字描述而非照抄公式符号。</p>
+<h3>三、与官方在线版的差异</h3>
+<table><thead><tr><th>项目</th><th>说明</th></tr></thead><tbody>
+<tr><td><strong>内容</strong></td><td>在线版是活的（有更新），PDF 是 Release 2.0.0 快照</td></tr>
+<tr><td><strong>代码</strong></td><td>在线版可直接在浏览器运行；PDF 里是静态代码块</td></tr>
+<tr><td><strong>练习</strong></td><td>在线版有可交互练习；PDF 只有题目</td></tr>
+<tr><td><strong>公式</strong></td><td><strong>在线版渲染正常；PDF 提取的文本里公式会错位</strong></td></tr>
+<tr><td><strong>页码</strong></td><td>本笔记全部用<strong>节号</strong>定位（如"4.4 节"）＋ <strong>PDF 页码</strong>，不用印刷页码</td></tr>
+</tbody></table>
+<h3>四、这本书不承诺什么（引用时的边界）</h3>
+<table><thead><tr><th>边界</th><th>说明</th></tr></thead><tbody>
+<tr><td><strong>数学推导偏浅</strong></td><td>它给你代码、图、直觉，但<strong>不给完整证明</strong>。要配 ISLP 补统计基础</td></tr>
+<tr><td><strong>结论全是经验性的</strong></td><td>几乎所有"X 更好"都要加限定（见「经验结论适用边界手册」的 18 条）</td></tr>
+<tr><td><strong>没有可信度标记</strong></td><td>不像 algs4 有 Proposition / Property / <strong>Assumption</strong> 的分级</td></tr>
+<tr><td><strong>框架依赖 i.i.d.</strong></td><td>而书里自己说了这个假设常被违反</td></tr>
+<tr><td><strong>公式文本会错位</strong></td><td>见上面第二节</td></tr>
+</tbody></table>
+<h3>五、跨域连接</h3>
+<p><strong>① 与 algs4 的同构</strong>（这是本项目最有意思的一处结构发现）</p>
+<table><thead><tr><th>algs4 的纪律</th><th>d2l 的纪律</th></tr></thead><tbody>
+<tr><td><strong>代价模型选错了，结论就错了</strong>&lt;br&gt;&lt;em&gt;"数组访问次数"这个模型看不见缓存&lt;/em&gt;</td><td><strong>评估方式选错了，模型就废了</strong>&lt;br&gt;&lt;em&gt;用训练误差评估等于没评估&lt;/em&gt;</td></tr>
+</tbody></table>
+<p>——<strong>两者都是"衡量方式决定了你能看见什么"。</strong></p>
+<p>而本项目 <code>动手实验/</code> 里，这两半都有了可跑的证据：</p>
+<ul>
+<li><strong>algs4 那一半</strong>：实验 3（矩阵遍历差 18 倍，而账面复杂度一样）</li>
+<li><strong>d2l 那一半</strong>：实验 8（两条误差曲线的相对位置）、实验 11（训练误差看不出分布问题）</li>
+</ul>
+<p><strong>② 与 MacKay《信息论》的关系</strong></p>
+<p>MacKay 第 V 部分（38–44 章）讲了神经网络，包括 <code>Learning as Inference</code>、<code>Supervised Learning in Multilayer Networks</code>。</p>
+<table><thead><tr><th>书</th><th>给你什么</th></tr></thead><tbody>
+<tr><td><strong>MacKay</strong></td><td><strong>为什么这样学是有道理的</strong>——信息论视角，把学习当作推断</td></tr>
+<tr><td><strong>d2l</strong></td><td><strong>实际上怎么跑起来</strong>——代码、超参、失败诊断</td></tr>
+</tbody></table>
+<p><strong>③ 与马尔的《视觉》</strong>（在 <code>06_文学与生命书写</code>）</p>
+<p>马尔的《视觉》讲"生物怎么看见"的计算理论，而<strong>现代视觉模型完全空缺</strong>——这是这一域最该接上的一个接口。UDL 与 CS231n 已下载/可达，<strong>产出待做</strong>。</p>
+<hr>
+<h2>第四部分：配套的可跑实验</h2>
+<p>这一域的机器学习部分有 <strong>5 个能真跑的实验</strong>（本机 <code>torch 2.8.0+cpu</code> 验证通过，共约 45 秒）：</p>
+<table><thead><tr><th>编号</th><th>文件</th><th>验证什么</th><th>关键实测结果</th></tr></thead><tbody>
+<tr><td><strong>8</strong></td><td>实验8_过拟合分叉.py</td><td>容量÷样本量决定过拟合</td><td>样本 100 时最优 ≥20 阶；样本 20 时最优 4 阶</td></tr>
+<tr><td><strong>9</strong></td><td>实验9_权重衰减.py</td><td>正则化什么时候有用</td><td>12 阶没用（λ=0 最优）；3 阶有用（2.92→2.56）</td></tr>
+<tr><td><strong>10</strong></td><td>实验10_数据量的作用.py</td><td>数据量与泛化误差</td><td>门槛效应：40 样本时从 1.96 骤降到 0.037</td></tr>
+<tr><td><strong>11</strong></td><td>实验11_打破独立同分布.py</td><td>i.i.d. 失效的后果</td><td>训练 0.0101 健康，跨分布 0.1813，平移 3σ 时 870 倍</td></tr>
+<tr><td><strong>12</strong></td><td>实验12_学习率.py</td><td>学习率的可用区间</td><td>1e-5→23.43；0.3 最优；1.0 第 12 步发散到 2.7e12</td></tr>
+</tbody></table>
+<p>运行方式：</p>
+<pre><code>
+cd 07_技术/动手实验
+python 全部运行.py 8 9 10 11 12      # 只跑模型组
+python 实验11_打破独立同分布.py        # 或单独跑某一个
+</code></pre>
+<p><strong>这五个实验刻意保留了三处"我的预期被数据推翻"的记录</strong>——那些部分比成功的部分更有教学价值：</p>
+<ol>
+<li><strong>实验 8</strong>：我原以为"阶数高就过拟合"，实测样本 100 时<strong>根本不出现</strong></li>
+<li><strong>实验 9</strong>：我原以为会看到完整 U 形，实测<strong>只有右半边</strong></li>
+<li><strong>实验 11</strong>：我一开始写的代码有个隐蔽 bug（<code>w</code> 是一维导致广播成方阵），<strong>程序不报错但结果毫无意义</strong></li>
+</ol>
+<hr>
+<p><em>本笔记基于《动手学深度学习》Release 2.0.0 中文版（作者官方免费发布，797 页）全文精读整理。</em></p>
+<p><em>⚠️ 引用边界：这本书的结论几乎全部是<strong>经验性</strong>的。引用任何一条时，请连同<strong>数据分布、样本量、超参数</strong>三个条件一起引用——那正是「经验结论适用边界手册」的 18 条在做的事。</em></p>
+  </main>
+
+  <div class="footer">
+    《动手学深度学习》精华笔记与专业问题 · 李沐等<br>
+    先自己回答，再看解答 —— 能讲成"通俗解释"那个样子，才算真的懂了
+  </div>
+
+</div>
+</body>
+</html>

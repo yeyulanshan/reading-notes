@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>四层解剖与 61 条 Proposition</title>
+<style>
+  :root{
+    --paper:#f7f4ed;
+    --card:#fffdf8;
+    --edge:#ded6c8;
+    --ink:#2b2721;
+    --ink-mid:#5c5449;
+    --ink-soft:#8c8175;
+    --teal:#166060;
+    --teal-soft:#e6efee;
+    --rust:#b1442a;
+    --rust-soft:#f7e9e4;
+    --gold:#9a7420;
+    --gold-soft:#f5eeda;
+    --sage:#55703c;
+    --sage-soft:#ecf0e2;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--paper);color:var(--ink);padding:36px 20px 48px;line-height:1.88;
+    -webkit-font-smoothing:antialiased;
+  }
+  .container{max-width:920px;margin:0 auto;}
+
+  .header{
+    text-align:center;margin-bottom:30px;padding:44px 24px 40px;
+    background:var(--card);border:1px solid var(--edge);border-top:5px solid var(--teal);
+    border-radius:4px;
+  }
+  .header h1{font-size:27px;color:var(--ink);margin-bottom:12px;letter-spacing:.5px;}
+  .header .subtitle{font-size:14.5px;color:var(--ink-mid);}
+  .header .author{margin-top:16px;font-size:12.5px;color:var(--ink-soft);letter-spacing:.5px;}
+
+  main{
+    background:var(--card);border:1px solid var(--edge);border-radius:4px;
+    padding:34px 38px;
+  }
+
+  h1{font-size:23px;color:var(--ink);margin:8px 0 18px;}
+  h2{
+    font-size:20px;color:var(--ink);margin:40px 0 16px;
+    padding-left:13px;border-left:4px solid var(--teal);letter-spacing:.3px;
+  }
+  h2:first-child{margin-top:0;}
+  h3{font-size:16.5px;color:var(--teal);margin:28px 0 12px;font-weight:700;}
+  h4{font-size:15px;color:var(--ink-mid);margin:18px 0 8px;}
+
+  p{color:var(--ink-mid);font-size:14.5px;margin-bottom:12px;}
+  strong{color:var(--ink);}
+  em{color:var(--rust);font-style:normal;font-weight:600;}
+
+  ul,ol{margin:8px 0 14px 24px;}
+  li{color:var(--ink-mid);font-size:14.5px;margin-bottom:6px;}
+
+  hr{border:none;border-top:1px solid var(--edge);margin:26px 0;}
+
+  table{width:100%;border-collapse:collapse;margin:14px 0 18px;font-size:13.5px;}
+  th,td{padding:10px 12px;border:1px solid var(--edge);text-align:left;vertical-align:top;}
+  th{background:var(--teal-soft);color:var(--teal);font-weight:700;}
+  td{color:var(--ink-mid);}
+
+  blockquote{
+    background:var(--gold-soft);border:1px solid #e6dcc0;border-left:4px solid var(--gold);
+    border-radius:0 3px 3px 0;padding:16px 20px;margin:14px 0;
+  }
+  blockquote p{color:#6d5011;font-size:14px;font-style:italic;margin-bottom:8px;}
+  blockquote p:last-child{margin-bottom:0;}
+  blockquote strong{color:#5a420d;}
+
+  code{
+    background:var(--paper);padding:1.5px 6px;border-radius:3px;
+    font-family:Consolas,Monaco,monospace;font-size:13px;color:var(--teal);
+  }
+  pre{
+    background:var(--paper);border:1px solid var(--edge);border-radius:3px;
+    padding:14px 16px;overflow-x:auto;margin:12px 0 16px;
+  }
+  pre code{background:none;padding:0;line-height:1.65;}
+
+  /* 专业问题标题 */
+  .q-title{
+    background:var(--teal-soft);border-left:4px solid var(--teal);
+    border-radius:0 3px 3px 0;padding:13px 18px;margin:28px 0 12px;
+    color:var(--ink);font-size:15.5px;font-weight:700;line-height:1.7;
+  }
+
+  .footer{
+    text-align:center;margin-top:38px;padding:20px;color:var(--ink-soft);font-size:12.5px;line-height:1.9;
+  }
+
+  @media(max-width:640px){
+    .header h1{font-size:20px;}
+    h2{font-size:17.5px;}
+    body{padding:20px 14px 32px;}
+    main{padding:22px 18px;}
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <h1>四层解剖与 61 条 Proposition</h1>
+    <div class="subtitle">《Algorithms》第 4 版 精华笔记与专业问题 · 20 个专业问题 + 通俗解释</div>
+    <div class="author">Robert Sedgewick &amp; Kevin Wayne · 普林斯顿 · 官方免费在线教材</div>
+  </div>
+
+  <main>
+<blockquote>
+<p>这份文档是 07_技术 域「计算基础」缺口的主答。它是<strong>作者官方免费放出的完整在线教材</strong>——30 节全部可达，已下载到 <code>00_待补书目/Sedgewick_Algorithms4_在线教材/</code>。</p>
+<p></p>
+<p>配套产出：</p>
+<p>- <strong>整体架构</strong>——四层解剖、科学方法、四种输入依赖对策</p>
+<p>- <strong>问题手册</strong>——28 题（L1 5 / L2 9 / L3 8 / L4 6），以全书 <strong>61 条 Proposition</strong> 为骨架，50 项自测</p>
+<p>- <strong>助人手册</strong>——12 个"帮他看性能问题"的场景，每个都标明"什么时候该停"</p>
+<p></p>
+<p>⚠️ <strong>一个必须说清的限制</strong>：本书是 <strong>Java</strong> 的。作者另有《Algorithms in C》，但那本没有免费在线版。把代码当伪代码读完全可行——因为这本书的重点是<strong>结构与代价</strong>，不是语言细节。</p>
+</blockquote>
+<hr>
+<h2>第一部分：精读笔记</h2>
+<h3>一、这本书真正的方法论：四层解剖</h3>
+<p>它给每个数据结构都按同一套四层讲。<strong>这才是它比"算法大全"更值得读的地方</strong>——它给你一个可以套用到任何数据结构的检查表：</p>
+<table><thead><tr><th>层</th><th>问的问题</th></tr></thead><tbody>
+<tr><td><strong>API · 抽象</strong></td><td>它对使用者承诺什么？</td></tr>
+<tr><td><strong>实现 · 机制</strong></td><td>数据放在哪、操作怎么做？</td></tr>
+<tr><td><strong>性能 · 代价</strong></td><td>代价多高、在什么条件下成立？</td></tr>
+<tr><td><strong>策略 · 选择</strong></td><td>什么时候用它、什么时候不用？</td></tr>
+</tbody></table>
+<p><strong>和 OSTEP 那套"抽象 → 机制 → 策略"是同一个套路</strong>，只是多了一层"代价"。而这一层不能省——因为在算法里，代价不是附带信息，<strong>它就是选择依据本身</strong>。</p>
+<p><strong>而第四层不能从第三层直接推出来</strong>，这是关键。举一个例子：</p>
+<table><thead><tr><th></th><th>红黑树</th><th>哈希表</th></tr></thead><tbody>
+<tr><td>查找</td><td><code>~2 lg N</code>（保证）</td><td><code>~N/M</code>（平均）</td></tr>
+<tr><td>有序操作</td><td>✅ 支持</td><td>❌ 不支持</td></tr>
+<tr><td>最坏情况</td><td>对数（有保证）</td><td>线性（无保证）</td></tr>
+</tbody></table>
+<p>——如果你的应用需要"找出所有 100 到 200 之间的键"，<strong>哈希表的平均代价再低也没用，因为它压根不提供这个操作。</strong></p>
+<p><strong>所以选择依据是"你要什么操作"，不是"哪个平均更快"。</strong></p>
+<h3>二、第 1.4 节：它把"分析算法"做成了科学方法</h3>
+<p>这是全书方法论的心脏。它从一个朴素的问题开始：</p>
+<blockquote>
+<p>How long will my program take?</p>
+<p>Why does my program run out of memory?</p>
+</blockquote>
+<p>然后它的回答方式不是"给你公式"，是<strong>把科学方法搬过来</strong>：</p>
+<table><thead><tr><th>步</th><th>内容</th></tr></thead><tbody>
+<tr><td><strong>1 观察</strong></td><td>"Observe some feature of the natural world, generally with precise measurements."</td></tr>
+<tr><td><strong>2 假设</strong></td><td>"Hypothesize a model that is consistent with the observations."</td></tr>
+<tr><td><strong>3 预测</strong></td><td>"Predict events using the hypothesis."</td></tr>
+<tr><td><strong>4 验证</strong></td><td>"Verify the predictions by making further observations."</td></tr>
+<tr><td><strong>5 重复至吻合</strong></td><td>"Validate by repeating until the hypothesis and observations agree."</td></tr>
+</tbody></table>
+<p><strong>而它给这个类比加了一个硬条件</strong>——这一句是整节的关键：</p>
+<blockquote>
+<p>"The experiments we design must be <strong>reproducible</strong> and the hypotheses that we formulate must be <strong>falsifiable</strong>."</p>
+</blockquote>
+<p>——<strong>实验必须可复现，假设必须可证伪。</strong> 这就是为什么这一域和其他域不同：在别的域你只能说"这个说法有道理"，在这里你必须说"这个说法能不能被测量推翻"。</p>
+<h3>三、倍增测试：从数据里把公式读出来</h3>
+<p>观察怎么变成数据？靠三个类：</p>
+<table><thead><tr><th>类</th><th>作用</th></tr></thead><tbody>
+<tr><td><code>Stopwatch.java</code></td><td>测一段程序的实际运行时间</td></tr>
+<tr><td><code>DoublingTest.java</code></td><td>把输入规模<strong>每次翻倍</strong>，打印各规模下的耗时</td></tr>
+<tr><td><code>DoublingRatio.java</code></td><td>同上，但额外输出<strong>相邻规模的耗时比值</strong></td></tr>
+</tbody></table>
+<p><strong>为什么要输出比值</strong>——这是全书最聪明的一个设计。如果耗时 <code>T(N) ~ a·N^b</code>，那么把 N 翻倍：</p>
+<pre><code>
+T(2N) / T(N) ≈ a(2N)^b / (aN^b) = 2^b
+</code></pre>
+<p>——<strong>比值只跟指数 b 有关，跟常数 a 无关。</strong> 所以你不需要先知道公式，就能从数据里把 b 读出来：</p>
+<table><thead><tr><th>翻倍后的比值</th><th>增长级</th><th>例子</th></tr></thead><tbody>
+<tr><td><strong>1</strong></td><td>常数</td><td>数组索引</td></tr>
+<tr><td><strong>2</strong></td><td>线性</td><td>一次遍历</td></tr>
+<tr><td><strong>2（略大于 2）</strong></td><td><code>N log N</code></td><td>归并排序</td></tr>
+<tr><td><strong>4</strong></td><td><code>N²</code></td><td>选择排序</td></tr>
+<tr><td><strong>8</strong></td><td><code>N³</code></td><td>暴力 3-sum</td></tr>
+</tbody></table>
+<p><strong>为什么"略大于 2"就能认出 N log N</strong>：因为 <code>2N·log(2N) / (N·log N) = 2·(1 + log2/log N)</code>——当 N 很大时趋近 2，但<strong>总是略大于 2</strong>。而纯线性的比值恰好是 2，不多不少。</p>
+<h3>四、从"耗时"到"公式"的四个约定</h3>
+<table><thead><tr><th>约定</th><th>内容</th><th>为什么需要它</th></tr></thead><tbody>
+<tr><td><strong>波浪号近似</strong></td><td>写成 <code>g(N) ~ f(N)</code>，意思是 <code>g(N)/f(N) → 1</code></td><td>扔掉低阶项——它们让公式变复杂但不改变结论</td></tr>
+<tr><td><strong>增长级</strong></td><td>取 <code>f(N) = N^b log^c N</code> 的形式</td><td>因为实现算法的结构原件只有几种（语句、条件、循环、嵌套、调用），所以增长级只可能是少数几个函数</td></tr>
+<tr><td><strong>代价模型</strong></td><td><strong>明确定义什么是"基本操作"</strong></td><td>不谈代价模型就谈复杂度是含糊的</td></tr>
+<tr><td><strong>Proposition</strong></td><td>精确的命题，含增长级与常数</td><td>例如：<code>~ N³/2 array accesses</code></td></tr>
+</tbody></table>
+<p><strong>"代价模型"那一条的严谨性值得单独说</strong>：它不说"3-sum 是 O(N³)"，它说"<strong>3-sum 在'数组访问次数'这个代价模型下是 ~N³/2</strong>"。换一个代价模型，命题就要重写。</p>
+<blockquote>
+<p><strong>Proposition（原文）</strong>：The brute-force 3-sum algorithm uses <strong>~ N³ / 2 array accesses</strong> to compute the number of triples that sum to 0 among N numbers.</p>
+</blockquote>
+<h3>五、四种对付"输入依赖"的办法</h3>
+<p>同一段程序，不同输入耗时可能差几个数量级。这一节讲怎么办：</p>
+<table><thead><tr><th>办法</th><th>内容</th><th>什么时候用</th></tr></thead><tbody>
+<tr><td><strong>输入模型</strong></td><td>"We can carefully model the kind of input to be processed."</td><td>作者自己标了弱点：<strong>"the model may be unrealistic"</strong></td></tr>
+<tr><td><strong>最坏情况保证</strong></td><td>无论什么输入，耗时都小于某个界</td><td>作者的原话很具体：<strong>"might be appropriate for the software that runs a nuclear reactor or a pacemaker or the brakes in your car."</strong></td></tr>
+<tr><td><strong>随机化算法</strong></td><td>引入随机性（快排、哈希）</td><td><strong>"the chance that they are invalid is less than the chance your computer will be struck by lightning"</strong></td></tr>
+<tr><td><strong>摊还分析</strong></td><td>对操作<strong>序列</strong>给出最坏情况保证</td><td>最典型的例子是可扩容数组</td></tr>
+</tbody></table>
+<h4>摊还分析：两条命题值得逐字读</h4>
+<blockquote>
+<p><strong>Proposition</strong>：In the linked-list implementation of Bag, Stack, and Queue, all operations take <strong>constant time in the worst case</strong>.</p>
+<p></p>
+<p><strong>Proposition</strong>：In the resizing-array implementation of Bag, Stack, and Queue, starting from an empty data structure, <strong>any sequence of N operations takes time proportional to N in the worst case</strong> (amortized constant time per operation).</p>
+</blockquote>
+<p><strong>这两条的差别是这一节最重要的东西</strong>：</p>
+<ul>
+<li>链表的承诺是<strong>每一次操作都快</strong>（真正的最坏情况常数）</li>
+<li>可扩容数组的承诺是<strong>平均下来快</strong>——某一次扩容操作会慢，但它不常发生</li>
+</ul>
+<p><strong>这就是"摊还"这个词的全部意思：不是每次都快，是序列总体快。</strong> 而这两者能不能互换，取决于你的应用能否容忍偶发的延迟尖峰——<strong>这是一个策略问题，不是机制问题。</strong></p>
+<h4>一个重要的区分：摊还 vs 平均情况</h4>
+<table><thead><tr><th></th><th>平均情况分析</th><th>摊还分析</th></tr></thead><tbody>
+<tr><td>对什么求平均</td><td><strong>输入的概率分布</strong></td><td><strong>操作序列</strong></td></tr>
+<tr><td>需要什么假设</td><td>需要<strong>假定输入的分布</strong></td><td><strong>不需要</strong>输入分布假设</td></tr>
+<tr><td>保证强度</td><td>弱——分布不成立就失效</td><td><strong>强</strong>——对<strong>任意</strong>操作序列都成立</td></tr>
+<tr><td>例子</td><td>BST 查找 <code>~2 ln N</code>（<strong>要求随机键</strong>）</td><td>可扩容数组：<strong>任意 N 次操作总共 O(N)</strong></td></tr>
+</tbody></table>
+<p><strong>所以摊还是更强的一种保证</strong>：它不依赖你对输入的猜测。<strong>但它也有软肋</strong>——它是<strong>对序列的保证，不是对单次操作的保证</strong>，所以对"每次操作都有硬实时要求"的场景，摊还不够用。</p>
+<h3>六、内存核算：它把"内存"也做成了可计算的</h3>
+<p>这是很多算法书跳过的部分，而它恰好是通往"真实硬件"那一层的桥。方法是：<strong>数变量个数，按类型加权字节数</strong>。在 64 位机器上：</p>
+<table><thead><tr><th>对象</th><th>开销</th></tr></thead><tbody>
+<tr><td><strong>对象本身</strong></td><td><strong>16 字节</strong>开销，且总量<strong>补齐到 8 的倍数</strong></td></tr>
+<tr><td><strong>引用</strong></td><td><strong>8 字节</strong></td></tr>
+<tr><td><strong>嵌套内部类</strong>（如链表 <code>Node</code>）</td><td><strong>额外 8 字节</strong>（指向外围实例的引用）</td></tr>
+<tr><td><strong>数组</strong></td><td><strong>24 字节</strong>头部（16 对象开销 + 4 长度 + 4 补齐）</td></tr>
+<tr><td><strong>字符串</strong>（长度 N）</td><td><strong>56 + 2N 字节</strong>（String 对象 32 + 字符数组 24 + 2N）</td></tr>
+</tbody></table>
+<p><strong>而它给了一条很实用的记账约定</strong>：</p>
+<blockquote>
+<p>我们<strong>算</strong> String 对象里的 char[] 数组（因为它是创建字符串时分配的），但<strong>不算</strong> StackOfStrings 里那些 String 对象（因为它们是客户端创建的）。</p>
+</blockquote>
+<p>——<strong>算谁分配的内存，不算谁引用的内存。</strong> 这条约定让内存核算变得可判定。</p>
+<h3>七、61 条 Proposition 构成的骨架</h3>
+<p>全书有 <strong>61 条</strong>明确标记的结论，分三种类型——<strong>这个区分是本书最有价值的设计之一</strong>：</p>
+<table><thead><tr><th>类型</th><th>含义</th><th>例子</th><th>能不能依赖</th></tr></thead><tbody>
+<tr><td><strong>Proposition</strong></td><td><strong>可证明</strong>的数学结论</td><td>红黑树高度 ≤ 2 lg N</td><td>✅ <strong>总是</strong>（只要前提满足）</td></tr>
+<tr><td><strong>Property</strong></td><td><strong>实际使用中的观察</strong></td><td>"Quicksort is the fastest general-purpose sort"</td><td>⚠️ <strong>看环境</strong></td></tr>
+<tr><td><strong>Assumption</strong></td><td><strong>无法证明的前置假定</strong></td><td>均匀散列假设</td><td>❌ <strong>可能不成立</strong></td></tr>
+</tbody></table>
+<p><strong>绝大多数教材把所有结论写成同一种格式</strong>（"定理"或"结论"），而这本书用三种标记明确告诉你每个结论的<strong>可信度类型</strong>。</p>
+<p>以下是各章最该记住的那些：</p>
+<h4>第 1 章 · 基础</h4>
+<blockquote>
+<p><strong>Proposition（链表/数组栈队列）</strong>：见上。</p>
+<p></p>
+<p><strong>Corollary（加权 quick-union）</strong>：For weighted quick-union with n sites, the depth of any node is <strong>at most lg n</strong>.</p>
+<p></p>
+<p><strong>Proposition（quick-find）</strong>：uses one array access for each <code>find()</code> and <strong>between N and 2N−1 array accesses for each <code>union()</code></strong>.</p>
+</blockquote>
+<p><strong>并查集的四个版本</strong>：</p>
+<table><thead><tr><th>版本</th><th>find</th><th>union</th><th>问题</th></tr></thead><tbody>
+<tr><td>quick-find</td><td><code>1</code></td><td><strong><code>N</code></strong></td><td>union 太贵</td></tr>
+<tr><td>quick-union</td><td><code>~N</code>（最坏）</td><td>取决于树高</td><td>树可能退化</td></tr>
+<tr><td><strong>加权 quick-union</strong></td><td><code>~lg N</code></td><td><code>~lg N</code></td><td>—</td></tr>
+<tr><td>+ 路径压缩</td><td>接近常数（摊还）</td><td>接近常数</td><td>—</td></tr>
+</tbody></table>
+<p><strong>关键在"加权"那一步</strong>：不加权时 union 可能把<strong>大树挂到小树上</strong>。加权指的是<strong>总是把小的树挂到大的树上</strong>——这样<strong>任何一个节点的深度每次增加，它所在的树至少翻倍</strong>，所以深度最多 <code>lg N</code>。</p>
+<h4>第 2 章 · 排序</h4>
+<blockquote>
+<p><strong>Proposition</strong>：Selection sort uses <strong>~n²/2 compares and n exchanges</strong>.</p>
+<p></p>
+<p><strong>Proposition</strong>：Insertion sort uses <strong>~n²/4 compares and ~n²/4 exchanges</strong> on average, and <strong>~n²/2 compares and ~n²/2 exchanges</strong> in the worst case.</p>
+<p></p>
+<p><strong>Proposition（归并）</strong>：Top-down mergesort uses between <strong>1/2 N lg N and N lg N compares</strong>.</p>
+<p></p>
+<p><strong>Proposition（下界）</strong>：No compare-based sorting algorithm can guarantee to sort N items with <strong>fewer than lg(N!) ~ N lg N compares</strong>.</p>
+<p></p>
+<p><strong>Proposition</strong>：Mergesort is an <strong>asymptotically optimal</strong> compare-based sorting algorithm.</p>
+<p></p>
+<p><strong>Proposition（快排最坏）</strong>：Quicksort uses <strong>~N²/2 compares</strong> in the worst case.</p>
+<p></p>
+<p><strong>Proposition（三向切分）</strong>：Quicksort with 3-way partitioning is <strong>entropy-optimal</strong>.</p>
+</blockquote>
+<p><strong>下界怎么来的</strong>（这是最有价值的部分）：用<strong>决策树</strong>。N 个元素有 <code>N!</code> 种排列，每次比较只有两个结果，所以一棵高为 h 的决策树最多有 <code>2^h</code> 个叶子。要区分 <code>N!</code> 种情况就需要 <code>2^h ≥ N!</code>，即 <code>h ≥ lg(N!) ~ N lg N</code>。</p>
+<p><strong>"熵最优"是什么意思</strong>：如果输入里有大量重复键，三向切分把数组分成"小于 / 等于 / 大于"三段，<strong>等于段的元素已经就位，不参与递归</strong>。于是运行时间与输入的"信息量"成正比——这正是 Shannon 熵的形状。<strong>这是 algs4 里唯一一个直接用"熵"命名的结论。</strong></p>
+<h4>第 2.4 节 · 优先队列</h4>
+<blockquote>
+<p><strong>Definition</strong>：A binary tree is <strong>heap-ordered</strong> if the key in each node is larger than (or equal to) the keys in that node's two children (if any).</p>
+<p></p>
+<p><strong>Definition</strong>：A binary heap is a set of nodes with keys arranged in a complete heap-ordered binary tree, <strong>represented in level order in an array</strong> (not using the first entry).</p>
+<p></p>
+<p><strong>Proposition</strong>：The largest key in a heap-ordered binary tree is found at <strong>the root</strong>.</p>
+<p></p>
+<p><strong>Proposition</strong>：In an n-item priority queue, the heap algorithms require no more than <strong>1 + lg n compares for insert</strong> and no more than <strong>2 lg n compares for remove-the-maximum</strong>.</p>
+<p></p>
+<p><strong>Proposition</strong>：<strong>Sink-based heap construction is linear time.</strong></p>
+<p></p>
+<p><strong>Proposition</strong>：Heapsort uses fewer than <strong>2 n lg n compares and exchanges</strong>.</p>
+</blockquote>
+<p><strong>为什么堆构造是线性时间</strong>——直觉上会算成 <code>N log N</code>。关键：<strong>从下往上 sink，而不是从上往下 swim</strong>。而且节点的高度分布极不均匀：</p>
+<table><thead><tr><th>节点所在层</th><th>节点数</th><th>sink 的最大深度</th></tr></thead><tbody>
+<tr><td>倒数第二层</td><td>N/4</td><td>1</td></tr>
+<tr><td>倒数第三层</td><td>N/8</td><td>2</td></tr>
+<tr><td>根</td><td>1</td><td>lg N</td></tr>
+</tbody></table>
+<p>——<strong>绝大多数节点的 sink 深度极小，只有极少数节点要沉得深。</strong> 把 <code>Σ (N/2^(h+1))·h</code> 求和，结果收敛到 <code>2N</code>，是线性的。</p>
+<p><strong>而如果用"从上往下 swim"建堆</strong>，代价是 <code>N log N</code>。<strong>同样的结构，两种构建方向，代价差一个 log。</strong></p>
+<h4>第 3 章 · 查找（全书主体）</h4>
+<blockquote>
+<p><strong>Proposition</strong>：Binary search in an ordered array with N keys uses <strong>no more than lg N + 1 compares</strong>.</p>
+<p></p>
+<p><strong>Proposition</strong>：Inserting a new key into an ordered array uses <strong>~ 2N array accesses</strong> in the worst case.</p>
+<p></p>
+<p><strong>Proposition（BST 命中）</strong>：Search hits in a BST built from <strong>N random keys</strong> require about <strong>~2 ln N</strong> compares, on average.</p>
+<p></p>
+<p><strong>Proposition（BST 有序操作）</strong>：Search, insertion, finding the minimum, finding the maximum, floor, ceiling, <strong>select</strong>, and <strong>rank</strong> all take time proportional to the height in a BST.</p>
+<p></p>
+<p><strong>Proposition（2-3 树）</strong>：Search and insert operations in a 2-3 tree with N keys are <strong>guaranteed</strong> to take time proportional to <strong>lg N</strong>.</p>
+<p></p>
+<p><strong>Proposition（红黑树高度）</strong>：The height of a red-black BST with N nodes is <strong>no more than 2 lg N</strong>.</p>
+<p></p>
+<p><strong>Assumption J（均匀散列）</strong>：The hash function that we use <strong>uniformly distributes</strong> keys among the integer values between 0 and M−1.</p>
+<p></p>
+<p><strong>Proposition（拉链哈希）</strong>：In a separate-chaining hash table with M lists and N keys, the number of compares is <strong>~N/M</strong>.</p>
+<p></p>
+<p><strong>Proposition（线性探测）</strong>：In a linear-probing hash table of size M with <strong>N = αM</strong> keys, the number of probes is <strong>~½(1 + 1/(1−α))</strong> for search hits.</p>
+</blockquote>
+<p><strong>五个符号表实现的完整对照</strong>：</p>
+<table><thead><tr><th>实现</th><th>查找（最坏）</th><th>插入（最坏）</th><th>有序操作</th><th>关键前提</th></tr></thead><tbody>
+<tr><td>无序链表</td><td><code>~N</code></td><td><code>~N</code></td><td>❌</td><td>—</td></tr>
+<tr><td>有序数组</td><td><code>~lg N</code></td><td><strong><code>~2N</code></strong></td><td>✅</td><td>插入要搬移</td></tr>
+<tr><td>BST</td><td><code>~2 ln N</code>（平均）/ <strong><code>~N</code>（最坏）</strong></td><td>同查找</td><td>✅</td><td><strong>随机键</strong></td></tr>
+<tr><td>红黑树</td><td><code>~2 lg N</code>（<strong>保证</strong>）</td><td><code>~2 lg N</code></td><td>✅</td><td>—</td></tr>
+<tr><td>哈希表</td><td><code>~N/M</code>（平均）/ <strong><code>~N</code>（最坏）</strong></td><td>同查找</td><td><strong>❌</strong></td><td><strong>均匀散列</strong></td></tr>
+</tbody></table>
+<p><strong>红黑树"2 lg N"里的 2 从哪来</strong>：红黑树把 2-3 树的每个 3-节点拆成两个节点（一红一黑）。最坏情况下所有链接都是红的，于是高度翻倍。</p>
+<p><strong>线性探测那个公式的后果很值得注意</strong>：当 <code>α → 1</code>（表快满）时，<code>1/(1−α) → ∞</code>。所以<strong>线性探测必须留出空间</strong>——实践中 α 通常控制在 1/2 到 1/8 之间。</p>
+<h4>第 4 章 · 图</h4>
+<blockquote>
+<p><strong>Proposition（DFS）</strong>：DFS marks all the vertices connected to a given source <strong>in time proportional to the sum of their degrees</strong>.</p>
+<p></p>
+<p><strong>Proposition</strong>：DFS uses <strong>preprocessing time and space proportional to V + E</strong>.</p>
+<p></p>
+<p><strong>Proposition（Greedy MST）</strong>：The greedy algorithm computes the MST of <strong>any connected edge-weighted graph</strong>.</p>
+<p></p>
+<p><strong>Proposition（Prim / Kruskal）</strong>：Prim's / Kruskal's algorithm computes the MST of any connected edge-weighted graph.</p>
+<p></p>
+<p><strong>Proposition（Dijkstra）</strong>：solves the single-source shortest-paths problem in edge-weighted digraphs with <strong>nonnegative weights</strong>.</p>
+<p></p>
+<p><strong>Proposition（拓扑序）</strong>：we can solve the single-source shortest-paths problem <strong>in time proportional to E + V</strong> for edge-weighted <strong>DAGs</strong>.</p>
+<p></p>
+<p><strong>Proposition（Bellman-Ford）</strong>：solves the single-source shortest-paths problem in edge-weighted digraphs with <strong>no negative cycles</strong>.</p>
+</blockquote>
+<p><strong>这一组命题最有价值的地方是前提的强弱对比</strong>：</p>
+<table><thead><tr><th>算法</th><th>前提</th><th>代价</th><th>为什么</th></tr></thead><tbody>
+<tr><td><strong>Dijkstra</strong></td><td><strong>非负权</strong>（最强）</td><td><code>E log V</code></td><td>贪心：一旦确定就永不回头</td></tr>
+<tr><td><strong>拓扑序</strong></td><td><strong>DAG</strong></td><td><strong><code>E + V</code></strong></td><td>拓扑序天然保证"之后再无更新"</td></tr>
+<tr><td><strong>Bellman-Ford</strong></td><td><strong>无负环</strong>（最弱）</td><td><code>E·V</code></td><td>放弃贪心，反复松弛 V 轮</td></tr>
+</tbody></table>
+<p>——<strong>前提越弱，代价越高。</strong></p>
+<h4>第 5 章 · 字符串</h4>
+<blockquote>
+<p><strong>Property</strong>：<strong>No prefix-free code uses fewer bits</strong> than the optimal prefix-free code. （哈夫曼编码最优性）</p>
+</blockquote>
+<p><strong>这一章的整体逻辑</strong>值得单独说——它共享一个思想：<strong>不要跟字符"比较"，要利用字符的结构。</strong></p>
+<table><thead><tr><th>节</th><th>做法</th></tr></thead><tbody>
+<tr><td><strong>5.1 基数排序</strong></td><td>不比较，看字符，<strong>突破了 <code>N lg N</code> 下界</strong></td></tr>
+<tr><td><strong>5.2 Trie</strong></td><td>用字符路径代替比较</td></tr>
+<tr><td><strong>5.3 子串查找</strong></td><td>KMP 之类，在不回溯的前提下找模式</td></tr>
+<tr><td><strong>5.4 正则</strong></td><td>把模式变成自动机</td></tr>
+<tr><td><strong>5.5 压缩</strong></td><td>用频率构造最优前缀码</td></tr>
+</tbody></table>
+<p><strong>Trie 换来的核心能力是前缀查询</strong>：找"所有以 <code>abc</code> 开头的键"只需沿 <code>a→b→c</code> 走三步。<strong>哈希表做不到这件事——因为它把键打散了，"前缀"这个概念不存在了。</strong></p>
+<p><strong>而哈夫曼编码与 03 域的信息论怎么接</strong>：</p>
+<table><thead><tr><th></th><th>MacKay（信息论）</th><th>algs4</th></tr></thead><tbody>
+<tr><td>问题</td><td>一个信源最少要用多少比特表示？</td><td>给定符号频率，怎么构造最短的前缀码？</td></tr>
+<tr><td>答案</td><td><strong>熵 H</strong>（下界，且可达）</td><td><strong>哈夫曼编码</strong>（在前缀码这一类里最优）</td></tr>
+</tbody></table>
+<p><strong>两者之间有一个必须知道的间隙</strong>：哈夫曼编码的期望码长落在 <code>[H, H+1)</code> 之间——<strong>它达不到熵，最多逼近。</strong>（因为每个符号至少要 1 比特，而概率很小的符号其自信息远小于 1 比特。）MacKay 那边讲的<strong>算术编码</strong>能突破这个 1 比特的损失。</p>
+<h4>第 6 章 · 语境（别处少见的一章）</h4>
+<table><thead><tr><th>节</th><th>内容</th></tr></thead><tbody>
+<tr><td>6.1</td><td>事件驱动模拟（硬球模型、布朗运动）</td></tr>
+<tr><td><strong>6.2</strong></td><td><strong>B 树</strong></td></tr>
+<tr><td>6.3</td><td>后缀数组</td></tr>
+<tr><td>6.4</td><td>最大流</td></tr>
+<tr><td><strong>6.5</strong></td><td><strong>归约（reductions）</strong></td></tr>
+<tr><td><strong>6.6</strong></td><td><strong>不可解性（intractability）</strong>——1533 行，<strong>全书最长的一节</strong></td></tr>
+</tbody></table>
+<p><strong>为什么 6.5 和 6.6 放在一起</strong>：因为归约是<strong>证明不可解性的工具</strong>。你要说明"问题 X 很难"，办法是<strong>把 X 归约到一个已知很难的问题</strong>。</p>
+<p><strong>书里给出的那个 Theorem 很能说明这一节的气质</strong>：</p>
+<blockquote>
+<p><strong>Theorem</strong>：Given a purported theorem (such as one for the Riemann Hypothesis), can you prove it is true using at most n symbols in some formal system such as Zermelo-Fraenkel set theory?</p>
+</blockquote>
+<p>——<strong>它把"证明一个数学定理"本身当成一个计算问题。</strong> 这一节讨论的不是"怎么写代码"，是"计算这件事本身的边界"。</p>
+<p><strong>B 树为什么放在"语境"章而不是"查找"章</strong>——因为它优化的目标不是"比较次数"，是"<strong>磁盘访问次数</strong>"：</p>
+<table><thead><tr><th></th><th>红黑树</th><th>B 树</th></tr></thead><tbody>
+<tr><td>优化目标</td><td><strong>比较次数</strong></td><td><strong>I/O 次数（页读取）</strong></td></tr>
+<tr><td>节点大小</td><td>1 个键</td><td><strong>一整页</strong>（几百到几千个键）</td></tr>
+<tr><td>高度</td><td><code>2 lg N</code></td><td><code>log_页大小 N</code></td></tr>
+<tr><td>N = 10⁹ 时高度</td><td>约 <strong>60</strong></td><td>约 <strong>3</strong></td></tr>
+</tbody></table>
+<p>——如果每次<strong>节点访问</strong>都是一次磁盘 I/O（毫秒级），那么 60 次和 3 次的差别是<strong>几秒 vs 几毫秒</strong>。<strong>把它放进"查找"章会和红黑树比"谁的比较次数少"，那就完全问错了问题。</strong></p>
+<hr>
+<h2>第二部分：20个专业问题（附通俗解释）</h2>
+<hr>
+<div class="q-title">1. 这本书用哪四层解剖每一个数据结构？为什么第四层不能从第三层推出来？</div>
+<p><strong>专业回答</strong></p>
+<p>四层：<strong>API（抽象）· 实现（机制）· 性能（代价）· 策略（选择）</strong>。</p>
+<p><strong>第四层不能从第三层直接推出的理由</strong>——两个结构的平均代价可能一样，但<strong>假设与能力完全不同</strong>：</p>
+<table><thead><tr><th></th><th>红黑树</th><th>哈希表</th></tr></thead><tbody>
+<tr><td>查找</td><td><code>~2 lg N</code>（保证）</td><td><code>~N/M</code>（平均，依赖均匀散列）</td></tr>
+<tr><td>有序操作</td><td>✅</td><td>❌</td></tr>
+<tr><td>最坏情况</td><td>对数（有保证）</td><td>线性（无保证）</td></tr>
+</tbody></table>
+<p><strong>如果你的应用需要"找出所有 100 到 200 之间的键"，哈希表的平均代价再低也没用——它压根不提供这个操作。</strong> 所以选择依据是"你要什么操作"，不是"哪个平均更快"。</p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p>四层的顺序<strong>不能颠倒</strong>：先问"我需要什么能力"，再问"哪个实现能做到"，最后才是选。<strong>先看性能表再选结构的人，常常选到一个做不到他要的事的结构。</strong></p>
+</blockquote>
+<hr>
+<div class="q-title">2. 什么是"代价模型"？为什么书里不说"3-sum 是 O(N³)"？</div>
+<p><strong>专业回答</strong></p>
+<p><strong>代价模型（cost model）</strong>的定义是<strong>明确定义什么是"基本操作"</strong>。3-sum 的代价模型是<strong>访问数组元素的次数</strong>（读或写都算）。</p>
+<table><thead><tr><th></th><th>"O(N³)"</th><th>代价模型 + Proposition</th></tr></thead><tbody>
+<tr><td>说的是什么</td><td>一个<strong>上界</strong>，忽略常数</td><td><strong>确切的</strong>操作次数（含常数）</td></tr>
+<tr><td>在什么衡量下</td><td>通常指"时间"，但没说是哪种</td><td>明确：<strong>数组访问次数</strong></td></tr>
+</tbody></table>
+<blockquote>
+<p><strong>Proposition</strong>：The brute-force 3-sum algorithm uses <strong>~ N³ / 2 array accesses</strong>.</p>
+</blockquote>
+<p><strong>换个代价模型，命题就要重写。</strong></p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p>"快"这个字必须配一个衡量标准。<strong>说"这个算法访问了 N³/2 次数组"是精确的；说"它是 O(N³)"是模糊的。</strong> 而模糊的说法无法用来比较两个实现。</p>
+</blockquote>
+<hr>
+<div class="q-title">3. 加倍测试的比值为什么能直接读出增长级？</div>
+<p><strong>专业回答</strong></p>
+<p>若 <code>T(N) ~ a·N^b</code>，则 <code>T(2N)/T(N) ≈ 2^b</code>——<strong>比值只跟指数有关，跟常数无关</strong>。</p>
+<table><thead><tr><th>比值</th><th>增长级</th></tr></thead><tbody>
+<tr><td>1</td><td>常数</td></tr>
+<tr><td>2</td><td>线性</td></tr>
+<tr><td>2（略大于 2）</td><td><code>N log N</code></td></tr>
+<tr><td>4</td><td><code>N²</code></td></tr>
+<tr><td>8</td><td><code>N³</code></td></tr>
+</tbody></table>
+<p><strong>"略大于 2"就是 N log N</strong> 的来源：<code>2N·log(2N)/(N·log N) = 2(1 + log2/log N)</code>，趋近 2 但总略大。</p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p><strong>你不需要先知道公式，能从数据里把公式读出来。</strong> 这是这一域最有用的一个技能——它让你在不知道理论的情况下也能判断一个程序大概多快。</p>
+</blockquote>
+<hr>
+<div class="q-title">4. 什么是"摊还"？它和"平均情况"有什么区别？</div>
+<p><strong>专业回答</strong></p>
+<blockquote>
+<p><strong>Proposition（链表）</strong>：all operations take <strong>constant time in the worst case</strong>.</p>
+<p></p>
+<p><strong>Proposition（可扩容数组）</strong>：starting from an empty data structure, <strong>any sequence of N operations takes time proportional to N</strong> (amortized constant time per operation).</p>
+</blockquote>
+<table><thead><tr><th></th><th>平均情况分析</th><th>摊还分析</th></tr></thead><tbody>
+<tr><td>对什么求平均</td><td><strong>输入的概率分布</strong></td><td><strong>操作序列</strong></td></tr>
+<tr><td>需要假设</td><td>需要<strong>假定输入分布</strong></td><td><strong>不需要</strong></td></tr>
+<tr><td>保证强度</td><td>弱（分布不成立就失效）</td><td><strong>强</strong>（对任意序列成立）</td></tr>
+<tr><td>例子</td><td>BST 查找 <code>~2 ln N</code>（要求随机键）</td><td>可扩容数组</td></tr>
+</tbody></table>
+<p><strong>摊还更强，但它是对序列的保证，不是对单次操作的保证。</strong></p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p>可扩容数组的意思是"<strong>总共</strong>很快"，不是"<strong>每一次</strong>都快"——某一次扩容会慢几百倍。<strong>如果用户能感受到那一次卡顿（音视频、交互界面），摊还保证就不够用。</strong></p>
+</blockquote>
+<hr>
+<div class="q-title">5. 归并排序的比较次数是多少？为什么它是最优的？</div>
+<p><strong>专业回答</strong></p>
+<blockquote>
+<p><strong>Proposition</strong>：Top-down mergesort uses between <strong>1/2 N lg N and N lg N compares</strong>.</p>
+<p></p>
+<p><strong>Proposition（下界）</strong>：No compare-based sorting algorithm can guarantee to sort N items with <strong>fewer than lg(N!) ~ N lg N compares</strong>.</p>
+<p></p>
+<p><strong>Proposition</strong>：Mergesort is an <strong>asymptotically optimal</strong> compare-based sorting algorithm.</p>
+</blockquote>
+<p><strong>下界的来源（决策树）</strong>：N 个元素有 <code>N!</code> 种排列 → 每次比较两个结果 → 高为 h 的树最多 <code>2^h</code> 个叶子 → <code>2^h ≥ N!</code> → <code>h ≥ lg(N!) ~ N lg N</code>。</p>
+<p><strong>"渐近最优"的依据</strong>：上界 <code>~N lg N</code> 与下界 <code>~N lg N</code> 撞上了。</p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p>归并排序在所有"靠比较来排序"的算法里已经到顶了。<strong>但注意"靠比较"这个限制——基数排序不比较，它能突破这个下界。</strong></p>
+</blockquote>
+<hr>
+<div class="q-title">6. 快速排序的最坏情况是什么？"熵最优"是什么意思？</div>
+<p><strong>专业回答</strong></p>
+<blockquote>
+<p><strong>Proposition</strong>：Quicksort uses <strong>~N²/2 compares</strong> in the worst case.</p>
+</blockquote>
+<p><strong>最坏情况</strong>：每次切分都极不均衡。这发生在<strong>输入已有序</strong>且<strong>每次取第一个元素当切分点</strong>时。</p>
+<p><strong>随机化的价值</strong>（书里的原话）：<em>"the chance that they are invalid is less than the chance your computer will be struck by lightning."</em></p>
+<blockquote>
+<p><strong>Proposition（三向切分）</strong>：Quicksort with 3-way partitioning is <strong>entropy-optimal</strong>.</p>
+</blockquote>
+<p><strong>"熵最优"</strong>：三向切分把数组分成"小于/等于/大于"三段，<strong>等于段已就位、不参与递归</strong>。于是运行时间与输入的"信息量"成正比——<strong>这正是 Shannon 熵的形状</strong>。</p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p>随机化没有<strong>消除</strong>最坏情况，只是让它变得极其不可能。<strong>对核反应堆、起搏器这类场景，这个区别是致命的</strong>——书里就是拿这几个例子来对照"最坏情况保证"的用途的。</p>
+</blockquote>
+<hr>
+<div class="q-title">7. 优先队列的堆操作代价是多少？为什么建堆是线性的？</div>
+<p><strong>专业回答</strong></p>
+<blockquote>
+<p><strong>Proposition</strong>：In an n-item priority queue, the heap algorithms require no more than <strong>1 + lg n compares for insert</strong> and no more than <strong>2 lg n compares for remove-the-maximum</strong>.</p>
+<p></p>
+<p><strong>Proposition</strong>：<strong>Sink-based heap construction is linear time.</strong></p>
+<p></p>
+<p><strong>Proposition</strong>：Heapsort uses fewer than <strong>2 n lg n compares and exchanges</strong>.</p>
+</blockquote>
+<p><strong>为什么建堆线性</strong>——关键：<strong>从下往上 sink，而不是从上往下 swim</strong>。节点的高度分布极不均匀：</p>
+<table><thead><tr><th>层</th><th>节点数</th><th>sink 深度</th></tr></thead><tbody>
+<tr><td>倒数第二</td><td>N/4</td><td>1</td></tr>
+<tr><td>倒数第三</td><td>N/8</td><td>2</td></tr>
+<tr><td>根</td><td>1</td><td>lg N</td></tr>
+</tbody></table>
+<p><code>Σ (N/2^(h+1))·h</code> 收敛到 <code>2N</code>。<strong>而"从上往下 swim"建堆是 <code>N log N</code>——同样的结构，两种方向，差一个 log。</strong></p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p>直觉会说"每个操作 O(log N)，建 N 个就是 N log N"。<strong>错在把"最坏的那个操作"乘了 N 次，而实际上最坏的操作只占极少数。</strong></p>
+</blockquote>
+<hr>
+<div class="q-title">8. 二叉堆的两个定义里，哪两个设计要点值得注意？</div>
+<p><strong>专业回答</strong></p>
+<blockquote>
+<p><strong>Definition</strong>：A binary tree is <strong>heap-ordered</strong> if the key in each node is larger than (or equal to) the keys in that node's two children.</p>
+<p></p>
+<p><strong>Definition</strong>：A binary heap is a set of nodes with keys arranged in a complete heap-ordered binary tree, <strong>represented in level order in an array</strong> (not using the first entry).</p>
+</blockquote>
+<p><strong>两个要点</strong>：</p>
+<p>① <strong>完全不使用指针</strong>——用数组下标运算代替（<code>k</code> 的子节点是 <code>2k</code> 和 <code>2k+1</code>）；</p>
+<p>② <strong>不用第 0 项</strong>，这样下标运算更简洁。</p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p>数组下标是<strong>算术</strong>，指针是<strong>跳转</strong>。前者在真实机器上快得多（这是我们后面要讲的"内存层级"的伏笔）。</p>
+</blockquote>
+<hr>
+<div class="q-title">9. 并查集从 quick-find 到加权 quick-union，代价怎么降下来的？</div>
+<p><strong>专业回答</strong></p>
+<table><thead><tr><th>版本</th><th>find</th><th>union</th></tr></thead><tbody>
+<tr><td>quick-find</td><td>1</td><td><strong>N ~ 2N−1</strong></td></tr>
+<tr><td>quick-union</td><td><code>~N</code>（最坏）</td><td>取决于树高</td></tr>
+<tr><td><strong>加权 quick-union</strong></td><td><strong><code>~lg N</code></strong></td><td><code>~lg N</code></td></tr>
+</tbody></table>
+<blockquote>
+<p><strong>Corollary</strong>：For weighted quick-union with n sites, the depth of any node is <strong>at most lg n</strong>.</p>
+</blockquote>
+<p><strong>"加权"的论证很漂亮</strong>：总是把<strong>小的树挂到大的树上</strong> → <strong>任何一个节点的深度每次增加，它所在的树至少翻倍</strong> → 深度最多 <code>lg N</code>。<strong>它不追踪树的形状，只追踪"深度增加一次意味着树翻倍"。</strong></p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p>不加权时，union 可能把大树挂到小树上，树越来越高。<strong>加权就是"小的听大的"，一句话的规则，把 O(N) 变成 O(log N)。</strong></p>
+</blockquote>
+<hr>
+<div class="q-title">10. 二叉搜索树的平均代价为什么不等于最坏代价？</div>
+<p><strong>专业回答</strong></p>
+<blockquote>
+<p><strong>Proposition</strong>：Search hits in a BST built from <strong>N random keys</strong> require about <strong>~2 ln N</strong> compares, on average.</p>
+</blockquote>
+<p>注意 <code>2 ln N ≈ 1.39 lg N</code>——<strong>比二分查找的 <code>lg N</code> 还差一点</strong>，但 BST 提供了二分查找没有的能力：<strong>动态插入</strong>。</p>
+<p><strong>而"随机键"这个前提是关键</strong>：如果键是<strong>有序</strong>插入的，树退化成链表，高度变成 <code>N</code>。</p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p>"平均 O(log N)"这个说法<strong>必须跟着"输入是随机的"这个前提</strong>。而真实数据里"有序"很常见（时间戳、自增 ID）——<strong>这是最经典的一类事故：测试用随机数据全过，上线遇到有序数据就挂。</strong></p>
+</blockquote>
+<hr>
+<div class="q-title">11. 红黑树的"2 lg N"是怎么保证的？它付出了什么？</div>
+<p><strong>专业回答</strong></p>
+<blockquote>
+<p><strong>Proposition（2-3 树）</strong>：Search and insert in a 2-3 tree with N keys are <strong>guaranteed</strong> to take time proportional to <strong>lg N</strong>.</p>
+<p></p>
+<p><strong>Proposition（红黑树）</strong>：The height of a red-black BST with N nodes is <strong>no more than 2 lg N</strong>.</p>
+</blockquote>
+<p><strong>"2"从哪来</strong>：红黑树把 2-3 树的每个 3-节点拆成两个节点（一红一黑）。最坏情况下所有链接都是红的，高度翻倍。</p>
+<p><strong>付出的代价</strong>：① <strong>实现复杂度</strong>（旋转与颜色翻转，边界情况多）；② <strong>常数因子</strong>（<code>2 lg N</code> 比 BST 的 <code>1.39 lg N</code> 还大）；③ 每节点多一个颜色位。</p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p>红黑树买的是<strong>保险</strong>，不是速度。<strong>在随机数据上，未平衡的 BST 反而更快。</strong> 它的价值是"输入有序时也不会退化"。</p>
+</blockquote>
+<hr>
+<div class="q-title">12. 哈希表的两条命题说了什么？"均匀散列"是假设还是结论？</div>
+<p><strong>专业回答</strong></p>
+<blockquote>
+<p><strong>Assumption J</strong>：The hash function that we use <strong>uniformly distributes</strong> keys between 0 and M−1.</p>
+<p></p>
+<p><strong>Proposition（拉链）</strong>：the number of compares is <strong>~N/M</strong>.</p>
+<p></p>
+<p><strong>Proposition（线性探测）</strong>：with N = αM keys, the number of probes is <strong>~½(1 + 1/(1−α))</strong> for search hits.</p>
+</blockquote>
+<p><strong>注意它叫 Assumption，不叫 Proposition。</strong> 所以——<strong>哈希表的 O(1) 从来不是被证明的，它是在一个假设下推导的。</strong></p>
+<p><strong>线性探测那个公式的后果</strong>：当 <code>α → 1</code> 时 <code>1/(1−α) → ∞</code>。所以<strong>线性探测必须留出空间</strong>，实践中 α 通常控制在 1/2 到 1/8。</p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p>哈希表"很快"这件事<strong>依赖一个可能不成立的前提</strong>。而<strong>对手可以故意构造让所有键碰撞的输入</strong>——这就是哈希碰撞攻击，真实发生过，导致过某些 web 框架的 DoS 漏洞。所以现代实现会在散列里加随机种子。</p>
+</blockquote>
+<hr>
+<div class="q-title">13. 五个符号表实现里，哪个不支持有序操作？为什么？</div>
+<p><strong>专业回答</strong></p>
+<p><strong>哈希表。因为键被散列函数打散了——"顺序"这个概念在它里面不存在。</strong></p>
+<p>这不实现上的疏忽，是<strong>根本的代价</strong>。书里的命题明确说 floor / ceiling / rank / select 这些操作"take time proportional to the height in a BST"——<strong>它们压根没有哈希表的版本</strong>。</p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p>这是<strong>API 层面的错误，不是性能问题</strong>。如果你的应用需要范围查询，哈希表再快也做不到——<strong>这不是"把哈希表优化一下"能解决的。</strong></p>
+</blockquote>
+<hr>
+<div class="q-title">14. 图算法为什么必须同时用 V 和 E 表示复杂度？</div>
+<p><strong>专业回答</strong></p>
+<blockquote>
+<p><strong>Proposition</strong>：DFS marks all the vertices connected to a given source <strong>in time proportional to the sum of their degrees</strong>.</p>
+<p></p>
+<p><strong>Proposition</strong>：DFS uses <strong>preprocessing time and space proportional to V + E</strong>.</p>
+</blockquote>
+<p><strong>"预处理"的含义</strong>：先花 <code>O(V+E)</code> 走一遍、建好辅助数组，之后每次查询只需常数时间。</p>
+<p><strong>为什么必须写 V+E</strong>：稠密图 <code>E ~ V²</code>，稀疏图 <code>E ~ V</code>，<strong>同一算法的实际代价差一个数量级</strong>。</p>
+<p><strong>最常见的坑</strong>：<strong>用邻接矩阵实现 DFS</strong> → 遍历变成 <code>O(V²)</code>，即使图是稀疏的。</p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p>图的"大小"要用两个数描述。<strong>说"这个图算法是线性"时必须说清是对 V 线性还是对 E 线性。</strong></p>
+</blockquote>
+<hr>
+<div class="q-title">15. MST 和最短路径的命题，前提的强弱对比说明什么？</div>
+<p><strong>专业回答</strong></p>
+<table><thead><tr><th>算法</th><th>前提</th><th>代价</th></tr></thead><tbody>
+<tr><td><strong>Prim / Kruskal</strong></td><td>任意连通带权图（<strong>无额外前提</strong>）</td><td><code>E log V</code></td></tr>
+<tr><td><strong>Dijkstra</strong></td><td><strong>非负权</strong></td><td><code>E log V</code></td></tr>
+<tr><td><strong>拓扑序最短路</strong></td><td><strong>DAG</strong></td><td><strong><code>E + V</code></strong></td></tr>
+<tr><td><strong>Bellman-Ford</strong></td><td><strong>无负环</strong>（最弱）</td><td><code>E·V</code></td></tr>
+</tbody></table>
+<p><strong>MST 的两条命题都强调"任意连通带权图"</strong>——这是它们比最短路更强的地方。<strong>而最短路的前提越弱，代价越高。</strong></p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p>这张表本身就是答案：<strong>你能接受的前提越少，算法就越慢。</strong> 而"负权"这个前提在"距离""成本"这类语义里看起来完全合理，所以<strong>把 Dijkstra 用在有负权的图上是极常见的实现错误</strong>——程序不报错，只是偶尔给出偏大的答案。</p>
+</blockquote>
+<hr>
+<div class="q-title">16. "渐近最优"这个说法为什么必须跟着"在哪一类算法里"？</div>
+<p><strong>专业回答</strong></p>
+<blockquote>
+<p><strong>Proposition</strong>：Mergesort is an asymptotically optimal <strong>compare-based</strong> sorting algorithm.</p>
+</blockquote>
+<p><strong>注意 "compare-based" 不能去掉。</strong> 基数排序<strong>不比较</strong>，它把键看成字符序列逐位分桶，所以<strong>不受 <code>lg(N!) ~ N lg N</code> 下界的约束</strong>。</p>
+<table><thead><tr><th></th><th>归并排序</th><th>基数排序</th></tr></thead><tbody>
+<tr><td>代价模型</td><td>比较次数</td><td>字符访问次数</td></tr>
+<tr><td>代价</td><td><code>~N lg N</code></td><td><code>~W·N</code>（W = 键长）</td></tr>
+<tr><td>下界</td><td><strong>撞到下界</strong>（在比较模型里）</td><td><strong>不受那个下界约束</strong></td></tr>
+</tbody></table>
+<p><strong>"最优"永远要问两个问题</strong>：① 在哪个代价模型下？② 在哪一类算法里？</p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p>算法领域几乎每一个"最优"都带一个隐含的模型假设。<strong>这和 03 域 MacKay 讲的"定理的前提"是同一条纪律：结论必须和前提一起引用。</strong></p>
+</blockquote>
+<hr>
+<div class="q-title">17. 为什么 B 树放在"语境"章而不是"查找"章？</div>
+<p><strong>专业回答</strong></p>
+<p><strong>因为 B 树优化的目标不是"比较次数"，是"磁盘访问次数"。</strong></p>
+<table><thead><tr><th></th><th>红黑树</th><th>B 树</th></tr></thead><tbody>
+<tr><td>节点大小</td><td>1 个键</td><td><strong>一整页</strong></td></tr>
+<tr><td>高度（N=10⁹）</td><td>约 <strong>60</strong></td><td>约 <strong>3</strong></td></tr>
+</tbody></table>
+<p>如果每次<strong>节点访问</strong>是一次磁盘 I/O（毫秒级），60 次 vs 3 次是<strong>几秒 vs 几毫秒</strong>。</p>
+<p><strong>所以 B 树不是"更快的查找结构"，它是"针对另一种硬件层级重新设计的结构"。</strong> 把它放进"查找"章会和红黑树比"谁的比较次数少"，那就完全问错了问题。</p>
+<p><strong>它和 OSTEP 的接口</strong>：文件系统的索引就是 B 树。</p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p><strong>换一个硬件层级，最好的数据结构就变了。</strong> 内存里的王者（红黑树）到了磁盘上就不合适了。</p>
+</blockquote>
+<hr>
+<div class="q-title">18. Trie 换来了什么？字符串问题为什么需要专门的结构？</div>
+<p><strong>专业回答</strong></p>
+<p><strong>因为字符串有一个哈希表不利用的性质：共享前缀。</strong></p>
+<table><thead><tr><th></th><th>哈希表</th><th>Trie</th></tr></thead><tbody>
+<tr><td>前缀查询</td><td>❌</td><td>✅ <strong>天然支持</strong></td></tr>
+<tr><td>有序遍历</td><td>❌</td><td>✅</td></tr>
+<tr><td>空间</td><td>取决于 α</td><td>取决于<strong>前缀共享程度</strong></td></tr>
+</tbody></table>
+<p><strong>Trie 换来的核心能力是前缀查询</strong>：找"所有以 <code>abc</code> 开头的键"只需沿 <code>a→b→c</code> 走三步。<strong>哈希表做不到——它把键打散了，"前缀"不存在了。</strong></p>
+<p><strong>这解释了为什么自动补全、拼写检查、IP 路由表都用 Trie。</strong></p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p><strong>不同的数据有不同结构可以利用。</strong> 哈希表把所有数据都当成"一个键"，而字符串其实是一串字符——Trie 利用了这个被浪费掉的结构。</p>
+</blockquote>
+<hr>
+<div class="q-title">19. 哈夫曼编码的"最优"是什么意思？它和 03 域的信息论怎么接？</div>
+<p><strong>专业回答</strong></p>
+<blockquote>
+<p><strong>Property</strong>：<strong>No prefix-free code uses fewer bits</strong> than the optimal prefix-free code.</p>
+</blockquote>
+<table><thead><tr><th></th><th>MacKay（信息论）</th><th>algs4</th></tr></thead><tbody>
+<tr><td>问题</td><td>一个信源最少要多少比特？</td><td>给定频率，怎么构造最短前缀码？</td></tr>
+<tr><td>答案</td><td><strong>熵 H</strong>（下界，可达）</td><td><strong>哈夫曼编码</strong>（前缀码里最优）</td></tr>
+<tr><td>关系</td><td><strong>理论上界</strong></td><td><strong>一类实用编码里的最优解</strong></td></tr>
+</tbody></table>
+<p><strong>两者之间有一个必须知道的间隙</strong>：哈夫曼的期望码长落在 <strong><code>[H, H+1)</code></strong>——<strong>它达不到熵，最多逼近。</strong>（每个符号至少 1 比特，而小概率符号的自信息远小于 1 比特。）MacKay 讲的<strong>算术编码</strong>能突破这个 1 比特的损失。</p>
+<blockquote>
+<p>📌 <strong>通俗解释</strong></p>
+<p>"哈夫曼是最优的"是在"前缀码"这一类里的最优，<strong>而前缀码整体达不到熵</strong>。这是跨域引用时最容易出的错：<strong>把"A 领域里的最优"当成"A 领域的极限"。</strong></p>
+</blockquote>
+<hr>
+<div class="q-title">20. 读完这两本书（algs4 + Dive into Systems），你应该能回答哪三类问题？</div>
+<p><strong>专业回答</strong></p>
+<p><strong>第一类 · 预测</strong>——"这段代码大概多快？"</p>
+<p>量出增长级（倍增比值）· 说出代价模型 · 指出命题的前提（随机键？非负权？单线程？）</p>
+<p><strong>第二类 · 选择</strong>——"这个需求该用什么结构？"</p>
+<p>先问 API 再问代价 · 知道哈希表不支持有序操作 · 知道 B 树和红黑树是<strong>针对不同硬件层级</strong>的 · 知道小 N 看常数、大 N 看增长级</p>
+<p><strong>第三类 · 判断边界</strong>——"这个问题值不值得继续优化？"</p>
+<p>认出下界 · 认出 NP 完全与不可判定 · 知道该换目标（近似、随机、限制规模）而不是继续压常数</p>
+<p><strong>而这三类问题的共同基础是书里那句方法论</strong>：</p>
+<blockquote>
+<p>"The experiments we design must be <strong>reproducible</strong> and the hypotheses that we formulate must be <strong>falsifiable</strong>."</p>
+<p>📌 <strong>通俗解释</strong></p>
+<p><strong>这一句可以当整个 07 域的方法论座右铭。</strong> 它把这一域和别的域区分开了：在别的域你只能说"这个说法有道理"，在这里你必须说"<strong>这个说法能不能被测量推翻</strong>"。</p>
+</blockquote>
+<hr>
+<h2>第三部分：文本考订与使用说明</h2>
+<h3>一、底本说明</h3>
+<p><strong>这不是一本纸书的电子版，而是作者官方免费放出的在线教材。</strong> 我下载了全部 30 节到一个目录：</p>
+<pre><code>
+07_技术/00_待补书目/Sedgewick_Algorithms4_在线教材/
+├── 1.1_11model.html  ... 6.6_66intractability.html   （30 个 HTML，2.1 MB）
+├── algs4.jar                                            （代码库）
+├── algs4-data.zip  ← 已删除
+└── 下载记录.txt
+</code></pre>
+<p><strong>我删掉了 <code>algs4-data.zip</code>（376 MB）</strong> ——那是完整的测试数据集，对阅读与理解没有必要。如果需要跑书里的示例，<code>algs4.jar</code> 已够；数据集可以按需单独下载。</p>
+<h3>二、与官方纸质版的差异</h3>
+<p>在线版是<strong>第 4 版的正文</strong>，但要注意：</p>
+<table><thead><tr><th>项目</th><th>说明</th></tr></thead><tbody>
+<tr><td><strong>习题</strong></td><td>在线版包含完整习题（Exercises / Creative Problems / Web Exercises），但<strong>没有习题解答</strong></td></tr>
+<tr><td><strong>图表</strong></td><td>图片、表格、代码块齐全（我抽查过：hash 那节 10 个代码块、11 张表、7 张图）</td></tr>
+<tr><td><strong>页码</strong></td><td><strong>在线版没有印刷页码</strong>，所以本笔记与问题手册全部用<strong>节号</strong>定位（如"1.4 节""3.3 节"），不用页码</td></tr>
+<tr><td><strong>章节导航</strong></td><td>每个 HTML 页顶部有重复的全书导航，转换为文本后需跳过</td></tr>
+</tbody></table>
+<h3>三、一处需要留意的格式问题</h3>
+<p><strong><code>Proposition</code> 在本节的标记方式有两种</strong>：</p>
+<pre><code>
+## Proposition A.        ← 整行标题形式（内容是后续段落）
+Proposition. ...内容...  ← 行内形式
+</code></pre>
+<p>而且<strong>有的带字母编号（A/B/C），有的不带</strong>。我的提取脚本对两种都做了处理，共得 <strong>61 条</strong>。但如果你自己用文本工具搜，可能会漏掉行内形式的那一批。</p>
+<h3>四、这本书不承诺什么（引用时的边界）</h3>
+<table><thead><tr><th>边界</th><th>说明</th></tr></thead><tbody>
+<tr><td><strong>它是 Java 的</strong></td><td>作者另有《Algorithms in C》，无免费在线版。把代码当伪代码读完全可行</td></tr>
+<tr><td><strong>它不碰真实硬件</strong></td><td>复杂度是纸上的。两个都是 O(N) 的遍历，真实速度可能差 10 倍——<strong>因为缓存</strong>。这一层由 <code>Dive into Systems</code> 补</td></tr>
+<tr><td><strong>它不是参考手册</strong></td><td>想查"这个问题的标准解法"该用 CLRS 或 Skiena。这本书是<strong>教进去的</strong>，不是<strong>查出来的</strong></td></tr>
+<tr><td><strong>它假设你会写代码</strong></td><td>30 节里大量写着"实现这个 API"。<strong>不跑代码学不会这本书</strong></td></tr>
+<tr><td><strong>Proposition 也有前提</strong></td><td>即使标成"可证明"，它仍然<strong>依赖代价模型</strong>。"堆排序少于 2n lg n 次比较与交换"在"比较与交换"这个模型下成立；换成"缓存缺失次数"可能完全不同</td></tr>
+</tbody></table>
+<h3>五、跨域连接（这一域与 03 域最硬的一条）</h3>
+<p><strong>第 5.5 节的数据压缩直接接 MacKay 的信息论</strong>：</p>
+<table><thead><tr><th>MacKay 给出的</th><th>algs4 给出的</th></tr></thead><tbody>
+<tr><td>熵 <strong>H</strong> 是压缩的下界，且可达</td><td><strong>哈夫曼编码</strong>在前缀码里最优</td></tr>
+<tr><td><strong>算术编码</strong>能逼近熵</td><td>哈夫曼的期望码长落在 <code>[H, H+1)</code></td></tr>
+<tr><td>代价模型是"比特数"</td><td>代价模型是"比较/字符访问次数"</td></tr>
+</tbody></table>
+<p><strong>两本书在这里接上了</strong>：MacKay 给你下界，algs4 给你一个达到或逼近下界的算法。<strong>而"还差多少"这个问题（哈夫曼差最多 1 比特）只有对照着读才能问出来。</strong></p>
+<hr>
+<p><em>本笔记基于 Sedgewick &amp; Wayne《Algorithms, 4th Edition》作者官方免费在线教材（30 节全文）精读整理。全书 61 条 Proposition / Property / Assumption 均可回溯至对应节。</em></p>
+<p><em>⚠️ 引用边界：这本书的结论全部依赖代价模型。引用任何一条 Proposition 时，请连同它的<strong>前提</strong>（随机键？非负权？均匀散列？单线程？）一起引用。</em></p>
+  </main>
+
+  <div class="footer">
+    《Algorithms》第 4 版 精华笔记与专业问题 · Sedgewick & Wayne<br>
+    先自己回答，再看解答 —— 能讲成"通俗解释"那个样子，才算真的懂了
+  </div>
+
+</div>
+</body>
+</html>
