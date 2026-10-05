@@ -15,23 +15,25 @@
   :root{
     color-scheme: dark;
 
-    --bg:#0a0d13;
-    --card:#131926;
-    --card-2:#181f30;
-    --edge:#212b3d;
-    --edge-lit:#31425f;
+    /* 海蓝配色：蓝本身有亮度，所以不必靠「提亮」来透气。
+       清亮度由 bg 与 card 的明度差提供（这里差 0.0170，是原先冷黑方案的 3.0 倍）。 */
+    --bg:#0a1a28;
+    --card:#123044;
+    --card-2:#183d55;
+    --edge:#1f4b66;
+    --edge-lit:#2f6b8d;
 
-    --ink:#f4f2ef;        /* 正文：微暖白，非纯白 */
-    --ink-2:#a6b2c4;
-    --ink-3:#68758c;
+    --ink:#f0f7fc;
+    --ink-2:#a9c8dd;
+    --ink-3:#7d9fb8;
 
-    --accent:#5b93f7;
-    --accent-2:#9a7bf2;
-    --gold:#d9b45a;
+    --accent:#3fb4e8;
+    --accent-2:#5fd0c4;
+    --gold:#e3c87f;
 
-    --shadow:0 14px 34px -14px rgba(0,0,0,.78), 0 0 0 1px rgba(91,147,247,.20);
+    --shadow:0 14px 34px -14px rgba(0,10,25,.62), 0 0 0 1px rgba(120,180,240,.22);
     --ease:cubic-bezier(.22,.61,.36,1);
-    --rule:rgba(91,147,247,.13);
+    --rule:rgba(63,180,232,.16);
   }
 
   *{margin:0;padding:0;box-sizing:border-box;}
@@ -47,20 +49,20 @@
     -webkit-font-smoothing:antialiased;
     overflow-x:clip;
   }
-  ::selection{background:rgba(91,147,247,.32); color:#fff;}
+  ::selection{background:rgba(63,180,232,.30); color:#fff;}
 
-  /* ---- 背景：极淡双色光晕 + 点阵网格（透明度约 4%）----------------- */
+  /* ---- 背景：海色光晕 + 点阵网格 --------------------------------- */
   body::before{
     content:""; position:fixed; inset:0; z-index:-2; pointer-events:none;
     background:
-      radial-gradient(920px 540px at 12% -8%, rgba(91,147,247,.15), transparent 62%),
-      radial-gradient(760px 470px at 92% 4%, rgba(154,123,242,.12), transparent 60%),
-      radial-gradient(660px 420px at 50% 108%, rgba(217,180,90,.06), transparent 62%);
+      radial-gradient(920px 540px at 12% -8%, rgba(63,180,232,.20), transparent 62%),
+      radial-gradient(760px 470px at 92% 4%, rgba(95,208,196,.15), transparent 60%),
+      radial-gradient(660px 420px at 50% 108%, rgba(227,200,127,.06), transparent 62%);
   }
   body::after{
     content:""; position:fixed; inset:0; z-index:-1; pointer-events:none;
     background-image:
-      radial-gradient(rgba(120,150,200,.11) 1px, transparent 1px);
+      radial-gradient(rgba(140,200,235,.13) 1px, transparent 1px);
     background-size:26px 26px;
     mask-image:radial-gradient(circle at 50% 20%, #000 0%, transparent 74%);
     -webkit-mask-image:radial-gradient(circle at 50% 20%, #000 0%, transparent 74%);
@@ -81,7 +83,7 @@
     letter-spacing:.01em;              /* 中文标题：不要负字距 */
     line-height:1.3; margin-bottom:22px;
     /* 两端收敛回底色 —— 文字融入背景，而不是浮在上面 */
-    background:linear-gradient(135deg,#131926 0%,#ffffff 34%,#c7dbff 52%,#b39cff 74%,#131926 100%);
+    background:linear-gradient(135deg,#0a1a28 0%,#ffffff 34%,#c7e6fb 52%,#7fe0d4 74%,#0a1a28 100%);
     -webkit-background-clip:text; background-clip:text; color:transparent;
   }
   .hero .lede{
@@ -118,7 +120,7 @@
   /* ---- 导航：滚动后收缩 + 毛玻璃（blur 必须配 saturate）----------- */
   .nav{
     position:sticky; top:0; z-index:50; margin:34px 0 8px; padding:12px 0;
-    background:rgba(10,13,19,.55);
+    background:rgba(10,26,40,.5);
     border-top:1px solid transparent; border-bottom:1px solid transparent;
     transition:max-width .5s var(--ease), padding .5s var(--ease),
                background .5s var(--ease), border-color .5s var(--ease),
@@ -126,12 +128,12 @@
   }
   .nav.is-stuck{
     padding:8px 0;
-    background:rgba(10,13,19,.72);
+    background:rgba(10,26,40,.7);
     backdrop-filter:blur(24px) saturate(1.4);
     -webkit-backdrop-filter:blur(24px) saturate(1.4);
-    border-top-color:rgba(255,255,255,.04);
-    border-bottom-color:rgba(255,255,255,.04);
-    box-shadow:0 8px 32px rgba(0,0,0,.28), inset 0 .5px rgba(255,255,255,.08);
+    border-top-color:rgba(255,255,255,.05);
+    border-bottom-color:rgba(255,255,255,.06);
+    box-shadow:0 8px 32px rgba(0,10,25,.34), inset 0 .5px rgba(255,255,255,.10);
   }
   .nav-inner{
     max-width:1180px; margin:0 auto; padding:0 24px;
@@ -143,7 +145,7 @@
     padding:6px 13px; border-radius:999px; border:1px solid transparent;
     transition:color .18s, background .18s, border-color .18s;
   }
-  .nav a:hover{color:var(--ink); background:rgba(91,147,247,.12); border-color:var(--edge-lit);}
+  .nav a:hover{color:var(--ink); background:rgba(63,180,232,.14); border-color:var(--edge-lit);}
 
   /* ---- 域区块 ----------------------------------------------------- */
   .domain{padding:54px 0 6px;}
@@ -151,8 +153,9 @@
   .domain-icon{
     font-size:22px; line-height:1; width:46px; height:46px; flex:0 0 46px;
     display:grid; place-items:center; border-radius:13px;
-    background:linear-gradient(150deg, rgba(91,147,247,.18), rgba(154,123,242,.12));
+    background:linear-gradient(150deg, rgba(63,180,232,.22), rgba(95,208,196,.13));
     border:1px solid var(--edge-lit);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.10);
   }
   .domain-meta{flex:1; min-width:0;}
   .domain-title{
@@ -168,25 +171,34 @@
 
   .books-grid{display:grid; gap:16px; grid-template-columns:repeat(auto-fill, minmax(302px, 1fr));}
 
-  /* ---- 书卡：1px 渐变边框 + 上移 + 阴影加深 ----------------------- */
+  /* ---- 书卡：内高光 + 1px 渐变描边 + 上移 -------------------------
+     层次感靠三件叠加，不是只靠背景变亮：
+       ① 卡片自身比底亮（明度差 0.0170）
+       ② inset 顶部 1px 内高光（像被上方的光照到）
+       ③ 悬浮时描边发光 + 上移 5px + 阴影加深
+     ================================================================= */
   .book-card{
     position:relative; padding:22px 22px 19px; border-radius:15px;
-    background:var(--card); border:1px solid var(--edge);
+    background:linear-gradient(180deg, rgba(255,255,255,.030), rgba(255,255,255,0) 62%), var(--card);
+    border:1px solid var(--edge);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.075), 0 2px 10px -6px rgba(0,10,25,.5);
     transition:transform .3s var(--ease), border-color .3s,
                background .3s, box-shadow .3s;
   }
   /* 1px 渐变描边：mask-composite:exclude 让渐变只留在 1px 边框上 */
   .book-card::after{
     content:""; position:absolute; inset:-1px; border-radius:16px; pointer-events:none;
-    background:linear-gradient(140deg, rgba(91,147,247,.62), rgba(154,123,242,.38) 44%, transparent 72%);
+    background:linear-gradient(140deg, rgba(63,180,232,.72), rgba(95,208,196,.42) 44%, transparent 72%);
     opacity:0; transition:opacity .3s;
     -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
     mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
     -webkit-mask-composite:xor; mask-composite:exclude; padding:1px;
   }
   .book-card:hover{
-    transform:translateY(-5px); background:var(--card-2);
-    border-color:transparent; box-shadow:var(--shadow);
+    transform:translateY(-5px);
+    background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,0) 62%), var(--card-2);
+    border-color:transparent;
+    box-shadow:var(--shadow), inset 0 1px 0 rgba(255,255,255,.13);
   }
   .book-card:hover::after{opacity:1;}
 
@@ -199,12 +211,14 @@
   .book-link{
     font-size:12.5px; text-decoration:none; color:var(--ink-2);
     padding:4px 11px; border-radius:7px;
-    background:rgba(91,147,247,.07); border:1px solid var(--edge);
-    transition:color .18s, background .18s, border-color .18s, transform .18s;
+    background:rgba(63,180,232,.09); border:1px solid var(--edge);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
+    transition:color .18s, background .18s, border-color .18s, transform .18s, box-shadow .18s;
   }
   .book-link:hover{
-    color:#fff; background:rgba(91,147,247,.22);
-    border-color:rgba(91,147,247,.5); transform:translateY(-1px);
+    color:#fff; background:rgba(63,180,232,.26);
+    border-color:rgba(63,180,232,.58); transform:translateY(-1px);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.14), 0 3px 10px -4px rgba(0,10,25,.6);
   }
   .book-link:active{transform:scale(.96);}   /* 按压缩放 */
 
@@ -226,7 +240,7 @@
   .cursor-glow{
     position:fixed; width:520px; height:520px; border-radius:50%;
     pointer-events:none; z-index:0; opacity:0;
-    background:radial-gradient(circle, rgba(91,147,247,.085), transparent 66%);
+    background:radial-gradient(circle, rgba(63,180,232,.09), transparent 66%);
     transition:opacity .5s ease;
   }
   @media (hover:hover) and (pointer:fine){
