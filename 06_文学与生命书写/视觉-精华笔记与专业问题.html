@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>视觉 · 精华笔记与专业问题</title>
+<style>
+  :root{
+    --paper:#f2f8fc; --card:#ffffff; --edge:#cfe0ec; --edge-lit:#a8c8de;
+    --ink:#12232e; --ink-mid:#3f5b6b; --ink-soft:#5c7a8c;
+    --v:#2b7fa8; --v-soft:#eaf4fb;
+    --key:#7e713d; --key-soft:#fbf8ef;
+    --q:#7a4f96; --q-soft:#f4eef8;
+    --warn:#a85035; --warn-soft:#fcf1ec;
+    --en:#2f7a5c; --en-soft:#eef8f3;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--paper);color:var(--ink);line-height:1.9;padding:32px 16px 56px;
+    -webkit-font-smoothing:antialiased;}
+  .wrap{max-width:960px;margin:0 auto;}
+  header{text-align:center;padding:38px 20px 32px;background:var(--card);
+    border:1px solid var(--edge);border-top:4px solid var(--v);border-radius:8px;margin-bottom:22px;}
+  header .kicker{font-size:11px;letter-spacing:.26em;color:var(--ink-soft);
+    font-family:ui-monospace,Consolas,monospace;margin-bottom:13px;}
+  header h1{font-size:24px;font-weight:800;letter-spacing:.01em;line-height:1.4;margin-bottom:10px;}
+  header .sub{font-size:13.8px;color:var(--ink-mid);line-height:1.9;}
+  header .src{margin-top:12px;font-size:12px;color:var(--ink-soft);line-height:1.9;}
+  .lead{background:var(--card);border:1px solid var(--edge);border-radius:8px;
+    padding:19px 22px;margin-bottom:24px;font-size:13.9px;color:var(--ink-mid);}
+  .lead .t{color:var(--key);font-weight:700;margin-bottom:9px;font-size:13.4px;}
+  .lead p+p{margin-top:8px;} .lead strong{color:var(--ink);}
+  .lead .warn{margin-top:12px;padding:11px 15px;background:var(--warn-soft);
+    border:1px solid #edd6cd;border-left:3px solid var(--warn);border-radius:4px;
+    font-size:13.2px;color:#8a4630;line-height:1.9;}
+  h2{font-size:18.5px;font-weight:700;margin:40px 0 6px;padding-left:12px;
+    border-left:4px solid var(--key);line-height:1.55;}
+  .s{color:var(--ink-soft);font-size:12.9px;margin:0 0 16px 16px;line-height:1.85;}
+  h3{font-size:15.6px;font-weight:700;margin:26px 0 8px;color:var(--ink);}
+  p{font-size:14.1px;color:var(--ink-mid);margin-bottom:10px;}
+  p strong{color:var(--ink);} p em{font-style:normal;color:var(--ink-mid);}
+  code{font-family:ui-monospace,Consolas,monospace;font-size:12.4px;
+    background:#eef6fb;border:1px solid var(--edge);border-radius:4px;
+    padding:1px 6px;color:#1d5c86;word-break:break-all;}
+  .note{background:var(--card);border:1px solid var(--edge);border-radius:8px;
+    padding:17px 20px;margin:14px 0;font-size:13.7px;color:var(--ink-mid);line-height:1.92;}
+  .note .h{font-size:13.4px;font-weight:700;color:var(--v);margin-bottom:8px;}
+  .note p+p{margin-top:8px;} .note strong{color:var(--ink);}
+  .key{background:var(--key-soft);border:1px solid #e6dcbe;border-left:3px solid var(--key);
+    border-radius:4px;padding:14px 17px;margin:14px 0;font-size:13.6px;color:#5f5527;line-height:1.92;}
+  .key .h{font-weight:700;color:var(--key);margin-bottom:7px;font-size:13.3px;}
+  .key strong{color:#4a4220;}
+  blockquote{margin:11px 0;padding:10px 15px;background:var(--key-soft);
+    border-left:3px solid var(--key);border-radius:4px;
+    font-size:13.4px;color:#5f5527;line-height:1.9;}
+  blockquote .who{display:block;margin-top:6px;font-size:11.6px;color:var(--ink-soft);text-align:right;}
+  blockquote.en{background:var(--en-soft);border-left-color:var(--en);color:#1f5a44;
+    font-family:Georgia,"Times New Roman",serif;font-size:13.2px;line-height:1.75;}
+  blockquote.en .who{color:var(--ink-soft);font-family:-apple-system,"PingFang SC",sans-serif;}
+  blockquote.en .zh{display:block;margin-top:8px;padding-top:8px;border-top:1px dashed #cfe6dc;
+    font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+    font-size:13.4px;color:#2b6b52;line-height:1.9;}
+  .qcard{background:var(--card);border:1px solid var(--edge);border-radius:9px;
+    padding:16px 19px;margin-bottom:12px;transition:border-color .2s,box-shadow .2s;}
+  .qcard:hover{border-color:var(--edge-lit);box-shadow:0 4px 14px -8px rgba(28,74,110,.18);}
+  .q-head{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:9px;}
+  .q-id{font-family:ui-monospace,Consolas,monospace;font-size:12px;font-weight:700;
+    color:var(--q);letter-spacing:.06em;}
+  .q-tag{font-size:11.4px;color:var(--ink-soft);border:1px solid var(--edge);
+    border-radius:999px;padding:1px 9px;background:var(--q-soft);}
+  .q-t{font-size:14.4px;color:var(--ink);line-height:1.88;font-weight:600;}
+  details{margin-top:10px;}
+  summary{font-size:12.8px;color:var(--v);cursor:pointer;list-style:none;
+    padding:5px 0;user-select:none;transition:color .18s;}
+  summary::-webkit-details-marker{display:none;}
+  summary::before{content:"▸ 展开通俗解释  ";}
+  details[open] summary::before{content:"▾ 收起  ";}
+  summary:hover{color:#1d5c86;}
+  .a{margin-top:10px;padding:14px 16px;background:#f8fbfd;border:1px solid var(--edge);
+    border-radius:7px;font-size:13.7px;color:var(--ink-mid);line-height:1.95;}
+  .a p+p{margin-top:8px;} .a strong{color:var(--ink);}
+  .a .lbl{display:block;font-size:12.6px;font-weight:700;color:var(--key);margin:11px 0 5px;}
+  .a .lbl::before{content:"◆ ";}
+  .a .pit{display:block;font-size:12.6px;font-weight:700;color:var(--warn);margin:11px 0 5px;}
+  .a .pit::before{content:"⚠ ";}
+  .pit-b{background:var(--warn-soft);border:1px solid #edd6cd;border-radius:4px;
+    padding:10px 14px;font-size:13.1px;color:#8a4630;line-height:1.9;margin-top:5px;}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.1px;}
+  th,td{padding:9px 12px;border:1px solid var(--edge);text-align:left;vertical-align:top;line-height:1.8;}
+  th{background:var(--v-soft);color:#1d5c86;font-weight:700;font-size:12.4px;}
+  td{color:var(--ink-mid);} td strong{color:var(--ink);}
+  ul,ol{margin:9px 0 0 21px;} li{font-size:13.5px;color:var(--ink-mid);margin-bottom:7px;line-height:1.9;}
+  li strong{color:var(--ink);}
+  footer{margin-top:46px;padding-top:20px;border-top:1px solid var(--edge);
+    text-align:center;font-size:12px;color:var(--ink-soft);line-height:2;}
+  @media(max-width:680px){
+    header h1{font-size:20px;} h2{font-size:16.5px;}
+    body{padding:18px 11px 40px;} table{font-size:11.6px;}
+    blockquote.en{font-size:12.6px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="kicker">MARR · VISION · CLOSE READING</div>
+  <h1>《视觉》精华笔记与专业问题</h1>
+  <div class="sub">第一部分 · 精读笔记 &nbsp;|&nbsp; 第二部分 · 20 个专业问题 &nbsp;|&nbsp; 附 · 速查表</div>
+  <div class="src">大卫·马尔（David Marr）· 1982 / 2010 重印 · 原版 397 页<br>
+    <strong>本项目底本为英文原著</strong>（<code>视觉_全文.txt</code>，97 万字符）——
+    引文给英文原文 + 中文翻译</div>
+</header>
+
+<div class="lead">
+  <div class="t">这本书的特殊地位</div>
+  <p>它是本项目里<strong>唯一一本以「计算理论」为方法讲认知的书</strong>。
+      马尔要回答的问题不是「视觉由哪些部分组成」，而是：</p>
+  <p style="text-align:center;font-size:15px;color:var(--ink);">
+    <strong>要理解一个信息处理系统，你需要回答哪几个层次的问题？</strong></p>
+  <p>他给的答案是三层。<strong>这三层后来成了认知科学的标准框架</strong>——
+  它比书里关于视觉的任何具体结论都更长寿。</p>
+  <div class="warn">
+    <strong>⚠️ 关于底本</strong><br>
+    本书语料是<strong>英文原著</strong>，全文中文字符为 0。
+    所以本页的引文给 <em>英文原文 + 中文翻译</em>，英文可在
+    <code>视觉_全文.txt</code> 中逐字核对，<strong>中文译文是本项目的翻译</strong>。
+    <em>另外：本项目 <code>视觉-整体架构.html</code> 是早期一次文件丢失后重新生成的，
+    不是原件——本页独立写成，不依赖它。</em>
+  </div>
+</div>
+
+<!-- ==================== 第一部分 ==================== -->
+<h2>第一部分 · 精读笔记</h2>
+
+<h3>一、全书的方法核心：三个层次</h3>
+<div class="note">
+  <div class="h">这是马尔最著名的贡献，也是读这本书必须抓住的第一件事</div>
+  <p>他指出：<strong>一个信息处理系统，可以在三个不同的层次上被描述，
+  而这三个层次是相互独立的。</strong></p>
+  <table>
+    <tr><th style="width:22%">层次</th><th>问的是什么</th><th>视觉里的例子</th></tr>
+    <tr><td class="a"><strong>计算理论</strong><br>computational theory</td>
+      <td>这个系统要解决什么问题？为什么是这个问题？解的约束条件是什么？</td>
+      <td>从二维图像恢复三维结构——<em>而这是欠定的</em></td></tr>
+    <tr><td class="b"><strong>表征与算法</strong><br>representation and algorithm</td>
+      <td>用什么表征？用什么算法在表征上操作？</td>
+      <td>基元草图、2½ 维草图、三维模型；零交叉检测</td></tr>
+    <tr><td class="c"><strong>硬件实现</strong><br>hardware implementation</td>
+      <td>在物理上怎么实现？</td>
+      <td>视网膜、外侧膝状体、视皮层</td></tr>
+  </table>
+  <blockquote class="en">
+    To understand fully a particular machine carrying out a particular
+    information-processing task, one has to do both things. Neither alone will suffice.
+    <span class="zh">要完整理解一台执行某个信息处理任务的机器，这两件事都得做，任何一件单独做都不够。</span>
+    <span class="who">General Introduction</span>
+  </blockquote>
+  <div class="key">
+    <div class="h">★ 这三层为什么重要</div>
+    <p>因为它把<strong>「计算机视觉」与「神经科学」的关系重新安排了一遍</strong>。</p>
+    <p>在此之前，研究视觉有两条互不相干的路：
+    <em>一条从神经元出发（生理学），一条从程序出发（人工智能）。</em></p>
+    <p>马尔的主张是：<strong>两者回答的是不同层次的问题，而不是同一问题的两种方法。</strong>
+    所以「神经元怎么工作」不能告诉你「视觉要解决什么问题」——
+    <em>而后者才是理解视觉的起点。</em></p>
+    <p><strong>这个主张的顺序很关键：先问「解决什么问题」，再问「怎么实现」。</strong>
+    此后认知科学里的绝大多数计算模型都沿用了这个顺序。</p>
+  </div>
+</div>
+
+<h3>二、全书的问题起点：为什么视觉是「欠定」的</h3>
+<div class="note">
+  <div class="h">这是马尔整个方案的必要前提</div>
+  <p>如果二维图像里的信息足以唯一确定三维结构，那视觉就是一道计算题，不需要解释。</p>
+  <p><strong>但事实是：同一幅二维图像，可以由无穷多个三维构型产生。</strong></p>
+  <blockquote class="en">
+    The difficulty here is exactly like the one we met in the stereopsis problem,
+    namely, that <strong>the solution is underdetermined</strong>. There are an infinite
+    number of three-dimensional configurations that could give rise, through orthographic
+    projection, to the images of Figure 3-53 — any number of different, randomly changing
+    snowstorms, for example. But we do not see any of these different possibilities;
+    we see only one, and it is the correct one. Just as in stereopsis, therefore,
+    <strong>we must be bringing additional</strong> …
+    <span class="zh">这里的困难与我们在立体视觉问题里遇到的一模一样，即<strong>解是欠定的</strong>。
+    有无穷多个三维构型可以通过正交投影产生图 3-53 的那些图像——比如任意多个不同的、随机变化的暴风雪。
+    但我们并没有看到这些不同的可能性；我们只看到一个，而且它是正确的那个。
+    因此，正如在立体视觉中一样，<strong>我们必定带入了额外的</strong>……</span>
+    <span class="who">Chapter 3, From Images to Surfaces</span>
+  </blockquote>
+  <div class="key">
+    <div class="h">★ 这句话的后半截才是全书的引擎</div>
+    <p>「<strong>我们只看到一个，而且它是正确的那个</strong>」——
+    这句话把问题从「图像里有什么信息」变成了<strong>「我们额外带入了什么」</strong>。</p>
+    <p>而那个「额外带入的东西」，就是马尔全书在找的：<strong>隐含的物理假设与约束</strong>。</p>
+    <p><em>所以「欠定」不是一个困难，是整本书的论证起点。没有欠定，就没有视觉理论要做。</em></p>
+  </div>
+</div>
+
+<h3>三、表征阶梯：四个表征</h3>
+<div class="note">
+  <div class="h">马尔给出的处理流程（这是书名的副标题所说的「表征」）</div>
+  <table>
+    <tr><th style="width:22%">表征</th><th>它是什么</th><th>坐标系</th></tr>
+    <tr><td class="a"><strong>raw primal sketch</strong><br>原始基元草图</td>
+      <td>检测出的强度变化及其局部几何（零交叉、边缘段、小线段）</td><td>图像坐标</td></tr>
+    <tr><td class="a"><strong>full primal sketch</strong><br>完整基元草图</td>
+      <td>加入分组过程（grouping）：把局部元素组织成更大的结构</td><td>图像坐标</td></tr>
+    <tr><td class="b"><strong>2½-D sketch</strong><br>2½ 维草图</td>
+      <td>以观察者为中心的可见表面表征：朝向、深度、不连续</td><td><strong>观察者中心</strong></td></tr>
+    <tr><td class="c"><strong>3-D model</strong><br>三维模型</td>
+      <td>以物体为中心的、分层的体积与表面基元表征</td><td><strong>物体中心</strong></td></tr>
+  </table>
+  <p><strong>三阶段的分界不是「处理得更深」，而是坐标系的更换</strong>——
+  从图像坐标到观察者中心，再到物体中心。
+  <em>这是全书结构上最要紧的一点，也是最常被读漏的一点。</em></p>
+  <blockquote class="en">
+    … we came to three main conclusions: A shape representation for recognition should
+    (1) use an object-centered coordinate system, (2) include volumetric primitives
+    of various sizes, and (3) have a modular organization. A representation based on
+    a shape's natural axes (for example, the axes identified by a stick figure)
+    follows directly from these choices.
+    <span class="zh">……我们得到三个主要结论：用于识别的形状表征应当
+    （1）使用物体中心的坐标系，（2）包含各种大小的体积基元，（3）具有模块化的组织。
+    基于形状自然轴（例如由棍状图识别出的轴）的表征，直接由这些选择推出。</span>
+    <span class="who">Chapter 5, Representing Shapes for Recognition</span>
+  </blockquote>
+</div>
+
+<h3>四、方法上最激进的一步：模块化</h3>
+<div class="note">
+  <div class="h">马尔为什么敢把视觉拆开</div>
+  <blockquote class="en">
+    Such findings are of critical importance because they help us to subdivide our study
+    of perception into more specialized parts which can be treated separately.
+    <strong>I shall refer to these as independent modules of perception.</strong>
+    <span class="zh">这类发现至关重要，因为它们帮助我们把知觉研究细分为更专门的、
+    可以被分别处理的部分。<strong>我把这些称为知觉的独立模块。</strong></span>
+    <span class="who">Chapter 1</span>
+  </blockquote>
+  <p><strong>「独立模块」的主张是</strong>：视觉的各个子过程（立体视觉、运动、
+  形状、颜色）各自独立工作，<em>互不依赖</em>。</p>
+  <div class="key">
+    <div class="h">★ 这个主张的代价（书里没有充分讨论）</div>
+    <p>如果模块真的独立，那么<strong>「整合」就成了一件无法解释的事</strong>——
+    <em>我们看到的毕竟是一个统一的世界，不是七张分开的图。</em></p>
+    <p>马尔把这个问题推到最后一章（"A Conversation"），
+    <strong>用对话体讨论，而没有给出机制</strong>。
+    <em>这一处缺口后来成了联结主义（神经网络）路线的主要攻击点。</em></p>
+  </div>
+</div>
+
+<h3>五、早期视觉的具体机制：零交叉</h3>
+<div class="note">
+  <div class="h">马尔与希尔德里斯的边缘检测理论</div>
+  <p>他的主张是：<strong>早期视觉检测的不是「边缘」，而是强度变化的零交叉</strong>——
+  即用一个拉普拉斯-高斯算子（∇²G）滤波后，输出为零的位置。</p>
+  <blockquote class="en">
+    The three main stages in the processes that derive the primal sketch are
+    (1) the detection of zero-crossings; (2) the formation of the raw primal sketch;
+    and (3) the creation of the full primal sketch.
+    <span class="zh">导出基元草图的三个主要阶段是：（1）零交叉检测；
+    （2）原始基元草图的形成；（3）完整基元草图的建立。</span>
+    <span class="who">Chapter 2</span>
+  </blockquote>
+  <p><strong>为什么必须多尺度</strong>：单一大小的算子无法同时处理粗糙与细致的结构——
+  <em>小算子对噪声敏感，大算子丢失细节。</em>
+  所以要用一族不同尺度的算子，并让它们之间可以互相印证。</p>
+</div>
+
+<h3>六、这本书的写法：为什么它至今可读</h3>
+<div class="note">
+  <div class="h">前言的评价（Shimon Ullman）</div>
+  <blockquote class="en">
+    Research monographs age quickly. … David Marr's <em>Vision</em> is unique:
+    reading it today is still a rewarding and stimulating experience for a broad range
+    of researchers in the brain and cognitive sciences.
+    <span class="zh">研究专著老得很快。……大卫·马尔的《视觉》是独特的：
+    今天读它，对脑与认知科学领域的广泛研究者来说，仍是一次有收获、有启发的体验。</span>
+    <span class="who">前言（Shimon Ullman）</span>
+  </blockquote>
+  <p><strong>它不老的真正原因</strong>：书里具体的算法（零交叉、2½ 维草图）
+  大部分已被后来的工作修改或取代，<em>但「三个层次」这个框架没有被取代。</em></p>
+  <p><strong>所以读这本书的正确方式是</strong>：把算法当历史读，把框架当方法读。</p>
+</div>
+
+<h3>七、它在项目里的位置</h3>
+<table>
+  <tr><th style="width:26%">与什么</th><th>关系</th></tr>
+  <tr><td><strong>与《数字图像处理》<br>同项目 07 域</strong></td>
+    <td class="a">这是最直接的一对。<strong>Gonzalez 问「怎么用算法从像素算出特征」，
+      马尔问「人脑怎么从图像算出物体」。</strong><br>
+      Gonzalez 的三级处理（低级 / 中级 / 高级）与马尔的三阶段
+      （基元草图 / 2½ 维 / 三维模型）<em>结构上几乎平行</em>，但目标不同：
+      前者要造工具，后者要解释生物视觉。<br>
+      <strong>两者的接缝在第 12 章（图像模式分类）——那里 Gonzalez 也走向了「理解」。</strong></td></tr>
+  <tr><td><strong>与《无穷的开始》<br>同项目 01 域</strong></td>
+    <td class="b">马尔说「我们必定带入了额外的假设」；
+      多伊奇说「观察都是理论负载的」。<br>
+      <em>这是同一个立场在视觉领域的具体形态。</em>
+      而马尔给出的那些「隐含物理假设」，正是多伊奇所说的「解释」。</td></tr>
+  <tr><td><strong>与《信息论》<br>同项目 03 域</strong></td>
+    <td class="c">「欠定 + 额外假设」这个结构在信息论里有精确对应：
+      <strong>没有先验，就没有从数据到结论的路径</strong>。<br>
+      <em>MacKay 讲的是这个原理的一般形式，马尔讲的是它在视觉里的实例。</em></td></tr>
+</table>
+
+<h3>八、边界：这本书不承诺什么</h3>
+<div class="note">
+  <div class="h">① 它不提供「完整的视觉理论」</div>
+  <p>它给的是<strong>一个框架 + 若干早期视觉的具体结果</strong>。
+  <em>识别（recognition）部分只写到「三维模型表征」的构想，没有实现。</em></p>
+
+  <div class="h" style="margin-top:12px;">② 它没有解释「模块如何整合」</div>
+  <p>如第四节所述，这是全书最大的缺口。</p>
+
+  <div class="h" style="margin-top:12px;">③ 它的许多具体结论已被取代</div>
+  <p>零交叉检测是否是早期视觉的实际机制，<strong>今天仍有争议</strong>。
+  <em>引用这一部分时要说清这是 1982 年的方案。</em></p>
+
+  <div class="h" style="margin-top:12px;">④ 它是 1982 年的书，作者 1980 年去世</div>
+  <p>马尔在书出版前两年去世，年仅 35 岁。
+  <em>所以这本书是一个未完成纲领的完整表述，不是一个已完成学科的总结。</em></p>
+</div>
+
+<!-- ==================== 第二部分 ==================== -->
+<h2>第二部分 · 20 个专业问题（附通俗解释）</h2>
+<div class="s">问的是方法论位置、与谁冲突、边界在哪</div>
+
+<h3>A 组 · 三个层次</h3>
+
+<div class="qcard">
+  <div class="q-head"><span class="q-id">P1</span><span class="q-tag">方法论</span></div>
+  <div class="q-t">马尔的三个层次，是「三种研究方法」还是「三个描述层次」？
+      这个区别为什么重要？</div>
+  <details><summary></summary>
+    <div class="a">
+      <p><strong>是三个描述层次，不是三种方法。</strong>这一点极其重要。</p>
+      <p>如果它们是三种方法，那么研究者可以选一种做——<em>做生理的做生理，做算法的做算法。</em></p>
+      <p>但马尔的主张是：<strong>同一个系统可以同时在这三个层次上被正确描述，
+      而且高层次的问题不能由低层次的答案代替。</strong></p>
+      <span class="lbl">为什么重要</span>
+      <p>因为它否掉了「等我们把神经元搞清楚了，视觉就自然明白了」这条路线。</p>
+      <p><em>按马尔，即使你知道每一个神经元的连接，
+      你仍然不知道这个系统在解决什么问题——而后者才是理解它的关键。</em></p>
+      <span class="pit">通俗说</span>
+      <div class="pit-b">知道一台计算机的每个晶体管怎么工作，
+      不等于知道它在算什么。<strong>马尔说的是同一件事。</strong></div>
+    </div>
+  </details>
+</div>
+
+<div class="qcard">
+  <div class="q-head"><span class="q-id">P2</span><span class="q-tag">顺序</span></div>
+  <div class="q-t">马尔坚持「先问计算理论，再问算法与实现」。
+      这个顺序是方法上的必要，还是一种偏好？如果倒过来会怎样？</div>
+  <details><summary></summary>
+    <div class="a">
+      <p><strong>他主张的是必要性，但这个主张可以被质疑。</strong></p>
+      <span class="lbl">他的理由</span>
+      <p>如果不知道系统要解决什么问题，你就无法判断某个机制<em>好不好</em>——
+      因为没有评价标准。<strong>而评价标准只能在计算理论层面给出。</strong></p>
+      <span class="lbl">反对的顺序</span>
+      <p>有很多发现是<strong>从机制倒推功能</strong>的：
+      <em>先发现某个神经元对特定刺激敏感，再反推它在算什么。</em>
+      这在神经科学里是常态。</p>
+      <p><strong>所以这个顺序不是逻辑必然，是效率主张</strong>：
+      <em>从功能出发更少走弯路，但不排除从机制出发也能到达。</em></p>
+      <span class="lbl">一个可检验的后果</span>
+      <p>如果马尔正确，那么<strong>纯从机制出发的视觉研究应该更容易陷入「有数据无理论」</strong>。
+      <em>这一点在几十年后的领域状况里可以观察。</em></p>
+      <span class="pit">通俗说</span>
+      <div class="pit-b">他说「先想清楚要解决什么，再看怎么实现」。
+      <strong>这是好建议，但不是唯一的路——只是倒着走通常更慢。</strong></div>
+    </div>
+  </details>
+</div>
+
+<div class="qcard">
+  <div class="q-head"><span class="q-id">P3</span><span class="q-tag">欠定</span></div>
+  <div class="q-t">「视觉是欠定的」这个前提，是逻辑结论还是经验观察？
+      如果是后者，它有被推翻的可能吗？</div>
+  <details><summary></summary>
+    <div class="a">
+      <p><strong>它更接近逻辑结论，而这一点让马尔的理论有一个稳固的地基。</strong></p>
+      <span class="lbl">为什么是逻辑的</span>
+      <p>「无穷多个三维构型可以通过正交投影产生同一幅二维图像」——
+      这是<strong>几何事实</strong>，不依赖任何经验测量。</p>
+      <p>所以「欠定」不是被观察到的，是<em>被证明的</em>。</p>
+      <span class="lbl">它的强度在哪</span>
+      <p>这意味着<strong>「必须带入额外假设」是一个必然推论，不是经验假说</strong>。
+      <em>除非你能证明三维到二维的投影是可逆的——而这是不可能的。</em></p>
+      <span class="lbl">但有一处要注意</span>
+      <p>马尔用的是<strong>正交投影</strong>这个简化。
+      在透视投影下结论同样成立，但论证细节不同。
+      <em>这个简化在书里没有充分讨论，是一个技术上的简略。</em></p>
+      <span class="pit">通俗说</span>
+      <div class="pit-b">「一张照片对应无穷多种真实场景」是几何事实。
+      <strong>所以看东西这件事，一定得靠猜——而猜的规则就是要研究的东西。</strong></div>
+    </div>
+  </details>
+</div>
+
+<h3>B 组 · 表征阶梯</h3>
+
+<div class="qcard">
+  <div class="q-head"><span class="q-id">P4</span><span class="q-tag">坐标系</span></div>
+  <div class="q-t">从 2½ 维草图到三维模型，最关键的变化是什么？
+      为什么这个变化比「处理得更深」更本质？</div>
+  <details><summary></summary>
+    <div class="a">
+      <p><strong>最关键的变化是坐标系的更换：从观察者中心到物体中心。</strong></p>
+      <table>
+        <tr><th>表征</th><th>坐标系</th><th>后果</th></tr>
+        <tr><td>基元草图</td><td class="a">图像坐标</td><td>与视网膜绑定</td></tr>
+        <tr><td>2½ 维草图</td><td class="b">观察者中心</td><td>有深度，但随视角变化</td></tr>
+        <tr><td>三维模型</td><td class="c">物体中心</td><td><strong>视角无关</strong>——同一物体换角度看，表征不变</td></tr>
+      </table>
+      <span class="lbl">为什么坐标系比「深度」更本质</span>
+      <p>因为<strong>识别的必要条件就是视角无关性</strong>。
+      如果我换一个角度看同一把椅子，得到的表征完全不同，那系统就无法判断「这是同一把椅子」。</p>
+      <p><em>所以「换成物体中心」不是锦上添花，是识别之所以可能的前提。</em></p>
+      <p><strong>这也解释了为什么 2½ 维草图不能直接用于识别</strong>——
+      它有深度，但它仍然是「从我这里看到的」。</p>
+      <span class="pit">通俗说</span>
+      <div class="pit-b">2½ 维是「从我这边看的立体」；三维模型是「不管从哪看都是它」。
+      <strong>要认出一个东西，必须是后者。</strong></div>
+    </div>
+  </details>
+</div>
+
+<div class="qcard">
+  <div class="q-head"><span class="q-id">P5</span><span class="q-tag">命名</span></div>
+  <div class="q-t">为什么叫「2½ 维」而不是「2.5 维」或「第三维」？
+      这个半维指的是什么？</div>
+  <details><summary></summary>
+    <div class="a">
+      <p><strong>「半」指的是：它有了深度信息，但不是完整的、可用于识别的三维表征。</strong></p>
+      <span class="lbl">它有什么</span>
+      <p>可见表面的<strong>朝向、深度、不连续</strong>——即<em>「我这里能看到的那些表面」的三维信息</em>。</p>
+      <span class="lbl">它没有什么</span>
+      <p><strong>被遮挡的部分</strong>。2½ 维草图只描述可见表面，
+      <em>所以它无法表示一个完整的物体。</em></p>
+      <p>而且它仍然是<em>观察者中心</em>的——同一物体在不同视角下得到不同的 2½ 维草图。</p>
+      <span class="lbl">所以「半」是精确的</span>
+      <p>它比二维多了深度（<strong>+½</strong>），
+      但比真正的三维物体表征少了遮挡部分与视角无关性（<strong>−½</strong>）。</p>
+      <span class="pit">通俗说</span>
+      <div class="pit-b">它是「你看到的那个立体表面」，不是「那个东西本身」。
+      <strong>多了半维，还差半维。</strong></div>
+    </div>
+  </details>
+</div>
+
+<div class="qcard">
+  <div class="q-head"><span class="q-id">P6</span><span class="q-tag">分组</span></div>
+  <div class="q-t">raw primal sketch 与 full primal sketch 的区别是什么？
+      「分组」（grouping）这一步为什么必须单独列出来？</div>
+  <details><summary></summary>
+    <div class="a">
+      <span class="lbl">区别</span>
+      <p><strong>raw</strong>：从图像里检测出来的局部元素——零交叉、边缘段、小线段。
+      <em>它是「哪里有强度变化」，没有组织。</em></p>
+      <p><strong>full</strong>：加入分组过程——把这些局部元素组织成更大的结构：
+      边界、区域、纹理单元。<em>它是「什么东西的边界」。</em></p>
+      <span class="lbl">为什么必须单独列出来</span>
+      <p>因为<strong>「局部检测」与「整体组织」是两类完全不同的计算</strong>。</p>
+      <p>前者只需要看图像的<em>一小块邻域</em>；
+      后者需要<em>跨越大范围的一致性判断</em>——它解决的仍然是欠定问题
+      （<em>哪些元素应该被归为一组，图像本身不告诉你</em>）。</p>
+      <p><strong>所以分组这一步需要自己的约束</strong>（共线性、相似性、连续性），
+      <em>而这些约束与零交叉检测用的约束不是同一批。</em></p>
+      <span class="pit">通俗说</span>
+      <div class="pit-b">先是「这里有一条线」；再是「这些线属于同一个物体」。
+      <strong>第二步要用另一套规则。</strong></div>
+    </div>
+  </details>
+</div>
+
+<h3>C 组 · 模块化及其代价</h3>
+
+<div class="qcard">
+  <div class="q-head"><span class="q-id">P7</span><span class="q-tag">模块化</span></div>
+  <div class="q-t">「知觉的独立模块」这个主张，它的证据是什么？
+      它面临的最大困难是什么？</div>
+<details><summary></summary>
+    <div class="a">
+      <span class="lbl">证据</span>
+      <p>来自心理物理学：<strong>适应与阈值检测研究发现存在独立的、对空间频率调谐的通道</strong>
+      （Campbell 与 Robson 1968）。</p>
+      <p>也就是说：<em>视觉系统里存在对不同空间频率各自敏感的机制，而且它们可以被分别适应。</em></p>
+      <p><strong>这类发现的价值在于它让「分别研究」成为可能</strong>——
+      如果各通道独立，就可以一个一个研究。</p>
+      <span class="lbl">最大困难：整合</span>
+      <p><strong>如果模块真的独立，那么「它们如何合成一个统一的世界」就无法解释。</strong></p>
+      <p>我们看到的不是七张分开的图（形状、颜色、运动、深度……），<em>是一个东西。</em>
+      这个统一性来自哪里？</p>
+      <p>马尔在最后一章用对话体讨论了这个问题，<strong>但没有给出机制</strong>。
+      <em>这是全书最大的理论缺口。</em></p>
+      <span class="pit">通俗说</span>
+      <div class="pit-b">拆开研究是好办法，但拆开之后就不知道怎么装回去了。
+      <strong>而大脑显然装回去了。</strong></div>
+    </div>
+  </details>
+</div>
+
+<div class="qcard">
+  <div class="q-head"><span class="q-id">P8</span><span class="q-tag">与联结主义</span></div>
+  <div class="q-t">马尔的模块化路线与后来的神经网络（联结主义）路线，
+      核心分歧在哪一点上？</div>
+  <details><summary></summary>
+    <div class="a">
+      <p><strong>分歧不在「是否用计算」，而在「表征是显式的还是隐式的」。</strong></p>
+      <span class="lbl">马尔的立场</span>
+      <p>他要求<strong>显式的表征</strong>：基元草图、2½ 维草图、三维模型——
+      每一种都是<em>可以被指认、被检查、被写成数据结构的东西</em>。</p>
+      <p>而且他要求<strong>先说明每个模块在算什么</strong>（计算理论层面），再实现它。</p>
+      <span class="lbl">联结主义的立场</span>
+      <p>表征<strong>分布在大量单元的连接权重里</strong>，不表现为可读的结构。
+      <em>而且它常常从「能完成任务」出发，事后才问「它学到了什么表征」。</em></p>
+      <span class="lbl">所以分歧的实质</span>
+      <p><strong>「理解一个系统」是否需要显式的、可读的中间表征？</strong></p>
+      <p>马尔答「需要」；联结主义答「不一定」——
+      <em>只要行为对了，内部表征是否可以读出来，不是必要条件。</em></p>
+      <span class="lbl">这也是为什么马尔的方法在深度学习时代被边缘化</span>
+      <p>不是因为他的框架错了，而是因为<strong>他的框架要求的那个东西（显式表征）
+      在成功的大规模系统里恰恰没有出现</strong>。</p>
+      <span class="pit">通俗说</span>
+      <div class="pit-b">马尔要能说清「中间那一步算出来的到底是什么」；
+      神经网络说「能认出来就行，中间是什么不用管」。
+      <strong>这是两种对「理解」的定义。</strong></div>
+    </div>
+  </details>
+</div>
+
+<h3>D 组 · 早期视觉的具体机制</h3>
+
+<div class="qcard">
+  <div class="q-head"><span class="q-id">P9</span><span class="q-tag">零交叉</span></div>
+  <div class="q-t">马尔为什么主张早期视觉检测的是「零交叉」而不是「边缘」？
+      这个替换带来了什么好处？</div>
+  <details><summary></summary>
+    <div class="a">
+      <span class="lbl">「边缘」的问题</span>
+      <p>「边缘」是一个<strong>含混的概念</strong>：多亮算一条边？多宽算一条边？
+      <em>它需要有人先定义阈值——而阈值是任意的。</em></p>
+      <span class="lbl">「零交叉」的好处</span>
+      <p>它有一个<strong>数学上明确的定义</strong>：把图像与 ∇²G 算子卷积后，
+      输出为零的那些位置。</p>
+      <p>好处有三：</p>
+      <p><strong>① 无需任意阈值</strong>——零就是零。<br>
+      <strong>② 可多尺度</strong>——换一个尺度的算子，就得到另一个尺度的零交叉，
+      <em>而它们之间可以互相印证（不同尺度的零交叉应该对应同一物理边缘）。</em><br>
+      <strong>③ 与生理证据可对应</strong>——视网膜和视皮层里确实存在类似 ∇²G 的感受野。</p>
+      <span class="lbl">但这一处争议至今未定</span>
+      <p>零交叉是否是早期视觉的<strong>实际机制</strong>，仍有争论。
+      <em>引用时要标明这是马尔—希尔德里斯 1980 年的方案。</em></p>
+      <span class="pit">通俗说</span>
+      <div class="pit-b">他说「别找边缘，去找数学上定义清楚的那个东西」。
+      <strong>这一步把「怎么看」变成了「算什么」。</strong></div>
+    </div>
+  </details>
+</div>
+
+<div class="qcard">
+  <div class="q-head"><span class="q-id">P10</span><span class="q-tag">多尺度</span></div>
+  <div class="q-t">为什么边缘检测必须用多个尺度？
+      单一尺度的算子会失败在哪里？</div>
+  <details><summary></summary>
+    <div class="a">
+      <p><strong>因为「什么算一条边缘」依赖于你观察的尺度。</strong></p>
+      <span class="lbl">单一尺度的两难</span>
+      <p><strong>尺度小</strong>：能分辨细节，<em>但噪声也被当成边缘。</em><br>
+      <strong>尺度大</strong>：抗噪好，<em>但细节被抹平，相邻的两条边缘合成一条。</em></p>
+      <p><strong>而图像里同时存在粗糙与细致的结构</strong>——没有哪个单一尺度是够的。</p>
+      <span class="lbl">书里的一个具体例子（马尔用小麦田）</span>
+      <blockquote class="en">
+        When seen from close by, the individual wheat stems form the reflecting surfaces,
+        and the situation is relatively straightforward. When viewed from afar, however,
+        image resolution is insufficient to distinguish the stems; the field as a whole
+        forms the visible surface.
+        <span class="zh">从近处看，是一根根麦秆构成反射表面，情况相对直接。
+        但从远处看，图像分辨率不足以分辨麦秆；整片田地成为可见表面。</span>
+        <span class="who">Chapter 2</span>
+      </blockquote>
+      <p><em>同一个麦田，两个尺度下是两种「表面」。所以尺度不是参数，是问题的一部分。</em></p>
+      <span class="pit">通俗说</span>
+      <div class="pit-b">近看是麦秆，远看是麦浪。
+      <strong>没有哪个是「真实」的——取决于你在哪个尺度上问问题。</strong></div>
+    </div>
+  </details>
+</div>
+
+<div class="qcard">
+  <div class="q-head"><span class="q-id">P11</span><span class="q-tag">隐含假设</span></div>
+  <div class="q-t">马尔说「我们必定带入了额外的假设」。请举出书里的一处具体假设，
+      并说明它为什么是必要的。</div>
+<details><summary></summary>
+    <div class="a">
+      <p>书里反复出现的一类假设是<strong>关于表面与光照的物理假设</strong>——
+      例如：<em>可见表面是分片光滑的；同一表面上的反射率变化是缓慢的；不连续处对应物体边界。</em></p>
+      <span class="lbl">为什么必要</span>
+      <p>因为<strong>图像里只有亮度值，没有「表面」这个概念</strong>。</p>
+      <p>要从亮度推出表面，就必须假定<em>「亮度的某种变化形态对应表面的某种性质」</em>——
+      而这个对应不在图像里，是加进去的。</p>
+      <p><strong>马尔的做法是把这些假设明说出来并检验它们</strong>：
+      <em>它们在世界里成立吗？成立的条件是什么？</em>
+      （书里用「小麦田」「猫的皮毛」这类例子讨论过假设的适用边界。）</p>
+      <span class="lbl">这一步的方法论意义</span>
+      <p><strong>把「隐含假设」变成「明说的、可检验的假设」——这是马尔全书最有价值的方法动作。</strong></p>
+      <p><em>因为隐含假设是无法被批评的；明说的假设可以被检验、被修改、被替换。</em></p>
+      <span class="pit">通俗说</span>
+      <div class="pit-b">他说清楚「我假定世界是这样的」，然后问「这个假定在什么情况下不成立」。
+      <strong>比不说要好得多。</strong></div>
+    </div>
+  </details>
+</div>
+
+<h3>E 组 · 位置与遗产</h3>
+
+<div class="qcard">
+  <div class="q-head"><span class="q-id">P12</span><span class="q-tag">与 Gonzalez</span></div>
+  <div class="q-t">马尔的三个阶段与 Gonzalez 的三级处理，表面相似。
+      请指出它们最关键的一处不同。</div>
+  <details><summary></summary>
+    <div class="a">
+      <table>
+        <tr><th></th><th>马尔</th><th>Gonzalez</th></tr>
+        <tr><td><strong>三段的判据</strong></td><td class="a">坐标系的更换</td>
+          <td class="b">输入输出的类型</td></tr>
+        <tr><td><strong>目标</strong></td><td>解释生物视觉</td><td>造可用的工具</td></tr>
+        <tr><td><strong>对「理解」的态度</strong></td><td>必须给出显式表征</td>
+          <td>描述为「认知功能」，划在自己之外</td></tr>
+      </table>
+      <span class="lbl">最关键的不同</span>
+      <p><strong>马尔的三段有内在的必然顺序</strong>（因为坐标系必须逐级更换，才能得到视角无关性）；
+      <strong>Gonzalez 的三级是分类学的，不是推导出来的</strong>——
+      <em>他的判据（输入输出是什么）可以给任意处理分类，但不产生顺序。</em></p>
+      <p><em>换句话：马尔的三阶段是一条链，Gonzalez 的三级是一张标签表。</em></p>
+      <span class="pit">通俗说</span>
+      <div class="pit-b">马尔说「必须这样走，因为不换坐标系就认不出东西」；
+      Gonzalez 说「这些处理可以按输入输出分成三类」。
+      <strong>一个是推导，一个是分类。</strong></div>
+    </div>
+  </details>
+</div>
+
+<div class="qcard">
+  <div class="q-head"><span class="q-id">P13</span><span class="q-tag">与 Gibson</span></div>
+  <div class="q-t">书里专门有一节讨论 J. J. Gibson 的取向。
+      两人的分歧是什么？为什么马尔要花篇幅反驳他？</div>
+  <details><summary></summary>
+    <div class="a">
+      <p style="font-size:12.8px;color:var(--ink-soft);">
+        ⚠️ 书里确实有 "The approach of J. J. Gibson" 这一节（第 1 章，第 29 页）。
+        以下是基于目录与马尔立场的分析。</p>
+      <span class="lbl">Gibson 的立场</span>
+      <p><strong>生态光学</strong>：视觉不需要「从图像重建三维」，
+      因为环境中的光本身就携带着足够的信息（<em>光流、纹理梯度、不变性</em>），
+      观察者直接「拾取」（pick up）这些信息即可。</p>
+      <p><em>即：不存在马尔所说的「欠定」问题——因为信息本来就在那里。</em></p>
+      <span class="lbl">马尔为什么必须反驳他</span>
+      <p>因为<strong>如果 Gibson 对，那马尔的整个方案就是多余的</strong>。
+      <em>不需要重建、不需要表征阶梯、不需要隐含假设——因为没有欠定。</em></p>
+      <p>所以这一节不是礼节性的讨论，是<strong>方案层面的排他</strong>。</p>
+      <span class="lbl">争论的实质</span>
+      <p><strong>「环境中是否有足够的信息」是一个可以被研究的问题</strong>——
+      <em>而两人的答案不同：Gibson 说够，马尔说不够、必须靠假设补足。</em></p>
+      <span class="pit">通俗说</span>
+      <div class="pit-b">Gibson 说「信息就在光里，你只要去看」；
+      马尔说「光里的信息不够，你还得猜」。<strong>这两种立场决定了要不要做重建理论。</strong></div>
+    </div>
+  </details>
+</div>
+
+<div class="qcard">
+  <div class="q-head"><span class="q-id">P14</span><span class="q-tag">遗产</span></div>
+  <div class="q-t">马尔这本书里，哪一部分至今仍在被使用，哪一部分已被取代？</div>
+  <details><summary></summary>
+    <div class="a">
+      <span class="lbl">仍在使用的：三个层次</span>
+      <p>它在认知科学、人工智能、神经科学里都是标准框架。
+      <em>任何计算模型论文都要说明自己在哪个层次上工作。</em></p>
+      <p><strong>这是马尔最长寿的贡献，而且它不依赖任何关于视觉的具体结论。</strong></p>
+      <span class="lbl">大体被取代的：具体表征与算法</span>
+      <p>· <strong>零交叉检测</strong>：作为早期视觉的实际机制，仍有争议，且不是主流解释。<br>
+      · <strong>2½ 维草图</strong>：这个概念后来很少被直接使用，<em>部分因为它的定义不够可操作</em>。<br>
+      · <strong>三维模型表征</strong>：构想本身（以轴为基础的体积基元）在识别研究里被其他路线取代
+      （<em>特征匹配、深度学习</em>）。</p>
+      <span class="lbl">产生最大影响的具体结果</span>
+      <p>大概是<strong>「多尺度边缘检测」这个思路本身</strong>——
+      它成了后续几十年图像处理的标准工具，<em>而且它的生命力跨到了 Gonzalez 那边</em>。</p>
+      <span class="pit">通俗说</span>
+      <div class="pit-b">框架还在用，具体的算法大多换了。
+      <strong>所以这本书要读的是第一章和它的方法论，不是后面的技术细节。</strong></div>
+    </div>
+  </details>
+</div>
+
+<div class="qcard">
+  <div class="q-head"><span class="q-id">P15</span><span class="q-tag">反身</span></div>
+  <div class="q-t">用《无穷的开始》的判据（好解释难以改变）审查马尔的理论，
+      它是一套好解释吗？</div>
+  <details><summary></summary>
+    <div class="a">
+      <p style="font-size:12.8px;color:var(--ink-soft);">⚠️ 这是跨域审查，非本书内容。</p>
+      <span class="lbl">支持它是好解释的部分</span>
+      <p><strong>① 它的前提是几何必然</strong>：欠定是投影的数学性质，
+      <em>不是可以改的经验假设。</em></p>
+      <p><strong>② 它给出了具体的、可检验的机制</strong>：零交叉、多尺度、
+      <em>这些可以被实验支持或否定。</em></p>
+      <p><strong>③ 它明确说出了自己的隐含假设</strong>（见 P11）——
+      <em>这正是「难以改变」的正面特征：细节被锁住了。</em></p>
+      <span class="lbl">不利于它的部分</span>
+      <p><strong>① 三层次框架本身很难被推翻</strong>：
+      如果某个系统不符合三层，可以说「那是另一种系统」。
+      <em>这有「怎么改都成立」的风险。</em></p>
+      <p><strong>② 模块化 + 未解释的整合</strong>：
+      整合缺口让它无法排除「其实不模块化」这个可能。</p>
+      <span class="lbl">结论</span>
+      <p><strong>它的具体科学部分（早期视觉机制）是好解释；它的框架部分强于描述、弱于可反驳。</strong></p>
+      <p><em>这与《科技想要什么》的情况结构相同——框架有价值，但框架本身不容易被检验。
+      这可能是所有「提出一个新框架」的著作的共同处境。</em></p>
+      <span class="pit">通俗说</span>
+      <div class="pit-b">它的实验结论可以被推翻；它的框架不容易。
+      <strong>框架的价值在于能带动研究，不在于能被证明。</strong></div>
+    </div>
+  </details>
+</div>
+
+<h3>F 组 · 更远的位置</h3>
+
+<div class="qcard">
+  <div class="q-head"><span class="q-id">P16</span><span class="q-tag">学科史</span></div>
+  <div class="q-t">马尔的方法为什么在深度学习兴起后被边缘化？
+      这是「他的框架被证伪了」吗？</div>
+  <details><summary></summary>
+    <div class="a">
+      <p><strong>不是被证伪，是被绕过了。</strong></p>
+      <span class="lbl">发生了什么</span>
+      <p>马尔的路线要求<strong>为每个模块写出显式表征与算法</strong>。
+      而当大规模神经网络在若干任务上达到人的水平时，
+      <em>它们没有给出任何可读的中间表征。</em></p>
+      <p>于是「理解视觉」这件事在实践上被重新定义了：
+      <strong>从「说清每一步算什么」变成「做出能完成任务的东西」。</strong></p>
+      <span class="lbl">为什么这不构成证伪</span>
+      <p>证伪需要<strong>一个马尔式的预测被实验否定</strong>。
+      但神经网络的成功并不否定「视觉是欠定的」「必须带入假设」这些马尔的论断——</p>
+      <p><em>恰恰相反：神经网络之所以需要大量数据，正是因为它要用数据来提供那些假设。</em></p>
+      <span class="lbl">所以真实的关系是</span>
+      <p><strong>两者回答的问题不同</strong>：
+      马尔问「人脑用哪些假设解决了欠定」；
+      神经网络给出了「用统计规律近似这些假设」的工程解。</p>
+      <p><em>前者是科学问题，后者是工程方案。工程胜利不等于科学问题被回答。</em></p>
+      <span class="pit">通俗说</span>
+      <div class="pit-b">马尔问「你是怎么认出来的」；神经网络说「我不知道，但我认得出来」。
+      <strong>后者更有用，但没有回答前者的问题。</strong></div>
+    </div>
+  </details>
+</div>
+
+<div class="qcard">
+  <div class="q-head"><span class="q-id">P17</span><span class="q-tag">与多伊奇</span></div>
+  <div class="q-t">马尔说「必须带入额外假设」，多伊奇说「观察都是理论负载的」。
+      把两句放在一起，能得到什么？</div>
+  <details><summary></summary>
+    <div class="a">
+      <p><strong>能得到一个双向的论证：多伊奇从认识论出发，马尔从工程出发，结论一致。</strong></p>
+      <span class="lbl">多伊奇的方向</span>
+      <p><em>从「知识怎么来」出发</em>：经验不能产生理论，理论只能靠猜想，
+      而观察已经被理论塑造。</p>
+      <span class="lbl">马尔的方向</span>
+      <p><em>从「一个具体任务怎么做」出发</em>：从二维到三维在几何上欠定，
+      所以必须补入假设——而假设不是从图像里读出来的。</p>
+      <span class="lbl">两者合起来说明什么</span>
+      <p><strong>「观察提供信息」这件事，在逻辑上就需要前存的解释结构。</strong>
+      多伊奇说这在认识论上普遍成立；马尔给出了一个可以精确计算的实例。</p>
+      <p><em>这比任何一方单独说都更有力——因为马尔那一边是可算的。</em></p>
+      <span class="lbl">一处差别</span>
+      <p>马尔关心的是<strong>假设是否在世界里成立</strong>（这是一个经验问题）；
+      多伊奇关心的是<strong>假设是否容易被修改</strong>（这是一个结构问题）。</p>
+      <p><em>前者问「对不对」，后者问「好不好」。两者都需要。</em></p>
+      <span class="pit">通俗说</span>
+      <div class="pit-b">多伊奇说「看东西一定带着想法」；马尔算出了「必须带多少想法」。
+      <strong>一个说性质，一个给了数字。</strong></div>
+    </div>
+  </details>
+</div>
+
+<div class="qcard">
+  <div class="q-head"><span class="q-id">P18</span><span class="q-tag">方法移植</span></div>
+  <div class="q-t">马尔的「三个层次」这套方法，能不能移植到视觉之外的领域？
+      请举一个，并说明移植到哪里会失效。</div>
+  <details><summary></summary>
+    <div class="a">
+      <span class="lbl">能移植的地方：任何「信息处理系统」</span>
+      <p>只要一个系统是<em>在解决问题</em>而不是<em>被物理规律直接决定</em>，
+      三层次就适用。例如：<strong>语言、免疫系统、经济组织、甚至机器学习系统本身</strong>。</p>
+      <p>在 AI 领域，这套问法尤其有用：
+      <em>先问「这个系统在算什么、评价标准是什么」（计算理论），再问「用什么表征」（算法），
+      最后才是「跑在什么硬件上」。</em></p>
+      <span class="lbl">会失效的地方</span>
+      <p><strong>① 没有明确「要解决什么问题」的系统。</strong>
+      如果系统的功能是被事后归派的，那计算理论层面就是空的——
+      <em>而马尔的方法要求这一层先确定。</em></p>
+      <p><strong>② 功能与实现不可分离的系统。</strong>
+      有些系统的「算什么」依赖于它的物理载体（<em>例如某些模拟计算</em>），
+      这时三层的独立性不成立。</p>
+      <p><strong>③ 演化产物的功能归属有争议时</strong>。
+      生物系统的「目的」往往是研究者赋予的，<em>而马尔的方法假定这个目的是可确定的。</em></p>
+      <span class="pit">通俗说</span>
+      <div class="pit-b">对「有明显任务的系统」这套方法很好用；
+      对「说不清它在干什么的系统」用不了——<strong>而后者恰恰不少。</strong></div>
+    </div>
+  </details>
+</div>
+
+<div class="qcard">
+  <div class="q-head"><span class="q-id">P19</span><span class="q-tag">未回答</span></div>
+  <div class="q-t">书里有没有明确提出但没有回答的问题？举一个，并说明为什么它重要。</div>
+  <details><summary></summary>
+    <div class="a">
+      <p><strong>最明显的是：独立的模块如何整合成一个统一的知觉？</strong></p>
+      <p>他在最后一章（"A Conversation"）用对话体讨论，<em>但给的是对问题的描述，不是机制。</em></p>
+      <span class="lbl">为什么它重要</span>
+      <p>因为<strong>这个缺口决定了模块化主张的强弱</strong>：</p>
+      <p>· 如果能整合 → 模块化是一个可用的分解策略。<br>
+      · 如果不能 → 模块化可能只是一个<em>研究上的方便</em>，而不是系统的真实结构。</p>
+      <p><strong>而马尔自己没有给出区分这两种情况的办法。</strong></p>
+      <span class="lbl">后来的历史怎么处理它</span>
+      <p><strong>联结主义实际上是绕开而不是解决了这个问题</strong>：
+      在分布式表征里，不存在「模块」这个层次，<em>所以整合问题也不出现。</em></p>
+      <p><em>这是一种「取消问题」的策略，在科学史上很常见——但它是取消，不是回答。</em></p>
+      <span class="pit">通俗说</span>
+      <div class="pit-b">他拆开了视觉，但没说怎么装回去。
+      <strong>后来的人干脆不拆了。</strong></div>
+    </div>
+  </details>
+</div>
+
+<div class="qcard">
+  <div class="q-head"><span class="q-id">P20</span><span class="q-tag">综合</span></div>
+  <div class="q-t">如果只带走这本书的一个东西，应该带走什么？</div>
+  <details><summary></summary>
+    <div class="a">
+      <p><strong>带走「三个层次」这个提问方式。</strong></p>
+      <span class="lbl">为什么是它</span>
+      <p>因为它是<strong>一个可以在任何领域立刻使用的动作</strong>：</p>
+      <p>遇到一个复杂的系统，先分开问三件事——</p>
+      <p><strong>① 它在解决什么问题？<br>
+      ② 它用什么表征和算法？<br>
+      ③ 它在什么物理基础上实现？</strong></p>
+      <p><em>然后检查：我是不是在用低层次的答案回答高层次的问题？</em></p>
+      <span class="lbl">这个动作最常见的用处</span>
+      <p><strong>识别「用机制代替功能」的论证</strong>。例如：</p>
+      <p>· 「大脑就是神经元放电」——<em>那是第三层，没有回答第一层。</em><br>
+      · 「市场就是买卖双方的行为」——<em>同上。</em><br>
+      · 「学习就是权重更新」——<em>同上。</em></p>
+      <p><strong>这些说法都没有错，但都没有回答问题。</strong>
+      <em>马尔的方法让你能指出这一点，而不必说它们「错」。</em></p>
+      <span class="lbl">与项目里另一条判据的关系</span>
+      <p>这和多伊奇的「什么能推翻它」是两种不同的检查：
+      <strong>多伊奇检查一个说法是否承担风险；马尔检查一个说法是否回答了它被问的那个问题。</strong></p>
+      <p><em>两者都是「先弄清问题是什么」，但角度不同。合起来用更有效。</em></p>
+      <span class="pit">通俗说</span>
+      <div class="pit-b">带走一句话：<strong>「你说的是哪个层次的事？它回答了被问的那个问题吗？」</strong></div>
+    </div>
+  </details>
+</div>
+
+<!-- ==================== 附录 ==================== -->
+<h2>附 · 速查表</h2>
+
+<h3>书的结构（据原书目录）</h3>
+<table>
+  <tr><th style="width:14%">部分</th><th style="width:36%">章</th><th>内容</th></tr>
+  <tr><td rowspan="2"><strong>Part I</strong><br>引论</td>
+    <td>Chapter 1 The Philosophy and the Approach</td>
+    <td>三个层次 · 表征与过程 · 对 Gibson 的讨论 · 表征框架</td></tr>
+  <tr><td colspan="2" style="font-size:12.6px;color:var(--ink-soft);">
+    含：Understanding Complex Information-Processing Systems / Representation and description /
+    Process / The three levels / Importance of computational theory / The approach of J. J. Gibson</td></tr>
+  <tr><td rowspan="5"><strong>Part II</strong><br>视觉</td>
+    <td>Chapter 2 Representing the Image</td>
+    <td>早期视觉的物理背景 · 零交叉与原始基元草图 · 分组与完整基元草图</td></tr>
+  <tr><td>Chapter 3 From Images to Surfaces</td>
+    <td>模块组织 · 约束与可用表征 · 立体视觉 · 方向选择性 · 表观运动 · 形状轮廓</td></tr>
+  <tr><td>Chapter 4 The Immediate Representation of Visible Surfaces</td>
+    <td><strong>2½ 维草图</strong>：图像分割 · 表征的信息内容 · 一般形式 · 坐标系 · 内插</td></tr>
+  <tr><td>Chapter 5 Representing Shapes for Recognition</td>
+    <td><strong>三维模型表征</strong>：形状表征的问题 · 坐标系 · 基元 · 组织 · 索引</td></tr>
+  <tr><td>Chapter 6（及 A Conversation）</td>
+    <td>讨论与收束</td></tr>
+</table>
+
+<h3>核心概念速查</h3>
+<table>
+  <tr><th style="width:24%">概念</th><th>一句话</th><th style="width:12%">出处</th></tr>
+  <tr><td><strong>三个层次</strong></td><td>计算理论 / 表征与算法 / 硬件实现，相互独立</td><td>Ch 1</td></tr>
+  <tr><td><strong>欠定</strong></td><td>无穷多个三维构型可产生同一二维图像，故必须补入假设</td><td>Ch 3</td></tr>
+  <tr><td><strong>原始基元草图</strong></td><td>零交叉、边缘段、小线段 —— 局部元素，图像坐标</td><td>Ch 2</td></tr>
+  <tr><td><strong>完整基元草图</strong></td><td>加入分组，把局部元素组织成边界与区域</td><td>Ch 2</td></tr>
+  <tr><td><strong>2½ 维草图</strong></td><td>可见表面的朝向与深度 —— 观察者中心，「半」= 无遮挡部分</td><td>Ch 4</td></tr>
+  <tr><td><strong>三维模型</strong></td><td>以轴为基础的体积基元，物体中心坐标 —— 视角无关</td><td>Ch 5</td></tr>
+  <tr><td><strong>独立模块</strong></td><td>知觉各子过程可分别研究；<em>但整合机制未给出</em></td><td>Ch 1</td></tr>
+  <tr><td><strong>零交叉</strong></td><td>∇²G 滤波后输出为零处；替代含混的「边缘」</td><td>Ch 2</td></tr>
+</table>
+
+<h3>底本与引文说明</h3>
+<table>
+  <tr><th style="width:26%">项</th><th>说明</th></tr>
+  <tr><td>底本</td><td><code>视觉_全文.txt</code> —— <strong>英文原著</strong>，969,698 字符，中文字符 0</td></tr>
+  <tr><td>版本</td><td>David Marr, <em>Vision: A Computational Investigation into the Human
+    Representation and Processing of Visual Information</em>（1982；2010 MIT Press 重印）</td></tr>
+  <tr><td>引文方式</td><td>本页引文给<strong>英文原文 + 中文翻译</strong>。
+    英文可在语料中逐字核对；<strong>中文译文是本项目的翻译，非原书内容</strong></td></tr>
+  <tr><td>项目内的关联产出</td><td><code>视觉-整体架构.html</code>、<code>视觉-问题手册.html</code>、
+    <code>视觉-助人手册.html</code><br>
+    <span style="color:var(--warn);">其中「整体架构」是早期文件丢失后重新生成的，不是原件</span></td></tr>
+</table>
+
+<footer>
+ 《视觉》精华笔记与专业问题 · 「底层」项目 06_文学与生命书写<br>
+ 大卫·马尔 · 1982 / 2010 · 原版 397 页 · 底本为英文原著<br>
+ <em>英文引文可在 视觉_全文.txt 中核对；中文译文及第二部分的比较性分析（P8、P12–P17）为本项目读法</em>
+</footer>
+
+</div>
+</body>
+</html>

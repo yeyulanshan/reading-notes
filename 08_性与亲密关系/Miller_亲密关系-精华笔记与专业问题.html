@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>亲密关系 · 精华笔记与专业问题</title>
+<style>
+  :root{
+    --paper:#faf7f3; --card:#ffffff; --edge:#e3d9cf; --edge-lit:#c8b5a4;
+    --ink:#2a211c; --ink-mid:#5a4a3f; --ink-soft:#887665;
+    --m:#a8622f; --m-soft:#f9f0e8;
+    --key:#77682c; --key-soft:#faf6e7;
+    --q:#74527e; --q-soft:#f6eef8;
+    --warn:#a85035; --warn-soft:#fcf1ec;
+    --ev:#2f6f6a; --ev-soft:#edf6f5;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--paper);color:var(--ink);line-height:1.9;padding:32px 16px 56px;
+    -webkit-font-smoothing:antialiased;}
+  .wrap{max-width:960px;margin:0 auto;}
+  header{text-align:center;padding:38px 20px 32px;background:var(--card);
+    border:1px solid var(--edge);border-top:4px solid var(--m);border-radius:8px;margin-bottom:22px;}
+  header .kicker{font-size:11px;letter-spacing:.26em;color:var(--ink-soft);
+    font-family:ui-monospace,Consolas,monospace;margin-bottom:13px;}
+  header h1{font-size:24px;font-weight:800;letter-spacing:.01em;line-height:1.4;margin-bottom:10px;}
+  header .sub{font-size:13.8px;color:var(--ink-mid);line-height:1.9;}
+  header .src{margin-top:12px;font-size:12px;color:var(--ink-soft);line-height:1.9;}
+  .lead{background:var(--card);border:1px solid var(--edge);border-radius:8px;
+    padding:19px 22px;margin-bottom:24px;font-size:13.9px;color:var(--ink-mid);}
+  .lead .t{color:var(--key);font-weight:700;margin-bottom:9px;font-size:13.4px;}
+  .lead p+p{margin-top:8px;} .lead strong{color:var(--ink);}
+  .lead .warn{margin-top:12px;padding:11px 15px;background:var(--warn-soft);
+    border:1px solid #edd6cd;border-left:3px solid var(--warn);border-radius:4px;
+    font-size:13.2px;color:#8a4630;line-height:1.9;}
+  h2{font-size:18.5px;font-weight:700;margin:40px 0 6px;padding-left:12px;
+    border-left:4px solid var(--key);line-height:1.55;}
+  .s{color:var(--ink-soft);font-size:12.9px;margin:0 0 16px 16px;line-height:1.85;}
+  h3{font-size:15.6px;font-weight:700;margin:26px 0 8px;color:var(--ink);}
+  p{font-size:14.1px;color:var(--ink-mid);margin-bottom:10px;}
+  p strong{color:var(--ink);} p em{font-style:normal;color:var(--ink-mid);}
+  code{font-family:ui-monospace,Consolas,monospace;font-size:12.4px;
+    background:#f8f2ec;border:1px solid var(--edge);border-radius:4px;
+    padding:1px 6px;color:#8a5630;word-break:break-all;}
+  .note{background:var(--card);border:1px solid var(--edge);border-radius:8px;
+    padding:17px 20px;margin:14px 0;font-size:13.7px;color:var(--ink-mid);line-height:1.92;}
+  .note .h{font-size:13.4px;font-weight:700;color:var(--m);margin-bottom:8px;}
+  .note p+p{margin-top:8px;} .note strong{color:var(--ink);}
+  .key{background:var(--key-soft);border:1px solid #e8dcbe;border-left:3px solid var(--key);
+    border-radius:4px;padding:14px 17px;margin:14px 0;font-size:13.6px;color:#5f5527;line-height:1.92;}
+  .key .h{font-weight:700;color:var(--key);margin-bottom:7px;font-size:13.3px;}
+  .key strong{color:#4a4220;}
+  .ev{background:var(--ev-soft);border:1px solid #cfe4e2;border-left:3px solid var(--ev);
+    border-radius:4px;padding:13px 16px;margin:13px 0;font-size:13.4px;color:#28564f;line-height:1.9;}
+  .ev .h{font-weight:700;color:var(--ev);margin-bottom:6px;font-size:13px;}
+  .ev strong{color:#1d4a44;}
+  blockquote{margin:11px 0;padding:10px 15px;background:var(--key-soft);
+    border-left:3px solid var(--key);border-radius:4px;
+    font-size:13.4px;color:#5f5527;line-height:1.9;}
+  blockquote .who{display:block;margin-top:6px;font-size:11.6px;color:var(--ink-soft);text-align:right;}
+  .qcard{background:var(--card);border:1px solid var(--edge);border-radius:9px;
+    padding:16px 19px;margin-bottom:12px;transition:border-color .2s,box-shadow .2s;}
+  .qcard:hover{border-color:var(--edge-lit);box-shadow:0 4px 14px -8px rgba(90,60,30,.16);}
+  .q-head{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:9px;}
+  .q-id{font-family:ui-monospace,Consolas,monospace;font-size:12px;font-weight:700;
+    color:var(--q);letter-spacing:.06em;}
+  .q-tag{font-size:11.4px;color:var(--ink-soft);border:1px solid var(--edge);
+    border-radius:999px;padding:1px 9px;background:var(--q-soft);}
+  .q-t{font-size:14.4px;color:var(--ink);line-height:1.88;font-weight:600;}
+  details{margin-top:10px;}
+  summary{font-size:12.8px;color:var(--m);cursor:pointer;list-style:none;
+    padding:5px 0;user-select:none;transition:color .18s;}
+  summary::-webkit-details-marker{display:none;}
+  summary::before{content:"▸ 展开通俗解释  ";}
+  details[open] summary::before{content:"▾ 收起  ";}
+  summary:hover{color:#8a4a20;}
+  .a{margin-top:10px;padding:14px 16px;background:#fdfaf7;border:1px solid var(--edge);
+    border-radius:7px;font-size:13.7px;color:var(--ink-mid);line-height:1.95;}
+  .a p+p{margin-top:8px;} .a strong{color:var(--ink);}
+  .a .lbl{display:block;font-size:12.6px;font-weight:700;color:var(--key);margin:11px 0 5px;}
+  .a .lbl::before{content:"◆ ";}
+  .a .pit{display:block;font-size:12.6px;font-weight:700;color:var(--warn);margin:11px 0 5px;}
+  .a .pit::before{content:"⚠ ";}
+  .pit-b{background:var(--warn-soft);border:1px solid #edd6cd;border-radius:4px;
+    padding:10px 14px;font-size:13.1px;color:#8a4630;line-height:1.9;margin-top:5px;}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.1px;}
+  th,td{padding:9px 12px;border:1px solid var(--edge);text-align:left;vertical-align:top;line-height:1.8;}
+  th{background:var(--m-soft);color:#8a4a20;font-weight:700;font-size:12.4px;}
+  td{color:var(--ink-mid);} td strong{color:var(--ink);}
+  ul,ol{margin:9px 0 0 21px;} li{font-size:13.5px;color:var(--ink-mid);margin-bottom:7px;line-height:1.9;}
+  li strong{color:var(--ink);}
+  footer{margin-top:46px;padding-top:20px;border-top:1px solid var(--edge);
+    text-align:center;font-size:12px;color:var(--ink-soft);line-height:2;}
+  @media(max-width:680px){
+    header h1{font-size:20px;} h2{font-size:16.5px;}
+    body{padding:18px 11px 40px;} table{font-size:11.6px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="kicker">INTIMATE RELATIONSHIPS · CLOSE READING</div>
+  <h1>《亲密关系》精华笔记与专业问题</h1>
+  <div class="sub">第一部分 · 精读笔记 &nbsp;|&nbsp; 第二部分 · 20 个专业问题 &nbsp;|&nbsp; 附 · 速查表</div>
+  <div class="src">罗兰·米勒（Rowland S. Miller）· 14 章 · 底本 26.7 万汉字<br>
+    本页是 <strong>08 域第 5 件</strong>（原有：整体架构 / 问题手册 /
+    概念误用与证据等级手册 / 自我诊断手册）</div>
+</header>
+
+<div class="lead">
+  <div class="t">这本书的定位，以及它为什么需要一份专门的读法笔记</div>
+  <p>它是<strong>教科书</strong>，不是观点书。它的每一章都在总结一片实证研究，
+  并给出这一片研究的<strong>证据强度</strong>。</p>
+  <p>这带来一个特殊的读法问题：<strong>它的知识点是可以直接拿来用的，
+  而它的「可拿来用」恰恰是危险的。</strong></p>
+  <p>因为教科书式的写法会让人产生一种印象：<em>这些结论都是确定的。</em>
+  而实际上书里对不同结论的信心差别很大——
+  <strong>有些是几十项研究的一致结果，有些只有几项研究、样本还很小。</strong></p>
+  <div class="warn">
+    <strong>⚠️ 所以本页的重点与前四件不同</strong><br>
+    本页<strong>不复述书里的知识点</strong>（问题手册已经做了），
+    而是集中处理三件事：<br>
+    ① <strong>这本书的知识是怎么生产出来的</strong>（研究方法部分为什么放在第 2 章）；<br>
+    ② <strong>哪些结论强、哪些弱</strong>（证据等级的读法）；<br>
+    ③ <strong>它作为教科书的结构，会诱导读者犯什么错</strong>。
+  </div>
+</div>
+
+<!-- ==================== 第一部分 ==================== -->
+<h2>第一部分 · 精读笔记</h2>
+
+<h3>一、为什么第 2 章是「研究方法」——这个安排本身就是论点</h3>
+<div class="note">
+  <div class="h">全书 14 章，第 2 章是唯一一章不讲「关系」而讲「怎么研究关系」的</div>
+  <p>这个安排很不寻常。多数通俗读物会把方法放在附录，甚至完全不提。
+  这本书把它放在<strong>讲完「人际关系的构成」（第 1 章）之后、讲任何具体结论之前</strong>。</p>
+  <p><strong>这个顺序在说一件事</strong>：<em>这本书里的每一个结论，
+  都必须带着它的证据条件一起被理解。</em></p>
+  <div class="key">
+    <div class="h">★ 它的实际后果</div>
+    <p>它让读者在读后面每一章时都保留一个意识：
+    <strong>「这个结论是怎么得出来的？」</strong></p>
+    <p>而通俗心理学读物恰恰相反——<em>它先给结论，从不给方法，
+    所以读者无法判断该信几分。</em></p>
+    <p><strong>把方法前置，是这本书区别于通俗读物最硬的一条界线。</strong></p>
+  </div>
+</div>
+
+<h3>二、这本书的知识有几种来源——每种能支撑多强的结论</h3>
+<div class="note">
+  <div class="h">这是本页最要紧的一张表</div>
+  <table>
+    <tr><th style="width:24%">方法</th><th>它能说明</th><th style="width:20%">它不能说明</th></tr>
+    <tr><td><strong>问卷 / 自我报告</strong></td>
+      <td class="a">人们<em>怎么描述</em>自己的关系与感受</td>
+      <td style="color:var(--warn);">实际发生了什么</td></tr>
+    <tr><td><strong>观察法</strong></td>
+      <td class="b">人们在实验室/自然情境里<em>实际做了什么</em></td>
+      <td style="color:var(--warn);">被观察时的行为是否等于日常行为</td></tr>
+    <tr><td><strong>相关研究</strong></td>
+      <td class="c">两个变量<em>是否一起变化</em></td>
+      <td style="color:var(--warn);"><strong>因果方向</strong>（A→B 还是 B→A，或第三个变量）</td></tr>
+    <tr><td><strong>纵向研究</strong></td>
+      <td class="c">时间顺序 —— 这比横断相关强得多</td>
+      <td style="color:var(--warn);">仍然不等于实验</td></tr>
+    <tr><td><strong>实验</strong></td>
+      <td class="a"><strong>因果</strong>（在有随机分配的前提下）</td>
+      <td style="color:var(--warn);">生态效度；以及很多关系问题无法做实验</td></tr>
+    <tr><td><strong>生理测量</strong></td>
+      <td class="b">身体反应（心率、激素、fMRI 激活）</td>
+      <td style="color:var(--warn);">心理状态本身 —— 激活区域不等于感受</td></tr>
+  </table>
+  <div class="ev">
+    <div class="h">书里关于生理测量的一处具体例子</div>
+    <p>研究者用 fMRI 让参与者体验不同心理状态，
+    结果显示<strong>亲密的爱情与饥渴的性欲由大脑不同部分控制</strong>。</p>
+    <p><em>这是「爱情与性欲不是同一件事」的一个生理层面的支持。</em>
+    但要注意：<strong>「激活了哪块脑区」不等于「这就是那种感受」</strong>——
+    脑区激活是一个相关，不是一个定义。</p>
+  </div>
+</div>
+
+<h3>三、最有价值的一类区分：横断相关 vs 纵向因果</h3>
+<div class="note">
+  <div class="h">这本书里最容易读错的地方，几乎都在这里</div>
+  <p>举例说明这个区别为什么关键：</p>
+  <p><strong>假设一项研究发现「沟通好的夫妻满意度更高」。</strong></p>
+  <p>这句话能读成几种意思？</p>
+  <p>· <strong>沟通好 → 满意度高</strong>（沟通是原因）<br>
+  · <strong>满意度高 → 沟通好</strong>（满意的人更愿意好好说话）<br>
+  · <strong>两者都由第三个因素决定</strong>（<em>例如依恋安全性、经济压力、健康状况</em>）</p>
+  <p><strong>横断相关无法区分这三者。</strong>而通俗读物经常直接读成第一种。</p>
+  <div class="key">
+    <div class="h">★ 读这本书的实用规则</div>
+    <p>看到任何一句「A 与 B 有关」，问三个问题：</p>
+    <p><strong>① 这是相关还是因果？</strong>（看有没有实验或纵向设计）<br>
+    <strong>② 时间顺序是什么？</strong>（<em>纵向研究能回答，横断不能</em>）<br>
+    <strong>③ 样本是谁？</strong>（<em>大学生？异性恋？西方中产？
+    ——而这些恰恰是绝大多数关系研究的样本</em>）</p>
+    <p><em>这三个问题都答不出来时，那个结论就只能当假设用，不能当依据用。</em></p>
+  </div>
+</div>
+
+<h3>四、14 章的骨架：一条从「怎么形成」到「怎么维持」的线</h3>
+<div class="note">
+  <div class="h">它不是 14 个话题，是一条时间线</div>
+  <table>
+    <tr><th style="width:30%">段</th><th>章</th></tr>
+    <tr><td><strong>基础</strong></td>
+      <td>1 人际关系的构成 · 2 研究方法</td></tr>
+    <tr><td><strong>关系怎么开始</strong></td>
+      <td>3 吸引力 · 4 社会认知</td></tr>
+    <tr><td><strong>关系怎么运作</strong></td>
+      <td>5 沟通 · 6 相互依赖</td></tr>
+    <tr><td><strong>关系的类型</strong></td>
+      <td>7 友谊 · 8 爱情 · 9 性爱</td></tr>
+    <tr><td><strong>关系怎么出问题</strong></td>
+      <td>10 压力与紧张 · 11 冲突 · 12 权力和暴力</td></tr>
+    <tr><td><strong>关系怎么结束或延续</strong></td>
+      <td>13 亲密关系的解体与消亡 · 14 亲密关系的维持和修复</td></tr>
+  </table>
+  <p><strong>这条线是按关系的时间顺序排的</strong>——
+  而这一点有用：<em>它意味着「哪一章对你有用」取决于你现在处在关系生命周期的哪一段。</em></p>
+  <p><strong>但它也有一个代价</strong>：<em>它会让读者以为关系是沿着这条线单向走的。</em>
+  而实际上关系会在这些阶段之间反复（<em>满意度下降 → 冲突 → 修复 → 回升</em>），
+  不是线性通过。</p>
+</div>
+
+<h3>五、教科书式的写法会诱导三种错</h3>
+<div class="note">
+  <div class="h">这一节是本页最实用的部分</div>
+
+  <div class="h" style="margin-top:6px;">错一：把「平均趋势」当成「个人预测」</div>
+  <p>书里的结论大多是<strong>群体平均</strong>：「平均而言，安全型依恋的人关系更稳定」。</p>
+  <p>而从这句话推不出<strong>「你是安全型，所以你会稳定」</strong>——
+  <em>群体统计的效应量通常不大，意味着个体层面的预测力有限。</em></p>
+  <div class="ev">
+    <div class="h">具体怎么理解「效应量不大」</div>
+    <p>如果一项研究说「A 使 B 的概率提高了」，而没有给效应量，
+    那么<strong>你无法知道这个「提高」在实际判断中有多大用</strong>。</p>
+    <p><em>一个统计上显著的效应，可能小到对任何一个人的预测都没有帮助。
+    这是读所有心理学教科书都要记住的一条。</em></p>
+  </div>
+
+  <div class="h" style="margin-top:14px;">错二：把「描述」读成「应该」</div>
+  <p>书里大量内容在描述<strong>关系实际是什么样的</strong>——
+  例如人们倾向于被相似的人吸引、冲突中的行为模式、关系解体的过程。</p>
+  <p><strong>而「实际上如此」不推出「应该如此」。</strong>
+  <em>「大多数关系是这样运作的」不能变成「你的关系也应该这样」。</em></p>
+
+  <div class="h" style="margin-top:14px;">错三：用书里的结论给身边的人贴标签</div>
+  <p>这本书里有很多<strong>分类</strong>（依恋类型、冲突风格、承诺类型）。
+  分类在研究中是有用的工具，<em>而用在具体的人身上会变成固化判断。</em></p>
+  <p><strong>项目里的「自我诊断手册」正是为这个问题写的</strong>——
+  <em>分类的用途是让你看到自己的模式，不是让你用它解释别人。</em></p>
+</div>
+
+<h3>六、这本书的证据等级在哪里最弱</h3>
+<div class="note">
+  <div class="h">有三类结论要格外小心</div>
+  <p><strong>① 涉及文化差异的结论。</strong>
+  绝大多数研究的样本是<em>西方（尤其美国）、大学生或中产、异性恋</em>。
+  <em>书里对这些限制有说明，但结论的表述往往比样本能支持的更强。</em></p>
+
+  <p><strong>② 涉及演化解释的结论。</strong>
+  书里有些内容用演化来解释性别差异（<em>例如择偶偏好、性驱力差异</em>）。
+  这类解释<strong>通常难以被直接检验</strong>——
+  <em>它们提供的是「为什么会这样」的一种可能，而不是「事实上为什么」的证据。</em></p>
+
+  <p><strong>③ 涉及「怎么做才好」的建议。</strong>
+  书里第 14 章会给维持与修复的方法。
+  <strong>但要注意：能有效果的干预研究，与「描述性发现」是两类证据</strong>。
+  <em>前者（随机对照的干预研究）在关系领域比后者少得多。</em></p>
+  <div class="key">
+    <div class="h">★ 项目里已有的那份手册正好管这个</div>
+    <p><code>Miller_亲密关系-概念误用与证据等级手册.html</code> 就是为这三类问题写的。</p>
+    <p><strong>本页与它的分工</strong>：那一份给<em>「哪些说法被误用了」</em>，
+    本页给<em>「这本书的知识是怎么生产的、因此哪里可信到哪里」</em>。</p>
+  </div>
+</div>
+
+<h3>七、它在项目里的位置</h3>
+<table>
+  <tr><th style="width:28%">与什么</th><th>关系</th></tr>
+  <tr><td><strong>与《爱的艺术》<br>同 08 域</strong></td>
+    <td class="a">这是 08 域里最值钱的一对，而且<strong>方向相反</strong>：<br>
+      <strong>弗洛姆</strong>是<em>规范性</em>的（爱应当是什么、需要什么能力）；<br>
+      <strong>米勒</strong>是<em>实证性</em>的（关系实际上如何运作、证据强度如何）。<br>
+      <em>两者不能互相验证，但可以互相提醒：
+      弗洛姆提醒米勒「这些数字背后是人」；米勒提醒弗洛姆「应然的说法需要经验的约束」。</em></td></tr>
+  <tr><td><strong>与《当呼吸化为空气》<br>02 域</strong></td>
+    <td class="b">米勒给规律，保罗给个案（<em>而且是在极端压力下的个案</em>）。<br>
+      <strong>这一对是「证据等级」这件事最好的教材</strong>：
+      <em>个案不能支撑规律，规律也不能取消个案的重量。</em></td></tr>
+  <tr><td><strong>与 02 域的《思考，快与慢》</strong></td>
+    <td class="c">卡尼曼讲的是<strong>判断的系统性偏差</strong>；
+      这本书里第 4 章「社会认知」讲的正是这些偏差在关系里的形态
+      （<em>自我服务偏差、归因偏差、积极错觉</em>）。<br>
+      <em>同一个机制，两个应用场景。</em></td></tr>
+</table>
+
+<h3>八、边界：这本书不承诺什么</h3>
+<div class="note">
+  <div class="h">① 它不给个人化的答案</div>
+  <p>它是教科书。<strong>它能告诉你「人们一般如何」，不能告诉你「你该怎么做」。</strong>
+  <em>而从「一般如何」到「你该怎么做」之间，需要一个它无法提供的步骤。</em></p>
+
+  <div class="h" style="margin-top:12px;">② 它的多数结论来自西方样本</div>
+  <p>这对中文读者尤其要注意。<em>书里对文化差异有讨论，但主体证据是西方的。</em></p>
+
+  <div class="h" style="margin-top:12px;">③ 它不能替代专业帮助</div>
+  <p>涉及暴力、虐待、严重心理困扰时，<strong>教科书不适用</strong>。
+  <em>（书里第 12 章「权力和暴力」处理的是一般规律，不是个案处置。）</em></p>
+
+  <div class="h" style="margin-top:12px;">④ 它是一本会过期的书</div>
+  <p>它总结的是截至写作时的研究。<strong>引用具体数字与结论时要注意版本与年份。</strong>
+  <em>但它的方法论部分（第 2 章）与结构部分是稳定的。</em></p>
+</div>
+
+<!-- ==================== 第二部分 ==================== -->
+<h2>第二部分 · 20 个专业问题（附通俗解释）</h2>
+<div class="s">重点在方法、证据等级、以及教科书结构带来的误用</div>
+
+<h3>A 组 · 方法</h3>
+
+<div class="qcard">
+  <div class="q-head"><span class="q-id">P1</span><span class="q-tag">设计</span></div>
+  <div class="q-t">为什么这本书要把「研究方法」放在第 2 章，
+      而不是像多数书那样放在附录或干脆不提？</div>
+  <details><summary></summary>
+    <div class="a">
+      <p><strong>因为这本书的主张是「结论必须带着它的证据条件一起被理解」，
+      而把它前置是最直接的表达方式。</strong></p>
+      <span class="lbl">放附录会怎样</span>
+      <p>读者会先读完 13 章结论，再（可能）读到方法。
+      <em>而那时每一句结论都已经在没有条件的情况下进入了记忆。</em></p>
+      <span class="lbl">前置的实际效果</span>
+      <p>读者在后面的每一章都会保留一个问题：<strong>「这是怎么测出来的？」</strong></p>
+      <p>而这个问题在这本书里<em>恰好经常改变答案</em>——
+      因为同一个话题下的不同研究，设计不同，结论强度差别很大。</p>
+      <span class="lbl">一个更深的理由</span>
+      <p>这本书的立场是：<strong>关于关系的说法之所以混乱，
+      主要不是因为缺少结论，而是因为读者无法区分结论的强度。</strong></p>
+      <p><em>所以教方法比给结论更根本。这也解释了为什么它是一本教科书而不是一本观点书。</em></p>
+      <span class="pit">通俗说</span>
+      <div class="pit-b">它把「这话是怎么知道的」放在最前面，
+      <strong>就是为了让你读后面每一句时都带着这个问题。</strong></div>
+    </div>
+  </details>
+</div>
+
+<div class="qcard">
+  <div class="q-head"><span class="q-id">P2</span><span class="q-tag">自我报告</span></div>
+  <div class="q-t">关系研究大量依赖自我报告（问卷）。这个方法最大的问题是什么？
+      书里如何应对？</div>
+  <details><summary></summary>
+    <div class="a">
+      <span class="lbl">最大的问题</span>
+      <p><strong>自我报告测的是「人们怎么描述」，不是「实际发生了什么」。</strong>
+      而这两者在关系研究里差别特别大，原因有几个：</p>
+      <p>· <strong>记忆重构</strong>：人对过去的关系事件记得不准，
+      <em>而且会朝着当前满意度一致的方向重构。</em><br>
+      · <strong>社会期许</strong>：涉及性、冲突、暴力时，
+      <em>人们倾向于给出更可接受的答案。</em><br>
+      · <strong>缺乏对照</strong>：一个人很难准确报告「我的沟通方式比别人差在哪」——
+      <em>因为他没有别人的内部体验可比。</em></p>
+      <span class="lbl">书里的应对</span>
+      <p><strong>① 用多种方法交叉</strong>：除问卷外还使用观察法、生理测量、
+      <em>以及伴侣双方各自报告（这能发现两人报告的不一致）。</em></p>
+      <p><strong>② 用纵向设计</strong>：追踪同一批人，看报告的<em>变化</em>——
+      <em>变化比单次水平更不容易被记忆偏差污染。</em></p>
+      <p><strong>③ 明确说明局限</strong>：在具体结论处指出这依赖自我报告。</p>
+      <span class="lbl">但根本问题没有解决</span>
+      <p><strong>「实际发生了什么」在关系研究里很难直接获得</strong>——
+      <em>因为关系的大部分发生在没有观察者的地方。这是一个领域性的限制，不是这本书的缺点。</em></p>
+      <span class="pit">通俗说</span>
+      <div class="pit-b">问卷问的是「你觉得你们怎么样」。
+      <strong>而「你觉得」和「实际」在关系里差得很远，尤其在不满意的时候。</strong></div>
+    </div>
+  </details>
+</div>
+
+<div class="qcard">
+  <div class="q-head"><span class="q-id">P3</span><span class="q-tag">因果</span></div>
+  <div class="q-t">「沟通好的夫妻满意度更高」这句话，能读出几种意思？
+      为什么这个区分在这本书里特别重要？</div>
+  <details><summary></summary>
+    <div class="a">
+      <p><strong>至少三种，而且它们指向完全不同的建议。</strong></p>
+      <table>
+        <tr><th>读法</th><th>含义</th><th>如果按它行动</th></tr>
+        <tr><td class="a">沟通 → 满意</td><td>沟通是原因</td><td>改善沟通就能提高满意度</td></tr>
+        <tr><td class="b">满意 → 沟通</td><td>满意度是原因</td><td><strong>改善沟通可能没用</strong>，得先处理满意度</td></tr>
+        <tr><td class="c">第三因素</td><td>两者都被别的决定</td><td>前两个都不对症</td></tr>
+      </table>
+      <span class="lbl">为什么在这本书里特别重要</span>
+      <p>因为<strong>这本书是教科书，它的结论会被读者直接拿去用</strong>。
+      <em>而「用错因果方向」的代价是：花力气改一个不是原因的东西。</em></p>
+      <span class="lbl">怎么区分</span>
+      <p>· <strong>横断相关</strong>：无法区分，只能提示。<br>
+      · <strong>纵向研究</strong>：能确定时间顺序，<em>把「满意 → 沟通」这种反向排除掉</em>。<br>
+      · <strong>实验/干预</strong>：能确定因果，<em>但关系领域的干预研究比前两者少。</em></p>
+      <span class="lbl">所以一个具体的读法</span>
+      <p><strong>在这本书里，看到「A 与 B 相关」时，先去找同一话题下有没有纵向或干预研究。</strong>
+      <em>书里通常会提到。有，则结论强；没有，则只能当提示。</em></p>
+      <span class="pit">通俗说</span>
+      <div class="pit-b">「沟通好的夫妻更满意」——
+      也可能是「满意的夫妻才愿意好好说话」。<strong>这两句的处方完全不同。</strong></div>
+    </div>
+  </details>
+</div>
+
+<div class="qcard">
+  <div class="q-head"><span class="q-id">P4</span><span class="q-tag">样本</span></div>
+  <div class="q-t">这本书的样本有什么系统性的偏向？
+      这些偏向会让哪些结论最不可靠？</div>
+  <details><summary></summary>
+    <div class="a">
+      <span class="lbl">偏向是什么</span>
+      <p>关系研究的主体样本是<strong>西方（尤其美国）、大学生或中产、异性恋、已婚或稳定交往</strong>。
+      <em>书里对文化差异有专门讨论，但主体证据仍然是这一批样本。</em></p>
+      <span class="lbl">哪些结论最受影响</span>
+      <p><strong>① 关于「什么算好的关系」的结论。</strong>
+      <em>如果好的标准本身是文化性的，那跨文化推论就危险。</em>
+      例如<em>个人选择 vs 家庭安排、独立 vs 相互依赖</em>——
+      这些在不同文化里的评价差别很大。</p>
+      <p><strong>② 关于性行为与性态度的结论。</strong>
+      <em>自我报告的社会期许偏差在这里最大，而样本的文化同质性又放大了它。</em></p>
+      <p><strong>③ 关于性别差异的结论。</strong>
+      <em>性别差异常常与「谁在什么社会条件下扮演什么角色」纠缠，
+      用西方样本得出的性别差异，可能部分是社会条件的产物。</em></p>
+      <span class="lbl">哪些结论较不受影响</span>
+      <p><strong>基础机制类</strong>的结论更稳：
+      <em>例如「归因偏差存在」「相互依赖的结构」「冲突升级的机制」——
+      这些在跨文化研究里也反复出现，只是表现形式不同。</em></p>
+      <span class="lbl">实用的读法</span>
+      <p><strong>把结论分成两层：机制层（较稳）与表现形式层（文化依赖）。</strong>
+      <em>书里常常把两层混在同一段里说。</em></p>
+      <span class="pit">通俗说</span>
+      <div class="pit-b">大部分结论来自美国大学生。
+      <strong>「人为什么会这样」比较稳；「这样好不好」很受文化影响。</strong></div>
+    </div>
+  </details>
+</div>
+
+<h3>B 组 · 证据等级</h3>
+
+<div class="qcard">
+  <div class="q-head"><span class="q-id">P5</span><span class="q-tag">效应量</span></div>
+  <div class="q-t">「统计显著」意味着什么？为什么它对预测一个人几乎没有帮助？</div>
+  <details><summary></summary>
+    <div class="a">
+      <span class="lbl">显著是什么</span>
+      <p>它说的是：<strong>「如果实际上没有这个效应，观察到这个结果的概率很低」</strong>。</p>
+      <p><em>它是一个关于「这个发现是否可能由偶然产生」的判断，
+      与「这个效应有多大」是两件事。</em></p>
+      <span class="lbl">为什么对预测个人几乎没帮助</span>
+      <p>因为<strong>效应量可以非常小，同时统计上显著</strong>——
+      <em>样本越大，越小的效应也能达到显著。</em></p>
+      <p>如果效应量小，意味着<strong>知道一个人在这个变量上的取值，
+      对他另一个变量的取值几乎没有预测力</strong>：
+      <em>两组人的分布大面积重叠，只有平均值略有差别。</em></p>
+      <div class="ev">
+        <div class="h">具体怎么用这一条</div>
+        <p>看到本书里任何一个「A 与 B 有关」的结论时，问一句：
+        <strong>「如果我知道一个人的 A，我对他 B 的预测能准多少？」</strong></p>
+        <p><em>多数情况下答案是「略微好于瞎猜」。而这个答案并不贬低研究——
+        它只是说明了群体结论的正确用法：用来理解趋势，不用来预测个人。</em></p>
+      </div>
+      <span class="lbl">书里的处理</span>
+      <p>教科书通常会报告效应量或给出描述性统计。
+      <strong>但如果只读结论句，这些就被跳过了</strong>——
+      <em>而结论句（「A 与 B 有关」）的表述形式不会告诉你效应有多大。</em></p>
+      <span class="pit">通俗说</span>
+      <div class="pit-b">「显著」只说明这不太可能是巧合，<strong>没说明它有多重要。</strong>
+      小效应也能显著。</div>
+    </div>
+  </details>
+</div>
+
+<div class="qcard">
+  <div class="q-head"><span class="q-id">P6</span><span class="q-tag">相关</span></div>
+  <div class="q-t">相关系数 r 的大小，怎么对应到「这个结论有多大用」？
+      请给出一个可操作的判断标准。</div>
+  <details><summary></summary>
+    <div class="a">
+      <p style="font-size:12.8px;color:var(--ink-soft);">
+        以下是一般性的经验刻度，用于读心理学文献时的粗略判断。</p>
+      <table>
+        <tr><th style="width:20%">r 的量级</th><th>含义（粗略）</th><th>能不能用来预测个人</th></tr>
+        <tr><td class="a"><strong>≈ .10</strong></td><td>很小 —— 只知道方向</td>
+          <td style="color:var(--warn);">基本不能</td></tr>
+        <tr><td class="b"><strong>≈ .30</strong></td><td>中等 —— 心理学里很常见</td>
+          <td style="color:var(--warn);">只能略微改善预测</td></tr>
+        <tr><td class="c"><strong>≈ .50</strong></td><td>大 —— 在关系研究里算很强</td>
+          <td>有一定预测力，但仍有大量例外</td></tr>
+        <tr><td><strong>&gt; .60</strong></td><td>很大 —— 心理学里少见</td>
+          <td>可以用于预测</td></tr>
+      </table>
+      <div class="ev">
+        <div class="h">这个刻度最有用的一处</div>
+        <p><strong>心理学里大量真实存在的效应落在 .20–.40。</strong>
+        这意味着：<em>这些结论对理解人群有用，对判断一个人用处有限。</em></p>
+        <p>而通俗读物转述时会<strong>丢掉这个量级，只留下方向</strong>——
+        「A 影响 B」听上去像是确定的关系，实际可能是 r ≈ .25。</p>
+      </div>
+      <span class="lbl">一个换算上的直觉</span>
+      <p>r = .30 大约对应「A 解释了 B 的 9% 的变异」——
+      <em>也就是说还有 91% 由别的东西决定。</em></p>
+      <p><strong>记住这个换算，比记住 r 的刻度更有用。</strong></p>
+      <span class="pit">通俗说</span>
+      <div class="pit-b">r = .30 意味着「还有九成是别的原因」。
+      <strong>方向是对的，力量比听起来小得多。</strong></div>
+    </div>
+  </details>
+</div>
+
+<div class="qcard">
+  <div class="q-head"><span class="q-id">P7</span><span class="q-tag">演化解释</span></div>
+  <div class="q-t">书里有些内容用演化解释性别差异。这类解释的证据地位如何？
+      和问卷研究有什么不同？</div>
+  <details><summary></summary>
+    <div class="a">
+      <span class="lbl">证据地位不同，而且更弱</span>
+      <p>问卷研究给的是<strong>「现在是什么样」</strong>。
+      演化解释给的是<strong>「为什么会是这样」</strong>——</p>
+      <p><em>而后者需要的前提多得多：这段历史发生过、这个特征是可遗传的、
+      它在那个环境里有适应性收益、而且没有别的解释更简洁。</em></p>
+      <span class="lbl">它的典型形式</span>
+      <p><strong>「观察到 X 差异 → 提出一个能解释它的演化故事」</strong>。</p>
+      <p>这类论证的问题在于：<em>它可以为几乎任何观察到的差异编一个故事——
+      包括相反的差异。</em></p>
+      <div class="ev">
+        <div class="h">怎么判断一个演化解释值不值得信</div>
+        <p>问三个问题：</p>
+        <p><strong>① 它有没有做出可检验的预测？</strong>
+        （<em>不只是解释已有数据，而是能预测还没测的东西</em>）<br>
+        <strong>② 有没有竞争性的非演化解释？</strong>
+        （<em>社会角色、当前经济结构、权力关系——而这些往往同样能解释同一批数据</em>）<br>
+        <strong>③ 跨文化的一致性如何？</strong>
+        （<em>如果某个「演化来的」差异在不同社会里差别很大，那它可能不是演化的</em>）</p>
+      </div>
+      <span class="lbl">书里的处理</span>
+      <p>教科书通常会把演化视角作为一种<strong>解释框架</strong>呈现，
+      并与其他视角（<em>社会角色、社会学习</em>）并列。
+      <strong>但读者容易只记住那一个故事，因为故事最好记。</strong></p>
+      <span class="pit">通俗说</span>
+      <div class="pit-b">演化解释很容易编——<strong>难的是它能不能预测新东西。</strong>
+      只解释已有数据的演化故事，和一个假设差不多。</div>
+    </div>
+  </details>
+</div>
+
+<h3>C 组 · 教科书结构的诱导</h3>
+
+<div class="qcard">
+  <div class="q-head"><span class="q-id">P8</span><span class="q-tag">误用一</span></div>
+  <div class="q-t">为什么「群体平均结论」不能直接用来预测个人？
+      这个错误在关系话题上为什么特别常见？</div>
+  <details><summary></summary>
+    <div class="a">
+      <span class="lbl">为什么不能</span>
+      <p>因为<strong>群体内的变异远大于群体间的平均差异</strong>。</p>
+      <p><em>即使两个群体的平均值确实不同，两个分布仍然大面积重叠——
+      所以知道一个人属于哪个群体，对他个人的预测力有限。</em></p>
+      <span class="lbl">在关系话题上为什么特别常见</span>
+      <p>三个原因：</p>
+      <p><strong>① 关系是高度个人化的领域</strong>，人的样本量是 1，
+      <em>所以「平均而言」这个词对个人几乎没有支撑力。</em></p>
+      <p><strong>② 人们急切地想要确定答案</strong>。
+      <em>关系的痛苦让人希望有一个规则可以遵守——而教科书结论看起来正像规则。</em></p>
+      <p><strong>③ 分类词最好记。</strong>
+      <em>「他是回避型」比「他的行为在某些情境下呈现回避倾向」好记得多，
+      但两者的证据强度差别巨大。</em></p>
+      <div class="ev">
+        <div class="h">一个具体的转述练习</div>
+        <p>看到「安全型依恋的人关系更稳定」时，把它改写成：</p>
+        <p><em>「在研究的样本里，安全型依恋与关系稳定性有中等程度的统计关联。
+        这意味着：如果我知道一个人是安全型，我对他关系能否稳定的预测只略微好于瞎猜。」</em></p>
+        <p><strong>改写之后，这句话就变得既准确又没什么用了——而这正是它的真实分量。</strong></p>
+      </div>
+      <span class="pit">通俗说</span>
+      <div class="pit-b">书里说「平均而言」；<strong>而你不是平均，你是一个具体的样本。</strong></div>
+    </div>
+  </details>
+</div>
+
+<div class="qcard">
+  <div class="q-head"><span class="q-id">P9</span><span class="q-tag">误用二</span></div>
+  <div class="q-t">这本书里有大量「实际如此」的描述。
+      把「实际如此」读成「应该如此」会出什么问题？</div>
+  <details><summary></summary>
+    <div class="a">
+      <span class="lbl">这个跳跃的问题</span>
+      <p><strong>「大多数关系是这样运作的」不能推出「你的关系也应该这样」。</strong>
+      这中间缺一个关于<em>「什么算好」</em>的判断，而那个判断不在经验研究里。</p>
+      <span class="lbl">在关系话题上的具体表现</span>
+      <p>· 「人们倾向于被相似的人吸引」→ <em>「所以我应该找一个和我相似的」</em><br>
+      · 「关系满意度通常会随时间下降」→ <em>「所以下降是正常的，不用管」</em><br>
+      · 「冲突中男性常表现为退缩」→ <em>「所以男人就是这样」</em></p>
+      <p><strong>这三种跳跃都把一个统计倾向变成了一个规范或借口。</strong></p>
+      <span class="lbl">为什么这本书特别容易被这样读</span>
+      <p>因为它是<strong>权威的教科书</strong>。
+      <em>「书上是这么写的」在关系争论里是一个很强的论据——
+      而它恰恰用错了地方。</em></p>
+      <div class="ev">
+        <div class="h">一个区分方法</div>
+        <p>问自己：<strong>这句话是在说「世界是怎样的」，还是在说「我该怎么做」？</strong></p>
+        <p>如果是前者，它来自研究；<strong>如果是后者，它还需要一个关于「什么值得追求」的判断——
+        那个判断由你（或你的文化、你的价值观）给出，书里没有。</strong></p>
+      </div>
+      <span class="lbl">项目里已有的一份手册正好管这个</span>
+      <p><code>Miller_亲密关系-概念误用与证据等级手册.html</code> 就是处理这类误用的。</p>
+      <span class="pit">通俗说</span>
+      <div class="pit-b">「多数人会这样」不等于「你该这样」。
+      <strong>中间那一步，书里没有，只能你自己走。</strong></div>
+    </div>
+  </details>
+</div>
+
+<div class="qcard">
+  <div class="q-head"><span class="q-id">P10</span><span class="q-tag">误用三</span></div>
+  <div class="q-t">用依恋类型这样的分类去描述身边的人，会有什么后果？
+      正确的用法是什么？</div>
+  <details><summary></summary>
+    <div class="a">
+      <span class="lbl">后果</span>
+      <p><strong>① 固化。</strong>分类词会让人觉得「他就是这个类型」——
+      <em>而书里的类型是连续维度上的区段，不是本质不同的种类。</em></p>
+      <p><strong>② 免责。</strong>「我是回避型」会变成不再改变的理由。
+      <em>而依恋的可变性（尤其通过稳定关系）正是研究里讨论的内容。</em></p>
+      <p><strong>③ 冲突升级。</strong>用分类来解释伴侣的行为，
+      在对方听来是<em>贴标签</em>——<strong>「你就是回避型」比「你刚才走开了」严重得多。</strong></p>
+      <span class="lbl">正确的用法</span>
+      <p><strong>分类的用途是描述模式，不是判定本质。</strong></p>
+      <p>可用：「我在被要求亲近时倾向于退开」——<em>这是一个可观察的行为描述。</em><br>
+      不可用：「我是回避型」——<em>这是把一个描述变成了一个身份。</em></p>
+      <span class="lbl">这个区别为什么重要</span>
+      <p>因为<strong>行为描述指出的是可以改变的东西，身份判定指出的是不能改变的东西。</strong>
+      <em>而依恋研究本身讨论的正是它可以怎么变。</em></p>
+      <div class="ev">
+        <div class="h">一个可操作的自检</div>
+        <p>当你想说「他是 ×× 型」时，改说：<strong>「他在什么情况下会做什么」。</strong></p>
+        <p><em>如果这句话说不出来，说明你并没有真的观察到那个模式，
+        只是套用了一个词。</em></p>
+      </div>
+      <span class="lbl">项目里的对应产出</span>
+      <p><code>Miller_亲密关系-自我诊断手册.html</code> 正是为「自己看自己」而不是「看别人」写的。</p>
+      <span class="pit">通俗说</span>
+      <div class="pit-b">说「我是回避型」，等于说自己改不了。
+      <strong>说「我在被靠近时会退开」，说的是一个可以看、可以改的动作。</strong></div>
+    </div>
+  </details>
+</div>
+
+<h3>D 组 · 结构与方法的位置</h3>
+
+<div class="qcard">
+  <div class="q-head"><span class="q-id">P11</span><span class="q-tag">结构</span></div>
+  <div class="q-t">14 章的顺序是按什么排的？这个顺序有什么好处，
+      又会让人产生什么错误印象？</div>
+  <details><summary></summary>
+    <div class="a">
+      <span class="lbl">按什么排</span>
+      <p><strong>按关系的生命周期</strong>：
+      基础 → 开始（吸引力、社会认知）→ 运作（沟通、相互依赖）→
+      类型（友谊、爱情、性爱）→ 出问题（压力、冲突、权力与暴力）→
+      结束或延续（解体、维持与修复）。</p>
+      <span class="lbl">好处</span>
+      <p><strong>「哪一章对你有用」取决于你处在哪一段</strong>——
+      <em>这是一个很实用的索引方式。</em></p>
+      <p>而且它把<strong>「关系是一件事，不是一个状态」</strong>这个观念结构化了。</p>
+      <span class="lbl">错误印象</span>
+      <p><strong>它暗示关系是单向通过这些阶段的。</strong>
+      <em>而实际上关系会在阶段之间反复：
+      满意度下降 → 冲突 → 修复 → 回升 → 再次下降。</em></p>
+      <p><strong>第 14 章（维持和修复）放在最后，容易被读成「终点」</strong>——
+      <em>而它实际上是循环的一部分：修复之后又会回到运作阶段。</em></p>
+      <div class="ev">
+        <div class="h">一个读法的修正</div>
+        <p>把 14 章读成<strong>一张地图上的区域，而不是一条路上的站点</strong>。</p>
+        <p><em>同一对伴侣在一年里可能经过其中大部分区域，而且会重复经过。</em></p>
+      </div>
+      <span class="pit">通俗说</span>
+      <div class="pit-b">章的顺序像一条直线，但关系是转圈的。
+      <strong>第 14 章不是终点，是下一个循环的开始。</strong></div>
+    </div>
+  </details>
+</div>
+
+<div class="qcard">
+  <div class="q-head"><span class="q-id">P12</span><span class="q-tag">缺什么</span></div>
+  <div class="q-t">这本书第 2 章讲了研究方法。它没有讲什么方法上的东西？
+      这个缺口影响哪些结论？</div>
+  <details><summary></summary>
+    <div class="a">
+      <p style="font-size:12.8px;color:var(--ink-soft);">
+        ⚠️ 这是对书籍结构的分析，不是书里的自述。</p>
+      <span class="lbl">教科书通常不会详述的</span>
+      <p><strong>① 发表偏差。</strong>
+      显著的、符合预期的结果更容易被发表。
+      <em>所以一篇综述里看到的「一致的证据」，可能已经是被筛选过的证据。</em></p>
+      <p><strong>② 重复性。</strong>
+      一个结论被引用了很多次，不等于被独立重复了很多次——
+      <em>同一批数据可以被发表多篇论文。</em></p>
+      <p><strong>③ 研究者自由度。</strong>
+      <em>在分析数据时可以做的选择（怎么分组、控制哪些变量、剔除哪些被试）
+      会显著影响结果，而这些选择往往不被完整报告。</em></p>
+      <span class="lbl">这个缺口影响哪些结论</span>
+      <p><strong>影响所有「已有大量研究支持」这一类表述。</strong></p>
+      <p>因为「大量研究」的数量本身可能被上述三个因素放大了。
+      <em>尤其是那些效应量小、又符合直觉或符合文化期待的结论——
+      它们最容易被反复发表，也最容易被教科书收录。</em></p>
+      <span class="lbl">这不等于书不可信</span>
+      <p><strong>这是整个心理学领域在 2010 年代之后才系统处理的问题</strong>，
+      而这本书的写作时间决定了它无法充分反映这些讨论。</p>
+      <p><em>读它的正确姿态是：把它当一份高质量的证据地图，
+      而不是一份最终判决。</em></p>
+      <span class="pit">通俗说</span>
+      <div class="pit-b">「很多研究都支持」这句话，
+      <strong>在心理学里需要打个折——因为不好看的结果不容易被发表。</strong></div>
+    </div>
+  </details>
+</div>
+
+<div class="qcard">
+  <div class="q-head"><span class="q-id">P13</span><span class="q-tag">干预</span></div>
+  <div class="q-t">第 14 章讲维持与修复。这些方法的效果，证据强度与前面的描述性结论一样吗？</div>
+  <details><summary></summary>
+    <div class="a">
+      <p><strong>不一样，而且是两套完全不同的证据。</strong></p>
+      <table>
+        <tr><th></th><th>描述性结论</th><th>干预效果</th></tr>
+        <tr><td><strong>问题</strong></td><td class="a">关系通常如何运作</td><td class="b">做 X 能不能改善关系</td></tr>
+        <tr><td><strong>需要的设计</strong></td><td>相关 / 纵向研究</td><td><strong>随机对照</strong></td></tr>
+        <tr><td><strong>证据量</strong></td><td>多</td><td style="color:var(--warn);">少得多</td></tr>
+        <tr><td><strong>主要困难</strong></td><td>因果方向</td>
+          <td style="color:var(--warn);">盲法难做、脱落率高、长期效果难追踪</td></tr>
+      </table>
+      <span class="lbl">为什么干预研究特别难</span>
+      <p>· <strong>无法盲法</strong>：参与者知道自己接受了什么干预；<br>
+      · <strong>脱落偏差</strong>：情况最糟的伴侣最可能退出，
+      <em>所以留下来的样本偏向「本来就会好转的人」</em>；<br>
+      · <strong>长期效果难测</strong>：短期改善是否持续，需要多年追踪。</p>
+      <span class="lbl">实用含义</span>
+      <p><strong>第 14 章的建议，可信度低于前面描述性的章节。</strong>
+      <em>这不是因为书不好，而是因为这两类知识的可获取性本来不同：
+      「关系如何运作」可以被观察，「怎么改善」需要实验，而实验难做。</em></p>
+      <span class="lbl">怎么用</span>
+      <p>把第 14 章当<strong>「有理由相信可能有用的一组做法」</strong>，
+      而不是「被证明有效的方案」。
+      <em>同时注意：书里提到的干预方法通常有具体的适用范围与前提。</em></p>
+      <span class="pit">通俗说</span>
+      <div class="pit-b">「关系通常怎么运作」证据多；
+      「怎么做能改善」证据少得多，因为没法做干净的实验。</div>
+    </div>
+  </details>
+</div>
+
+<h3>E 组 · 与相邻学科</h3>
+
+<div class="qcard">
+  <div class="q-head"><span class="q-id">P14</span><span class="q-tag">与 Fromm</span></div>
+  <div class="q-t">这本书（实证）与《爱的艺术》（规范）能互相检验吗？
+      如果能，方向是什么？</div>
+  <details><summary></summary>
+    <div class="a">
+      <p><strong>只能单向：经验证据可以约束规范主张，反之不行。</strong></p>
+      <span class="lbl">单向的第一层</span>
+      <p>弗洛姆说「爱是一种需要学习的能力，核心是给予」。
+      <strong>这句话不能被证伪</strong>——<em>因为它是规范性的，一个「应该」不能被数据推翻。</em></p>
+      <p>但经验研究可以问：<strong>「按这个描述去生活的人，实际过得怎么样？」</strong>
+      <em>这不是在检验弗洛姆对不对，是在看这个主张有没有可行的形态。</em></p>
+      <span class="lbl">单向的第二层（更硬）</span>
+      <p>如果弗洛姆的某个主张<strong>隐含了一个经验断言</strong>，那这个断言可以被检验。</p>
+      <p>例如：<em>「成熟的爱要求双方保持自身的完整」</em>——
+      这隐含了「不完整的结合会导致问题」，<strong>而这是一个可以用关系研究检验的断言。</strong></p>
+      <span class="lbl">反向为什么不成立</span>
+      <p>用米勒的数据去否定弗洛姆，会犯<strong>范畴错误</strong>：
+      <em>「多数人实际不这么做」不能推出「不应当这么做」。</em></p>
+      <p><strong>这是「实然与应然」的经典区分。</strong></p>
+      <span class="lbl">所以两者正确的配合</span>
+      <p><strong>用弗洛姆提出「什么值得追求」，用米勒检查「这在人的实际条件下可不可行」。</strong></p>
+      <p><em>而没有米勒，弗洛姆容易变成空谈；没有弗洛姆，米勒容易变成「人就是这样」的顺从。</em></p>
+      <span class="pit">通俗说</span>
+      <div class="pit-b">弗洛姆说爱该是什么样，米勒说爱实际是什么样。
+      <strong>数据能检验「做得到吗」，不能检验「该不该」。</strong></div>
+    </div>
+  </details>
+</div>
+
+<div class="qcard">
+  <div class="q-head"><span class="q-id">P15</span><span class="q-tag">与卡尼曼</span></div>
+  <div class="q-t">第 4 章「社会认知」讲的偏差，与《思考，快与慢》里的偏差是同一批吗？
+      在关系里它们有什么特殊形态？</div>
+  <details><summary></summary>
+    <div class="a">
+      <p><strong>是同一批机制，但在关系里有一个特殊形态：它们是双向的、且针对同一个人。</strong></p>
+      <span class="lbl">共同的偏差</span>
+      <p>· <strong>自我服务偏差</strong>：把关系的成功归于自己，失败归于对方或外部；<br>
+      · <strong>归因偏差</strong>：对伴侣的负面行为作<em>内部归因</em>（「他就是这种人」），
+      对自己的作<em>外部归因</em>（「我太累了」）；<br>
+      · <strong>积极错觉</strong>：对伴侣的看法比客观情况更好。</p>
+      <span class="lbl">关系里的特殊形态</span>
+      <p><strong>① 偏差的对象是「我们」</strong>。
+      一般判断偏差针对的是外部对象；关系里的偏差同时涉及<em>自我、伴侣、关系</em>三个对象，
+      而它们的利害是绑定的。</p>
+      <p><strong>② 双方都有偏差，而且互相作用。</strong>
+      <em>两个人都认为自己在冲突中让步更多——这不是有一个人在说谎。</em></p>
+      <p><strong>③ 积极错觉在关系里可能是功能性的。</strong>
+      一般判断里，错觉是错误、需要纠正；
+      <em>而在关系里，对伴侣持过于正面的看法与更高的满意度相关。</em></p>
+      <span class="lbl">第三点最值得注意</span>
+      <p><strong>它违反了「准确总是更好」这个直觉。</strong>
+      <em>在关系里，一定程度的失真可能有保护作用——
+      这是卡尼曼那本书不会涉及的领域特定结论。</em></p>
+      <span class="lbl">但要注意边界</span>
+      <p>「积极错觉有益」的前提是<strong>错觉没有被现实反复击穿</strong>。
+      <em>如果伴侣的行为持续与那个正面看法冲突，失真就从保护变成了伤害。</em></p>
+      <span class="pit">通俗说</span>
+      <div class="pit-b">两个人都觉得自己让步更多——不是谁在撒谎，是人都这么记。
+      <strong>而把伴侣看得比实际好一点，在关系里反而不坏。</strong></div>
+    </div>
+  </details>
+</div>
+
+<div class="qcard">
+  <div class="q-head"><span class="q-id">P16</span><span class="q-tag">与保罗</span></div>
+  <div class="q-t">把这本书与《当呼吸化为空气》放在一起，
+      能看出「规律」与「个案」各自的位置吗？</div>
+  <details><summary></summary>
+    <div class="a">
+      <p><strong>能，而且这一对是「证据等级」这件事最好的教材。</strong></p>
+      <span class="lbl">米勒能说什么</span>
+      <p>· 压力会降低关系满意度（<em>可重复的规律</em>）；<br>
+      · 疾病会改变关系中的角色与依赖结构；<br>
+      · 照护者承受的负担是可测量的。</p>
+      <p><strong>这些都是「多数人会怎样」。</strong></p>
+      <span class="lbl">米勒不能说但保罗能说的</span>
+      <p><strong>在那个压力里，人具体在想什么。</strong>
+      <em>——那个数字（「还有多久」）落到自己身上时是什么感觉，
+      以及它怎么重新组织了每一个决定。</em></p>
+      <span class="lbl">两者不能互相取代</span>
+      <p>· <strong>不能用保罗否定米勒</strong>：「他那样，所以你说的规律不对」——
+      <em>一个个案不能反驳一个统计规律。</em><br>
+      · <strong>也不能用米勒消解保罗</strong>：「那只是压力的表现」——
+      <em>把体验还原成类别，等于取消了体验。</em></p>
+      <span class="lbl">正确的配合</span>
+      <p><strong>用米勒判断「这是否普遍」，用保罗理解「这在内部是什么感受」。</strong></p>
+      <p><em>而这两件事在处理真实的人时都需要：
+      只有规律会变成冷酷，只有个案会变成无从下手。</em></p>
+      <span class="pit">通俗说</span>
+      <div class="pit-b">米勒说「多数人会怎样」，保罗说「我当时是怎样」。
+      <strong>两个都对，回答的是不同的问题。</strong></div>
+    </div>
+  </details>
+</div>
+
+<h3>F 组 · 用途与边界</h3>
+
+<div class="qcard">
+  <div class="q-head"><span class="q-id">P17</span><span class="q-tag">用途</span></div>
+  <div class="q-t">这本书最适合当作什么使用？最容易被误用成什么？</div>
+  <details><summary></summary>
+    <div class="a">
+      <span class="lbl">最适合</span>
+      <p><strong>① 一份「证据地图」</strong>：想知道某个关系话题上研究到什么程度、结论有多强；<br>
+      <strong>② 一个纠偏工具</strong>：用来检验自己从通俗读物、影视、长辈那里得来的说法；<br>
+      <strong>③ 一个观察自己的框架</strong>（<em>用「自我诊断手册」的方式，而不是贴标签</em>）。</p>
+      <span class="lbl">最容易被误用成</span>
+      <p><strong>① 一本规则手册</strong>：<em>「书上说应该这样沟通」</em>——
+      而书里说的多数是「平均而言，这样沟通的伴侣满意度更高」。</p>
+      <p><strong>② 一件武器</strong>：<em>冲突时引用书里的结论来证明自己对</em>——
+      这是最糟的用法，因为<strong>它把统计学用在了单次事件上</strong>，
+      而在单次事件上统计学没有裁决力。</p>
+      <p><strong>③ 一个诊断工具</strong>：用分类词判断伴侣「是什么型」。
+      <em>（见 P10。）</em></p>
+      <span class="lbl">一个自检问法</span>
+      <p>在引用这本书之前，问：<strong>「我是在用一个群体结论，还是在判断这一件事？」</strong></p>
+      <p><em>如果是后者，这本书帮不上忙——它从来不是为这个目的写的。</em></p>
+      <span class="pit">通俗说</span>
+      <div class="pit-b">它是一张地图，不是一本规则手册。
+      <strong>地图能告诉你地形，不能告诉你该往哪走。</strong></div>
+    </div>
+  </details>
+</div>
+
+<div class="qcard">
+  <div class="q-head"><span class="q-id">P18</span><span class="q-tag">中文读者</span></div>
+  <div class="q-t">作为中文读者读这本书，需要额外注意什么？</div>
+  <details><summary></summary>
+    <div class="a">
+      <span class="lbl">① 样本与规范的双重外来性</span>
+      <p>书里的证据来自西方样本，
+      <strong>而「什么算好的关系」在书里也带着西方（尤其美国）中产的默认</strong>——
+      <em>例如对个人选择、情感表达、平等协商的重视。</em></p>
+      <p>这意味着：<strong>读到的「规律」和读到的「好坏标准」都需要分别检验。</strong>
+      <em>前者是经验问题（可能有跨文化一致性），后者是文化问题（很可能是局部的）。</em></p>
+      <span class="lbl">② 家庭在关系中的位置不同</span>
+      <p>在西方样本里，亲密关系的主体是伴侣二人；
+      <em>而在中文语境里，原生家庭与亲属网络的参与度通常更高。</em></p>
+      <p><strong>书里对「关系」的定义可能比中文语境里的实际关系窄。</strong>
+      <em>（第 7 章「友谊」与第 1 章对关系类型的讨论可以对照着看。）</em></p>
+      <span class="lbl">③ 表达方式的文化差异</span>
+      <p>书里关于「沟通」的很多结论建立在<em>直接表达</em>这个默认上。
+      <strong>在间接表达为主的关系里，那些结论的适用性需要重新考虑。</strong></p>
+      <span class="lbl">这不是说书不适用</span>
+      <p><strong>机制层（归因偏差、相互依赖结构、冲突升级）的适用性较高；
+      表现形式层（怎么沟通、什么是好的）需要本地化。</strong></p>
+      <p><em>而书里通常把两层混着说——这就是中文读者需要额外做的工作。</em></p>
+      <span class="pit">通俗说</span>
+      <div class="pit-b">书里的「人为什么会这样」比较通用；
+      「什么样算好」很美国。<strong>两层要分开看。</strong></div>
+    </div>
+  </details>
+</div>
+
+<div class="qcard">
+  <div class="q-head"><span class="q-id">P19</span><span class="q-tag">未回答</span></div>
+  <div class="q-t">这本书里有没有明确提出但没有回答的问题？举一个，并说明它为什么重要。</div>
+  <details><summary></summary>
+    <div class="a">
+      <p><strong>有一个很明显的：从「群体规律」到「个人该怎么办」，中间那一步是什么？</strong></p>
+      <p>整本书在积累关于<strong>「人们一般如何」</strong>的知识，
+      但从来没有回答<strong>「那我该怎么做」</strong>。</p>
+      <span class="lbl">为什么它重要</span>
+      <p>因为<strong>读者拿起这本书，几乎都是为了后者。</strong>
+      <em>而书只能给前者——这不是它的缺陷，是它的体裁决定的。</em></p>
+      <p><strong>但书里没有明说这一点。</strong>
+      <em>教科书的形式会让人以为「掌握了规律就掌握了做法」。</em></p>
+      <span class="lbl">这个跳跃需要什么</span>
+      <p>至少三样书里没有的东西：</p>
+      <p><strong>① 你的具体情境</strong>（书里的变量是抽象的，你的处境是具体的）；<br>
+      <strong>② 你的价值判断</strong>（<em>什么算好，这不在经验研究里</em>）；<br>
+      <strong>③ 尝试与修正</strong>（<em>在自己的关系里试，看结果</em>）。</p>
+      <span class="lbl">一个可注意的地方</span>
+      <p><strong>第 14 章最接近回答这个问题，但它的证据最弱（见 P13）。</strong>
+      <em>这个分布本身说明了困难：最容易积累证据的部分离个人最远，
+      离个人最近的部分最难积累证据。</em></p>
+      <span class="pit">通俗说</span>
+      <div class="pit-b">它告诉你人一般会怎样，但没说「你该怎么做」。
+      <strong>而最后那一步，书里没有，也不该有。</strong></div>
+    </div>
+  </details>
+</div>
+
+<div class="qcard">
+  <div class="q-head"><span class="q-id">P20</span><span class="q-tag">综合</span></div>
+  <div class="q-t">如果只带走这本书的一个东西，应该带走什么？</div>
+  <details><summary></summary>
+    <div class="a">
+      <p><strong>带走「问证据强度」这个习惯。</strong></p>
+      <span class="lbl">为什么是它</span>
+      <p>因为<strong>书里的具体结论会过期，而这个习惯不会</strong>。</p>
+      <p>具体的读法是三个问题：</p>
+      <p><strong>① 这是相关还是因果？</strong>（<em>看设计：横断 / 纵向 / 实验</em>）<br>
+      <strong>② 效应有多大？</strong>（<em>能不能用来预测一个人</em>）<br>
+      <strong>③ 样本是谁？</strong>（<em>能不能推广到我和我身边的人</em>）</p>
+      <span class="lbl">这个习惯的用处远不止这本书</span>
+      <p>它可以用于：<em>新闻里的研究报道、健康建议、
+      畅销心理学书、以及你自己的经验总结。</em></p>
+      <p><strong>尤其最后一项</strong>：人对自己的关系会形成理论，
+      <em>而那些理论通常来自很少的几次经历，却以「我一直都知道」的语气被持有。</em></p>
+      <span class="lbl">这本书教这个方法的方式很特别</span>
+      <p>它不是靠讲道理，是靠<strong>把方法放在第 2 章</strong>——
+      <em>让你在读后面的每一章时都得先过这一关。</em></p>
+      <p><strong>所以最好的用法是学它的结构，而不是记它的结论。</strong></p>
+      <span class="lbl">与项目里其他判据的关系</span>
+      <p>· <strong>《无穷的开始》</strong>：这个说法能被推翻吗？<br>
+      · <strong>《视觉》</strong>：你说的是哪个层次的事？<br>
+      · <strong>《当呼吸化为空气》</strong>：你站在哪个位置？<br>
+      · <strong>这本书</strong>：<strong>这个结论有多强？</strong></p>
+      <p><em>四个问题合起来，是一套检查「我凭什么相信这件事」的完整流程。</em></p>
+      <span class="pit">通俗说</span>
+      <div class="pit-b">带走一句话：<strong>「相关还是因果？效应多大？样本是谁？」</strong></div>
+    </div>
+  </details>
+</div>
+
+<!-- ==================== 附录 ==================== -->
+<h2>附 · 速查表</h2>
+
+<h3>14 章一览（按关系生命周期）</h3>
+<table>
+  <tr><th style="width:8%">章</th><th style="width:28%">标题</th><th>在关系生命周期里的位置</th></tr>
+  <tr><td>1</td><td>人际关系的构成</td><td><strong>基础</strong>：归属需要、依恋、关系类型</td></tr>
+  <tr><td>2</td><td><strong>研究方法</strong></td><td><strong>基础</strong>：证据是怎么来的（<em>本页重点</em>）</td></tr>
+  <tr><td>3</td><td>吸引力</td><td>开始：什么让人相互靠近</td></tr>
+  <tr><td>4</td><td>社会认知</td><td>开始：我们如何理解伴侣（<em>偏差所在</em>）</td></tr>
+  <tr><td>5</td><td>沟通</td><td>运作：信息的传递与误解</td></tr>
+  <tr><td>6</td><td>相互依赖</td><td>运作：交换、公平、承诺（<em>理论核心</em>）</td></tr>
+  <tr><td>7</td><td>友谊</td><td>类型：非浪漫关系</td></tr>
+  <tr><td>8</td><td>爱情</td><td>类型：爱情的理论与类型</td></tr>
+  <tr><td>9</td><td>性爱</td><td>类型：性行为、性态度、性与关系</td></tr>
+  <tr><td>10</td><td>压力与紧张</td><td>出问题：嫉妒、欺骗、背叛</td></tr>
+  <tr><td>11</td><td>冲突</td><td>出问题：冲突的过程与应对</td></tr>
+  <tr><td>12</td><td>权力和暴力</td><td>出问题：权力结构、暴力</td></tr>
+  <tr><td>13</td><td>亲密关系的解体与消亡</td><td>结束：破裂的过程</td></tr>
+  <tr><td>14</td><td>亲密关系的维持和修复</td><td>延续：维持机制与干预（<em>证据最弱的一章</em>）</td></tr>
+</table>
+
+<h3>证据等级速查（读这本书最该先看的一栏）</h3>
+<table>
+  <tr><th style="width:24%">设计</th><th>能支持什么强度的结论</th></tr>
+  <tr><td>个案 / 自述</td><td style="color:var(--warn);">不能支持任何一般性结论（<em>可作假设来源</em>）</td></tr>
+  <tr><td>横断相关</td><td>只能说明「一起变化」，<strong>不能定因果方向</strong></td></tr>
+  <tr><td>纵向研究</td><td>能定时间顺序 —— <strong>比横断强得多</strong></td></tr>
+  <tr><td>实验（随机分配）</td><td>能定因果；<em>但生态效度受限</em></td></tr>
+  <tr><td>干预研究（RCT）</td><td>能说「做什么有用」；<em>关系领域数量少、盲法难</em></td></tr>
+  <tr><td>生理测量</td><td>相关层面的支持；<em>激活 ≠ 感受</em></td></tr>
+  <tr><td>演化解释</td><td style="color:var(--warn);">解释力强、<strong>可检验性弱</strong> —— 要看能否预测新数据</td></tr>
+</table>
+
+<h3>三个自检问题（读书时随身带）</h3>
+<table>
+  <tr><th style="width:8%">#</th><th style="width:34%">问题</th><th>答不出来时的处理</th></tr>
+  <tr><td>1</td><td><strong>这是相关还是因果？</strong></td>
+    <td>当提示用，不当依据用</td></tr>
+  <tr><td>2</td><td><strong>效应有多大？能预测个人吗？</strong></td>
+    <td>当「群体趋势」用，不当「个人预测」用</td></tr>
+  <tr><td>3</td><td><strong>样本是谁？能推广吗？</strong></td>
+    <td>机制层可用，表现形式层存疑</td></tr>
+</table>
+
+<h3>底本与项目内的关联产出</h3>
+<table>
+  <tr><th style="width:30%">项</th><th>说明</th></tr>
+  <tr><td>底本</td><td><code>Miller_亲密关系_全文.txt</code>，772,182 字符 / 26.7 万汉字 / 877 页标记</td></tr>
+  <tr><td>章结构</td><td>14 章，按关系生命周期排序</td></tr>
+  <tr><td rowspan="5">08 域内的 5 件（<strong>各管一件事</strong>）</td>
+    <td><code>Miller_亲密关系-整体架构.html</code> —— 骨架与概念连接</td></tr>
+  <tr><td><code>Miller_亲密关系-问题手册.html</code> —— 知识点自测（13,167 汉字，5 件中最长）</td></tr>
+  <tr><td><code>Miller_亲密关系-概念误用与证据等级手册.html</code> —— 哪些说法被误用了</td></tr>
+  <tr><td><code>Miller_亲密关系-自我诊断手册.html</code> —— 用来看自己，不是看别人</td></tr>
+  <tr><td><strong><code>Miller_亲密关系-精华笔记与专业问题.html</code></strong>（本页）
+    —— 知识是怎么生产的、因此哪里可信到哪里</td></tr>
+  <tr><td>标注惯例</td><td>本页标「分析」「超出书本范围」处为待议读法；
+    <strong>本页不复述知识点</strong>（问题手册已做），集中在方法与证据等级</td></tr>
+</table>
+
+<footer>
+ 《亲密关系》精华笔记与专业问题 · 「底层」项目 08_性与亲密关系（本域第 5 件）<br>
+ 罗兰·米勒 · 14 章 · 底本 26.7 万汉字 · 877 页标记<br>
+ <em>本页重点在方法与证据等级，非知识点复述；<br>
+ 书中的结论强度不等，引用前请先过「三个自检问题」</em>
+</footer>
+
+</div>
+</body>
+</html>
