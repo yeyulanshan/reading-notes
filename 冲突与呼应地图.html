@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>底层 · 冲突与呼应地图</title>
+<style>
+  :root{
+    --paper:#f2f8fc; --card:#ffffff; --edge:#cfe0ec; --edge-lit:#a8c8de;
+    --ink:#12232e; --ink-mid:#3f5b6b; --ink-soft:#5c7a8c;
+    --a:#2b7fa8; --a-soft:#eaf4fb;
+    --b:#a8703c; --b-soft:#faf3ec;
+    --l1:#a85035; --l1-soft:#fcf1ec;
+    --l2:#8a6a24; --l2-soft:#fbf6e8;
+    --l3:#3f6b5c; --l3-soft:#eef6f3;
+    --l4:#7a4f96; --l4-soft:#f4eef8;
+    --key:#7e713d; --key-soft:#fbf8ef;
+    --my:#2f7a5c; --my-soft:#eef8f3;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--paper);color:var(--ink);line-height:1.9;padding:32px 16px 56px;
+    -webkit-font-smoothing:antialiased;}
+  .wrap{max-width:1000px;margin:0 auto;}
+  header{text-align:center;padding:38px 20px 32px;background:var(--card);
+    border:1px solid var(--edge);border-top:4px solid var(--a);border-radius:8px;margin-bottom:22px;}
+  header .kicker{font-size:11px;letter-spacing:.26em;color:var(--ink-soft);
+    font-family:ui-monospace,Consolas,monospace;margin-bottom:13px;}
+  header h1{font-size:24px;font-weight:800;letter-spacing:.01em;line-height:1.4;margin-bottom:10px;}
+  header .sub{font-size:13.8px;color:var(--ink-mid);line-height:1.9;}
+  header .src{margin-top:12px;font-size:12px;color:var(--ink-soft);line-height:1.9;}
+  .lead{background:var(--card);border:1px solid var(--edge);border-radius:8px;
+    padding:19px 22px;margin-bottom:22px;font-size:13.9px;color:var(--ink-mid);}
+  .lead .t{color:var(--key);font-weight:700;margin-bottom:9px;font-size:13.4px;}
+  .lead p+p{margin-top:8px;} .lead strong{color:var(--ink);}
+  .lead .warn{margin-top:12px;padding:11px 15px;background:var(--l1-soft);
+    border:1px solid #e8cfc4;border-left:3px solid var(--l1);border-radius:4px;
+    font-size:13.2px;color:#8a4630;line-height:1.9;}
+  h2{font-size:18px;font-weight:700;margin:38px 0 6px;padding-left:12px;
+    border-left:4px solid var(--key);line-height:1.55;}
+  .s{color:var(--ink-soft);font-size:12.9px;margin:0 0 16px 16px;line-height:1.85;}
+  h3{font-size:15.6px;font-weight:700;margin:22px 0 8px;color:var(--ink);}
+  p{font-size:14.1px;color:var(--ink-mid);margin-bottom:10px;}
+  p strong{color:var(--ink);} p em{font-style:normal;color:var(--ink-mid);}
+  code{font-family:ui-monospace,Consolas,monospace;font-size:12.4px;
+    background:#eef6fb;border:1px solid var(--edge);border-radius:4px;
+    padding:1px 6px;color:#1d5c86;word-break:break-all;}
+  /* 类别徽章 */
+  .cat{display:inline-block;font-size:11.4px;font-weight:700;padding:2px 9px;
+    border-radius:999px;margin-right:8px;vertical-align:middle;}
+  .c1{background:var(--l1-soft);color:var(--l1);border:1px solid #e8cfc4;}
+  .c2{background:var(--l2-soft);color:var(--l2);border:1px solid #e3d3a8;}
+  .c3{background:var(--l3-soft);color:var(--l3);border:1px solid #cfe4dd;}
+  .c4{background:var(--l4-soft);color:var(--l4);border:1px solid #d9c4e6;}
+  /* 冲突卡 */
+  .cf{background:var(--card);border:1px solid var(--edge);border-radius:10px;
+    padding:20px 22px;margin-bottom:16px;transition:border-color .2s,box-shadow .2s;}
+  .cf:hover{border-color:var(--edge-lit);box-shadow:0 4px 16px -8px rgba(28,74,110,.20);}
+  .cf-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px;}
+  .cf-num{font-family:ui-monospace,Consolas,monospace;font-size:11.6px;font-weight:700;
+    color:#fff;background:var(--a);border-radius:4px;padding:2px 8px;letter-spacing:.06em;}
+  .cf-title{font-size:16px;font-weight:700;color:var(--ink);line-height:1.6;}
+  .cf-point{font-size:13.6px;color:var(--ink-mid);margin:8px 0 14px;
+    padding:9px 13px;background:#f7fbfe;border-left:3px solid var(--a);border-radius:3px;}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;}
+  .side{border-radius:7px;padding:14px 16px;font-size:13.4px;line-height:1.85;}
+  .side.a{background:var(--a-soft);border:1px solid #cfe4f0;}
+  .side.b{background:var(--b-soft);border:1px solid #ecdcc9;}
+  .side .who{display:block;font-size:12.4px;font-weight:700;margin-bottom:7px;
+    font-family:ui-monospace,Consolas,monospace;letter-spacing:.03em;}
+  .side.a .who{color:var(--a);} .side.b .who{color:var(--b);}
+  .side p{font-size:13.4px;color:var(--ink-mid);} .side p+p{margin-top:8px;}
+  .side blockquote{margin:9px 0 0;padding:9px 13px;background:rgba(255,255,255,.72);
+    border-left:3px solid currentColor;border-radius:3px;font-size:13.2px;
+    color:#3f4f5b;line-height:1.85;}
+  .side.a blockquote{border-left-color:var(--a);} .side.b blockquote{border-left-color:var(--b);}
+  .side blockquote .who2{display:block;margin-top:6px;font-size:11.4px;
+    color:var(--ink-soft);text-align:right;font-style:normal;}
+  /* 三栏：我的判断 / 可反驳条件 / 我可能错在哪 */
+  .tri{border-radius:7px;padding:13px 16px;font-size:13.3px;line-height:1.9;margin-bottom:10px;}
+  .tri .lbl2{display:block;font-size:12.6px;font-weight:700;margin-bottom:6px;}
+  .tri.my{background:var(--my-soft);border:1px solid #cfe6dc;color:#2b5d48;}
+  .tri.my .lbl2{color:var(--my);}
+  .tri.fals{background:var(--key-soft);border:1px solid #e6dcbe;color:#5f5527;}
+  .tri.fals .lbl2{color:var(--key);}
+  .tri.self{background:var(--l1-soft);border:1px solid #e8cfc4;color:#8a4630;}
+  .tri.self .lbl2{color:var(--l1);}
+  .tri strong{color:inherit;font-weight:700;}
+  .tri em{font-style:normal;opacity:.88;}
+  .done{font-size:12.4px;color:var(--ink-soft);margin-top:10px;padding-top:9px;
+    border-top:1px dashed var(--edge);}
+  .done::before{content:"已单独成文 · ";color:var(--a);font-weight:700;}
+  /* 表格 */
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13px;}
+  th,td{padding:9px 11px;border:1px solid var(--edge);text-align:left;vertical-align:top;line-height:1.8;}
+  th{background:var(--a-soft);color:#1d5c86;font-weight:700;font-size:12.2px;}
+  td{color:var(--ink-mid);} td strong{color:var(--ink);}
+  ul,ol{margin:9px 0 0 21px;} li{font-size:13.5px;color:var(--ink-mid);
+    margin-bottom:7px;line-height:1.9;}
+  li strong{color:var(--ink);}
+  .box{background:var(--card);border:1px solid var(--edge);border-radius:8px;
+    padding:18px 21px;margin:16px 0;font-size:13.7px;color:var(--ink-mid);}
+  .box .h{font-weight:700;color:var(--key);margin-bottom:9px;font-size:13.4px;}
+  .box p+p{margin-top:8px;} .box strong{color:var(--ink);}
+  footer{margin-top:44px;padding-top:20px;border-top:1px solid var(--edge);
+    text-align:center;font-size:12px;color:var(--ink-soft);line-height:2;}
+  @media(max-width:760px){
+    .two{grid-template-columns:1fr;} header h1{font-size:20px;}
+    h2{font-size:16.5px;} body{padding:18px 11px 40px;} .cf{padding:16px 15px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="kicker">CONFLICT &amp; RESONANCE MAP · 底层</div>
+  <h1>底层 · 冲突与呼应地图</h1>
+  <div class="sub">7 处跨书关系 · 4 种类型 · 含「我的判断 / 可反驳条件 / 我可能错在哪」</div>
+  <div class="src">覆盖 26 本书 · 引文均可在各书 <code>_全文.txt</code> 中核对<br>
+    这是本项目第一份<strong>跨书</strong>产出（此前 79 份产出里只有 2 份链到别的书）</div>
+</header>
+
+<div class="lead">
+  <div class="t">这份文件要解决什么问题</div>
+  <p>这个项目此前是 <strong>26 座孤岛</strong>：每本书有 3–5 件产出，做得很厚，
+  但<strong>没有一条路</strong>能从《无穷的开始》通到《枪炮病菌与钢铁》第 17 章那个正面冲突。
+  79 份产出里只有 2 份链到另一本书。</p>
+  <p><strong>而关系本身是存在的</strong>——它只存在于正文里，不在文件之间。
+  所以你知道有冲突，但你要靠记忆去找。</p>
+  <p><strong>「冲突的价值是乘出来的，不是加出来的。」</strong>
+  一本书自己不会暴露自己的边界；<em>两本书撞在一起时，边界才显形。</em></p>
+  <div class="warn">
+    <strong>⚠️ 先说这份文件的三个立场</strong><br>
+    ① <strong>只收录找得到双方原文的关系。</strong>凭印象觉得"这两本书应该冲突"的，
+    一律进「存疑区」，不进正文。<br>
+    ② <strong>「对立」要分类。</strong>很多看起来的对立其实是<em>范畴不同</em>或<em>条件性对立</em>——
+    把它们说成硬对立，是这份文件最容易犯的错。<br>
+    ③ <strong>每条都带「我可能错在哪」。</strong>
+    因为我在这个项目里出错的<em>方式是稳定的</em>（编造过引文、把 OCR 错字修完当原文引、
+    写过一条语料里没有的引文），<em>所以我的判断需要一个显式的自查栏。</em>
+  </div>
+</div>
+
+<!-- ============ 四种类型 ============ -->
+<h2>零 · 先分类：四种「关系」，处理方式完全不同</h2>
+<div class="s">不分类的冲突地图会把「补充」当成「打架」，那是错的</div>
+
+<div class="box">
+  <p><span class="cat c1">Ⅰ 真对立</span>
+  <strong>双方在同一问题上给出不相容的答案。</strong>
+  <em>这是唯一需要「选边」的类型。</em></p>
+  <p><span class="cat c2">Ⅱ 条件性对立</span>
+  <strong>只在某些条件下才对立</strong>，条件之外两者可以都是对的。
+  <em>这一类的正确读法不是选边，是找出那个条件。</em></p>
+  <p><span class="cat c3">Ⅲ 范畴不同</span>
+  <strong>两者在回答不同的问题</strong>，表面上的矛盾来自把「实然」与「应然」、
+  「规律」与「个案」混为一谈。<em>这一类不能"裁判"，只能指出各自的地盘。</em></p>
+  <p><span class="cat c4">Ⅳ 虚对立（实为同一侧）</span>
+  <strong>看起来对立，实际立场一致</strong>，或者争的其实是同一现象的不同机制。
+  <em>识别这一类最有价值——它能防止你在一个假问题上选边。</em></p>
+</div>
+
+<!-- ============ 冲突 1 ============ -->
+<h2>一 · 历史的驱动力：思想 vs 生物地理</h2>
+
+<div class="cf">
+  <div class="cf-head">
+    <span class="cf-num">CF1</span><span class="cat c2">Ⅱ 条件性对立</span>
+    <span class="cf-title">多伊奇《无穷的开始》 ⚔ 戴蒙德《枪炮、病菌与钢铁》</span>
+  </div>
+  <div class="cf-point"><strong>争的是什么</strong>：人类各大洲历史发展轨迹不同，
+  究竟该由<strong>思想与决策</strong>解释，还是由<strong>地理与生物条件</strong>解释？</div>
+
+  <div class="two">
+    <div class="side a">
+      <span class="who">多伊奇 · 第 17 章「不可维持」</span>
+      <p>他先<strong>承认了对方一大片</strong>：</p>
+      <blockquote>所以在那时候，人类行为与其他动物的行为相似，<strong>大部分的事情确实可以用生物地理学来解释</strong>。
+      但是，抽象语言、解释、高于最低生存水平的财富、远距离贸易之类的发展，
+      全都有潜力突破狭隘，<strong>从而使思想观念具有因果力</strong>。<span class="who2">第 17 章</span></blockquote>
+      <p>然后在总结里给出他真正的断言：</p>
+      <blockquote>戴蒙德对不同社会的不同历史所作的"终极解释"是错的：
+      <strong>历史是思想的历史，不是生物地理学的机械影响的历史</strong>。<span class="who2">第 17 章「小结」</span></blockquote>
+    </div>
+    <div class="side b">
+      <span class="who">戴蒙德 · 前言 / 全书主线</span>
+      <blockquote>本书的重点在于探寻<strong>终极的原因</strong>，并尽可能向前回溯历史的因果链。<span class="who2">前言</span></blockquote>
+      <p>他把因果链一路推到<strong>环境</strong>：大陆轴线方向、可驯化的动植物、
+      病菌、以及由此而来的粮食盈余与人口密度。</p>
+      <p><em>他的立场不是「思想不重要」，而是「思想是近因，环境是终极因」。</em></p>
+    </div>
+  </div>
+
+  <div class="tri my"><span class="lbl2">◆ 我的判断</span>
+    <strong>这是条件性对立，不是硬对立</strong>，而且<strong>双方其实同意同一件事的开头</strong>：
+    人类早期行为确实可以由生物地理解释。
+    <br>分歧在一处<strong>很具体的点</strong>：<em>是否存在一个时刻，思想开始具有独立于环境的因果力？</em>
+    <br>多伊奇答「有，而且从抽象语言出现就开始了」；戴蒙德答「有，但它始终是环境的下游」。
+    <br><strong>而在这一点上我倾向多伊奇</strong>，理由是戴蒙德那条链<em>解释的是「谁先有条件的集合」，
+    不是「谁先想到」</em>——而历史上确实存在<strong>条件齐备却几千年没发生</strong>的例子（他书里自己举了羊驼）。
+    <em>条件齐备而未发生，说明条件不是充分条件。</em>
+  </div>
+  <div class="tri fals"><span class="lbl2">◆ 可反驳条件（如果我这个判断错了）</span>
+    要推翻「思想有独立因果力」，需要找到这样的证据：
+    <strong>在条件齐备的若干社会里，思想/技术的出现时间<em>由条件而非由人</em>决定</strong>——
+    也就是说，<em>只要给足时间与接触，任何社会都会独立走到同一步，不存在"想到了"这个变量。</em>
+    <br>反过来，要推翻戴蒙德，只需<strong>一个条件齐备却长期停滞、且停滞不能归因于外部阻断的例子</strong>。
+    <em>他书里的美洲羊驼案例恰恰是这样一个候选——而多伊奇正是抓住这一点。</em>
+  </div>
+  <div class="tri self"><span class="lbl2">◆ 我可能错在哪</span>
+    <strong>我可能把戴蒙德读窄了。</strong>「终极因」这个说法本身就<em>允许近因存在</em>——
+    他并没有说思想无关，只说思想不是<strong>终极</strong>解释。
+    <em>如果是这样，那么多伊奇反对的其实是一个戴蒙德没主张的强版本，这场冲突有一部分是假靶子。</em>
+    <br><strong>我这次的证据也有一处需要注意</strong>：我引的多伊奇那句「大部分的事情确实可以用生物地理学来解释」
+    是我在通读语料时找到的，<em>它并不在《无穷的开始》的「小结」里</em>——
+    所以它容易被读者忽略，<em>而我在这一页把它放在最前面，可能给了它比原文更重的分量。</em>
+  </div>
+  <div class="done">多伊奇 vs 戴蒙德在本项目里此前<strong>没有单独成文</strong>，这是第一次。</div>
+</div>
+
+<!-- ============ 冲突 2 ============ -->
+<h2>二 · 真理的标准：难以改变 vs 社会实践</h2>
+
+<div class="cf">
+  <div class="cf-head">
+    <span class="cf-num">CF2</span><span class="cat c1">Ⅰ 真对立</span>
+    <span class="cf-title">多伊奇「好解释」 ⚔ 毛泽东《实践论》</span>
+  </div>
+  <div class="cf-point"><strong>争的是什么</strong>：判定一个说法是真理，<strong>依据它自身结构的硬度，
+  还是依据它在实践中的结果？</strong></div>
+
+  <div class="two">
+    <div class="side a">
+      <span class="who">多伊奇 · 第 1 章「小结」</span>
+      <blockquote>我们通过寻求好解释来做到这一点，<strong>好解释是难以改变的，改变细节会毁掉整个解释</strong>。
+      这才是科学革命的决定性因素……<strong>而实验检验不是</strong>。<span class="who2">第 1 章</span></blockquote>
+      <blockquote>实验和观测的功能是<strong>在现有理论中作出选择</strong>，并不是作为新理论的来源。<span class="who2">第 1 章</span></blockquote>
+    </div>
+    <div class="side b">
+      <span class="who">毛泽东 · 《实践论》</span>
+      <blockquote>判定认识或理论之是否真理，不是依主观上觉得如何而定，
+      而是依<strong>客观上社会实践的结果</strong>如何而定。<strong>真理的标准只能是社会的实践</strong>。<span class="who2">《实践论》</span></blockquote>
+      <blockquote>只有在社会实践过程中……人们<strong>达到了思想中所预想的结果</strong>时，
+      人们的认识才被证实了。<span class="who2">《实践论》</span></blockquote>
+    </div>
+  </div>
+
+  <div class="tri my"><span class="lbl2">◆ 我的判断</span>
+    <strong>这是这份地图里最硬的一处真对立</strong>，因为两者<em>指向的是同一个对象（真理的标准），
+    给出的答案不相容</em>。
+    <br><strong>我认为两者各有一处对方接不住的地方，所以不能简单选边</strong>：
+    <br>· 多伊奇的强项：<em>一个不能被反驳的说法，你拿它去实践也没用</em>——因为它总能解释掉任何结果。
+    <strong>没有「难以改变」这一条，「实践检验」本身就没有可检的东西。</strong>
+    <br>· 实践论的强项：<em>它给出了一个可操作的程序</em>——
+    「事先说出预想的结果」。<strong>而多伊奇没有给这个程序</strong>：他要求结构硬度，但没说要拿什么去碰它。
+    <br><strong>所以我的判断是：两者是同一件事的两端，而不是两个竞争的答案。</strong>
+    多伊奇给「<em>可</em>反驳性」，实践论给「<em>是否已</em>反驳」——<em>前者是后者的前提。</em>
+  </div>
+  <div class="tri fals"><span class="lbl2">◆ 可反驳条件</span>
+    要推翻「前者是后者的前提」，需要一个<strong>没有结构硬度、却能被实践裁决的说法</strong>。
+    <br>要推翻「实践不可或缺」，需要一个<strong>从未被任何实践碰过、却被公认成立的解释</strong>。
+    <em>第二类候选是数学——但数学恰好是多伊奇会说的那种「难以改变」的结构。</em>
+  </div>
+  <div class="tri self"><span class="lbl2">◆ 我可能错在哪</span>
+    <strong>「两者是同一件事的两端」这个调和，可能是我在回避选边。</strong>
+    如果多伊奇真的说过「实验不是决定性因素」，那他<em>就是在否认实践的标准地位</em>，
+    这与「两者互补」不相容。
+    <br>我倾向于这个调和的理由是：<em>多伊奇反对的是「实验<strong>产生</strong>理论」，
+    不是「实验<strong>检验</strong>理论」</em>——但这是<strong>我的解读</strong>，
+    <em>原文并没有明确做这个区分。</em>
+  </div>
+  <div class="done">已单独成文：<code>02_心智与认知/毛选/好解释与实践论-对照.html</code></div>
+</div>
+
+<!-- ============ 冲突 3 ============ -->
+<h2>三 · 人受什么限制：阶级 vs 通用性</h2>
+
+<div class="cf">
+  <div class="cf-head">
+    <span class="cf-num">CF3</span><span class="cat c2">Ⅱ 条件性对立</span>
+    <span class="cf-title">毛泽东「阶级地位」 ⚔ 多伊奇「通用解释者」</span>
+  </div>
+  <div class="cf-point"><strong>争的是什么</strong>：人的认识<strong>受什么限制</strong>？
+  受限是<strong>结构性的、不可自解</strong>的，还是<strong>可以被知识与批评解除</strong>的？</div>
+
+  <div class="two">
+    <div class="side a">
+      <span class="who">毛泽东 · 《实践论》等</span>
+      <p>人在阶级社会中的认识<strong>打上阶级的烙印</strong>——
+      <em>立场决定你能看到什么、以及你会把什么当作显然。</em></p>
+    </div>
+    <div class="side b">
+      <span class="who">多伊奇 · 第 3 章</span>
+      <blockquote>人类的身体（包括大脑）可以把任意事物转换成任意事物，
+      <strong>只要自然法则允许</strong>。他们是"<strong>通用建造者</strong>"。<span class="who2">第 3 章</span></blockquote>
+      <p><em>限制只有一种：自然法则。其余的都是知识不足。</em></p>
+    </div>
+  </div>
+
+  <div class="tri my"><span class="lbl2">◆ 我的判断</span>
+    <strong>这是条件性对立。</strong>两者的差别在<em>「限制能不能被自己解除」</em>：
+    <br>· 多伊奇：能，靠猜想与批评——<em>所以他要求一个允许批评的环境。</em>
+    <br>· 毛泽东：不能单靠认识解除，要靠<strong>改变存在</strong>——<em>而这就把「谁有机会批评」变成了前提条件。</em>
+    <br><strong>我倾向：两者在同一侧，只是层次不同。</strong>
+    <em>毛泽东说的是"你站在哪里决定你能想到什么"（社会学限制）；
+    多伊奇说的是"想到了就能做到什么"（认识论能力）。</em>
+    <strong>这两句可以同时为真。</strong>
+  </div>
+  <div class="tri fals"><span class="lbl2">◆ 可反驳条件</span>
+    要证明两者真的对立，需要一个<strong>阶级地位被彻底改变、但认识没有随之改变</strong>的例子
+    （<em>或反过来：阶级地位未变而认识完全改变</em>）。
+    <br>要证明它们互补，需要一个<strong>受压迫者仍然产生了突破性解释</strong>的例子——
+    <em>而科学史上这类例子是存在的，这正是多伊奇那一侧的支撑。</em>
+  </div>
+  <div class="tri self"><span class="lbl2">◆ 我可能错在哪</span>
+    <strong>我把毛泽东的「阶级」处理成了一个社会学变量，这可能窄了。</strong>
+    在他那里，「实践」不只是「有机会批评」，还包含<strong>立场与利益</strong>——
+    <em>而利益不是靠"更严密的论证"就能改的。</em>
+    <br><strong>如果这一点成立，那么两者就不是"层次不同"，而是真的对立</strong>：
+    多伊奇的方案<em>默认了可以通过论证改变立场</em>，而毛泽东否认这一点。
+    <em>这是这份地图里我最有把握不足的一处。</em>
+  </div>
+  <div class="done">已单独成文：<code>02_心智与认知/毛选/阶级地位与通用解释者-对照.html</code></div>
+</div>
+
+<!-- ============ 冲突 4 ============ -->
+<h2>四 · 技术往哪走：人的知识 vs 技术自身的方向</h2>
+
+<div class="cf">
+  <div class="cf-head">
+    <span class="cf-num">CF4</span><span class="cat c1">Ⅰ 真对立</span>
+    <span class="cf-title">多伊奇《无穷的开始》 ⚔ 凯利《科技想要什么》</span>
+  </div>
+  <div class="cf-point"><strong>争的是什么</strong>：技术发展的<strong>方向由谁决定</strong>——
+  由人的知识与选择，还是由技术系统自身的趋同趋势？</div>
+
+  <div class="two">
+    <div class="side a">
+      <span class="who">多伊奇 · 第 17 章</span>
+      <blockquote>历史是思想的历史，不是生物地理学的机械影响的历史。<span class="who2">第 17 章「小结」</span></blockquote>
+      <blockquote>关于人类事物的机械性再阐释，通常不仅缺少解释能力，<strong>在道德上也是错误的</strong>，
+      因为它们实质上否认了参与者的人类属性，只把他们和他们的思想当作自然环境的副作用。<span class="who2">第 17 章</span></blockquote>
+    </div>
+    <div class="side b">
+      <span class="who">凯利 · 全书主线</span>
+      <blockquote>技术元素的旋涡按照自己的节奏、自己的规则和自己的方向发展。
+      它的父母和创造者──人类──<strong>不再拥有完全的掌控力</strong>。<span class="who2">凯利</span></blockquote>
+      <blockquote>所有保持稳定自组织的自适应复杂系统……将展现自发形态和<strong>固有方向</strong>。
+      我们称这些形态为<strong>必然事物</strong>，是因为不论何时，只要环境适合，它们就会像排水时产生的旋涡
+      或者冬日暴雪中的雪花一样显露无遗。<span class="who2">凯利</span></blockquote>
+    </div>
+  </div>
+
+  <div class="tri my"><span class="lbl2">◆ 我的判断</span>
+    <strong>这是真对立，但对立点比通常说的窄。</strong>
+    通常的说法是「多伊奇说人决定，凯利说技术决定」——<em>但这不准确</em>。
+    <br>凯利说的是<strong>「不由人的意图决定」</strong>，而不是「人无关」；
+    多伊奇说的是<strong>「思想是原因，不是副作用」</strong>，而不是「技术没有自身趋势」。
+    <br><strong>真正的对立点在于：趋势是</strong>人的知识积累的产物<strong>，还是</strong>一个独立的东西<strong>。</strong>
+    <em>这也是多伊奇会给出的判据：如果趋势是独立的东西，那它就应该能在没有人的地方也出现——
+    而凯利确实认为它能（他把技术放进"第七王国"）。</em>
+    <br><strong>我倾向多伊奇</strong>，因为凯利那套论证的<em>经验证据（趋同）恰恰是人做出来的</em>：
+    <strong>趋同是"多个独立的人想到了同一件事"，不是"没有人的地方长出了同一件东西"。</strong>
+  </div>
+  <div class="tri fals"><span class="lbl2">◆ 可反驳条件</span>
+    要推翻我这一侧的倾向，需要<strong>一个无人参与却自发出现的"技术"</strong>——
+    <em>而这不是要找证据，是要找反例，所以很难。</em>
+    <br>反过来，凯利要站得住，需要说明<strong>为什么"人做出的趋同"可以被读成"技术自身的方向"</strong>——
+    <em>他给的是生态学类比（眼睛进化 40–60 次），但那个类比的对象不是技术。</em>
+  </div>
+  <div class="tri self"><span class="lbl2">◆ 我可能错在哪</span>
+    <strong>我可能把凯利的「方向」读成了本体论主张，而他只是想说「统计上的规律」。</strong>
+    如果凯利的意思是「不管谁来做，最后都会做成相似的样子」，那它与多伊奇<em>并不冲突</em>——
+    <em>那是在说人的选择的分布有规律，不是在说有一个非人的力量。</em>
+    <br>如果是这样，这一条应该从「真对立」降级到「范畴不同」。
+    <strong>我倾向保留为真对立，是因为凯利明确用了「必然事物」和「不再拥有完全的掌控力」——
+    这些措辞超出了统计规律。</strong><em>但这是我的解读。</em>
+  </div>
+  <div class="done">此前没有单独成文。</div>
+</div>
+
+<!-- ============ 冲突 5 ============ -->
+<h2>五 · 实然与应然：研究关系 vs 教人爱</h2>
+
+<div class="cf">
+  <div class="cf-head">
+    <span class="cf-num">CF5</span><span class="cat c3">Ⅲ 范畴不同</span>
+    <span class="cf-title">米勒《亲密关系》 ⊥ 弗洛姆《爱的艺术》</span>
+  </div>
+  <div class="cf-point"><strong>看起来的争点</strong>：一个说「关系实际是怎么运作的」，
+  一个说「爱应该怎么学」。<strong>它们真的在争吗？</strong></div>
+
+  <div class="two">
+    <div class="side a">
+      <span class="who">米勒 · 实证取向</span>
+      <p>书里自述的定位是<strong>科学权威、崇尚实证精神</strong>，
+      <em>书里的每一句结论都带证据强度</em>（样本、设计、效应量）。</p>
+      <blockquote>一般而言，具有亲密关系的人较之单身生活的人更幸福、健康、长寿
+      （Koballetal.，2010）。<span class="who2">第 1 章</span></blockquote>
+    </div>
+    <div class="side b">
+      <span class="who">弗洛姆 · 规范取向</span>
+      <blockquote>弗洛姆认为，<strong>爱是一门艺术</strong>，要求人们有这方面的知识并付出努力。
+      但是大多数人认为爱仅仅是一种偶然产生的令人心荡神怡的感受，
+      只有幸运儿才能"堕入"爱的情网。<span class="who2">《爱的艺术》</span></blockquote>
+      <blockquote>同共生有机体结合相对立的是<strong>成熟的爱情</strong>，
+      那就是在<strong>保留自己完整性和独立性</strong>的条件下……
+      与他人合二为一。<span class="who2">《爱的艺术》</span></blockquote>
+    </div>
+  </div>
+
+  <div class="tri my"><span class="lbl2">◆ 我的判断</span>
+    <strong>这一条不是对立，是范畴不同。</strong>一个问「实际上如何」（实然），
+    一个问「应当如何」（应然）。
+    <br><strong>用数据否定弗洛姆，是范畴错误</strong>——「多数人实际不这么做」推不出「不应当这么做」。
+    <strong>用弗洛姆否定米勒，同样是错的</strong>——一个"应该"不能被数据推翻，也<em>不能替代</em>数据。
+    <br><strong>但两者之间有一处真接缝</strong>，值得单独指出：
+    <em>弗洛姆的规范主张里隐含了经验断言。</em>
+    例如他说<strong>成熟的爱要求双方保持完整</strong>——这隐含「不完整的结合会出问题」，
+    <strong>而这是一个可以用关系研究检验的断言。</strong>
+    <em>在这一类地方，米勒的数据可以约束弗洛姆。</em>
+  </div>
+  <div class="tri fals"><span class="lbl2">◆ 可反驳条件</span>
+    要证明它们其实是同一类（可以互相裁判），需要找到<strong>弗洛姆的一个纯规范主张，
+    它同时又是可被数据检验的经验断言</strong>——<em>而这在逻辑上不可能，除非那个主张本身是伪装的描述。</em>
+    <br>要证明我低估了冲突，需要指出<strong>弗洛姆在书里其实也在做描述性断言</strong>，
+    而那断言与米勒的证据冲突。<em>这个方向是可能的——他确实谈过"现代人的爱的能力衰退"。</em>
+  </div>
+  <div class="tri self"><span class="lbl2">◆ 我可能错在哪</span>
+    <strong>「实然/应然」这个二分可能被我用来回避一个真实的冲突。</strong>
+    弗洛姆在《爱的艺术》里<em>确实做了历史与社会判断</em>（关于资本主义如何使人失去爱的能力），
+    <strong>而那些判断是可被检验的社会学断言</strong>。
+    <br><em>如果它们与米勒的证据冲突，那这一条就不只是"范畴不同"。</em>
+    <strong>我这一轮没有去核那部分——所以这一条的判定是暂定的。</strong>
+  </div>
+  <div class="done">此前没有单独成文。</div>
+</div>
+
+<!-- ============ 冲突 6 ============ -->
+<h2>六 · 错觉是好是坏：积极错觉 vs 系统性偏差</h2>
+
+<div class="cf">
+  <div class="cf-head">
+    <span class="cf-num">CF6</span><span class="cat c2">Ⅱ 条件性对立</span>
+    <span class="cf-title">米勒《亲密关系》 ⚔ 卡尼曼《思考，快与慢》</span>
+  </div>
+  <div class="cf-point"><strong>争的是什么</strong>：对现实的<strong>失真</strong>——
+  在关系里是有益的，还是应当被纠正的错误？</div>
+
+  <div class="two">
+    <div class="side a">
+      <span class="who">米勒 · 第 4 章「社会认知」</span>
+      <blockquote>人们经常以<strong>积极错觉</strong>（positive illusion）来评价自己的爱人，
+      尽可能地用积极眼光来描述伴侣……他们并不会忽视伴侣真实的缺点，
+      只是认为这些缺憾并不如其他人认为的那么重要。<span class="who2">第 4 章</span></blockquote>
+      <p><strong>但同一段里给了边界条件</strong>：</p>
+      <blockquote>对爱人持有这么积极的看法是否会带来危险？……
+      <strong>答案取决于积极错觉与现实不符合的程度</strong>。<span class="who2">第 4 章</span></blockquote>
+    </div>
+    <div class="side b">
+      <span class="who">卡尼曼 · 第三部分</span>
+      <blockquote>我们总是高估自己对世界的了解，却低估了事件中存在的偶然性。
+      当我们回顾以往时，由于<strong>后见之明</strong>，对有些事会产生<strong>虚幻的确定感</strong>，
+      因此我们变得过于自信。<span class="who2">《思考，快与慢》</span></blockquote>
+      <blockquote>系统1存在成见，在很多特定的情况下，这一系统<strong>易犯系统性错误</strong>。<span class="who2">同上</span></blockquote>
+    </div>
+  </div>
+
+  <div class="tri my"><span class="lbl2">◆ 我的判断</span>
+    <strong>这是条件性对立，条件就写在米勒那段话里。</strong>
+    <br>· 当错觉<strong>与现实的偏离不大</strong>（<em>「他了解全部实情，但解释方式不同」</em>）→ <strong>有益</strong>；
+    <br>· 当错觉<strong>凭空虚构了伴侣没有的品质</strong> → <strong>注定幻想破灭</strong>。
+    <br><strong>所以两者不是对立的，卡尼曼说的是"偏离大"那一侧。</strong>
+    <em>米勒那句「答案取决于偏离的程度」其实已经把卡尼曼收进来了。</em>
+    <br><strong>但有一处真接缝值得指出</strong>：卡尼曼的框架里，
+    <em>偏差是成本</em>；而米勒这里<em>偏差有收益</em>。
+    <strong>「失真有时是功能性的」这一点，是卡尼曼那本书不涉及的领域特定结论</strong>——
+    <em>它提醒：判断偏差的代价不是普遍规律，而是领域相关的。</em>
+  </div>
+  <div class="tri fals"><span class="lbl2">◆ 可反驳条件</span>
+    要推翻「条件性对立」这个归类，需要证明<strong>积极错觉在任何偏离程度上都有益</strong>
+    （<em>那会与米勒自己的边界条件冲突</em>），
+    或者证明<strong>卡尼曼的偏差框架能解释积极错觉的收益</strong>
+    （<em>即：那也是一种成本被算错了，而不是真收益</em>）。
+  </div>
+  <div class="tri self"><span class="lbl2">◆ 我可能错在哪</span>
+    <strong>我把米勒的边界条件当成了"和解"，但它也可能是米勒在自我防卫。</strong>
+    <em>「取决于偏离程度」这个说法本身没有给出阈值——所以它可以被用来解释任何结果。</em>
+    <strong>按多伊奇的判据，这正是一个「怎么改都成立」的说法。</strong>
+    <em>如果这一条成立，那么米勒这一处的主张强度比我写的要弱。</em>
+  </div>
+  <div class="done">此前没有单独成文。</div>
+</div>
+
+<!-- ============ 冲突 7 ============ -->
+<h2>七 · 规律与个案：这两者能互相反驳吗</h2>
+
+<div class="cf">
+  <div class="cf-head">
+    <span class="cf-num">CF7</span><span class="cat c3">Ⅲ 范畴不同</span>
+    <span class="cf-title">米勒《亲密关系》 ⊥ 卡拉尼什《当呼吸化为空气》</span>
+  </div>
+  <div class="cf-point"><strong>看起来的争点</strong>：一个给群体规律，一个给个人经历。
+  <strong>它们之间能不能互相检验？</strong></div>
+
+  <div class="two">
+    <div class="side a">
+      <span class="who">米勒 · 群体层面</span>
+      <blockquote>要抵御精神或身体疾病，任何人所能得到的最好保护，
+      莫过于身边积极的<strong>社会支持网络</strong>。<span class="who2">第 1 章</span></blockquote>
+      <p><em>阅读它的方式是：「多数人会怎样」。</em></p>
+    </div>
+    <div class="side b">
+      <span class="who">卡拉尼什 · 个案层面</span>
+      <blockquote>现在我体力不支，重病缠身，我想象的未来和个人的<strong>身份认同轰然崩塌</strong>。
+      我面对着我那些病人曾经面对过的，有关"存在"的窘境。<span class="who2">《当呼吸化为空气》第 88 页</span></blockquote>
+      <blockquote>人一旦遭遇顽疾，最需要小心的，是<strong>价值观的不断变化</strong>。
+      你努力思考自己到底看重些什么，答案也会接踵而至。<span class="who2">同上</span></blockquote>
+      <p><em>两段合起来是他那本书的核心处境：<strong>不是"要不要活下去"，而是"我还是不是原来那个人"。</strong></em></p>
+    </div>
+  </div>
+
+  <div class="tri my"><span class="lbl2">◆ 我的判断</span>
+    <strong>范畴不同，不能互相反驳。</strong>
+    <br>· <strong>不能用保罗否定米勒</strong>：「他那样，所以你说的规律不对」——
+    <em>一个个案不能反驳一个统计规律。</em>
+    <br>· <strong>也不能用米勒消解保罗</strong>：「那只是压力的表现」——
+    <em>把体验还原成类别，等于取消了体验。</em>
+    <br><strong>正确的配合是单向的</strong>：用米勒判断「这是否普遍」，
+    用保罗理解「这在内部是什么感受」。
+    <em>而这两件事在处理真实的人时都需要：只有规律会变成冷酷，只有个案会变成无从下手。</em>
+    <br><strong>但有一条真接缝</strong>：保罗那句「价值观会变化」
+    <em>是一个可以被关系研究检验的断言</em>——<strong>疾病是否系统性地改变人的价值排序，这是有数据的。</strong>
+    <em>在这一处，米勒那一侧可以检验保罗。</em>
+    <br><strong>而「身份认同轰然崩塌」那句更接近一个真缺口</strong>：
+    <em>米勒那本书研究的是正常范围内的伴侣，而"我是谁"的崩塌不是他的变量。</em>
+  </div>
+  <div class="tri fals"><span class="lbl2">◆ 可反驳条件</span>
+    要证明它们其实可以互相反驳，需要找到<strong>保罗的叙述里一个明确的一般性主张</strong>，
+    且它与米勒的证据冲突。<em>「价值观会变化」就是这样一个候选——所以我去查了它是否可检验。</em>
+    <br>要证明我把它们的距离拉得太大，需要指出<strong>米勒书里的个案材料与保罗的处境直接对应</strong>。
+    <em>第 10 章「压力与紧张」确实处理了疾病与照护——所以两者的距离比我说的近。</em>
+  </div>
+  <div class="tri self"><span class="lbl2">◆ 我可能错在哪</span>
+    <strong>「个案不能反驳规律」这句话是对的，但它可能被我用来保护米勒。</strong>
+    <em>如果保罗的经历揭示的是"规律在极端条件下失效"，那就不是范畴问题，是边界问题。</em>
+    <strong>而"极端条件"恰恰是米勒那本书样本最少覆盖的地方</strong>——
+    <em>他的研究主体是正常范围内的伴侣。</em>
+    <br><strong>如果是这样，这一条应该从「范畴不同」升级为「条件性对立」，而且是一个真实的缺口。</strong>
+    <em>我这一轮没有核米勒第 10 章对极端压力的覆盖程度——这是这一条的暂定之处。</em>
+  </div>
+  <div class="done">此前没有单独成文。</div>
+</div>
+
+<!-- ============ 一览 ============ -->
+<h2>八 · 一览表</h2>
+
+<table>
+  <tr><th style="width:6%">编号</th><th style="width:26%">双方</th>
+    <th style="width:14%">类型</th><th>争的点 / 我的倾向</th></tr>
+  <tr><td><strong>CF1</strong></td><td>多伊奇 ⚔ 戴蒙德</td>
+    <td><span class="cat c2">Ⅱ</span></td>
+    <td>历史的驱动力。我倾向多伊奇（<em>条件齐备而未发生</em>），但<em>戴蒙德的「终极因」可能已被我读窄</em>。</td></tr>
+  <tr><td><strong>CF2</strong></td><td>多伊奇 ⚔ 实践论</td>
+    <td><span class="cat c1">Ⅰ</span></td>
+    <td>真理的标准。<strong>本图最硬的一处</strong>；我判断两者是同一件事的两端（<em>可反驳性是可检验性的前提</em>）。</td></tr>
+  <tr><td><strong>CF3</strong></td><td>阶级地位 ⚔ 通用解释者</td>
+    <td><span class="cat c2">Ⅱ</span></td>
+    <td>认识受什么限制。我判断互补（<em>社会学限制 vs 认识论能力</em>），但<em>「利益能否被论证改变」这一处我不够有把握</em>。</td></tr>
+  <tr><td><strong>CF4</strong></td><td>多伊奇 ⚔ 凯利</td>
+    <td><span class="cat c1">Ⅰ</span></td>
+    <td>技术方向由谁定。我倾向多伊奇（<em>趋同是人做出的</em>），但<em>若凯利的「方向」只是统计规律，则应降级为 Ⅲ</em>。</td></tr>
+  <tr><td><strong>CF5</strong></td><td>米勒 ⊥ 弗洛姆</td>
+    <td><span class="cat c3">Ⅲ</span></td>
+    <td>实然 vs 应然。有一处真接缝（<em>弗洛姆的规范主张隐含经验断言</em>）。<strong>暂定——我未核他那些社会学判断</strong>。</td></tr>
+  <tr><td><strong>CF6</strong></td><td>米勒 ⚔ 卡尼曼</td>
+    <td><span class="cat c2">Ⅱ</span></td>
+    <td>错觉的代价。边界条件写在米勒原文里（<em>取决于偏离程度</em>）；但<em>那个条件本身可能"怎么改都成立"</em>。</td></tr>
+  <tr><td><strong>CF7</strong></td><td>米勒 ⊥ 保罗</td>
+    <td><span class="cat c3">Ⅲ</span></td>
+    <td>规律 vs 个案。不能互相反驳；<strong>但若保罗揭示的是"规律在极端条件下失效"，则应升级为 Ⅱ</strong>。</td></tr>
+</table>
+
+<div class="box">
+  <div class="h">★ 这份地图本身暴露出来的三件事</div>
+  <p><strong>① 真对立只有 2 处（CF2、CF4），其余 5 处都不是硬对立。</strong>
+  这比我此前的印象少——<em>我此前在对话里把它们都说成"冲突"，那是不准确的。</em></p>
+  <p><strong>② 有 3 处我明确写了"暂定"，因为我没有去核关键的一侧</strong>
+  （<em>弗洛姆的社会学判断、米勒第 10 章对极端压力的覆盖、凯利"方向"的准确含义</em>）。
+  <strong>这三处是这份地图下一步该补的。</strong></p>
+  <p><strong>③ 最有价值的不是"谁对"，而是接缝。</strong>
+  凡是两本书之间<strong>有一处可以被对方检验的断言</strong>，那一处就是这座知识库里最值钱的地方——
+  <em>因为它同时约束了两个来源。</em>
+  这份地图里这样的接缝有 3 处：<em>弗洛姆的隐含经验断言、保罗的"价值观会变化"、凯利的趋同证据。</em></p>
+</div>
+
+<!-- ============ 给你自己的问题 ============ -->
+<h2>九 · 三个给你自己的问题</h2>
+<div class="s">按项目惯例：每条跨书关系最后都留三个问题，指向你自己的处境</div>
+
+<div class="box">
+  <p><strong>Q1 · 关于 CF2（真理的标准）</strong><br>
+  在你做大创（嵌入式项目）的经验里，有没有一个时刻，<strong>你的判断是靠"结构够硬"成立的，
+  而不是靠"跑通了"？</strong><br>
+  <em>反过来的情况更容易想到：跑通了但不知道为什么。那你有没有遇到过"说不清为什么、但它就是对的"——
+  而它后来被推翻了？</em></p>
+
+  <p><strong>Q2 · 关于 CF4（技术往哪走）</strong><br>
+  你是自动控制系的，做过 51 和 STM32。<strong>你选技术方向的时候，
+  有多少是"我想清楚了"，有多少是"轮到它了"？</strong><br>
+  <em>凯利的说法对你可能有一个具体的用法：如果方向不由人选，那你选什么就不那么重要——
+  这既是解脱也是威胁。你倾向把它当解脱还是威胁？</em></p>
+
+  <p><strong>Q3 · 关于 CF7（规律 vs 个案）</strong><br>
+  你在 `思/收获.txt` 里写：「<strong>想的话都是问题，只有去做才有答案</strong>」。<br>
+  <em>这句话接近实践论那一侧。而你在同一篇里写「面对一个从未接触过的东西我是否如我所想象的那般勇敢」——
+  那是一个关于自己的、个案式的问题。</em><br>
+  <strong>你更习惯用哪一种方式回答自己的问题：找到规律，还是找到一个能说服自己的例子？</strong></p>
+</div>
+
+<!-- ============ 存疑区 ============ -->
+<h2>附 · 存疑区：觉得有关系但找不到原文的</h2>
+<div class="s">按本页的立场①，这些不进正文</div>
+
+<div class="box">
+  <p><strong>① 多伊奇 vs 库恩</strong>——「范式是否可通约」。<br>
+  <em>《无穷的开始》全书没有提到库恩，本项目也没有库恩的书。</em>
+  <strong>所以这一条目前只有单侧材料，无法对照。</strong>
+  <em>要补的话，需要引入一本库恩（或一个二手来源）。</em></p>
+
+  <p><strong>② 道金斯 vs 凯利</strong>——同一批趋同证据，两个方向相反的用法。<br>
+  <em>道金斯用趋同证明「不需要设计者」，凯利用趋同论证「有方向」。</em>
+  <strong>两者的证据对象不同（生物性状 vs 技术），所以严格说不是同一批证据。</strong>
+  <em>它更像「同一类论证的两种用法」，而不是一处冲突——所以放在存疑区。</em></p>
+
+  <p><strong>③ 弗洛姆 vs 米勒</strong>的更深一层——「爱能不能被科学化」。<br>
+  <em>这是 CF5 的元问题，但两边都没有直接讨论对方的取向。</em>
+  <strong>缺原文。</strong></p>
+
+  <p><strong>④ 马尔（《视觉》）vs 深度学习</strong>——「表征要不要显式」。<br>
+  <em>这是我在《视觉》精读笔记里提出的（P8），但《动手学深度学习》那本书里没有回应这个问题的原文。</em>
+  <strong>缺对话的一方。</strong></p>
+</div>
+
+<footer>
+  底层 · 冲突与呼应地图 · 「底层」项目（跨域产出，第 1 份）<br>
+  7 处关系 · 4 种类型 · 3 处标注为「暂定」<br>
+  <em>引文均可在各书 <code>_全文.txt</code> 中核对；<br>
+  标「我的判断」「暂定」「我可能错在哪」处为待议读法；<br>
+  本页的立场：只收录找得到双方原文的关系，凭印象的一律进存疑区</em>
+</footer>
+
+</div>
+</body>
+</html>
