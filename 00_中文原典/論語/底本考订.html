@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>底本考订 · 底层</title>
+<meta name="description" content="18,613 字底本的来历、异文与存疑之处">
+<meta name="theme-color" content="#f2f8fc">
+<style>
+  :root{
+    --paper:#f2f8fc; --card:#ffffff; --card-2:#e9f4fb;
+    --edge:#cfe0ec; --edge-lit:#a4c6dd;
+    --ink:#12232e; --ink-2:#627480; --ink-3:#587286;
+    --accent:#2c7ea2; --accent-2:#377972; --gold:#84744a;
+    --quote-bg:#fbf8ef; --quote-edge:#d8cba4; --quote-ink:#5f5527;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--paper); color:var(--ink); line-height:1.9;
+    -webkit-font-smoothing:antialiased;
+    padding:32px 16px 60px;
+  }
+  ::selection{background:rgba(63,180,232,.26); color:#0d2430;}
+  .wrap{max-width:860px; margin:0 auto;}
+
+  header.doc{
+    background:var(--card); border:1px solid var(--edge);
+    border-top:4px solid var(--accent); border-radius:10px;
+    padding:34px 34px 28px; margin-bottom:24px;
+  }
+  header.doc h1{
+    font-size:26px; font-weight:800; line-height:1.4; letter-spacing:.01em;
+    margin-bottom:12px;
+    background:linear-gradient(135deg,#1d4a68,#2c7ea2 55%,#377972);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  header.doc .sub{font-size:14.6px; color:var(--ink-2); line-height:1.95;}
+  header.doc .src{
+    margin-top:16px; padding-top:14px; border-top:1px dashed var(--edge);
+    font-size:12.6px; color:var(--ink-3); line-height:1.95;
+  }
+  header.doc .src strong{color:var(--ink-2);}
+
+  main{
+    background:var(--card); border:1px solid var(--edge); border-radius:10px;
+    padding:36px 38px 40px;
+  }
+
+  h2{
+    font-size:19px; font-weight:700; color:var(--ink);
+    margin:38px 0 14px; padding-left:12px;
+    border-left:4px solid var(--gold); line-height:1.55;
+  }
+  h2:first-child{margin-top:0;}
+  h3{font-size:16px; font-weight:700; color:var(--ink); margin:26px 0 10px;}
+  h4{
+    font-size:15.2px; font-weight:700; color:#1d4a68;
+    margin:22px 0 9px; padding-left:10px;
+    border-left:3px solid rgba(63,180,232,.45); line-height:1.6;
+  }
+
+  p{font-size:14.6px; color:var(--ink-2); margin-bottom:13px; text-wrap:pretty;}
+  strong{color:var(--ink); font-weight:700;}
+  em{font-style:normal; color:var(--ink); background:rgba(63,180,232,.10);
+     border-radius:3px; padding:0 3px;}
+
+  code{
+    font-family:ui-monospace,Consolas,monospace; font-size:13px;
+    background:var(--card-2); border:1px solid var(--edge); border-radius:4px;
+    padding:1px 6px; color:#1d5c86; word-break:break-all;
+  }
+
+  a{color:var(--accent); text-decoration:none; border-bottom:1px solid #cfe4f0;}
+  a:hover{border-bottom-color:var(--accent);}
+
+  blockquote{
+    margin:14px 0; padding:13px 18px;
+    background:var(--quote-bg); border:1px solid #e8dfc4;
+    border-left:3px solid var(--quote-edge); border-radius:5px;
+    font-size:14.2px; color:var(--quote-ink); line-height:1.95;
+  }
+  blockquote p{margin-bottom:9px; color:inherit; font-size:inherit;}
+  blockquote p:last-child{margin-bottom:0;}
+  blockquote strong{color:#8a6a24;}
+  blockquote em{background:rgba(138,106,36,.10); color:#8a6a24;}
+  blockquote code{background:rgba(255,255,255,.7); color:#7a5f1c; border-color:#e0d2ac;}
+
+  ul,ol{margin:12px 0 14px 22px;}
+  li{font-size:14.5px; color:var(--ink-2); margin-bottom:8px; line-height:1.9;}
+  li strong{color:var(--ink);}
+
+  table{width:100%; border-collapse:collapse; margin:16px 0; font-size:13.6px;}
+  th,td{padding:9px 12px; border:1px solid var(--edge); text-align:left;
+        vertical-align:top; line-height:1.8;}
+  th{background:var(--card-2); color:#1d5c86; font-weight:700; font-size:12.8px;}
+  td{color:var(--ink-2);}
+  td strong{color:var(--ink);}
+  td code{font-size:12.4px;}
+
+  hr{border:none; border-top:1px dashed var(--edge); margin:32px 0;}
+
+  pre{
+    background:#eef4f9; border:1px solid var(--edge); border-radius:6px;
+    padding:14px 16px; margin:16px 0; overflow-x:auto;
+    line-height:1.7;
+  }
+  pre code{
+    background:none; border:none; padding:0; font-size:12.8px;
+    color:#1d4a68; white-space:pre; word-break:normal;
+  }
+
+  footer.doc{
+    margin-top:26px; padding-top:20px; border-top:1px solid var(--edge);
+    font-size:12.4px; color:var(--ink-3); line-height:2; text-align:center;
+  }
+  footer.doc a{color:var(--ink-2);}
+  @media(max-width:700px){
+    body{padding:16px 10px 40px;}
+    header.doc{padding:24px 20px 20px;} header.doc h1{font-size:21px;}
+    main{padding:24px 18px 28px;} h2{font-size:17px;}
+    table{font-size:12.2px;} th,td{padding:7px 8px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="doc">
+    <h1>底本考订</h1>
+    <p class="sub">18,613 字底本的来历、异文与存疑之处</p>
+    <p class="src">读书前先看这一页：哪些字是可靠的，哪些是后世改的。</p>
+  </header>
+  <main>
+<h1>底本考订 · 《論語》</h1>
+<p><strong>这份文件记录底本的技术事实。放在产出的最前面，因为不看它就会引错。</strong></p>
+<hr>
+<h2>一、底本是什么</h2>
+<table>
+<tr><th>项</th><th>事实</th></tr>
+<tr><td>文件</td><td><a href="論語_Confucian_Analects.txt"><code>論語_Confucian_Analects.txt</code></a>（Legge 双语版，Gutenberg #4094）</td></tr>
+<tr><td>纯中文抽出件</td><td><a href="論語_純中文底本.txt"><code>論語_純中文底本.txt</code></a></td></tr>
+<tr><td>来源</td><td>Project Gutenberg，<strong>公共领域</strong></td></tr>
+<tr><td>译注者</td><td><strong>James Legge</strong>（理雅各，1815–1897）—— 19 世纪最重要的汉学译家之一</td></tr>
+<tr><td>篇数</td><td><strong>20 篇（完整）</strong></td></tr>
+<tr><td>章数</td><td><strong>493 章标记</strong></td></tr>
+<tr><td>汉字数</td><td><strong>18,613</strong></td></tr>
+<tr><td>字形</td><td><strong>繁体</strong></td></tr>
+</table>
+<p><strong>为什么用 Legge 版</strong>：本网络里 ctext.org、国学网、古诗文网、中文维基文库、archive.org <strong>全部被 Cloudflare 或超时阻断</strong>（已逐个实测）。Gutenberg 的 Legge 版是唯一可达的完整中文底本。</p>
+<hr>
+<h2>二、⚠️ 三条使用限制（必须遵守）</h2>
+<h3>限制 1 · 不要按章号引用</h3>
+<p><strong>Legge 版的章号与通行本不一致。</strong> 我逐条核对过（13 个样本）：</p>
+<table>
+<tr><th>句子</th><th>通行本章号</th><th>Legge 底本所在章</th><th>差</th></tr>
+<tr><td>聽其言而觀其行</td><td>5.10</td><td><strong>第九章</strong></td><td>−1</td></tr>
+<tr><td>老者安之、朋友信之、少者懷之</td><td>5.26</td><td><strong>廿四章</strong></td><td>−2</td></tr>
+<tr><td>己欲立而立人、己欲達而達人</td><td>6.30</td><td><strong>廿八章</strong></td><td>−2</td></tr>
+<tr><td>仁遠乎哉、我欲仁、斯仁至矣</td><td>7.30</td><td><strong>廿八章</strong></td><td>−2</td></tr>
+<tr><td>君子求諸己、小人求諸人</td><td>15.21</td><td><strong>二十章</strong></td><td>−1</td></tr>
+<tr><td>子絕四、毋意、毋必、毋固、毋我</td><td>9.4</td><td>第四章</td><td><strong>一致</strong></td></tr>
+<tr><td>己所不欲、勿施於人</td><td>12.2</td><td>第二章</td><td><strong>一致</strong></td></tr>
+<tr><td>性相近也、習相遠也</td><td>17.2</td><td>第二章</td><td><strong>一致</strong></td></tr>
+<tr><td>不知命、無以為君子也</td><td>20.3</td><td>第三章</td><td><strong>一致</strong></td></tr>
+</table>
+<p><strong>规律</strong>：靠后的篇偏移越大，靠前的篇一致。<strong>所以无法用一个固定偏移量换算。</strong></p>
+<p><strong>▲ 本底本还自带编号缺陷</strong>（不是我的抽取错误，是原书如此）：</p>
+<table>
+<tr><th>篇</th><th>缺陷</th></tr>
+<tr><td>八佾第三</td><td>缺「十三章」（一章…十二章、<strong>十四章</strong>…）</td></tr>
+<tr><td>里仁第四</td><td>出现<strong>两个「八章」</strong>（一章…八章、<strong>八章</strong>、十章…）</td></tr>
+<tr><td>公冶長第五</td><td>缺「廿五章」（…廿四章、<strong>廿六章</strong>…）</td></tr>
+<tr><td>述而第七</td><td>缺「廿九章」（…廿八章、<strong>三十章</strong>、卅一章…）</td></tr>
+<tr><td>為政第二</td><td>第四章出现<strong>两个「五節」</strong></td></tr>
+<tr><td>學而第一</td><td>第五章、第十章也各有重复节号</td></tr>
+</table>
+<p><strong>所以引用方式是</strong>：<strong>引篇名 + 引原文首句</strong>，绝不用章号。 &gt; ✅ 「《論語·顏淵》"仲弓問仁。子曰、出門如見大賓…己所不欲、勿施於人…"」 &gt; ❌ 「《論語》12.2」</p>
+<hr>
+<h3>限制 2 · 断句与通行本不同</h3>
+<p><strong>Legge 在句中插入顿号</strong>，所以很多通行本的连读在他这里断开：</p>
+<table>
+<tr><th>通行本</th><th>Legge 底本实际</th></tr>
+<tr><td>朝聞道、夕死可矣</td><td>朝聞道、夕死<strong>、</strong>可矣</td></tr>
+<tr><td>子以四教、文行忠信</td><td>子以四教、文<strong>、</strong>行<strong>、</strong>忠<strong>、</strong>信<strong></td></tr>
+<tr><td>唯仁者能好人、能惡人</td><td>唯仁者<strong>、</strong>能好人<strong>、</strong>能惡人</strong></td></tr>
+<tr><td>夫子溫良恭儉讓</td><td>夫子溫<strong>、</strong>良<strong>、</strong>恭、儉、讓</td></tr>
+</table>
+<p><strong>所以引文必须照底本原样写。</strong> 我在产出里已经这样做，并用「底本作…」标注通行本写法。</p>
+<hr>
+<h3>限制 3 · 有异文</h3>
+<table>
+<tr><th>通行本</th><th>底本</th><th>说明</th></tr>
+<tr><td>入<strong>太</strong>廟</td><td>入<strong>大</strong>廟</td><td>大/太 通</td></tr>
+<tr><td>公伯寮愬子路於<strong>季</strong>孫</td><td>…於<strong>李</strong>孫</td><td>底本作「李」</td></tr>
+<tr><td>不遠<strong>遊</strong></td><td>不遠<strong>游</strong></td><td>游/遊 通</td></tr>
+<tr><td><strong>季</strong>氏第十六</td><td><strong>李</strong>氏第十六</td><td>★ <strong>篇名本身作「李氏」，不是「季氏」</strong></td></tr>
+</table>
+<p><strong>★ 最后一条最需要注意</strong>：底本把「季氏」写作「李氏」。 所以<strong>按「季氏」搜索该篇会找不到</strong> —— 我就是这样漏掉「益者三友」那章的。</p>
+<hr>
+<h2>三、抽取过程与三次纠错（留档，因为过程本身有教学价值）</h2>
+<p><strong>从 Legge 双语版抽出纯中文底本，我错了三次。</strong> 每次都表现为"章数不对"：</p>
+<table>
+<tr><th>尝试</th><th>结果</th><th>我当时的误判</th></tr>
+<tr><td>1</td><td>每篇 10 章</td><td>以为是过滤阈值太严</td></tr>
+<tr><td>2</td><td>仍每篇 10 章</td><td>怀疑内容缺失</td></tr>
+<tr><td>3</td><td>468 章</td><td>以为是底本分章方式不同</td></tr>
+<tr><td><strong>4</strong></td><td><strong>493 章 ✅</strong></td><td><strong>真因：第 11 章起章标记无「第」字，且用了「廿」「卅」单字</strong></td></tr>
+</table>
+<p><strong>真正的根因链</strong>：</p>
+<ol><li>原文<strong>前 10 章</strong>写作 <code>【第X章】</code>，<strong>第 11 章起</strong>写作 <code>【X章】</code>（无「第」）</li><li>数字用了<strong>廿（二十）、卅（三十）</strong>单字形态，如 <code>【廿九章】</code>、<code>【卅一章】</code></li><li>章标记与英译<strong>挤在同一物理行</strong>，被我的 <code>cjk_ratio ≥ 0.30</code> 过滤整行丢弃</li></ol>
+<p><strong>三条修正缺一不可</strong>。修正后：468 → <strong>493 章</strong>，學而篇 16 章与通行本完全一致。</p>
+<p><strong>★ 这个教训值得单独记</strong>：</p>
+<p>&gt; <strong>"内容看起来不对"时，先怀疑自己的解析规则，不要先怀疑数据源。</strong> &gt; 我前三次都在怀疑 Legge（"他合并了章"、"他内容缺失"）， &gt; 而问题一直是<strong>我对他的编号格式做了错误假设</strong>。</p>
+<hr>
+<h2>四、内容完整性核验（已做）</h2>
+<p>我查了 <strong>99 条</strong>标志性句子 + <strong>237 条</strong>准备引用的句子：</p>
+<table>
+<tr><th>检验</th><th>结果</th></tr>
+<tr><td>标志性句子</td><td>99 条中 83 条原样命中，16 条为标点/异文变体，<strong>0 条真缺失</strong></td></tr>
+<tr><td>准备引用的句子</td><td>237 条中 205 条原样命中，32 条为底本断句差异，<strong>0 条真缺失</strong></td></tr>
+</table>
+<p><strong>结论：内容完整。</strong> 所有"未找到"都追到了具体原因（顿号插入 / 异文 / 篇名写法）。</p>
+<h3>但必须说明一件事</h3>
+<p><strong>这不是校勘本。</strong> 我<strong>没有</strong>拿它和通行本逐字对校，所以：</p>
+<ul><li>它可能有<strong>别的异文或讹字</strong>是我没发现的</li><li>我只能保证：<strong>我引用的每一句都已经核对过底本原样</strong></li></ul>
+<p><strong>这个区别很重要</strong>：项目规范是"引用要能逐步核对"。 我做到的是"<strong>我引的每一句都能在底本里找到</strong>"，而不是"<strong>底本本身无误</strong>"。</p>
+<hr>
+<h2>五、还缺什么（《論語》这一块）</h2>
+<table>
+<tr><th>缺口</th><th>影响</th><th>能否解决</th></tr>
+<tr><td><strong>无今人注解</strong>（朱熹、杨伯峻等）</td><td>古文的歧义只能靠上下文判断，<strong>没有权威解释可依</strong></td><td>版权书，需购买</td></tr>
+<tr><td><strong>无白话译文</strong></td><td>读起来更费力</td><td>版权书</td></tr>
+<tr><td><strong>非校勘本</strong></td><td>可能有未发现的异文</td><td>需另找校勘本对校</td></tr>
+<tr><td><strong>《孟子》《大學》《中庸》缺失</strong></td><td>"四书"只有《論語》</td><td>Gutenberg 中文书目里没有</td></tr>
+<tr><td><strong>无《論語》的注疏传统</strong>（何晏、皇侃、邢昺）</td><td>看不到解释史</td><td>需另找源</td></tr>
+</table>
+<p><strong>★ 第一条最要紧</strong>：<strong>古文的多义性是真实的</strong>，而我没有注解依据。 所以产出里凡是解释有歧义的地方，我都<strong>标明"这是有争议的"</strong>，而不是给一个确定答案。</p>
+<p><strong>这一条限制和 <code>01_哲学与思维地基</code> 域的精神一致</strong>： 那个域的核心是"判断一个说法可不可信"。在这里，<strong>"我这一句读得对不对"本身就是需要标注置信度的东西。</strong></p>
+<hr>
+<p><em>本文档记录的全部数字与异文，均来自对 <code>論語_純中文底本.txt</code> 的实际检索，非引用。</em> <em>抽取脚本见 <code>temp/extract_lunyu6.py</code>；核验脚本见 <code>temp/quote_check.py</code>、<code>temp/chapnum_check.py</code>。</em></p>
+  </main>
+  <footer class="doc">
+    本页由 Markdown 渲染而成 · 原文为 <code>底本考订.md</code>（留在项目内作编辑源，不单独发布）
+  </footer>
+</div>
+</body>
+</html>

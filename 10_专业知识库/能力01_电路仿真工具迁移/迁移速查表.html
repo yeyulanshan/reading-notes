@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>迁移速查表：Multisim / PSpice → LTspice · 底层</title>
+<meta name="description" content="符号、器件、指令的对照表">
+<meta name="theme-color" content="#f2f8fc">
+<style>
+  :root{
+    --paper:#f2f8fc; --card:#ffffff; --card-2:#e9f4fb;
+    --edge:#cfe0ec; --edge-lit:#a4c6dd;
+    --ink:#12232e; --ink-2:#627480; --ink-3:#587286;
+    --accent:#2c7ea2; --accent-2:#377972; --gold:#84744a;
+    --quote-bg:#fbf8ef; --quote-edge:#d8cba4; --quote-ink:#5f5527;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--paper); color:var(--ink); line-height:1.9;
+    -webkit-font-smoothing:antialiased;
+    padding:32px 16px 60px;
+  }
+  ::selection{background:rgba(63,180,232,.26); color:#0d2430;}
+  .wrap{max-width:860px; margin:0 auto;}
+
+  header.doc{
+    background:var(--card); border:1px solid var(--edge);
+    border-top:4px solid var(--accent); border-radius:10px;
+    padding:34px 34px 28px; margin-bottom:24px;
+  }
+  header.doc h1{
+    font-size:26px; font-weight:800; line-height:1.4; letter-spacing:.01em;
+    margin-bottom:12px;
+    background:linear-gradient(135deg,#1d4a68,#2c7ea2 55%,#377972);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  header.doc .sub{font-size:14.6px; color:var(--ink-2); line-height:1.95;}
+  header.doc .src{
+    margin-top:16px; padding-top:14px; border-top:1px dashed var(--edge);
+    font-size:12.6px; color:var(--ink-3); line-height:1.95;
+  }
+  header.doc .src strong{color:var(--ink-2);}
+
+  main{
+    background:var(--card); border:1px solid var(--edge); border-radius:10px;
+    padding:36px 38px 40px;
+  }
+
+  h2{
+    font-size:19px; font-weight:700; color:var(--ink);
+    margin:38px 0 14px; padding-left:12px;
+    border-left:4px solid var(--gold); line-height:1.55;
+  }
+  h2:first-child{margin-top:0;}
+  h3{font-size:16px; font-weight:700; color:var(--ink); margin:26px 0 10px;}
+  h4{
+    font-size:15.2px; font-weight:700; color:#1d4a68;
+    margin:22px 0 9px; padding-left:10px;
+    border-left:3px solid rgba(63,180,232,.45); line-height:1.6;
+  }
+
+  p{font-size:14.6px; color:var(--ink-2); margin-bottom:13px; text-wrap:pretty;}
+  strong{color:var(--ink); font-weight:700;}
+  em{font-style:normal; color:var(--ink); background:rgba(63,180,232,.10);
+     border-radius:3px; padding:0 3px;}
+
+  code{
+    font-family:ui-monospace,Consolas,monospace; font-size:13px;
+    background:var(--card-2); border:1px solid var(--edge); border-radius:4px;
+    padding:1px 6px; color:#1d5c86; word-break:break-all;
+  }
+
+  a{color:var(--accent); text-decoration:none; border-bottom:1px solid #cfe4f0;}
+  a:hover{border-bottom-color:var(--accent);}
+
+  blockquote{
+    margin:14px 0; padding:13px 18px;
+    background:var(--quote-bg); border:1px solid #e8dfc4;
+    border-left:3px solid var(--quote-edge); border-radius:5px;
+    font-size:14.2px; color:var(--quote-ink); line-height:1.95;
+  }
+  blockquote p{margin-bottom:9px; color:inherit; font-size:inherit;}
+  blockquote p:last-child{margin-bottom:0;}
+  blockquote strong{color:#8a6a24;}
+  blockquote em{background:rgba(138,106,36,.10); color:#8a6a24;}
+  blockquote code{background:rgba(255,255,255,.7); color:#7a5f1c; border-color:#e0d2ac;}
+
+  ul,ol{margin:12px 0 14px 22px;}
+  li{font-size:14.5px; color:var(--ink-2); margin-bottom:8px; line-height:1.9;}
+  li strong{color:var(--ink);}
+
+  table{width:100%; border-collapse:collapse; margin:16px 0; font-size:13.6px;}
+  th,td{padding:9px 12px; border:1px solid var(--edge); text-align:left;
+        vertical-align:top; line-height:1.8;}
+  th{background:var(--card-2); color:#1d5c86; font-weight:700; font-size:12.8px;}
+  td{color:var(--ink-2);}
+  td strong{color:var(--ink);}
+  td code{font-size:12.4px;}
+
+  hr{border:none; border-top:1px dashed var(--edge); margin:32px 0;}
+
+  pre{
+    background:#eef4f9; border:1px solid var(--edge); border-radius:6px;
+    padding:14px 16px; margin:16px 0; overflow-x:auto;
+    line-height:1.7;
+  }
+  pre code{
+    background:none; border:none; padding:0; font-size:12.8px;
+    color:#1d4a68; white-space:pre; word-break:normal;
+  }
+
+  footer.doc{
+    margin-top:26px; padding-top:20px; border-top:1px solid var(--edge);
+    font-size:12.4px; color:var(--ink-3); line-height:2; text-align:center;
+  }
+  footer.doc a{color:var(--ink-2);}
+  @media(max-width:700px){
+    body{padding:16px 10px 40px;}
+    header.doc{padding:24px 20px 20px;} header.doc h1{font-size:21px;}
+    main{padding:24px 18px 28px;} h2{font-size:17px;}
+    table{font-size:12.2px;} th,td{padding:7px 8px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="doc">
+    <h1>迁移速查表：Multisim / PSpice → LTspice</h1>
+    <p class="sub">符号、器件、指令的对照表</p>
+    <p class="src">从 Multisim 迁到 LTspice 时手边要放的那一页。</p>
+  </header>
+  <main>
+<h1>迁移速查表：Multisim / PSpice → LTspice</h1>
+<p><strong>用法</strong>：左边找你熟悉的操作，右边是 LTspice 的做法。 <strong>标记说明</strong>：★ = 迁移时最容易踩的坑。</p>
+<hr>
+<h2>一、最根本的一条：从「画图」转向「读网表」</h2>
+<table>
+<tr><th></th><th>Multisim</th><th>LTspice</th></tr>
+<tr><td>你的主要工作</td><td>在画布上放元件、连线</td><td><strong>能读能改网表，也能画图</strong></td></tr>
+<tr><td>网表在哪</td><td>藏在背后（<code>Transfer &gt; Netlist</code>）</td><td><strong>就是那个 <code>.cir</code> 文件本身</strong></td></tr>
+<tr><td>排查问题靠</td><td>看电路图</td><td><strong>看网表</strong>（因为错误常在节点名、元件值）</td></tr>
+</table>
+<p><strong>★ 坑 1</strong>：Multisim 里你把元件拖上去、连好线就算完了。 LTspice 里<strong>你可以完全不画图</strong> —— 直接写网表，然后 <code>Run</code>。 <strong>推荐做法</strong>：先照着 <code>网表/</code> 里那四个 <code>.cir</code> <strong>手抄一遍</strong>，比对着图形界面点半天学得快。</p>
+<p><strong>★ 坑 2</strong>：LTspice 的元件<strong>没有"引脚号"概念，只有"节点顺序"</strong>。 <code>R1 in out 1k</code> 的意思是"R1 接在 in 与 out 之间，阻值 1k"。 第一个节点与第二个节点的<strong>顺序有意义</strong>（它决定电流正方向），但不影响阻值。</p>
+<hr>
+<h2>二、元件放置与取值</h2>
+<table>
+<tr><th>要做的事</th><th>Multisim</th><th>LTspice</th></tr>
+<tr><td>放电阻</td><td>元件库 → Resistor</td><td>快捷键 <strong><code>R</code></strong>，或网表写 <code>R1 n1 n2 1k</code></td></tr>
+<tr><td>放电容</td><td>元件库 → Capacitor</td><td>快捷键 <strong><code>C</code></strong>，或 <code>C1 n1 n2 1uF</code></td></tr>
+<tr><td>放电感</td><td>元件库 → Inductor</td><td>快捷键 <strong><code>L</code></strong>，或 <code>L1 n1 n2 1mH</code></td></tr>
+<tr><td>放电压源</td><td>Sources → DC_POWER</td><td>快捷键 <strong><code>V</code></strong>（默认是 DC）</td></tr>
+<tr><td>放地</td><td>元件库 → Ground</td><td>快捷键 <strong><code>G</code></strong>（或网表里用节点 <code>0</code>）</td></tr>
+<tr><td>改阻值</td><td>双击元件 → 改 Value</td><td><strong>右键元件 → 直接打字</strong>，或改网表</td></tr>
+<tr><td>给节点命名</td><td>双击导线 → Net name</td><td><code>Edit &gt; Label Net</code>（快捷键 <strong><code>F4</code></strong>），或网表里直接写名字</td></tr>
+</table>
+<p><strong>★ 坑 3：SPICE 的数值后缀与 Multisim 不同，而且有一个致命陷阱</strong></p>
+<table>
+<tr><th>后缀</th><th>含义</th><th>注意</th></tr>
+<tr><td><code>k</code></td><td>千（1e3）</td><td></td></tr>
+<tr><td><code>meg</code></td><td><strong>兆（1e6）</strong></td><td><strong>★ <code>m</code> 是毫，不是兆！</strong></td></tr>
+<tr><td><code>m</code></td><td>毫（1e-3）</td><td></td></tr>
+<tr><td><code>u</code></td><td>微（1e-6）</td><td>写 <code>µ</code> 也行，但 <code>u</code> 更保险</td></tr>
+<tr><td><code>n</code></td><td>纳（1e-9）</td><td></td></tr>
+<tr><td><code>p</code></td><td>皮（1e-12）</td><td></td></tr>
+<tr><td><code>f</code></td><td>飞（1e-15）</td><td></td></tr>
+</table>
+<p><strong>★ 这是从 Multisim 迁移时最危险的一个坑</strong>： 很多人以为 <code>1m</code> 是"1 兆"，实际是"1 毫"。想写 1MΩ 必须写 <strong><code>1meg</code></strong>。 写错了不报错，<strong>只是结果差 1000 倍</strong> —— 而你可能很久才发现。</p>
+<p>&gt; 保险做法：<strong>一律用科学计数法</strong>，比如 <code>1e6</code>、<code>1e-3</code>。 &gt; 完全避免后缀歧义。</p>
+<p><strong>★ 坑 4</strong>：<code>1k</code> 与 <code>1K</code> 一样（SPICE 不分大小写）。 但 <code>1M</code> 和 <code>1m</code> <strong>完全一样</strong> —— 都是毫！所以大写也救不了你，只能用 <code>meg</code>。</p>
+<hr>
+<h2>三、分析类型对照</h2>
+<table>
+<tr><th>Multisim 里的分析</th><th>对应的 SPICE 指令</th><th>写法示例</th></tr>
+<tr><td>DC Operating Point</td><td><strong><code>.op</code></strong></td><td><code>.op</code></td></tr>
+<tr><td>DC Sweep</td><td><strong><code>.dc</code></strong></td><td><code>.dc V1 0 20 0.5</code>（V1 从 0 扫到 20，步长 0.5）</td></tr>
+<tr><td>AC Analysis（频率响应）</td><td><strong><code>.ac</code></strong></td><td><code>.ac dec 100 1 100k</code></td></tr>
+<tr><td>Transient Analysis</td><td><strong><code>.tran</code></strong></td><td><code>.tran 5m</code></td></tr>
+<tr><td>Parameter Sweep</td><td><strong><code>.step</code></strong></td><td><code>.step param R 1k 10k 1k</code></td></tr>
+<tr><td>自动测量（无直接对应）</td><td><strong><code>.meas</code></strong></td><td><code>.meas TRAN vmax MAX V(out)</code></td></tr>
+</table>
+<p><strong><code>.ac</code> 的三种扫描方式</strong>：</p>
+<table>
+<tr><th>写法</th><th>含义</th><th>什么时候用</th></tr>
+<tr><td><code>.ac dec 100 1 100k</code></td><td>每十倍频 100 点</td><td><strong>波特图的标准选择</strong></td></tr>
+<tr><td><code>.ac oct 10 1 100k</code></td><td>每倍频 10 点</td><td>需要更密的低频段时</td></tr>
+<tr><td><code>.ac lin 1000 1 1k</code></td><td>线性 1000 点</td><td>通带很窄、想看清细节时</td></tr>
+</table>
+<p><strong>★ 坑 5：<code>.ac</code> 与 <code>.tran</code> 是两件不同的事</strong> Multisim 的"AC Analysis"给的不是波形，而是<strong>频率响应</strong>。 LTspice 里也是 —— <code>.ac</code> 必须先在工作点线性化。 <strong>所以要"看波形"必须用 <code>.tran</code>，"看频响"必须用 <code>.ac</code>。</strong> 不能混。</p>
+<p><strong>★ 坑 6：SPICE 里多个分析可以同时写在一份网表里</strong> 比如例 2 里同时有 <code>.op</code>、<code>.ac</code>、<code>.tran</code>。 LTspice 会<strong>依次全部跑完</strong>，然后在波形窗口里给你多个页签切换。 这和 Multisim"一次只能选一个分析"的习惯不同 —— 好处是一次改动能看全部结果。</p>
+<hr>
+<h2>四、仿真设置（这是迁移中最容易出错的一块）</h2>
+<table>
+<tr><th>项目</th><th>Multisim</th><th>LTspice</th></tr>
+<tr><td>瞬态时长</td><td>在分析对话框里填</td><td><code>.tran &lt;时长&gt;</code>，如 <code>.tran 5m</code></td></tr>
+<tr><td>最大步长</td><td>"Maximum time step"</td><td><code>.tran 0 5m 0 1u</code> ← <strong>最后一个参数</strong></td></tr>
+<tr><td>起始时间</td><td>"Start time"</td><td><code>.tran 0 5m 1m</code> ← 第三个参数</td></tr>
+<tr><td>相对误差容限</td><td>一般不动</td><td><code>options reltol=1e-4</code>（默认 1e-3）</td></tr>
+<tr><td>初始条件</td><td>可设节点初值</td><td><code>.ic V(out)=0</code> 或元件上加 <code>ic=</code></td></tr>
+</table>
+<p><strong>★ 坑 7：<code>.tran</code> 的参数顺序极易记错</strong></p>
+<pre><code>.tran  Tstep  Tstop  Tstart  Tmax
+        ↑      ↑       ↑      ↑
+      打印步长  总时长  起始时间 最大步长</code></pre>
+<ul><li><strong>只写一个数</strong>：<code>.tran 5m</code> → 已够用</li><li><strong>要控制精度</strong>：<code>.tran 0 5m 0 1u</code> → 最大步长 1µs</li><li><strong>最大步长太大</strong>会产生<strong>假的锯齿/振荡</strong> —— 而那不是电路现象，是数值误差</li></ul>
+<p><strong>判断办法</strong>：把最大步长改小 10 倍重跑。<strong>如果波形变了，说明之前是数值问题。</strong></p>
+<p><strong>★ 坑 8：边沿时间不能写 0</strong> <code>PULSE(0 1 0 0 0 5m 10m)</code> 会让 SPICE 无法确定时间步长，可能报错或算出怪波形。 <strong>至少给 <code>1n</code> 或 <code>1u</code>。</strong> Multisim 的方波源有默认边沿，SPICE 的 PULSE 没有。</p>
+<p><strong>★ 坑 9：<code>PULSE</code> 的七参数顺序</strong></p>
+<pre><code>PULSE( V1  V2  Tdelay  Trise  Tfall  Ton  Tperiod )</code></pre>
+<ul><li><strong><code>Ton</code> 是高电平持续时间，不是占空比</strong></li><li>要 50% 占空比 → <code>Ton = Tperiod / 2</code></li><li><code>SINE</code> 是 <code>SINE(Offset Amplitude Freq Tdelay Theta Phase)</code></li></ul>
+<hr>
+<h2>五、看结果：这是 LTspice 比 Multisim 强的地方</h2>
+<table>
+<tr><th>要做的事</th><th>Multisim</th><th>LTspice</th></tr>
+<tr><td>看数字结果</td><td>分析结果窗口</td><td><strong><code>View &gt; SPICE Error Log</code></strong>（<code>.op</code> 和 <code>.meas</code> 都在这）</td></tr>
+<tr><td>看波形</td><td>图形窗口</td><td>点击图上节点，或 <code>Plot Settings</code></td></tr>
+<tr><td>看波特图</td><td>自动给</td><td><strong>要手动改轴</strong>（见坑 10）</td></tr>
+<tr><td>量两点间</td><td>放游标</td><td>右键波形 → <code>Cursor</code></td></tr>
+<tr><td><strong>自动测量</strong></td><td>无直接对应</td><td><strong><code>.meas</code></strong>（见下）</td></tr>
+<tr><td>导出数据</td><td><code>Export</code></td><td>波形窗口 <code>File &gt; Export data as text</code></td></tr>
+</table>
+<p><strong>★ 坑 10：LTspice 默认不给你 dB，要自己说一次</strong></p>
+<p>Multisim 的 AC Analysis 直接画波特图（dB 与相位）。 <strong>LTspice 默认画的是 <code>V(out)</code> 的绝对值</strong>（单位 V），不是 dB。</p>
+<p><strong>改法（两种）</strong>：</p>
+<ol><li><strong>直接换轴</strong>：波形窗口里 <strong>右键纵轴 → <code>View &gt; Decibel</code></strong>（或右键波形曲线）</li><li><strong>改表达式（推荐）</strong>：画 <code>V(out)/V(in)</code> 得到传递函数，再换成 dB</li></ol>
+<pre><code>在波形窗口顶部有个表达式框，把它改成：
+    V(out)/V(in)
+然后用右键把纵轴设成 Decibel</code></pre>
+<p><strong>★ 坑 11：想同时看幅度和相位，需要两个绘图窗格</strong> <code>Plot Settings &gt; Add Plot Pane</code>，然后在新窗格里画 <code>phase(V(out)/V(in))</code>。 <strong>这个操作在 Multisim 里是自动的，在 LTspice 里要做一次，但做完就顺手了。</strong></p>
+<hr>
+<h2>六、<code>.meas</code>：最值得迁移过来的一个习惯</h2>
+<p><strong>Multisim 里你是"用眼睛读游标"。LTspice 的 <code>.meas</code> 让你把读数写成指令，结果打进日志。</strong></p>
+<table>
+<tr><th>要测什么</th><th>写法</th></tr>
+<tr><td>稳态值</td><td><code>.meas TRAN vfinal FIND V(out) AT 5m</code></td></tr>
+<tr><td>最大值</td><td><code>.meas TRAN vmax MAX V(out)</code></td></tr>
+<tr><td><strong>上升时间</strong></td><td><code>.meas TRAN tr TRIG V(out) VAL=0.1 RISE=1 TARG V(out) VAL=0.9 RISE=1</code></td></tr>
+<tr><td><strong>某时刻的值</strong></td><td><code>.meas TRAN t63 WHEN V(out)=0.264 RISE=2</code></td></tr>
+<tr><td>平均值</td><td><code>.meas TRAN vavg AVG V(out) FROM 1m TO 5m</code></td></tr>
+<tr><td>频响峰值</td><td><code>.meas AC vpeak MAX mag(V(out))</code></td></tr>
+<tr><td>带宽（−3dB 频率）</td><td><code>.meas AC fc WHEN mag(V(out))=0.7071</code></td></tr>
+</table>
+<p><strong>为什么这值得迁移</strong>：</p>
+<p>&gt; 改一个元件值，重跑，<strong>数值直接对比</strong> —— 而不是"眼睛看一下，感觉差不多"。 &gt; <strong>这和你项目里 <code>动手实验/</code> 的传统是同一件事：把观察变成可复现的测量。</strong></p>
+<hr>
+<h2>七、绘图习惯的差别</h2>
+<table>
+<tr><th></th><th>Multisim</th><th>LTspice</th></tr>
+<tr><td>连线</td><td>拖动</td><td>快捷键 <strong><code>F3</code></strong>（画线）· <strong><code>F2</code></strong>（放元件）</td></tr>
+<tr><td>删除</td><td>Delete</td><td><strong><code>F5</code></strong>（剪刀）· 或 <code>Ctrl+X</code></td></tr>
+<tr><td>复制</td><td>Ctrl+C/V</td><td><strong><code>F6</code></strong>（复制）· <strong><code>F7</code></strong>（移动）</td></tr>
+<tr><td>旋转元件</td><td>右键 → Rotate</td><td><strong><code>Ctrl+R</code></strong></td></tr>
+<tr><td>撤销</td><td>Ctrl+Z</td><td><strong><code>F9</code></strong></td></tr>
+<tr><td>保存</td><td>Ctrl+S</td><td>Ctrl+S（<code>.asc</code> 是原理图，<code>.cir</code> 是网表）</td></tr>
+</table>
+<p><strong>★ 坑 12：<code>.asc</code> 与 <code>.cir</code> 是两种文件，可以互转</strong></p>
+<ul><li><code>.cir</code> = 网表（纯文本，你手写的就是这个）</li><li><code>.asc</code> = 原理图（LTspice 自己画的，能双击改参数）</li></ul>
+<p><strong>打开 <code>.cir</code> 后，LTspice 会自动画出原理图</strong>（<code>View &gt; SPICE Netlist</code> 反过来看网表）。 所以<strong>可以先用文本建电路，再看图形</strong> —— 这个顺序对迁移特别有用。</p>
+<hr>
+<h2>八、一个"迁移检查清单"</h2>
+<p><strong>从 Multisim 转到 LTspice，按这个顺序做一遍就不会乱：</strong></p>
+<ul><li>[ ] 数值带后缀的<strong>全部改用科学计数法</strong>（避免 <code>m</code>/<code>meg</code> 陷阱）</li><li>[ ] 每个节点<strong>起有意义的名字</strong>（<code>out</code> 而不是 <code>n001</code>）</li><li>[ ] 先跑 <strong><code>.op</code></strong> 确认工作点合理，再跑别的分析</li><li>[ ] <code>.tran</code> 起步用<strong>小一点的最大步长</strong>，然后放大验证波形没变</li><li>[ ] <code>.ac</code> 之后<strong>手动把纵轴换成 dB</strong></li><li>[ ] 关键读数<strong>写成 <code>.meas</code></strong>，而不是用眼睛读游标</li><li>[ ] 跑完<strong>和"答案卡"对一遍</strong>（<code>能力01_..._验证.py</code> 的输出）</li></ul>
+<hr>
+<h2>九、性能与规模（LTspice 的真正优势）</h2>
+<table>
+<tr><th>项目</th><th>Multisim</th><th>LTspice</th></tr>
+<tr><td>开关电源仿真</td><td>慢、常不收敛</td><td><strong>快很多</strong>（它是为这个设计的）</td></tr>
+<tr><td>节点数上限</td><td>授权限制</td><td><strong>无限制</strong></td></tr>
+<tr><td>收敛算法</td><td>一般</td><td><strong>有专门的收敛选项</strong>（<code>.options</code>）</td></tr>
+<tr><td>厂商模型库</td><td>有</td><td><strong>极全</strong>（ADI 自己的器件都在里面）</td></tr>
+</table>
+<p><strong>所以迁移的真正理由不只是"免费"，而是：</strong> <strong>LTspice 在开关电源、模拟 IC 这类"难收敛"的仿真上，比 Multisim 强一个档次</strong> —— 而这正是工程实际会用到的。</p>
+<hr>
+<p><em>本速查表基于 SPICE 通用语法与 LTspice 的公开文档整理。</em> <em>其中标注 ★ 的条目，多数来自 <code>能力01_网表自检.py</code> 与网表注释里记录的实际踩坑。</em></p>
+  </main>
+  <footer class="doc">
+    本页由 Markdown 渲染而成 · 原文为 <code>迁移速查表.md</code>（留在项目内作编辑源，不单独发布）
+  </footer>
+</div>
+</body>
+</html>

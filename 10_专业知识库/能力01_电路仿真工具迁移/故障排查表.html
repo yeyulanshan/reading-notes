@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>故障排查表：仿真结果不对时怎么查 · 底层</title>
+<meta name="description" content="按症状查，不按原因查">
+<meta name="theme-color" content="#f2f8fc">
+<style>
+  :root{
+    --paper:#f2f8fc; --card:#ffffff; --card-2:#e9f4fb;
+    --edge:#cfe0ec; --edge-lit:#a4c6dd;
+    --ink:#12232e; --ink-2:#627480; --ink-3:#587286;
+    --accent:#2c7ea2; --accent-2:#377972; --gold:#84744a;
+    --quote-bg:#fbf8ef; --quote-edge:#d8cba4; --quote-ink:#5f5527;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--paper); color:var(--ink); line-height:1.9;
+    -webkit-font-smoothing:antialiased;
+    padding:32px 16px 60px;
+  }
+  ::selection{background:rgba(63,180,232,.26); color:#0d2430;}
+  .wrap{max-width:860px; margin:0 auto;}
+
+  header.doc{
+    background:var(--card); border:1px solid var(--edge);
+    border-top:4px solid var(--accent); border-radius:10px;
+    padding:34px 34px 28px; margin-bottom:24px;
+  }
+  header.doc h1{
+    font-size:26px; font-weight:800; line-height:1.4; letter-spacing:.01em;
+    margin-bottom:12px;
+    background:linear-gradient(135deg,#1d4a68,#2c7ea2 55%,#377972);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  header.doc .sub{font-size:14.6px; color:var(--ink-2); line-height:1.95;}
+  header.doc .src{
+    margin-top:16px; padding-top:14px; border-top:1px dashed var(--edge);
+    font-size:12.6px; color:var(--ink-3); line-height:1.95;
+  }
+  header.doc .src strong{color:var(--ink-2);}
+
+  main{
+    background:var(--card); border:1px solid var(--edge); border-radius:10px;
+    padding:36px 38px 40px;
+  }
+
+  h2{
+    font-size:19px; font-weight:700; color:var(--ink);
+    margin:38px 0 14px; padding-left:12px;
+    border-left:4px solid var(--gold); line-height:1.55;
+  }
+  h2:first-child{margin-top:0;}
+  h3{font-size:16px; font-weight:700; color:var(--ink); margin:26px 0 10px;}
+  h4{
+    font-size:15.2px; font-weight:700; color:#1d4a68;
+    margin:22px 0 9px; padding-left:10px;
+    border-left:3px solid rgba(63,180,232,.45); line-height:1.6;
+  }
+
+  p{font-size:14.6px; color:var(--ink-2); margin-bottom:13px; text-wrap:pretty;}
+  strong{color:var(--ink); font-weight:700;}
+  em{font-style:normal; color:var(--ink); background:rgba(63,180,232,.10);
+     border-radius:3px; padding:0 3px;}
+
+  code{
+    font-family:ui-monospace,Consolas,monospace; font-size:13px;
+    background:var(--card-2); border:1px solid var(--edge); border-radius:4px;
+    padding:1px 6px; color:#1d5c86; word-break:break-all;
+  }
+
+  a{color:var(--accent); text-decoration:none; border-bottom:1px solid #cfe4f0;}
+  a:hover{border-bottom-color:var(--accent);}
+
+  blockquote{
+    margin:14px 0; padding:13px 18px;
+    background:var(--quote-bg); border:1px solid #e8dfc4;
+    border-left:3px solid var(--quote-edge); border-radius:5px;
+    font-size:14.2px; color:var(--quote-ink); line-height:1.95;
+  }
+  blockquote p{margin-bottom:9px; color:inherit; font-size:inherit;}
+  blockquote p:last-child{margin-bottom:0;}
+  blockquote strong{color:#8a6a24;}
+  blockquote em{background:rgba(138,106,36,.10); color:#8a6a24;}
+  blockquote code{background:rgba(255,255,255,.7); color:#7a5f1c; border-color:#e0d2ac;}
+
+  ul,ol{margin:12px 0 14px 22px;}
+  li{font-size:14.5px; color:var(--ink-2); margin-bottom:8px; line-height:1.9;}
+  li strong{color:var(--ink);}
+
+  table{width:100%; border-collapse:collapse; margin:16px 0; font-size:13.6px;}
+  th,td{padding:9px 12px; border:1px solid var(--edge); text-align:left;
+        vertical-align:top; line-height:1.8;}
+  th{background:var(--card-2); color:#1d5c86; font-weight:700; font-size:12.8px;}
+  td{color:var(--ink-2);}
+  td strong{color:var(--ink);}
+  td code{font-size:12.4px;}
+
+  hr{border:none; border-top:1px dashed var(--edge); margin:32px 0;}
+
+  pre{
+    background:#eef4f9; border:1px solid var(--edge); border-radius:6px;
+    padding:14px 16px; margin:16px 0; overflow-x:auto;
+    line-height:1.7;
+  }
+  pre code{
+    background:none; border:none; padding:0; font-size:12.8px;
+    color:#1d4a68; white-space:pre; word-break:normal;
+  }
+
+  footer.doc{
+    margin-top:26px; padding-top:20px; border-top:1px solid var(--edge);
+    font-size:12.4px; color:var(--ink-3); line-height:2; text-align:center;
+  }
+  footer.doc a{color:var(--ink-2);}
+  @media(max-width:700px){
+    body{padding:16px 10px 40px;}
+    header.doc{padding:24px 20px 20px;} header.doc h1{font-size:21px;}
+    main{padding:24px 18px 28px;} h2{font-size:17px;}
+    table{font-size:12.2px;} th,td{padding:7px 8px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="doc">
+    <h1>故障排查表：仿真结果不对时怎么查</h1>
+    <p class="sub">按症状查，不按原因查</p>
+    <p class="src">仿真报错时先从这一页找起。</p>
+  </header>
+  <main>
+<h1>故障排查表：仿真结果不对时怎么查</h1>
+<p><strong>这份表的用法</strong>：你跑出来的结果和 <code>能力01_..._验证.py</code> 给的"答案卡"不一致时， 按<strong>从上到下</strong>的顺序查。<strong>顺序很重要</strong> —— 先查最可能的，不要乱试。</p>
+<p><strong>核心原则（和 <code>07_技术/动手实验/助人手册</code> 同一条纪律）</strong>：</p>
+<p>&gt; <strong>先确认"你测的是什么"，再看"数值对不对"。</strong> &gt; 很多"仿真错了"其实是"看错了量"。</p>
+<hr>
+<h2>一、诊断顺序（按这个顺序查，别跳）</h2>
+<table>
+<tr><th>步</th><th>查什么</th><th>为什么先查这个</th></tr>
+<tr><td><strong>1</strong></td><td><strong>你看的是不是正确的量？</strong></td><td>比如你把 <code>V(out)</code> 看成了 <code>V(in)</code>，或把电流看成了电压</td></tr>
+<tr><td><strong>2</strong></td><td><strong>数值后缀有没有写错？</strong></td><td><code>1m</code> 是毫不是兆（见下 F1）。<strong>这一类错误不报错，只错 1000 倍</strong></td></tr>
+<tr><td><strong>3</strong></td><td><strong>节点连对了没有？</strong></td><td>网表里的节点名打错会<strong>静默地改变电路拓扑</strong></td></tr>
+<tr><td><strong>4</strong></td><td><strong>工作点合理吗？</strong></td><td>先看 <code>.op</code>。工作点错了，<code>.ac</code> 一定错</td></tr>
+<tr><td><strong>5</strong></td><td><strong>仿真设置对不对？</strong></td><td>步长、时长、扫描范围</td></tr>
+<tr><td><strong>6</strong></td><td><strong>最后才怀疑：电路理解有没有偏差</strong></td><td>到这一步才是"要补的知识"</td></tr>
+</table>
+<hr>
+<h2>二、12 个具体故障</h2>
+<h3>F1 · 结果差了 1000 倍或 100 万倍 ★最常见</h3>
+<p><strong>症状</strong>：截止频率差 1000 倍、电流差 1000 倍、谐振频率差一大截。</p>
+<p><strong>原因</strong>：SPICE 的后缀与你直觉不符。</p>
+<table>
+<tr><th>你以为</th><th>实际含义</th><th>应该写</th></tr>
+<tr><td><code>1m</code> = 1 兆</td><td><strong>1 毫（1e-3）</strong></td><td><code>1meg</code> 或 <code>1e6</code></td></tr>
+<tr><td><code>1M</code> = 1 兆</td><td><strong>也是 1 毫</strong>（SPICE 不分大小写）</td><td><code>1meg</code> 或 <code>1e6</code></td></tr>
+<tr><td><code>1u</code> = 1 单位</td><td>1 微（1e-6）</td><td>对</td></tr>
+</table>
+<p><strong>排查</strong>：把所有带后缀的值改成<strong>科学计数法</strong>重跑。 如果结果对了，就是这个原因。</p>
+<p><strong>预防</strong>：<strong>一律用 <code>1e6</code> 这种写法</strong>，完全避开后缀歧义。</p>
+<hr>
+<h3>F2 · 波形是假的锯齿 / 高频毛刺 ★常见</h3>
+<p><strong>症状</strong>：本该平滑的曲线出现细密锯齿，或叠了一层高频振荡。</p>
+<p><strong>原因</strong>：<code>.tran</code> 的<strong>最大步长太大</strong>，或波形本身不连续但没给边沿时间。</p>
+<p><strong>排查</strong>：</p>
+<pre><code>把 .tran 5m  改成  .tran 0 5m 0 1u
+``` （最后那个 `1u` 是最大步长）
+
+<strong>判断标准</strong>：<strong>如果改小步长之后波形变了，说明之前是数值误差，不是电路现象。</strong>
+
+<strong>★ 这条特别重要</strong>，因为假的振荡看起来非常像"真的振荡"。 尤其对 RLC 电路 —— 你可能会以为那是谐振，其实是数值噪声。
+
+---
+
+### F3 · 边沿出现无限陡的跳变 / 报"时间步长过小"
+
+<strong>症状</strong>：`PULSE` 源驱动时仿真极慢或报错。
+
+<strong>原因</strong>：`Trise` 或 `Tfall` 写了 `0`。
+
+<strong>修改</strong>：至少写 `1n`。</code></pre>
+<p>错误：PULSE(0 1 0 0 0 5m 10m) 正确：PULSE(0 1 0 1n 1n 5m 10m)</p>
+<pre><code>
+<strong>★ 为什么 Multisim 不报这个错</strong>：它的方波源<strong>有默认边沿时间</strong>。 而 SPICE 的 `PULSE` 没有默认值 —— 这是迁移时最常见的错之一。
+
+---
+
+### F4 · `.ac` 的结果完全不靠谱
+
+<strong>症状</strong>：频率响应形状怪异，或低频段就大幅衰减。
+
+<strong>原因</strong>：<strong>直流工作点不对</strong>。`.ac` 是在工作点附近线性化的，工作点错了它就没意义。
+
+<strong>排查</strong>：先单独跑 `.op`，看各节点电压是否合理。 比如 RC 低通里，如果电容<strong>没有直流路径</strong>（比如悬空），工作点就是未定义的。
+
+<strong>修改</strong>：确认每个节点都有到地的直流路径。
+
+---
+
+### F5 · `.op` 报 "singular matrix"（矩阵奇异）
+
+<strong>症状</strong>：报错 `Singular matrix` 或 `No DC path to ground`。
+
+<strong>原因</strong>：某个节点<strong>没有直流通路</strong>。典型情形：
+- 两个电容串在一起，中间那个节点
+- 一个节点只连着电容
+- 电流源串在一条没有其他通路的支路上
+
+<strong>排查</strong>：找出哪个节点没通路。LTspice 通常会告诉你节点名。
+
+<strong>修改</strong>：加一个大电阻到地。<strong>这不是作弊</strong> —— 现实里永远有漏电流。</code></pre>
+<p>Rleak thatnode 0 1G</p>
+<pre><code>
+---
+
+### F6 · `.ac` 跑出来的幅度是"V"不是"dB"
+
+<strong>症状</strong>：纵轴显示 0.707 而不是 −3，或者显示 5 而不是 14。
+
+<strong>原因</strong>：<strong>这不是错误</strong> —— LTspice 默认画绝对值，不画 dB。
+
+<strong>修改</strong>（两种）：
+1. 波形窗口里<strong>右键纵轴 → `View &gt; Decibel`</strong>
+2. 把表达式改成 `V(out)/V(in)`（得到传递函数），再换成 dB
+
+<strong>★ 记住</strong>：<strong>Multisim 自动给 dB，LTspice 要你说一次。</strong>
+
+---
+
+### F7 · 相位曲线画不出来
+
+<strong>症状</strong>：想同时看幅度和相位，但只有一个窗格。
+
+<strong>修改</strong>：`Plot Settings &gt; Add Plot Pane`（或右键波形区 → `Add Plot Pane`）， 然后在新窗格里画 `phase(V(out)/V(in))`。
+
+---
+
+### F8 · 电流符号是负的，以为算错了
+
+<strong>症状</strong>：`I(V1) = -5mA`，而手算得 +5mA。
+
+<strong>原因</strong>：<strong>这不是错误</strong>。SPICE 的约定是：
+
+&gt; <strong>电流从元件的第 1 个节点流向第 2 个节点时为正。</strong>
+
+`V1 in 0` 的第 1 个节点是 `in`；而电源内部电流方向是 `0 → in`，所以是负。
+
+<strong>判断办法</strong>：
+- 电源<strong>供出</strong>功率 → 电流显示为<strong>负</strong>
+- 电源<strong>吸收</strong>功率（被充电）→ 显示为<strong>正</strong>
+
+<strong>修改</strong>（如果你真的想读正数）：把源写成 `V1 0 in -10`（两节点对调，电压也变号）。 <strong>但更推荐：不改电路，改自己的读法。</strong> 因为符号只反映参考方向。
+
+---
+
+### F9 · 元件值明明对了，但结果完全不同
+
+<strong>症状</strong>：反复检查元件值都没错，但结果就是不对。
+
+<strong>原因</strong>：<strong>节点名打错了</strong>。比如把 `R2 out 0 1k` 写成了 `R2 out in 1k`。
+
+<strong>为什么危险</strong>：<strong>它不报错，只是电路拓扑变了。</strong>
+
+<strong>排查</strong>：把网表打印出来，<strong>逐个节点核对连接关系</strong>。 建议画一张纸上的电路图，和网表对照。
+
+<strong>★ 这条最能说明"为什么网表是第一公民"</strong> —— 看图形界面时你会以为连对了，看文本时错误一目了然。
+
+---
+
+### F10 · 谐振频率偏高/偏低
+
+<strong>症状</strong>：RLC 电路的谐振峰位置与 `f0 = 1/(2π√LC)` 算出的不一致。
+
+<strong>原因</strong>（按概率）：
+1. <strong>L 或 C 的后缀写错</strong>（见 F1）
+2. <strong>输出取错了位置</strong>：取"电感电压"和"电容电压"的谐振频率不同
+3. <strong>R 太大</strong>：Q 值太低，峰不明显，你会读错位置
+
+<strong>排查</strong>：
+- 先用 `能力01_网表自检.py` 确认元件值被正确解析
+- 确认你画的是 `V(out)`（电容电压）
+- 用 `.meas AC fpeak WHEN mag(V(out))=max` 自动找峰，别用眼睛
+
+---
+
+### F11 · 阶跃响应看不到超调
+
+<strong>症状</strong>：RLC 电路的阶跃响应应该是欠阻尼（有超调），但看起来是单调上升。
+
+<strong>原因</strong>（按概率）：
+1. <strong>`.tran` 时长太短</strong>，还没到峰值（本例峰值在 100µs 处）
+2. <strong>最大步长太大</strong>，把超调"抹平"了（见 F2）
+3. <strong>输出取错位置</strong>：取"电容电压"有超调；取"电阻电压"形状不同
+4. <strong>R 太大</strong>，实际已经过阻尼
+
+<strong>排查</strong>：先算 ζ = (R/2)·√(C/L)。<strong>ζ &lt; 1 才有超调。</strong> 本例 ζ = 0.158，肯定有超调。然后检查 `.tran` 设置。
+
+---
+
+### F12 · `.meas` 报错或没输出
+
+<strong>症状</strong>：写了 `.meas` 但 `SPICE Error Log` 里没有结果，或报 `Measurement failed`。
+
+<strong>原因</strong>（按概率）：
+1. <strong>`TRIG`/`TARG` 的 `VAL` 在仿真范围内没被达到</strong> —— 比如想让信号达到 5V，但它最高只到 1V
+2. <strong>`RISE=n` 的 n 太大</strong> —— 仿真里信号只上升了 1 次，你写了 `RISE=2`
+3. <strong>`.meas` 引用了不存在的节点名</strong>
+4. <strong>`.meas` 的类型不匹配</strong> —— `TRAN` 测量写在只有 `.ac` 的仿真里
+
+<strong>排查</strong>：
+- 先把波形画出来，<strong>用眼睛确认那个值确实被达到过</strong>
+- 再用 `.meas` 测量
+- <strong>`RISE=n` 从 1 开始数，不是 0</strong>
+
+---
+
+## 三、一类特别的故障：结果对，但你不确定它对
+
+<strong>这类最难，因为它不给你任何报错信号。</strong>
+
+<strong>症状</strong>：跑出来了，数字看着合理，但你<strong>不知道它是不是真的对</strong>。
+
+<strong>这是"仿真最危险的地方"</strong> —— 算错了却以为对。
+
+<strong>唯一的防线是独立验证</strong>：
+
+| 方法 | 怎么做 |
+|---|---|
+| <strong>手算一个特例</strong> | 比如把 C 取成 0（短路）或 ∞（开路），答案应该退化成纯电阻电路 |
+| <strong>量纲检查</strong> | `1/(2πRC)` 的结果必须是"1/秒"（Hz） |
+| <strong>极端值检查</strong> | R → 0 时电流应该 → ∞；R → ∞ 时应该 → 0 |
+| <strong>用另一个工具算</strong> | 比如本目录的 `.py` 脚本（sympy/scipy 独立算） |
+| <strong>物理直觉</strong> | 功耗不能是负的；无源网络的增益不能大于 1 |
+
+<strong>★ 极限检验最有用</strong>。举几个本例的用法：
+
+- <strong>例 2（RC 低通）</strong>：把 C 取极小（如 `1p`），fc 应该变得极高 → 全频段几乎不衰减
+- <strong>例 3（RLC）</strong>：把 R 取很大（如 `1k`），ζ 应该 &gt; 1 → 超调消失，变成过阻尼
+- <strong>例 4（积分器）</strong>：把 R 取极小，τ → 0 → 输出应该几乎等于输入（不再是积分器）
+
+<strong>如果某个极限下仿真结果不符合直觉，就找到问题了。</strong>
+
+---
+
+## 四、一张速查卡
+</code></pre>
+<p>结果不对 │ ├─ 差了 1000 / 1e6 倍  →  F1 数值后缀（1m 是毫不是兆） │ ├─ 波形有假锯齿/毛刺    →  F2 最大步长太大 │ ├─ 边沿极慢或报错       →  F3 Trise/Tfall 写了 0 │ ├─ .ac 形状怪           →  F4 直流工作点不对（先跑 .op） │ ├─ 报 singular matrix   →  F5 节点没有直流通路（加 1G 电阻） │ ├─ 幅度单位是 V 不是 dB →  F6 手动换纵轴（不是错误） │ ├─ 电流是负的           →  F8 符号约定（不是错误） │ ├─ 元件对但结果全错     →  F9 节点名打错（不报错！） │ ├─ 谐振/超调位置不对    →  F10/F11 输出取错位置 或 .tran 设置 │ ├─ .meas 无输出         →  F12 先确认值确实被达到过 │ └─ 结果对但不确定       →  做极限检验（见第三节）</p>
+<pre><code>
+---
+
+## 五、最该记住的三条
+
+1. <strong>先确认你在看正确的量</strong> —— 很多"仿真错了"是"看错了量"
+2. <strong>数值后缀一律用科学计数法</strong> —— 完全避开 `m`/`meg` 陷阱
+3. <strong>算错了却以为对，是仿真最危险的地方</strong> —— 唯一防线是<strong>独立算一遍</strong>（就是本目录那两个 `.py` 脚本在做的事）
+
+---
+
+*本表基于 SPICE 通用故障模式与 LTspice 的公开文档整理。* *其中 F1、F2、F3、F8、F9 是 `能力01_网表自检.py` 与网表注释里实际记录过的问题。*
+</code></pre>
+  </main>
+  <footer class="doc">
+    本页由 Markdown 渲染而成 · 原文为 <code>故障排查表.md</code>（留在项目内作编辑源，不单独发布）
+  </footer>
+</div>
+</body>
+</html>

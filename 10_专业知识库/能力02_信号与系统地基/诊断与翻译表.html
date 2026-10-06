@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>能力 02 · 诊断 · 翻译表 · 误区排查 · 底层</title>
+<meta name="description" content="把一个说法翻译成另一种说法">
+<meta name="theme-color" content="#f2f8fc">
+<style>
+  :root{
+    --paper:#f2f8fc; --card:#ffffff; --card-2:#e9f4fb;
+    --edge:#cfe0ec; --edge-lit:#a4c6dd;
+    --ink:#12232e; --ink-2:#627480; --ink-3:#587286;
+    --accent:#2c7ea2; --accent-2:#377972; --gold:#84744a;
+    --quote-bg:#fbf8ef; --quote-edge:#d8cba4; --quote-ink:#5f5527;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--paper); color:var(--ink); line-height:1.9;
+    -webkit-font-smoothing:antialiased;
+    padding:32px 16px 60px;
+  }
+  ::selection{background:rgba(63,180,232,.26); color:#0d2430;}
+  .wrap{max-width:860px; margin:0 auto;}
+
+  header.doc{
+    background:var(--card); border:1px solid var(--edge);
+    border-top:4px solid var(--accent); border-radius:10px;
+    padding:34px 34px 28px; margin-bottom:24px;
+  }
+  header.doc h1{
+    font-size:26px; font-weight:800; line-height:1.4; letter-spacing:.01em;
+    margin-bottom:12px;
+    background:linear-gradient(135deg,#1d4a68,#2c7ea2 55%,#377972);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  header.doc .sub{font-size:14.6px; color:var(--ink-2); line-height:1.95;}
+  header.doc .src{
+    margin-top:16px; padding-top:14px; border-top:1px dashed var(--edge);
+    font-size:12.6px; color:var(--ink-3); line-height:1.95;
+  }
+  header.doc .src strong{color:var(--ink-2);}
+
+  main{
+    background:var(--card); border:1px solid var(--edge); border-radius:10px;
+    padding:36px 38px 40px;
+  }
+
+  h2{
+    font-size:19px; font-weight:700; color:var(--ink);
+    margin:38px 0 14px; padding-left:12px;
+    border-left:4px solid var(--gold); line-height:1.55;
+  }
+  h2:first-child{margin-top:0;}
+  h3{font-size:16px; font-weight:700; color:var(--ink); margin:26px 0 10px;}
+  h4{
+    font-size:15.2px; font-weight:700; color:#1d4a68;
+    margin:22px 0 9px; padding-left:10px;
+    border-left:3px solid rgba(63,180,232,.45); line-height:1.6;
+  }
+
+  p{font-size:14.6px; color:var(--ink-2); margin-bottom:13px; text-wrap:pretty;}
+  strong{color:var(--ink); font-weight:700;}
+  em{font-style:normal; color:var(--ink); background:rgba(63,180,232,.10);
+     border-radius:3px; padding:0 3px;}
+
+  code{
+    font-family:ui-monospace,Consolas,monospace; font-size:13px;
+    background:var(--card-2); border:1px solid var(--edge); border-radius:4px;
+    padding:1px 6px; color:#1d5c86; word-break:break-all;
+  }
+
+  a{color:var(--accent); text-decoration:none; border-bottom:1px solid #cfe4f0;}
+  a:hover{border-bottom-color:var(--accent);}
+
+  blockquote{
+    margin:14px 0; padding:13px 18px;
+    background:var(--quote-bg); border:1px solid #e8dfc4;
+    border-left:3px solid var(--quote-edge); border-radius:5px;
+    font-size:14.2px; color:var(--quote-ink); line-height:1.95;
+  }
+  blockquote p{margin-bottom:9px; color:inherit; font-size:inherit;}
+  blockquote p:last-child{margin-bottom:0;}
+  blockquote strong{color:#8a6a24;}
+  blockquote em{background:rgba(138,106,36,.10); color:#8a6a24;}
+  blockquote code{background:rgba(255,255,255,.7); color:#7a5f1c; border-color:#e0d2ac;}
+
+  ul,ol{margin:12px 0 14px 22px;}
+  li{font-size:14.5px; color:var(--ink-2); margin-bottom:8px; line-height:1.9;}
+  li strong{color:var(--ink);}
+
+  table{width:100%; border-collapse:collapse; margin:16px 0; font-size:13.6px;}
+  th,td{padding:9px 12px; border:1px solid var(--edge); text-align:left;
+        vertical-align:top; line-height:1.8;}
+  th{background:var(--card-2); color:#1d5c86; font-weight:700; font-size:12.8px;}
+  td{color:var(--ink-2);}
+  td strong{color:var(--ink);}
+  td code{font-size:12.4px;}
+
+  hr{border:none; border-top:1px dashed var(--edge); margin:32px 0;}
+
+  pre{
+    background:#eef4f9; border:1px solid var(--edge); border-radius:6px;
+    padding:14px 16px; margin:16px 0; overflow-x:auto;
+    line-height:1.7;
+  }
+  pre code{
+    background:none; border:none; padding:0; font-size:12.8px;
+    color:#1d4a68; white-space:pre; word-break:normal;
+  }
+
+  footer.doc{
+    margin-top:26px; padding-top:20px; border-top:1px solid var(--edge);
+    font-size:12.4px; color:var(--ink-3); line-height:2; text-align:center;
+  }
+  footer.doc a{color:var(--ink-2);}
+  @media(max-width:700px){
+    body{padding:16px 10px 40px;}
+    header.doc{padding:24px 20px 20px;} header.doc h1{font-size:21px;}
+    main{padding:24px 18px 28px;} h2{font-size:17px;}
+    table{font-size:12.2px;} th,td{padding:7px 8px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="doc">
+    <h1>能力 02 · 诊断 · 翻译表 · 误区排查</h1>
+    <p class="sub">把一个说法翻译成另一种说法</p>
+    <p class="src">用来诊断「我到底卡在哪一层」。</p>
+  </header>
+  <main>
+<h1>能力 02 · 诊断 · 翻译表 · 误区排查</h1>
+<p><strong>这份文件针对一个具体处境</strong>：信号与系统学过，但没学通。</p>
+<p><strong>所以它不做三件事</strong>：不从零讲、不列公式表、不按教材章序走。 <strong>它只做一件事</strong>：<strong>帮你定位到底哪一层没通</strong>，然后给那一层的最小入口。</p>
+<hr>
+<h1>第一部分 · 诊断：你在哪一层卡住</h1>
+<h2>27 个自测题（按"表示"分组，不按教材章序）</h2>
+<p><strong>用法</strong>：逐条问自己。<strong>能立刻答出来就打勾</strong>，模棱两可就当不会。 最后看哪个分组的勾最少 —— <strong>那就是你的入口</strong>。</p>
+<h3>A 组 · 时域与卷积（对应 MIT 6.003 lec02/04/08）</h3>
+<ul><li>[ ] 我能从 KCL 或分压<strong>自己列出</strong> RC 电路的微分方程（不是背结论）</li><li>[ ] 我知道"线性"和"时不变"各自的定义，且能举一个<strong>不是</strong>LTI 的例子</li><li>[ ] 我理解卷积是"把输入拆成冲激、各自响应再叠加"，而不是一个积分公式</li><li>[ ] 我能解释为什么 LTI 系统<strong>完全由冲激响应决定</strong></li><li>[ ] 我知道阶跃响应和冲激响应是<strong>积分/微分</strong>的关系</li></ul>
+<h3>B 组 · 复频域（s 与 z）（对应 lec03/05/06/07）</h3>
+<ul><li>[ ] 我能说清<strong>为什么要引入拉普拉斯变换</strong>（而不是只会算）</li><li>[ ] 我知道极点在左半平面 = 稳定，且能说出<strong>为什么</strong></li><li>[ ] 我能从极点位置<strong>直接读出</strong>时间常数或振荡频率（不用反变换）</li><li>[ ] 我知道 z 变换与拉普拉斯变换的关系（z = e^(sT)），以及为什么</li><li>[ ] 我知道 z 平面单位圆内 = 稳定，且它与 s 左半平面是同一件事</li><li>[ ] 我能解释<strong>收敛域（ROC）</strong>为什么重要，以及忽略它会出什么错</li></ul>
+<h3>C 组 · 频域与傅里叶（对应 lec09/11/14–20）</h3>
+<ul><li>[ ] 我知道傅里叶级数、傅里叶变换、DTFT、DFT <strong>四者的区别与联系</strong></li><li>[ ] 我能解释频率响应 H(jω) 就是"把 d/dt 换成 jω"（而不是另一个公式）</li><li>[ ] 我能<strong>手画</strong>一阶低通的波特图（渐近线 + 转折点）</li><li>[ ] 我知道相位的物理意义（时延），而不只是"一个角度"</li><li>[ ] 我理解<strong>采样定理</strong>的完整条件，以及混叠的后果</li><li>[ ] 我知道为什么会有"频域和时域是同一个东西的两面"这种说法</li></ul>
+<h3>D 组 · 与控制的连接（对应 lec10/12/13）</h3>
+<ul><li>[ ] 我能从传递函数<strong>直接</strong>判断闭环稳定性（不用解微分方程）</li><li>[ ] 我知道<strong>极点位置</strong>与<strong>响应快慢/超调</strong>的定量关系</li><li>[ ] 我理解反馈改变的是<strong>极点位置</strong>，而不只是"减小误差"</li><li>[ ] 我能说清<strong>相位裕度</strong>的物理含义（而不是只会读图）</li><li>[ ] 我知道状态空间的特征值与传递函数的极点是<strong>同一件事</strong>（单输入单输出时）</li></ul>
+<h3>E 组 · 计算与直觉（这一组最容易被低估）</h3>
+<ul><li>[ ] 我能<strong>估算</strong>一个 RC 电路的 fc，不用算到小数点后</li><li>[ ] 我看到一个传递函数能<strong>想象出</strong>它的阶跃响应大致形状</li><li>[ ] 我能判断一个结果是<strong>量纲上</strong>对不对</li><li>[ ] 我知道"τ 是到 63.2% 的时间"这个说法的来处，并能用它反推参数</li><li>[ ] 我遇到不会的问题时，知道<strong>先做极限检验</strong>（C→0、ω→0、ω→∞ 等）</li></ul>
+<h2>怎么读诊断结果</h2>
+<table>
+<tr><th>勾最少的组</th><th>说明</th><th>入口</th></tr>
+<tr><td><strong>A</strong></td><td>时域基础不牢</td><td>MIT 6.003 <strong>lec02, 04, 08</strong> + 教材 chap1–3</td></tr>
+<tr><td><strong>B</strong></td><td>复频域是空的</td><td>MIT 6.003 <strong>lec03, 05, 06, 07</strong> + 教材 chap4–6</td></tr>
+<tr><td><strong>C</strong></td><td>频域与傅里叶混乱</td><td>MIT 6.003 <strong>lec09, 11, 14–21</strong></td></tr>
+<tr><td><strong>D</strong></td><td>与控制的连接没建立</td><td>MIT 6.003 <strong>lec10, 12, 13</strong> + <code>能力02_四张脸.py</code> 的"脸 5"</td></tr>
+<tr><td><strong>E</strong></td><td>有知识但没有直觉</td><td><strong><code>能力02_四张脸.py</code></strong> 跑一遍 + 自己改参数重跑</td></tr>
+</table>
+<p><strong>⚠️ 一个重要的判断（我的推测，你可以反驳）</strong>：</p>
+<p><strong>大多数人"没学通"的症状落在 B 组和 C 组，而根因常在 A 组。</strong></p>
+<p>因为 A 组（时域与卷积）是<strong>唯一一个"动手就能验证"的层</strong>—— 你可以在纸上算卷积，也可以用数值积分验证。 而如果这一层是靠背公式过的，后面所有变换都会变成"另一套公式"， 于是这门课就分裂成了好几个互不相干的工具箱。</p>
+<p><strong>所以我的建议是：无论诊断结果如何，都先跑一遍 <code>能力02_四张脸.py</code>。</strong> 因为那个脚本用<strong>一个</strong>系统把五层串起来了 —— 而"串起来"这件事本身就是解药。</p>
+<hr>
+<h1>第二部分 · 翻译表：同一件事的五种说法</h1>
+<p><strong>这张表是能力 02 的核心工具。</strong> 左边是你的问题，右边是五种表示各自怎么回答。</p>
+<h2>2.1 概念对照</h2>
+<table>
+<tr><th>概念</th><th>时域说法</th><th>频域说法</th><th>s 域说法</th><th>z 域说法</th><th>状态空间说法</th></tr>
+<tr><td><strong>系统的"身份"</strong></td><td>冲激响应 h(t)</td><td>频率响应 H(jω)</td><td>传递函数 H(s)</td><td>H(z)</td><td>(A, B, C, D)</td></tr>
+<tr><td><strong>"快慢"</strong></td><td>时间常数 τ</td><td>截止频率 ωc=1/τ</td><td>极点实部 −1/τ</td><td>极点 \</td><td>z\</td><td>=e^(−T/τ)</td><td>特征值 λ=−1/τ</td></tr>
+<tr><td><strong>"振荡"</strong></td><td>衰减振荡的周期</td><td>谐振峰的位置</td><td>极点的虚部 ±jωd</td><td>极点的辐角</td><td>特征值的虚部</td></tr>
+<tr><td><strong>"稳定性"</strong></td><td>h(t)→0</td><td>（不直接看）</td><td>极点在左半平面</td><td>极点在单位圆内</td><td>特征值实部&lt;0</td></tr>
+<tr><td><strong>"增益"</strong></td><td>阶跃响应的终值</td><td>\</td><td>H(0)\</td><td>（直流增益）</td><td>H(0)</td><td>H(1)</td><td>−CA⁻¹B+D</td></tr>
+<tr><td><strong>"运算"</strong></td><td>卷积 y=h*u</td><td>相乘 Y=H·U</td><td>相乘 Y=H·U</td><td>相乘 Y=H·U</td><td>矩阵运算</td></tr>
+<tr><td><strong>"输入输出关系"</strong></td><td>微分方程</td><td>H(jω)=Y(jω)/U(jω)</td><td>H(s)=Y(s)/U(s)</td><td>H(z)=Y(z)/U(z)</td><td>dx/dt=Ax+Bu</td></tr>
+</table>
+<p><strong>★ 看</strong>"运算"<strong>那一行</strong>：时域是<strong>卷积</strong>，其他四个都是<strong>相乘</strong>。 这就是为什么要做变换 —— <strong>变换把卷积变成了乘法</strong>。 记住这一点，整个变换体系就有了统一的理由。</p>
+<h2>2.2 「同一个东西」的五个名字</h2>
+<p>以本项目的 RC 电路（τ = 1 ms）为例：</p>
+<table>
+<tr><th>特征量</th><th>在哪张脸上</th><th>数值</th><th>换算</th></tr>
+<tr><td>时间常数</td><td>① 时域</td><td>τ = 1.000 ms</td><td>基准</td></tr>
+<tr><td>截止频率</td><td>② 频域</td><td>fc = 159.15 Hz</td><td>fc = 1/(2πτ)</td></tr>
+<tr><td>极点</td><td>③ s 域</td><td>s_p = −1000 rad/s</td><td>s_p = −1/τ</td></tr>
+<tr><td>z 极点</td><td>④ z 域</td><td>z_p = 0.9524</td><td>z_p = e^(−T/τ)</td></tr>
+<tr><td>特征值</td><td>⑤ 状态空间</td><td>λ = −1000 rad/s</td><td>λ = s_p（SISO 一阶）</td></tr>
+</table>
+<p><strong>反向换算（任意一个 → τ）</strong>：</p>
+<pre><code>τ = 1/(2π·fc)          从频域
+τ = −1/s_p             从 s 域极点
+τ = −1/λ               从状态空间特征值
+τ = −T / ln(z_p)       从 z 域极点
+τ = t(63.2%)           从时域波形（示波器做法）</code></pre>
+<p><strong>★ 这六行就是"把五张脸缝起来"的线。建议手抄一遍。</strong></p>
+<h2>2.3 五种分析手段各自回答什么</h2>
+<table>
+<tr><th>你想知道</th><th>用什么</th><th>不要用</th></tr>
+<tr><td>稳态直流值是多少</td><td>s 域令 s→0（或 .op）</td><td>傅里叶</td></tr>
+<tr><td>快慢、超调、振铃</td><td>极点位置</td><td>傅里叶</td></tr>
+<tr><td>对正弦输入的稳态响应</td><td>频率响应 H(jω)</td><td>微分方程直接解</td></tr>
+<tr><td>对任意输入的响应</td><td>卷积（或 s 域相乘）</td><td>频率响应</td></tr>
+<tr><td>采样后会怎样</td><td>z 域 / DTFT</td><td>s 域</td></tr>
+<tr><td>闭环稳不稳</td><td>根轨迹 / 波特图 / 特征值</td><td>时域仿真试错</td></tr>
+<tr><td><strong>数值上到底是多少</strong></td><td><strong>跑一遍代码或仿真</strong></td><td>—</td></tr>
+</table>
+<p><strong>★ 最后一行值得强调</strong>：<strong>前面所有"用什么"都是为了"不用试错"。</strong> 而如果你不确定自己对不对，<strong>最快的办法就是算一遍</strong> —— 这正是 <code>能力02_四张脸.py</code> 在做的事。</p>
+<hr>
+<h1>第三部分 · 12 个常见误区（按"错在哪一层"分类）</h1>
+<h2>A 组 · 时域</h2>
+<h3>M1 · "卷积就是那个积分公式" <strong>错在</strong>：把卷积当运算，没当<strong>物理意义</strong>。 <strong>正确</strong>：卷积 = "把输入拆成一串冲激，每个冲激产生一个衰减的响应，全部叠加"。 <strong>检验</strong>：你能不能<strong>不用公式</strong>、用"叠加"的直觉说出方波通过 RC 后为什么变成那样？</h3>
+<h3>M2 · "线性"和"时不变"混在一起 <strong>错在</strong>：以为是同一件事。 <strong>正确</strong>：<strong>线性</strong>（叠加原理）和<strong>时不变</strong>（延迟输入则延迟输出）是<strong>两个独立条件</strong>。 <strong>反例</strong>：<code>y(t) = t·u(t)</code> 是线性的但<strong>时变</strong>；<code>y(t) = u(t)²</code> 是时不变的但<strong>非线性</strong>。 <strong>为什么重要</strong>：传递函数、频率响应、卷积——<strong>全都要求 LTI</strong>。</h3>
+<h3>M3 · 忽略"零输入响应"和"零状态响应"的区别 <strong>错在</strong>：解微分方程时只算了一部分。 <strong>正确</strong>：完整解 = 零输入响应（初始条件引起的）+ 零状态响应（输入引起的）。 传递函数只描述<strong>零状态</strong>响应。</h3>
+<h2>B 组 · 复频域</h2>
+<h3>M4 · 忽略收敛域（ROC） <strong>错在</strong>：只算 H(s) 的表达式，不看它在哪收敛。 <strong>正确</strong>：<strong>同一个 H(s) 表达式配不同的 ROC，是不同的系统。</strong> <strong>后果</strong>：会得出"稳定系统不稳定"或反之的错误结论。</h3>
+<h3>M5 · 以为极点在左半平面"就是"稳定 <strong>错在</strong>：把它当定义背下来。 <strong>正确</strong>：那是因为极点在左半平面 → 对应的时域项是 e^(−σt) → 衰减到 0。 <strong>检验</strong>：如果极点在<strong>虚轴上</strong>呢？（临界稳定：不衰减也不发散，如纯积分器。）</h3>
+<h3>M6 · 把 z = e^(sT) 当"另一个公式" <strong>错在</strong>：没看出它是<strong>坐标变换</strong>。 <strong>正确</strong>：</h3>
+<pre><code>s 平面               z 平面
+虚轴（jω）      →    单位圆
+左半平面        →    单位圆内
+右半平面        →    单位圆外
+``` <strong>所以</strong>"s 左半平面稳定"和"z 单位圆内稳定"是<strong>同一句话的两个坐标写法</strong>。
+
+## C 组 · 频域
+
+### M7 · 混淆四种"傅里叶" <strong>错在</strong>：把它们当同一件事。
+
+| 名称 | 适用信号 |
+|---|---|
+| <strong>傅里叶级数</strong> | 连续、<strong>周期</strong> |
+| <strong>傅里叶变换</strong> | 连续、<strong>非周期</strong> |
+| <strong>DTFT</strong> | 离散、非周期（频域连续且周期） |
+| <strong>DFT</strong> | 离散、<strong>有限长</strong>（频域也离散） |
+
+<strong>口诀</strong>：<strong>时域周期 ↔ 频域离散；时域离散 ↔ 频域周期。</strong>
+
+### M8 · 以为"频率响应"是新东西 <strong>正确</strong>：`H(jω)` 就是把 `H(s)` 里的 `s` 换成 `jω`。 而 `H(s)` 就是把微分方程里的 `d/dt` 换成 `s`。 <strong>所以频率响应 = 微分方程在正弦输入下的稳态解</strong>，不是新概念。
+
+### M9 · 相位只是"一个角度" <strong>错在</strong>：没理解相位的物理意义是<strong>时延</strong>。 <strong>正确</strong>：相位 −φ 在频率 ω 处等价于延迟 φ/ω。 <strong>所以</strong>相位非线性 → 不同频率延迟不同 → 波形失真（即使幅度没变）。
+
+### M10 · 采样定理只记"两倍" <strong>错在</strong>：只记 `fs &gt; 2fmax`。 <strong>完整条件</strong>：① 信号<strong>带限</strong>（这本身就是个前提）；② `fs &gt; 2fmax`； ③ <strong>抗混叠滤波器</strong>必须在采样前（而不是采样后想办法）。 <strong>★ 第三条最常被忽略</strong>，而现实中它才是关键。
+
+## D 组 · 与控制连接
+
+### M11 · 认为反馈只是"减小误差" <strong>正确</strong>：反馈真正改变的是<strong>极点位置</strong>。 误差减小是极点移动的<strong>结果</strong>，不是原因。 <strong>这也解释了为什么反馈可能让系统不稳定</strong>——它把极点推到了右半平面。
+
+### M12 · 把"超调"当纯粹的时域现象 <strong>正确</strong>：超调由<strong>阻尼比 ζ</strong> 决定，而 ζ 由<strong>极点的辐角</strong>决定。 所以：</code></pre>
+<p>超调量  ←→  极点的辐角（与负实轴的夹角） 衰减快慢 ←→  极点到虚轴的距离（实部绝对值） ``` <strong>一张极点图就同时告诉了你超调和快慢。</strong> 这是控制里"看极点"的全部理由。</p>
+<hr>
+<h1>第四部分 · 极限检验（最实用的自学工具）</h1>
+<p><strong>当你不确定自己算得对不对，做极限检验。</strong> 它比"重算一遍"有效得多。</p>
+<table>
+<tr><th>检验</th><th>做法</th><th>该发生什么</th></tr>
+<tr><td><strong>参数极限</strong></td><td>C→0 / C→∞ / R→0 / R→∞</td><td>电路退化成导线或断路</td></tr>
+<tr><td><strong>频率极限</strong></td><td>ω→0 / ω→∞</td><td>电容呈开路 / 短路</td></tr>
+<tr><td><strong>时间极限</strong></td><td>t→0 / t→∞</td><td>初值 / 稳态值</td></tr>
+<tr><td><strong>增益极限</strong></td><td>传递函数在 s→0 与 s→∞</td><td>应是有限值且符合物理</td></tr>
+<tr><td><strong>量纲检验</strong></td><td>检查单位</td><td>τ 必须是秒；ωc 必须是 rad/s</td></tr>
+<tr><td><strong>因果检验</strong></td><td>输出是否先于输入出现</td><td>因果系统不该有超前</td></tr>
+<tr><td><strong>稳定性检验</strong></td><td>极点位置</td><td>物理无源系统应稳定</td></tr>
+</table>
+<p><strong>★ 一个具体的例子（本项目 RC 电路）</strong>：</p>
+<pre><code>C → 0   →   τ → 0   →   fc → ∞   →   |H| ≡ 1（全通）
+C → ∞   →   τ → ∞   →   fc → 0    →   |H| ≡ 0（全阻）
+R → 0   →   τ → 0   →   fc → ∞   →   |H| ≡ 1（全通）</code></pre>
+<p><strong>如果哪一条和你算的不一致，说明那里有错。</strong></p>
+<hr>
+<h1>第五部分 · 学习路径（按诊断结果）</h1>
+<h2>如果 A 组弱（时域没底）</h2>
+<pre><code>1. 跑 能力02_四张脸.py 的"脸 1"，改 R、C 看 τ 怎么变
+2. MIT 6.003 教材 chap1–3（差分方程 → 模块化 → 框图与算子）
+   ↑ 注意：它从<strong>离散</strong>讲起，比从连续讲起容易上手
+3. MIT 6.003 lec02, 04, 08（离散系统 / 连续系统 / 卷积）
+4. 自己推一遍 RC 的微分方程（不看答案）</code></pre>
+<h2>如果 B 组弱（复频域是空的）</h2>
+<pre><code>1. MIT 6.003 lec03（Feedback, Poles, and Fundamental Modes）
+   ↑ 这一讲从"极点"出发讲，是理解 s 域的最好入口
+2. MIT 6.003 lec05（Z 变换）→ lec06（拉普拉斯变换）
+3. 教材 chap4–6（Modes / Repeated roots / The perfect sine wave）
+4. 跑 能力02_四张脸.py 的"脸 3"和"脸 4"，看极点怎么对应
+5. 重点：不要只学"怎么算变换"，要学"极点意味着什么"</code></pre>
+<h2>如果 C 组弱（频域混乱）</h2>
+<pre><code>1. MIT 6.003 lec09（频率响应）→ lec11（CT 频响与波特图）
+2. 然后才 lec14–19（傅里叶的四张皮）
+3. 关键：先接受"频率响应 = 把 s 换成 jω"，再学傅里叶的一般理论
+4. 采样部分（lec21–22）单独拿出来学，它有自己的逻辑</code></pre>
+<h2>如果 D 组弱（与控制没接上）</h2>
+<pre><code>1. 跑 能力02_四张脸.py 的"脸 5"（状态空间）
+2. MIT 6.003 lec10, 12, 13（反馈与控制）
+3. 然后读 能力01 的 例3（RLC 谐振）—— 那里有二阶系统的超调
+4. 重点：把"极点位置"和"超调/快慢"建立定量直觉</code></pre>
+<h2>如果 E 组弱（没直觉）</h2>
+<pre><code>1. 只做一件事：跑 能力02_四张脸.py，然后<strong>改一个参数</strong>，预测结果，再看
+2. 具体训练法（这是最有效的）：
+   - 把 R 从 1k 改成 2k，先算 fc 会变成多少
+   - 再跑，看是不是
+   - 预测对了 = 有直觉；预测错了 = 找到薄弱点
+3. 这个训练比读书有效，因为它<strong>强制你做出可被推翻的预测</strong>
+   —— 这正是 07_技术/动手实验 那条纪律</code></pre>
+<hr>
+<h1>附 · 本项目已下载的对应资源</h1>
+<table>
+<tr><th>资源</th><th>位置</th><th>用途</th></tr>
+<tr><td><strong>MIT 6.003 全部 25 讲</strong></td><td><code>00_基础教材/MIT6003_信号与系统/lec01–25.pdf</code></td><td><strong>主教材</strong>（1914 页全套）</td></tr>
+<tr><td>教材 7 章</td><td>同上 <code>chap1–7.pdf</code></td><td>从差分方程到控制</td></tr>
+<tr><td>作业 + 解答</td><td>同上 <code>hw*.pdf</code> <code>sol*.pdf</code></td><td>练习</td></tr>
+<tr><td>考试 + 解答</td><td>同上 <code>F09*.pdf</code> <code>S10*.pdf</code> <code>q*.pdf</code></td><td>自测</td></tr>
+<tr><td><strong>Think DSP</strong></td><td><code>00_基础教材/信号处理_ThinkDSP_中文待译.pdf</code></td><td><strong>每章可跑代码</strong>，补动手</td></tr>
+<tr><td><strong>RISC-V Reader 中文版</strong></td><td><code>00_基础教材/体系结构_...pdf</code></td><td>（与本能力无关，属能力 03）</td></tr>
+</table>
+<p><strong>MIT 6.003 的许可</strong>：CC BY-NC-SA（麻省理工学院开放课件）。</p>
+<hr>
+<p><em>本文件的所有数值断言均由 <code>能力02_四张脸.py</code> 实测得出（脚本 exit=0）。</em> <em>诊断题与误区基于 MIT 6.003 的课程结构与常见学习障碍整理，不是引用。</em></p>
+  </main>
+  <footer class="doc">
+    本页由 Markdown 渲染而成 · 原文为 <code>诊断与翻译表.md</code>（留在项目内作编辑源，不单独发布）
+  </footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>能力 02 · 信号与系统地基 · 底层</title>
+<meta name="description" content="同一个系统的五张脸 · 数值互证">
+<meta name="theme-color" content="#f2f8fc">
+<style>
+  :root{
+    --paper:#f2f8fc; --card:#ffffff; --card-2:#e9f4fb;
+    --edge:#cfe0ec; --edge-lit:#a4c6dd;
+    --ink:#12232e; --ink-2:#627480; --ink-3:#587286;
+    --accent:#2c7ea2; --accent-2:#377972; --gold:#84744a;
+    --quote-bg:#fbf8ef; --quote-edge:#d8cba4; --quote-ink:#5f5527;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--paper); color:var(--ink); line-height:1.9;
+    -webkit-font-smoothing:antialiased;
+    padding:32px 16px 60px;
+  }
+  ::selection{background:rgba(63,180,232,.26); color:#0d2430;}
+  .wrap{max-width:860px; margin:0 auto;}
+
+  header.doc{
+    background:var(--card); border:1px solid var(--edge);
+    border-top:4px solid var(--accent); border-radius:10px;
+    padding:34px 34px 28px; margin-bottom:24px;
+  }
+  header.doc h1{
+    font-size:26px; font-weight:800; line-height:1.4; letter-spacing:.01em;
+    margin-bottom:12px;
+    background:linear-gradient(135deg,#1d4a68,#2c7ea2 55%,#377972);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  header.doc .sub{font-size:14.6px; color:var(--ink-2); line-height:1.95;}
+  header.doc .src{
+    margin-top:16px; padding-top:14px; border-top:1px dashed var(--edge);
+    font-size:12.6px; color:var(--ink-3); line-height:1.95;
+  }
+  header.doc .src strong{color:var(--ink-2);}
+
+  main{
+    background:var(--card); border:1px solid var(--edge); border-radius:10px;
+    padding:36px 38px 40px;
+  }
+
+  h2{
+    font-size:19px; font-weight:700; color:var(--ink);
+    margin:38px 0 14px; padding-left:12px;
+    border-left:4px solid var(--gold); line-height:1.55;
+  }
+  h2:first-child{margin-top:0;}
+  h3{font-size:16px; font-weight:700; color:var(--ink); margin:26px 0 10px;}
+  h4{
+    font-size:15.2px; font-weight:700; color:#1d4a68;
+    margin:22px 0 9px; padding-left:10px;
+    border-left:3px solid rgba(63,180,232,.45); line-height:1.6;
+  }
+
+  p{font-size:14.6px; color:var(--ink-2); margin-bottom:13px; text-wrap:pretty;}
+  strong{color:var(--ink); font-weight:700;}
+  em{font-style:normal; color:var(--ink); background:rgba(63,180,232,.10);
+     border-radius:3px; padding:0 3px;}
+
+  code{
+    font-family:ui-monospace,Consolas,monospace; font-size:13px;
+    background:var(--card-2); border:1px solid var(--edge); border-radius:4px;
+    padding:1px 6px; color:#1d5c86; word-break:break-all;
+  }
+
+  a{color:var(--accent); text-decoration:none; border-bottom:1px solid #cfe4f0;}
+  a:hover{border-bottom-color:var(--accent);}
+
+  blockquote{
+    margin:14px 0; padding:13px 18px;
+    background:var(--quote-bg); border:1px solid #e8dfc4;
+    border-left:3px solid var(--quote-edge); border-radius:5px;
+    font-size:14.2px; color:var(--quote-ink); line-height:1.95;
+  }
+  blockquote p{margin-bottom:9px; color:inherit; font-size:inherit;}
+  blockquote p:last-child{margin-bottom:0;}
+  blockquote strong{color:#8a6a24;}
+  blockquote em{background:rgba(138,106,36,.10); color:#8a6a24;}
+  blockquote code{background:rgba(255,255,255,.7); color:#7a5f1c; border-color:#e0d2ac;}
+
+  ul,ol{margin:12px 0 14px 22px;}
+  li{font-size:14.5px; color:var(--ink-2); margin-bottom:8px; line-height:1.9;}
+  li strong{color:var(--ink);}
+
+  table{width:100%; border-collapse:collapse; margin:16px 0; font-size:13.6px;}
+  th,td{padding:9px 12px; border:1px solid var(--edge); text-align:left;
+        vertical-align:top; line-height:1.8;}
+  th{background:var(--card-2); color:#1d5c86; font-weight:700; font-size:12.8px;}
+  td{color:var(--ink-2);}
+  td strong{color:var(--ink);}
+  td code{font-size:12.4px;}
+
+  hr{border:none; border-top:1px dashed var(--edge); margin:32px 0;}
+
+  pre{
+    background:#eef4f9; border:1px solid var(--edge); border-radius:6px;
+    padding:14px 16px; margin:16px 0; overflow-x:auto;
+    line-height:1.7;
+  }
+  pre code{
+    background:none; border:none; padding:0; font-size:12.8px;
+    color:#1d4a68; white-space:pre; word-break:normal;
+  }
+
+  footer.doc{
+    margin-top:26px; padding-top:20px; border-top:1px solid var(--edge);
+    font-size:12.4px; color:var(--ink-3); line-height:2; text-align:center;
+  }
+  footer.doc a{color:var(--ink-2);}
+  @media(max-width:700px){
+    body{padding:16px 10px 40px;}
+    header.doc{padding:24px 20px 20px;} header.doc h1{font-size:21px;}
+    main{padding:24px 18px 28px;} h2{font-size:17px;}
+    table{font-size:12.2px;} th,td{padding:7px 8px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="doc">
+    <h1>能力 02 · 信号与系统地基</h1>
+    <p class="sub">同一个系统的五张脸 · 数值互证</p>
+    <p class="src">能力的入口：先建立「同一个东西可以有五种描述」这个直觉。</p>
+  </header>
+  <main>
+<h1>能力 02 · 信号与系统地基</h1>
+<p><strong>这一个能力的定位与能力 01 不同：能力 01 是「换个工具」，这里是「补地基」。</strong></p>
+<hr>
+<h2>一、为什么单独立一个能力</h2>
+<p><strong>背景</strong>：自动化专业，信号与系统学过但没学通。</p>
+<p><strong>这不是"深化"，是"补地基"。</strong> 区别很大：</p>
+<table>
+<tr><th></th><th>深化</th><th>补地基</th></tr>
+<tr><td>前提</td><td>已经通了</td><td><strong>没通</strong></td></tr>
+<tr><td>做法</td><td>往深处挖</td><td><strong>把断的地方接上</strong></td></tr>
+<tr><td>风险</td><td>挖不动</td><td><strong>从零重讲 → 读不下去</strong></td></tr>
+</table>
+<p><strong>所以这个能力不做三件事</strong>：不从零讲、不列公式表、不按教材章序走。</p>
+<p><strong>它只做一件事</strong>：<strong>先帮你定位哪一层没通，再给那一层的最小入口。</strong></p>
+<p><strong>为什么它优先级最高</strong>（呼应 <code>../结构决策.md</code> 的 P1）：</p>
+<p>&gt; 信号与系统是<strong>中枢</strong>。它是电路里的阻抗、控制里的传递函数、 &gt; 滤波器设计的依据、DSP 的基础、深度学习里卷积的来源。 &gt; <strong>它不通，后面所有方向都是悬空的。</strong></p>
+<hr>
+<h2>二、目录内容</h2>
+<pre><code>能力02_信号与系统地基/
+├── README.md              ← 你在这里
+├── 能力02_四张脸.py         ★ 核心：同一个系统的五张脸，数值互证
+└── 诊断与翻译表.md          ★ 27 题诊断 + 翻译表 + 12 个误区 + 极限检验</code></pre>
+<p><strong>只有两个文件，但这是刻意的</strong>——因为这个能力的关键不是"材料多"， 而是<strong>先诊断、再定位</strong>。所以：</p>
+<table>
+<tr><th>文件</th><th>什么时候用</th></tr>
+<tr><td><strong>诊断与翻译表.md</strong></td><td><strong>先读这个。</strong> 做 27 题诊断，找出你的入口</td></tr>
+<tr><td><strong>能力02_四张脸.py</strong></td><td>无论诊断结果如何，<strong>都跑一遍</strong>（理由见下）</td></tr>
+</table>
+<hr>
+<h2>三、核心产出：同一个系统的五张脸</h2>
+<h3>它在解决什么问题</h3>
+<p>信号与系统学不通，最常见的症状<strong>不是某公式没记住</strong>，而是：</p>
+<p>&gt; "我会算拉普拉斯变换，也会算差分方程，也会画波特图， &gt;  <strong>但它们是同一个东西</strong>这件事，我没真正感觉到。"</p>
+<p>于是这门课变成四五个互不相干的工具箱：微分方程一套、拉普拉斯一套、 差分方程一套、z 变换一套、傅里叶一套……</p>
+<h3>它做了什么</h3>
+<p>拿<strong>一个</strong>物理系统（一阶 RC 低通，τ = 1 ms），把它的<strong>五张脸</strong>都算出来：</p>
+<table>
+<tr><th>脸</th><th>表示</th><th>形式</th><th>算出的特征量</th><th>实测数值</th></tr>
+<tr><td>①</td><td><strong>时域</strong></td><td><code>RC·dy/dt + y = u</code></td><td>时间常数 τ</td><td><strong>1.000 ms</strong></td></tr>
+<tr><td>②</td><td><strong>频域</strong></td><td><code>H(jω) = 1/(1+jωRC)</code></td><td>截止频率 fc</td><td><strong>159.1549 Hz</strong></td></tr>
+<tr><td>③</td><td><strong>s 域</strong></td><td><code>H(s) = 1/(1+sτ)</code></td><td>极点 s_p</td><td><strong>−1000 rad/s</strong></td></tr>
+<tr><td>④</td><td><strong>z 域</strong></td><td><code>y[n] = 0.952381·y[n−1] + 0.047619·u[n]</code></td><td>z 极点</td><td><strong>0.952381</strong></td></tr>
+<tr><td>⑤</td><td><strong>状态空间</strong></td><td><code>dx/dt = −x/τ + u/τ</code></td><td>特征值 λ</td><td><strong>−1000 rad/s</strong></td></tr>
+</table>
+<p><strong>然后证明它们是同一件事</strong>：</p>
+<pre><code>τ = 1/ωc = −1/s_p = −1/λ = −T/ln(z_p)</code></pre>
+<p><strong>实测验证</strong>（脚本 exit=0）：</p>
+<ul><li>z 极点 0.952381 vs 理论 e^(−T/τ) = 0.951229（差 1.15e-03，是离散化误差）</li><li>状态空间特征值 −1000 rad/s <strong>完全等于</strong> s 域极点</li><li>同一个阶跃响应，解析解与差分方程解的偏差在 1e-7 ~ 5e-3 之间（随 T 减小而减小）</li></ul>
+<h3>为什么"都要跑一遍"</h3>
+<p><strong>因为"把五张脸串起来"这件事本身就是解药。</strong></p>
+<p>哪怕你诊断出自己 A 组弱（时域）、C 组弱（频域）， <strong>先看一遍这五个数如何互相换算</strong>，后面学任何一个具体章节都会更容易—— 因为你已经知道那块拼图在整个图里的位置。</p>
+<h3>一个刻意加入的设计</h3>
+<p>脚本最后有<strong>三个极限检验</strong>（C→0、C→∞、R→0 时电路退化成什么）。</p>
+<p><strong>这是给你自己检查理解用的</strong>：把参数改成极端值重跑， 如果结果不符合直觉，就找到了薄弱点。</p>
+<p><strong>这比"重读一遍课本"有效</strong>，因为它强制你<strong>做出可被推翻的预测</strong> —— 这和 <code>07_技术/动手实验</code> 那条纪律是同一件事。</p>
+<hr>
+<h2>四、怎么用（建议的顺序）</h2>
+<h3>第 1 步 · 做诊断</h3>
+<p>打开 <a href="诊断与翻译表.html"><code>诊断与翻译表.md</code></a>，做 27 题自测。 按 A/B/C/D/E 五组统计勾数。</p>
+<h3>第 2 步 · 先跑一遍四张脸</h3>
+<pre class="lang-bash"><code>cd 10_专业知识库/能力02_信号与系统地基
+python 能力02_四张脸.py</code></pre>
+<p><strong>不管诊断结果如何都跑一遍。</strong> 理由见上。</p>
+<h3>第 3 步 · 按诊断结果选入口</h3>
+<p><code>诊断与翻译表.md</code> 第五部分给了五条路径（对应 A–E 组）。 每条路径都指向 <strong>MIT 6.003 的具体讲次</strong>：</p>
+<table>
+<tr><th>组</th><th>入口</th></tr>
+<tr><td>A 时域弱</td><td>lec02, 04, 08 + 教材 chap1–3</td></tr>
+<tr><td>B 复频域弱</td><td><strong>lec03</strong>（从极点讲起，最好入口）, 05, 06 + chap4–6</td></tr>
+<tr><td>C 频域乱</td><td>lec09, 11 → 然后 lec14–19</td></tr>
+<tr><td>D 与控制没接上</td><td>lec10, 12, 13 + <code>能力01</code> 的例 3（RLC 二阶）</td></tr>
+<tr><td>E 没直觉</td><td>只做一件事：改参数、预测、再跑</td></tr>
+</table>
+<h3>第 4 步 · 用翻译表随时对照</h3>
+<p><code>诊断与翻译表.md</code> 第二部分是<strong>这张能力最该打印出来的一张表</strong>： 概念在五种表示里各叫什么、五种分析手段各回答什么问题、哪个不要用。</p>
+<hr>
+<h2>五、我在这份产出里的一个推测（你可以反驳）</h2>
+<p><strong>我的判断是：大多数人"没学通"的症状落在 B 组（复频域）和 C 组（频域）， 但根因常在 A 组（时域与卷积）。</strong></p>
+<p>理由：<strong>A 组是唯一一个"动手就能验证"的层</strong>——你可以在纸上算卷积， 也可以用数值积分验证。而如果这一层是靠背公式过的， 后面所有变换都会变成"另一套公式"，于是这门课就分裂成了几个工具箱。</p>
+<p><strong>所以我把"五张脸"做成了第一个产出，而不是从 A 组开始讲。</strong> 因为"串起来"比"补齐某一层"更能破解"分裂成工具箱"这个症状。</p>
+<p><strong>如果你跑完发现症状和我的推测不符，那正好——诊断的价值就在这里。</strong></p>
+<hr>
+<h2>六、"掌握"的判据</h2>
+<ul><li>[ ] 我能说清五张脸之间<strong>任意两个</strong>的换算关系</li><li>[ ] 我能不看答案说出：把 R 从 1k 改成 10k，fc 会变成多少</li><li>[ ] 我能解释为什么<strong>时域是卷积，而其他四张脸都是相乘</strong></li><li>[ ] 我能说出 z = e^(sT) 这个映射把 s 平面的哪块映到 z 平面的哪块</li><li>[ ] 我能用<strong>极点位置</strong>直接说出一个二阶系统的超调与快慢</li><li>[ ] 我遇到不确定的结果时，会<strong>先做极限检验</strong></li></ul>
+<hr>
+<h2>七、已下载的对应资源</h2>
+<table>
+<tr><th>资源</th><th>位置</th><th>说明</th></tr>
+<tr><td><strong>MIT 6.003 全部 25 讲</strong></td><td><code>../00_基础教材/MIT6003_信号与系统/lec01–25.pdf</code></td><td><strong>1914 页全套</strong>，实测无异常</td></tr>
+<tr><td>教材 7 章</td><td>同上 <code>chap1–7.pdf</code></td><td><strong>从差分方程讲到控制</strong></td></tr>
+<tr><td>作业 + 解答</td><td>同上 <code>hw*.pdf</code> <code>sol*.pdf</code></td><td>练习用</td></tr>
+<tr><td>考试 + 解答</td><td>同上 <code>F09*.pdf</code> <code>S10*.pdf</code> <code>q*.pdf</code></td><td>自测用</td></tr>
+<tr><td><strong>Think DSP</strong></td><td><code>../00_基础教材/信号处理_ThinkDSP_中文待译.pdf</code></td><td><strong>每章可跑代码</strong>，补动手</td></tr>
+</table>
+<p><strong>一个值得注意的细节</strong>：MIT 6.003 的教材<strong>从差分方程讲起</strong>（chap1 是 "Difference equations"）， 而不是从连续时间信号讲起。这和多数国内教材的顺序相反。</p>
+<p><strong>这个顺序对"没学通"的人可能更友好</strong>——因为差分方程是可以用手算、用代码验的最简单的形式， 而把"系统"这个概念建立起来之后，再看连续时间就不会那么抽象。</p>
+<p>（顺带：这也解释了为什么 <code>能力01</code> 里那个"分压电路 + RC + RLC"的路径是有效的 ——它是<strong>从电路这个具体东西出发</strong>，而不是从抽象定义出发。）</p>
+<hr>
+<p><em>本能力的实测数据由 <code>能力02_四张脸.py</code> 产生（exit=0）。</em> <em>MIT 6.003 材料许可：CC BY-NC-SA（麻省理工学院开放课件）。</em></p>
+  </main>
+  <footer class="doc">
+    本页由 Markdown 渲染而成 · 原文为 <code>README.md</code>（留在项目内作编辑源，不单独发布）
+  </footer>
+</div>
+</body>
+</html>
