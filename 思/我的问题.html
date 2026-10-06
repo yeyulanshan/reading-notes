@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>我的问题 · 底层</title>
+<meta name="description" content="从五份私人笔记抽取的九组问题 · 项目里哪里碰到了、哪里还没长齐">
+<meta name="theme-color" content="#f2f8fc">
+<style>
+  :root{
+    --paper:#f2f8fc; --card:#ffffff; --card-2:#e9f4fb;
+    --edge:#cfe0ec; --edge-lit:#a4c6dd;
+    --ink:#12232e; --ink-2:#627480; --ink-3:#587286;
+    --accent:#2c7ea2; --accent-2:#377972; --gold:#84744a;
+    --quote-bg:#fbf8ef; --quote-edge:#d8cba4; --quote-ink:#5f5527;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--paper); color:var(--ink); line-height:1.9;
+    -webkit-font-smoothing:antialiased;
+    padding:32px 16px 60px;
+  }
+  ::selection{background:rgba(63,180,232,.26); color:#0d2430;}
+  .wrap{max-width:860px; margin:0 auto;}
+
+  header.doc{
+    background:var(--card); border:1px solid var(--edge);
+    border-top:4px solid var(--accent); border-radius:10px;
+    padding:34px 34px 28px; margin-bottom:24px;
+  }
+  header.doc h1{
+    font-size:26px; font-weight:800; line-height:1.4; letter-spacing:.01em;
+    margin-bottom:12px;
+    background:linear-gradient(135deg,#1d4a68,#2c7ea2 55%,#377972);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  header.doc .sub{font-size:14.6px; color:var(--ink-2); line-height:1.95;}
+  header.doc .src{
+    margin-top:16px; padding-top:14px; border-top:1px dashed var(--edge);
+    font-size:12.6px; color:var(--ink-3); line-height:1.95;
+  }
+  header.doc .src strong{color:var(--ink-2);}
+
+  main{
+    background:var(--card); border:1px solid var(--edge); border-radius:10px;
+    padding:36px 38px 40px;
+  }
+
+  h2{
+    font-size:19px; font-weight:700; color:var(--ink);
+    margin:38px 0 14px; padding-left:12px;
+    border-left:4px solid var(--gold); line-height:1.55;
+  }
+  h2:first-child{margin-top:0;}
+  h3{font-size:16px; font-weight:700; color:var(--ink); margin:26px 0 10px;}
+  h4{
+    font-size:15.2px; font-weight:700; color:#1d4a68;
+    margin:22px 0 9px; padding-left:10px;
+    border-left:3px solid rgba(63,180,232,.45); line-height:1.6;
+  }
+
+  p{font-size:14.6px; color:var(--ink-2); margin-bottom:13px; text-wrap:pretty;}
+  strong{color:var(--ink); font-weight:700;}
+  em{font-style:normal; color:var(--ink); background:rgba(63,180,232,.10);
+     border-radius:3px; padding:0 3px;}
+
+  code{
+    font-family:ui-monospace,Consolas,monospace; font-size:13px;
+    background:var(--card-2); border:1px solid var(--edge); border-radius:4px;
+    padding:1px 6px; color:#1d5c86; word-break:break-all;
+  }
+
+  a{color:var(--accent); text-decoration:none; border-bottom:1px solid #cfe4f0;}
+  a:hover{border-bottom-color:var(--accent);}
+
+  blockquote{
+    margin:14px 0; padding:13px 18px;
+    background:var(--quote-bg); border:1px solid #e8dfc4;
+    border-left:3px solid var(--quote-edge); border-radius:5px;
+    font-size:14.2px; color:var(--quote-ink); line-height:1.95;
+  }
+  blockquote p{margin-bottom:9px; color:inherit; font-size:inherit;}
+  blockquote p:last-child{margin-bottom:0;}
+  blockquote strong{color:#8a6a24;}
+  blockquote em{background:rgba(138,106,36,.10); color:#8a6a24;}
+  blockquote code{background:rgba(255,255,255,.7); color:#7a5f1c; border-color:#e0d2ac;}
+
+  ul,ol{margin:12px 0 14px 22px;}
+  li{font-size:14.5px; color:var(--ink-2); margin-bottom:8px; line-height:1.9;}
+  li strong{color:var(--ink);}
+
+  table{width:100%; border-collapse:collapse; margin:16px 0; font-size:13.6px;}
+  th,td{padding:9px 12px; border:1px solid var(--edge); text-align:left;
+        vertical-align:top; line-height:1.8;}
+  th{background:var(--card-2); color:#1d5c86; font-weight:700; font-size:12.8px;}
+  td{color:var(--ink-2);}
+  td strong{color:var(--ink);}
+  td code{font-size:12.4px;}
+
+  hr{border:none; border-top:1px dashed var(--edge); margin:32px 0;}
+
+  footer.doc{
+    margin-top:26px; padding-top:20px; border-top:1px solid var(--edge);
+    font-size:12.4px; color:var(--ink-3); line-height:2; text-align:center;
+  }
+  footer.doc a{color:var(--ink-2);}
+  @media(max-width:700px){
+    body{padding:16px 10px 40px;}
+    header.doc{padding:24px 20px 20px;} header.doc h1{font-size:21px;}
+    main{padding:24px 18px 28px;} h2{font-size:17px;}
+    table{font-size:12.2px;} th,td{padding:7px 8px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="doc">
+    <h1>我的问题</h1>
+    <p class="sub">从五份私人笔记抽取的九组问题 · 项目里哪里碰到了、哪里还没长齐</p>
+    <p class="src">抽取自 <strong>思/</strong> 目录下的五份私人笔记。按该目录既定规则——<strong>不改动原文一个字</strong>，只做定位、找出文本依据、分清哪部分是完整的、指出哪部分还没长齐。</p>
+  </header>
+  <main>
+<h1>我的问题 · 从 <code>思/</code> 抽取的九组问题，以及项目里哪里碰到了</h1>
+<p><strong>这份文件的规则</strong>：<code>思/</code> 里那五份笔记<strong>一个字都不改</strong>。 本文件只做四件事——<strong>定位原文、找出文本依据、分清哪部分是完整的、指出哪部分还没长齐。</strong></p>
+<ul><li>建立时间：见 git 记录</li><li>抽取自：<code>思/总体思想.txt</code>、<code>思/行为.txt</code>、<code>思/0.txt</code>、 <code>思/新建 文本文档 (3).txt</code>、<code>思/新建 文本文档 (4).txt</code></li><li>已核对的原文在此：<code>思/README.md</code>（原有索引，与本文件互补）</li></ul>
+<hr>
+<h2>为什么要有这份文件</h2>
+<p>这个项目此前有 <strong>79 份产出、26 本书</strong>，但<strong>没有一处是为你自己写的</strong>—— 产出全是「整体架构 / 问题手册 / 助人手册 / 精华笔记」，全是单向的输出。</p>
+<p>你自己在 <code>思/收获.txt</code> 里写过：</p>
+<blockquote><p>「当我带着<strong>满心的问题</strong>去看相关书籍与视频时，我发现我的记忆力与专注度提高了好几个档次」</p></blockquote>
+<p><strong>问题是你这套系统的引擎。</strong> 而此前它不是一个一等公民—— 你的问题散在五份 txt 里，与 79 份产出<strong>零连接</strong>。</p>
+<p>这份文件就是把它们接起来的第一步。</p>
+<hr>
+<h2>一 · 九组问题</h2>
+<p>分三类：<strong>方法类（怎么处理信息）· 原理类（事情为什么这样）· 自我类（在说自己）</strong>。</p>
+<hr>
+<h3>方法组 · 你在建的模型</h3>
+<h4>Q1 · 最小行为模型：「动机 + 能力」够不够？</h4>
+<blockquote><p><strong>原文</strong>（<code>思/行为.txt</code>，全篇）： 「能否通过力学模型来分析行为模型？／力是改变物体运动状态的原因／ 现已知，思想，环境，文化属性，性格，行为／行为是果什么是因，不谈次要只谈主要的话／ 什么情况下人会立即做出反应？／危及生命延续／ 力直接作用于物体会产生直接运动／再复杂的运动模型都可拆解为简单运动的叠加／ 那么行为是不是也是如此？／什么运动容易发生？无阻力的 什么运动难以发生？动力小于阻力的／ <strong>行为模型：动机  能力</strong>」</p></blockquote>
+<blockquote><p><strong>原文</strong>（<code>思/总体思想.txt</code>）： 「<strong>我现在在想一个最小行为模型。</strong>比如我想解决一个问题我可以系统性的分为哪几部， 将已有信息拆分整合成什么形式的」</p></blockquote>
+<p><strong>这是什么</strong>：一个<strong>未完成的模型</strong>。你已经推到「行为 = 动机 + 能力」， 但还没有验证、没有边界条件、也没有第三个变量。</p>
+<p><strong>项目里哪里碰到了</strong>：</p>
+<table>
+<tr><th>产出</th><th>碰到哪一处</th><th>强弱</th></tr>
+<tr><td><code>08/Miller_亲密关系-精华笔记与专业问题.html</code></td><td>「能力」「动机」共 43 处，但<strong>都在讲关系</strong>，不是在讲行为模型</td><td>词同、题不同</td></tr>
+<tr><td><code>08/Fromm_爱的艺术-精华笔记与专业问题.html</code></td><td>「爱是一种<strong>能力</strong>」——一个规范性版本的能力论</td><td>相邻</td></tr>
+<tr><td><code>01/非对称风险-问题手册.html</code></td><td>动机 ×5（<em>代理人问题：行为与后果分离</em>）</td><td>相邻</td></tr>
+</table>
+<p><strong>★★ 缺口</strong>：<strong>项目里没有一本行为科学的书。</strong> 你的「动机 + 能力」与既有的行为模型有直接对应—— Fogg 行为模型（B = MAP：动机 × 能力 × 提示）、 自我效能（班杜拉）、执行意图（Gollwitzer 的 if-then）—— 而<strong>这三样在项目里一个字都没有</strong>。</p>
+<p><strong>这一组的现状</strong>：<strong>未长齐</strong>。缺的是：① 第三个变量（提示/触发）；② 边界条件 （<em>你问「什么运动容易发生」——那正是「能力」高、「动机」够的时候，但你还缺「提示」这个触发项</em>）。</p>
+<hr>
+<h4>Q2 · 「为学日益，为道日损」作为一道工序——具体怎么做？</h4>
+<blockquote><p><strong>原文</strong>（<code>思/总体思想.txt</code>）： 「我比较的好奇，好奇世界上的许多事，比如说金融，历史，哲学，网络，情感，自动控制等等， 但我的精力又是有限的，大脑一次性装的东西也是有限的， 所以我就想到了"<strong>为学日益，为道日损</strong>"将那些信息格式转换成<strong>我所需要的内容</strong>。」</p></blockquote>
+<p><strong>这是什么</strong>：一个<strong>已经想清楚方向、但还没有工序</strong>的方法论。 你说了「转换格式」，但没说要转到什么格式。</p>
+<p><strong>项目里哪里碰到了</strong>：</p>
+<table>
+<tr><th>产出</th><th>碰到哪一处</th><th>强弱</th></tr>
+<tr><td><code>01/无穷的开始-精读笔记与专业问题.html</code></td><td><strong>「解释的延伸」</strong>——一个好解释能解释的东西超出它被提出要解释的范围</td><td><strong>强</strong></td></tr>
+<tr><td><code>07/数字图像处理-问题手册.html</code></td><td>「抽象」；<code>D3 选路</code> 那套<strong>五步决策链</strong>——一个「信息 → 判断」的现成工序</td><td><strong>强</strong>（可借用）</td></tr>
+<tr><td><code>07/Sedgewick_Algorithms4-整体架构.html</code></td><td>「抽象」×5——<em>抽象就是「损」掉细节、留下结构</em></td><td>中</td></tr>
+</table>
+<p><strong>★ 一处可以借用的现成答案</strong>： <code>07/数字图像处理-问题手册.html</code> 的 D3 给了一套五步链 （<em>先定在哪一级处理 → 问是不是逆问题 → 找不能违反的约束 → 检查「最优」的前提 → 留后路</em>）。 <strong>那是「信息 → 判断」的工序，而你要的是「信息 → 我能用的内容」的工序——两者结构相同。</strong></p>
+<p><strong>这一组的现状</strong>：<strong>方向清楚，工序缺失</strong>。可借用，但需要你自己改写。</p>
+<hr>
+<h4>Q3 · 「大道 / 小道」——这是什么意思？</h4>
+<blockquote><p><strong>原文</strong>（<code>思/新建 文本文档 (3).txt</code>）： 「文化属性？强者文化？弱者文化？／<strong>道？好的解释？小道？大道？</strong>／ 文化只能用文化的武器清除？／关系社会？立场？观点？视角？／ 以和为贵，争取双赢，若不得以而战，达则止步。」</p></blockquote>
+<p><strong>这是什么</strong>：<strong>一个真问题，且是本项目里连接最强的一处。</strong></p>
+<p><strong>项目里哪里碰到了</strong>：</p>
+<table>
+<tr><th>产出</th><th>碰到哪一处</th><th>强弱</th></tr>
+<tr><td><code>01/无穷的开始-问题手册.html</code></td><td><strong>好解释 ×16、易谬 ×10、延伸 ×9</strong></td><td><strong>强</strong> — 你问的「好的解释」正是这本书的核心判据</td></tr>
+<tr><td><code>02/毛选/好解释与实践论-对照.html</code></td><td>两套判据的并列与冲突</td><td><strong>强</strong></td></tr>
+<tr><td><code>03/Dawkins_盲眼钟表匠-精华笔记.html</code></td><td>「道」×68、延伸 ×1</td><td>中（<em>词同、义不同：那里是"达尔文的方式"</em>）</td></tr>
+<tr><td><code>00/論語-问题手册.html</code></td><td>「道」×67</td><td>中（<em>儒家那个"道"</em>）</td></tr>
+<tr><td><code>00/中国智慧-精华笔记与专业问题.html</code></td><td>「道」×73</td><td>中</td></tr>
+<tr><td><code>冲突与呼应地图.html</code></td><td>CF2：<strong>真理的标准</strong>（好解释 vs 社会实践）</td><td><strong>强</strong></td></tr>
+</table>
+<p><strong>★ 这一组是三组里最"长齐"的</strong>： 你问的「好的解释」在项目里已经有<strong>判据</strong>（难以改变）、 <strong>反例</strong>（易谬主义）、<strong>冲突</strong>（vs 实践论），<strong>以及一处跨书对照</strong>。</p>
+<p><strong>但你的原话里有一个词项目里没碰过</strong>：<strong>「大道 / 小道」这个区分。</strong> 项目处理的是「好解释 / 坏解释」—— <em>而「大小」是另一个维度：不是「对不对」，是「能覆盖多宽」。</em> <strong>这个维度在《无穷的开始》里有对应物（解释的延伸范围），但没有被单独拿出来讲。</strong></p>
+<p><strong>这一组的现状</strong>：<strong>大部分长齐，缺「大/小」这个维度。</strong></p>
+<hr>
+<h3>原理组 · 你在问的事情</h3>
+<h4>Q4 · 文化属性：强者文化 vs 弱者文化</h4>
+<blockquote><p><strong>原文</strong>（<code>思/新建 文本文档 (3).txt</code>，第一行）： 「<strong>文化属性？强者文化？弱者文化？</strong>」</p></blockquote>
+<p><strong>项目里哪里碰到了</strong>：</p>
+<table>
+<tr><th>产出</th><th>碰到哪一处</th><th>强弱</th></tr>
+<tr><td><code>01/无穷的开始-问题手册.html</code></td><td><strong>谜米 ×28、反理性谜米 ×9</strong></td><td><strong>强</strong> — 「靠使持有者丧失批评能力来复制」</td></tr>
+<tr><td><code>01/无穷的开始-精读笔记与专业问题.html</code></td><td>谜米 ×31、批评 ×18</td><td><strong>强</strong></td></tr>
+<tr><td><code>03/Dawkins_盲眼钟表匠-概念误用与失效边界手册.html</code></td><td>强者 ×2、弱者 ×1</td><td><strong>弱（词同、题不同）</strong></td></tr>
+</table>
+<p><strong>★ 这不是一个术语巧合——你问的「强者/弱者文化」与多伊奇的「理性/反理性谜米」是同一个区分。</strong></p>
+<p>多伊奇的定义（已在项目里核对过）：</p>
+<blockquote><p>「谜米复制只有两种基本策略：<strong>帮助预期的持有者，或者使持有者丧失批评能力</strong>。」</p></blockquote>
+<p><strong>两者的差别在哪</strong>：</p>
+<ul><li>你说的是<strong>文化的强弱</strong>（<em>谁的文化更"强"</em>）；</li><li>多伊奇说的是<strong>复制策略</strong>（<em>靠对你好，还是靠让你不敢问</em>）。</li></ul>
+<p><strong>多伊奇那一侧的好处</strong>：他<strong>不带道德评价</strong>—— 「弱者文化」听起来像贬义，而「反理性谜米」只是一个<em>机制描述</em>。 <em>但你那一侧点出了一件多伊奇没说的事：这种文化会<strong>在竞争中被淘汰或胜出</strong>。</em></p>
+<p><strong>这一组的现状</strong>：<strong>碰到了，但没对上。</strong> 缺的是把「强弱」与「复制策略」这两个框架摆在一起对一次。</p>
+<hr>
+<h4>Q5 · 「文化只能用文化的武器清除」——这句话成立吗？</h4>
+<blockquote><p><strong>原文</strong>（<code>思/新建 文本文档 (3).txt</code>，第三行）</p></blockquote>
+<p><strong>项目里哪里碰到了</strong>：</p>
+<table>
+<tr><th>产出</th><th>碰到哪一处</th><th>强弱</th></tr>
+<tr><td><code>01/无穷的开始-精读笔记与专业问题.html</code></td><td>谜米 ×31、批评 ×18、<strong>复制策略 ×3</strong></td><td><strong>强</strong></td></tr>
+<tr><td><code>01/无穷的开始-问题手册.html</code></td><td>谜米 ×28、批评 ×17、复制策略 ×3</td><td><strong>强</strong></td></tr>
+<tr><td><code>02/毛选/阶级地位与通用解释者-对照.html</code></td><td>批评 ×15</td><td>中</td></tr>
+<tr><td><code>01/非对称风险-精华笔记与专业问题.html</code></td><td>批评 ×12</td><td>弱</td></tr>
+</table>
+<p><strong>★ 多伊奇对这个问题的答案是「是」，但理由与通常说的不同</strong>： 他的论证不是「文化只能被文化打败」（<em>那是一句比喻</em>）， 而是<strong>「你不能靠禁止来消除一个谜米，只能靠提供一个更好的谜米」</strong>—— 因为<em>禁令本身也是一个谜米，而它如果是反理性的，就在复制同一个机制。</em></p>
+<p><strong>这一组的现状</strong>：<strong>碰到了，答案在，但你没有把它当成一个可检验的命题。</strong> <em>「文化只能用文化清除」这个说法可以被检验：历史上有哪些文化是被非文化的力量（战争、经济）清除的？</em></p>
+<hr>
+<h4>Q6 · 关系社会：立场决定观点吗？</h4>
+<blockquote><p><strong>原文</strong>（<code>思/新建 文本文档 (3).txt</code>，第四行）： 「<strong>关系社会？立场？观点？视角？</strong>」</p></blockquote>
+<p><strong>项目里哪里碰到了</strong>：</p>
+<table>
+<tr><th>产出</th><th>碰到哪一处</th><th>强弱</th></tr>
+<tr><td><code>02/毛选/阶级地位与通用解释者-对照.html</code></td><td>阶级 ×28、立场 ×2</td><td><strong>强</strong> — 正是「立场 vs 视角」</td></tr>
+<tr><td><code>00/中国智慧-精华笔记与专业问题.html</code></td><td><strong>关系性 ×10</strong>、立场 ×5</td><td><strong>强</strong> — 「关系性自我」</td></tr>
+<tr><td><code>冲突与呼应地图.html</code></td><td>CF3：阶级地位 vs 通用解释者（阶级 ×9、立场 ×8）</td><td><strong>强</strong></td></tr>
+<tr><td><code>01/无穷的开始-精读笔记与专业问题.html</code></td><td>立场 ×15</td><td>中</td></tr>
+<tr><td><code>06/视觉-问题手册.html</code></td><td>视角 ×15（<em>词同、义不同：那里是视觉的"视角"</em>）</td><td>弱</td></tr>
+</table>
+<p><strong>★ 这一组在项目里有现成的两份对照</strong>，而且是全项目唯一的跨书产出。</p>
+<p><strong>你的问法比它们都更进一步</strong>：你问的是「<strong>关系社会</strong>」—— <em>不是「立场决定观点」（那是认识论），而是「关系决定立场」（那是社会学）。</em> <strong>这两者在项目里没有被分开。</strong> <code>00/中国智慧</code> 的「关系性自我」是最近的一处，但它讲的是<em>自我如何被关系构成</em>， 不是<em>立场如何被关系决定</em>。</p>
+<p><strong>这一组的现状</strong>：<strong>碰到了，而且有对照，但你的「关系社会」那一层还没进去。</strong></p>
+<hr>
+<h4>Q7 · 以和为贵、争取双赢、达则止步——什么时候这套策略成立？</h4>
+<blockquote><p><strong>原文</strong>（<code>思/新建 文本文档 (3).txt</code>，末行）： 「<strong>以和为贵，争取双赢，若不得以而战，达则止步。</strong>」</p></blockquote>
+<p><strong>项目里哪里碰到了</strong>：</p>
+<table>
+<tr><th>产出</th><th>碰到哪一处</th><th>强弱</th></tr>
+<tr><td><code>01/非对称风险-整体架构.html</code></td><td><strong>非对称 ×13</strong></td><td><strong>强</strong> — 「双赢」在非对称下不成立</td></tr>
+<tr><td><code>01/非对称风险-问题手册.html</code></td><td>非对称 ×14</td><td><strong>强</strong></td></tr>
+<tr><td><code>01/非对称风险-精华笔记与专业问题.html</code></td><td>非对称 ×14</td><td><strong>强</strong></td></tr>
+<tr><td><code>03/盲眼钟表匠-精华笔记与专业问题.html</code></td><td>合作 ×3（<em>演化里的合作</em>）</td><td>中</td></tr>
+<tr><td><code>08/Miller_亲密关系-问题手册.html</code></td><td>合作 ×2</td><td>弱</td></tr>
+</table>
+<p><strong>★ 这是九组里「最被项目正面回答」的一组，而答案可能会让你不舒服</strong>：</p>
+<p>塔勒布那一侧的核心论证是—— <strong>「双赢」要求双方的风险是对称的；而在现实里遇到的大多数冲突，风险是非对称的。</strong> <em>当一方承担后果、另一方不承担时，「以和为贵」对承担后果的那一方是净损失。</em></p>
+<p><strong>这与《无穷的开始》第 15 章有一处呼应</strong>： <em>「若不得以而战，达则止步」——「达则止步」的前提是你还活着、还有能力止步； 而多伊奇说静态社会的失败正是因为<strong>无法迅速创造知识，所以任何问题都会变成灾难</strong>。</em></p>
+<p><strong>这一组的现状</strong>：<strong>碰到了，有答案，但答案与你的原话方向相反。</strong> <em>这正是最值得你读的一组——因为它可能要求你改一句你写下来的原则。</em></p>
+<hr>
+<h4>Q8 · 借势：「对时局的判断力比耐力更加重要」</h4>
+<blockquote><p><strong>原文</strong>（<code>思/0.txt</code>，全篇）：以引力弹弓为模型—— 「当我们知道引力弹弓的理论后我们就会有新的解法，在被牵引时我们享受着行星代着我们运动， 当我们到达位置后主动加速脱离行星，以便去乘坐下一班行星，<strong>以此用最小的力走最远的路，此为借势</strong>。」</p><p>「当我们回首时会惊讶的发现许多时候并非我们一步步算着走的，<strong>大多数时候是被势推着走的</strong>， 所以在这个时代<strong>对时局的判断力比耐力更加重要</strong>。所谓行至水穷处坐看云起时。」</p></blockquote>
+<p><strong>项目里哪里碰到了</strong>：</p>
+<table>
+<tr><th>产出</th><th>碰到哪一处</th><th>强弱</th></tr>
+<tr><td><code>01/科技想要什么-精华笔记与专业问题.html</code></td><td><strong>方向 ×57、必然 ×23</strong></td><td><strong>强</strong> — 「势」的现成模型</td></tr>
+<tr><td><code>03/盲眼钟表匠-问题手册.html</code></td><td>方向 ×9、必然 ×9</td><td>中</td></tr>
+<tr><td><code>03/MacKay_信息论-精华笔记与专业问题.html</code></td><td>方向 ×11、必然 ×4</td><td>弱</td></tr>
+<tr><td><strong><code>冲突与呼应地图.html</code></strong></td><td><strong>CF4：技术往哪走——趋势是独立的东西，还是人的知识积累的产物</strong></td><td><strong>强，且是冲突</strong></td></tr>
+</table>
+<p><strong>★ 你的「借势」与凯利的「必然性」是同一个东西，而它与多伊奇冲突</strong>—— <strong>这一点在《冲突与呼应地图》CF4 里已经展开。</strong></p>
+<p><strong>你的引力的比喻里有一处比凯利更精确</strong>：</p>
+<blockquote><p>「刚刚脱离的它是不知道的，它现在后悔了，若有一个行星再次将它牵引它发誓它不会再脱离了。」</p></blockquote>
+<p><strong>这句话说的是「借势」的成本</strong>：脱离旧轨道之后有一段<em>没有参照系</em>的时间， 而人在那段时间里会<strong>主动要求回到被牵引的状态</strong>—— <em>这比「用最小的力走最远的路」更接近实际，因为大多数人不缺"借势"的聪明，缺的是承受那段黑暗。</em></p>
+<p><strong>这一组的现状</strong>：<strong>碰到了，而且是九组里项目材料最厚的一组</strong>（凯利那本书整本讲这个）。 缺的是把「势」这个字在你的用法与凯利的用法之间对一次。</p>
+<hr>
+<h3>自我组 · 在说自己，不是待解决的问题</h3>
+<h4>Q9 · 保持输出，以及阅读的代价</h4>
+<blockquote><p><strong>原文</strong>（<code>思/新建 文本文档 (4).txt</code>，全篇）： 「从上次与人争吵后我就很少写些什么了，是我懒了？懈怠了还是其他的什么，如同迷雾一般让人琢磨不清。 可人还是要<strong>保持输出的习惯</strong>，去写点什么，以理清自己的心中所思； 去做些什么，以确定自己所能触及的边界。至于要写些什么则是随便，反正是要保持写的一个习惯。」</p><p>「每一部好的作品都是人间不可多得的宝物，在阅读的途中我总是想着快些再快些， 但越到故事的结尾就越发的不愿往下看了……让我以二十几岁的阅历去历经别人， 半辈子甚至是一生的经历……<strong>这对读者又何尝不是一种残忍？</strong>」</p></blockquote>
+<p><strong>这是两个不同的问题</strong>，我分开列：</p>
+<p><strong>Q9a · 输出为什么会中断？</strong></p>
+<ul><li>项目里<strong>没有</strong>任何一本讲写作或输出习惯的书。</li><li>最近的相邻处是 <code>07/数字图像处理-问题手册.html</code>（输出 ×20，<em>但那是"输出图像"</em>） 与 <code>02/当呼吸化为空气-精华笔记.html</code>（写作 ×14，<em>那是保罗为什么要写</em>）。</li><li><strong>现状：未长齐。</strong> 缺的是<em>「知道该写」与「写不下去」之间那一段</em>。</li></ul>
+<p><strong>Q9b · 阅读别人的一生，对读者意味着什么？</strong></p>
+<ul><li><code>02/当呼吸化为空气</code> 是<strong>唯一</strong>直接相关的一本——它正是一个「用一本书装一个人一生」的实例。</li><li><em>而保罗的处理方式与你的疑问有直接对应：他也是文学出身，也正是因为意识到 「文学问意义但给不出可操作答案」才转向医学。</em></li><li><strong>现状：有一本，但没对上。</strong> 你问的是<strong>读者</strong>的代价，保罗写的是<strong>作者</strong>的处境。</li></ul>
+<hr>
+<h2>二 · 一览表</h2>
+<table>
+<tr><th>#</th><th>问题</th><th>组</th><th>项目里碰到了吗</th><th>现状</th></tr>
+<tr><td><strong>Q1</strong></td><td>最小行为模型：动机+能力够不够</td><td>方法</td><td>词碰到（Miller/Fromm 的「能力」），<strong>题没碰到</strong></td><td><strong>未长齐</strong>（缺第三变量与边界的书）</td></tr>
+<tr><td><strong>Q2</strong></td><td>「为学日益，为道日损」的工序</td><td>方法</td><td>碰到（解释的延伸、D3 五步链）</td><td>方向清楚，<strong>工序缺失</strong>（可借用）</td></tr>
+<tr><td><strong>Q3</strong></td><td>大道 / 小道</td><td>方法</td><td><strong>强</strong>（好解释、易谬、延伸、两处对照）</td><td><strong>大部分长齐，缺「大/小」维度</strong></td></tr>
+<tr><td><strong>Q4</strong></td><td>强者文化 vs 弱者文化</td><td>原理</td><td><strong>强</strong>（反理性谜米）</td><td>碰到了，<strong>没对上</strong>（需并置两套框架）</td></tr>
+<tr><td><strong>Q5</strong></td><td>文化只能用文化的武器清除</td><td>原理</td><td><strong>强</strong>（批评、复制策略）</td><td>碰到了，<strong>答案在，未被当作可检验命题</strong></td></tr>
+<tr><td><strong>Q6</strong></td><td>关系社会：关系决定立场？</td><td>原理</td><td><strong>强</strong>（两份对照、关系性自我）</td><td>碰到了，<strong>你的「关系社会」那一层没进去</strong></td></tr>
+<tr><td><strong>Q7</strong></td><td>以和为贵 / 双赢 / 达则止步</td><td>原理</td><td><strong>最强</strong>（非对称风险整本）</td><td><strong>有答案，且与你的原话方向相反</strong></td></tr>
+<tr><td><strong>Q8</strong></td><td>借势 / 时局判断力</td><td>原理</td><td><strong>材料最厚</strong>（凯利整本 + CF4）</td><td>碰到了，<strong>缺「势」的两种用法对照</strong></td></tr>
+<tr><td><strong>Q9a</strong></td><td>输出为什么会中断</td><td>自我</td><td><strong>没碰到</strong></td><td><strong>未长齐</strong></td></tr>
+<tr><td><strong>Q9b</strong></td><td>阅读他人一生的代价</td><td>自我</td><td>一本（当呼吸化为空气）</td><td>有一本，<strong>方向没对上</strong></td></tr>
+</table>
+<hr>
+<h2>三 · 这份清单暴露出来的四件事</h2>
+<p><strong>① 你的问题里有一个反复出现的词：「文化」。</strong> Q4、Q5、Q6 都在文化那一层，而项目里对应的材料<strong>集中在《无穷的开始》一本书上</strong>（谜米理论）。 <strong>《論語》《道德經》《中国智慧》都在 00 域，但它们讲的是「道」，不是「文化」。</strong> <em>这是一个真实的缺口：你关心「文化如何运作」，而书库里唯一正面处理它的是一本英国人写的认识论。</em></p>
+<p><strong>② Q1 和 Q9a 是「未长齐」的两组，而它们都是「关于怎么做」的问题。</strong> 项目里<strong>技术书很多（07 域 20 份产出）</strong>，但<strong>没有一本行为科学或习惯科学的书</strong>。 <em>这解释了为什么「最小行为模型」卡住了——它的原料不在库里。</em></p>
+<p><strong>③ Q7 是唯一一组「项目给了与你的原则相反的答案」。</strong> 按你自己的要求（<em>你让我挑战你</em>），<strong>这一组应该最先读</strong>。</p>
+<p><strong>④ Q3 和 Q8 有一个共同结构：你在用一个「大小」或「势」的隐喻，而项目里的框架是二值的。</strong></p>
+<ul><li>Q3：你想分<strong>大道/小道</strong>，项目只有<strong>好/坏解释</strong>；</li><li>Q8：你想讲<strong>势</strong>，项目里凯利讲<strong>必然方向</strong>、多伊奇讲<strong>人的选择</strong>。</li></ul>
+<p><strong>隐喻给你的是连续维度，而框架给你的是二分。这个落差本身可能是一个值得单独想的问题。</strong></p>
+<hr>
+<h2>四 · 五个问题（接在这份清单后面）</h2>
+<p><strong>不是给你答案的，是给下一轮读书的。</strong></p>
+<ol><li><strong>Q1</strong>：「动机 + 能力」之外，你有没有过<strong>动机够、能力够、但就是没做</strong>的时候？</li></ol>
+<p><em>那时候缺的是第三样东西——而它是什么，你能叫出名字吗？</em></p>
+<ol><li><strong>Q3</strong>：你说「小道 / 大道」。</li></ol>
+<p><em>举一个你以为是小道、后来发现是大道的东西（或反过来）。那个转折是怎么发生的？</em></p>
+<ol><li><strong>Q4</strong>：「强者文化 / 弱者文化」——</li></ol>
+<p><em>你能举出一个具体的文化现象，并说清它靠什么传播（对你好，还是让你不敢问）吗？</em></p>
+<ol><li><strong>Q7</strong>：你写了「以和为贵，争取双赢」。</li></ol>
+<p><em>在你经历过的真实冲突里，有没有一次是<strong>风险不对称</strong>的？那一次「以和为贵」的结果是什么？</em></p>
+<ol><li><strong>Q9a</strong>：「保持输出」这件事，上次中断是因为「与人争吵」。</li></ol>
+<p><em>争吵与输出之间是什么关系——是争吵占了时间，还是争吵改变了你想说的东西？</em></p>
+<hr>
+<h2>五 · 与原有索引的关系</h2>
+<p><code>思/README.md</code> 是<strong>原文的索引</strong>（把八份笔记按功能分类，A/B/C 三类）。 本文件是<strong>问题的索引</strong>（把同一个原料里长出来的问题，接向 79 份产出）。</p>
+<ul><li>想知道「哪份笔记说了什么」→ 看 <code>思/README.md</code></li><li>想知道「我的问题在哪里被碰到过」→ 看本文件</li></ul>
+<p><strong>两份文件都不改动 <code>思/</code> 里任何原文一个字。</strong></p>
+  </main>
+  <footer class="doc">
+    本页由 Markdown 渲染而成 · 原文为 <code>我的问题.md</code>（留在项目内作编辑源，不单独发布）
+  </footer>
+</div>
+</body>
+</html>
