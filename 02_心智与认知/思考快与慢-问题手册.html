@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>思考，快与慢 · 问题手册</title>
+<style>
+  :root{
+    --paper:#0d1117; --card:#161c24; --edge:#252d38;
+    --ink:#e8eef6; --ink-mid:#a3b2c2; --ink-soft:#6d7c8d;
+    --l1:#5aa9e6; --l2:#c9a24a; --l3:#b26fc9;
+    --key:#d9c26a; --key-soft:#2a2517;
+    --pit:#d4693c; --pit-soft:#2a1a13;
+    --ref:#5cc98f; --ref-soft:#11251b;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--paper);color:var(--ink);line-height:1.95;padding:32px 16px 56px;
+    -webkit-font-smoothing:antialiased;}
+  .wrap{max-width:940px;margin:0 auto;}
+  header{text-align:center;padding:38px 20px 32px;background:var(--card);
+    border:1px solid var(--edge);border-top:4px solid var(--l1);border-radius:4px;margin-bottom:22px;}
+  header .kicker{font-size:11px;letter-spacing:.26em;color:var(--ink-soft);
+    font-family:ui-monospace,Consolas,monospace;margin-bottom:13px;}
+  header h1{font-size:24px;font-weight:800;letter-spacing:.01em;line-height:1.4;margin-bottom:10px;}
+  header .sub{font-size:13.8px;color:var(--ink-mid);line-height:1.9;}
+  header .src{margin-top:12px;font-size:12px;color:var(--ink-soft);line-height:1.9;}
+  .howto{background:var(--card);border:1px solid var(--edge);border-radius:3px;
+    padding:18px 22px;margin-bottom:22px;font-size:13.8px;color:var(--ink-mid);}
+  .howto .t{color:var(--key);font-weight:700;margin-bottom:9px;font-size:13.4px;}
+  .howto p+p{margin-top:7px;} .howto strong{color:var(--ink);}
+  .howto em{font-style:normal;color:#c2cfdc;}
+  .lvkey{display:flex;gap:16px;flex-wrap:wrap;margin-top:11px;font-size:12.4px;}
+  .lvkey span{display:inline-flex;align-items:center;gap:6px;color:var(--ink-soft);}
+  .lvkey i{font-style:normal;font-family:ui-monospace,Consolas,monospace;font-size:10.6px;
+    padding:1px 7px;border-radius:3px;font-weight:700;}
+  .lv1c{background:rgba(90,169,230,.16);color:var(--l1);border:1px solid rgba(90,169,230,.4);}
+  .lv2c{background:rgba(201,162,74,.16);color:var(--l2);border:1px solid rgba(201,162,74,.4);}
+  .lv3c{background:rgba(178,111,201,.16);color:var(--l3);border:1px solid rgba(178,111,201,.4);}
+  h2{font-size:17.5px;font-weight:700;margin:34px 0 5px;padding-left:12px;
+    border-left:4px solid var(--key);line-height:1.55;}
+  .s{color:var(--ink-soft);font-size:12.8px;margin:0 0 15px 16px;line-height:1.85;}
+  .q{background:var(--card);border:1px solid var(--edge);border-radius:9px;
+    padding:16px 19px;margin-bottom:12px;transition:border-color .2s;}
+  .q:hover{border-color:#33404f;}
+  .q-head{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:9px;}
+  .q-id{font-family:ui-monospace,Consolas,monospace;font-size:12px;font-weight:700;
+    color:var(--ink-soft);letter-spacing:.06em;}
+  .q-lv{font-family:ui-monospace,Consolas,monospace;font-size:10.4px;font-weight:700;
+    padding:1px 7px;border-radius:3px;}
+  .lv1{background:rgba(90,169,230,.16);color:var(--l1);border:1px solid rgba(90,169,230,.4);}
+  .lv2{background:rgba(201,162,74,.16);color:var(--l2);border:1px solid rgba(201,162,74,.4);}
+  .lv3{background:rgba(178,111,201,.16);color:var(--l3);border:1px solid rgba(178,111,201,.4);}
+  .q-tag{font-size:11.4px;color:var(--ink-soft);border:1px solid var(--edge);
+    border-radius:999px;padding:1px 9px;}
+  .q-text{font-size:14.4px;color:var(--ink);line-height:1.9;}
+  .q-text strong{color:#fff;}
+  details{margin-top:11px;}
+  summary{font-size:12.8px;color:var(--l1);cursor:pointer;list-style:none;
+    padding:5px 0;user-select:none;transition:color .18s;}
+  summary::-webkit-details-marker{display:none;}
+  summary::before{content:"▸ ";font-size:11px;}
+  details[open] summary::before{content:"▾ ";}
+  summary:hover{color:#8fc4ee;}
+  .a{margin-top:11px;padding:15px 17px;background:#111722;border:1px solid var(--edge);
+    border-radius:7px;font-size:13.8px;color:var(--ink-mid);line-height:1.95;}
+  .a p+p{margin-top:9px;}
+  .a strong{color:var(--ink);}
+  .a em{font-style:normal;color:#c2cfdc;}
+  .a .key{display:block;margin:13px 0 6px;font-size:13px;font-weight:700;color:var(--key);}
+  .a .key::before{content:"◆ ";font-size:10px;}
+  blockquote{margin:11px 0;padding:10px 15px;background:var(--key-soft);
+    border-left:3px solid var(--key);border-radius:3px;
+    font-size:13.4px;color:#efe3b8;line-height:1.9;}
+  blockquote .who{display:block;margin-top:6px;font-size:11.6px;color:var(--ink-soft);
+    text-align:right;}
+  .pit{display:block;margin:13px 0 6px;font-size:13px;font-weight:700;color:var(--pit);}
+  .pit::before{content:"⚠ ";font-size:11px;}
+  .pit-b{background:var(--pit-soft);border:1px solid #3d231c;border-radius:3px;
+    padding:11px 15px;font-size:13.2px;color:#e8b79a;line-height:1.9;margin-top:6px;}
+  .ref{display:block;margin:12px 0 5px;font-size:12.4px;color:var(--ref);}
+  .ref::before{content:"→ ";font-size:11px;}
+  ul{margin:8px 0 0 20px;} li{font-size:13.4px;color:var(--ink-mid);margin-bottom:6px;line-height:1.9;}
+  li strong{color:var(--ink);}
+  footer{margin-top:42px;padding-top:20px;border-top:1px solid var(--edge);
+    text-align:center;font-size:12px;color:var(--ink-soft);line-height:2;}
+  @media(max-width:680px){
+    header h1{font-size:20px;} h2{font-size:16px;}
+    body{padding:18px 11px 40px;}
+    .q{padding:14px 15px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="kicker">THINKING, FAST AND SLOW · QUESTION MANUAL</div>
+  <h1>《思考，快与慢》问题手册</h1>
+  <div class="sub">22 个问题 · 三档难度 · 按全书五部分组织</div>
+  <div class="src">丹尼尔·卡尼曼 · 与阿莫斯·特沃斯基的合作研究<br>
+    全书 5 部分 38 章 · 本项目语料 29.2 万汉字</div>
+</header>
+
+<div class="howto">
+  <div class="t">怎么用这本手册</div>
+  <p>每个问题都配一份参考答案，<strong>参考答案里引了原文</strong>（引文均可在
+  <code>思考快与慢_全文_简体.txt</code> 中核对）。</p>
+  <p><strong>先自己想，再展开。</strong>这本书讲的正是「系统1会先给一个看似合理的答案」
+  ——如果你一上来就看答案，你用的就是系统1。</p>
+  <p><em>L1 是「读懂了吗」，L2 是「能用吗」，L3 是「能反着用吗」——能指出它的边界在哪。</em></p>
+  <div class="lvkey">
+    <span><i class="lv1c">L1</i>概念理解</span>
+    <span><i class="lv2c">L2</i>应用与辨认</span>
+    <span><i class="lv3c">L3</i>边界与反驳</span>
+  </div>
+</div>
+
+<!-- ==================== 第一部分 ==================== -->
+<h2>第一部分 · 系统1，系统2</h2>
+<div class="s">第 1–9 章。这一部分建立全书的地基：两套系统、它们怎么协作、在哪里出问题。</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">A1</span><span class="q-lv lv1">L1</span><span class="q-tag">总纲</span></div>
+  <div class="q-text">用一句话说清<b>系统1</b>与<b>系统2</b>的分工，并说明为什么作者要用「系统」这个词，而不是直接说「直觉」和「理性」。</div>
+  <details><summary>展开参考答案</summary>
+    <div class="a">
+      <p><strong>系统1：自动、快速、不费力、无意识，靠联想和原型工作。<br>
+      系统2：受控、缓慢、费力、需要注意力，负责逻辑与自我控制。</strong></p>
+      <p>卡尼曼用「系统」而不是「直觉／理性」，是因为他要强调的是
+      <strong>两套运作方式，而不是两种能力</strong>。系统1不是「低级」，它在绝大多数日常判断里是主力；
+      系统2也不是「正确答案的产地」，它<em>懒惰</em>，常常只是默认接受系统1的建议。</p>
+      <span class="key">关键：它们不是两个小人，是两种加工模式</span>
+      <p>书里反复提醒：系统1和系统2是<strong>为了叙述方便起的名字</strong>，
+      不是大脑里两个真实的器官。这决定了后面所有结论的性质——
+      <em>你没法「关掉」系统1，只能识别出它正在起作用。</em></p>
+      <span class="pit">常见误解</span>
+      <div class="pit-b">以为「多用系统2就能避免错误」。<strong>做不到，而且代价极高。</strong>
+      卡尼曼自己说，他做了一辈子研究，也只是「提升了对易犯错误的情境的识别能力」——
+      <em>而识别别人犯错比识别自己容易得多。</em></div>
+      <span class="ref">对应第一部分，全书地基</span>
+    </div>
+  </details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">A2</span><span class="q-lv lv1">L1</span><span class="q-tag">认知放松</span></div>
+  <div class="q-text">什么决定你「觉得一件事容易」？为什么「读起来顺」会影响你「信不信」？</div>
+  <details><summary>展开参考答案</summary>
+    <div class="a">
+      <p>卡尼曼给出的机制是<strong>认知放松度</strong>——系统1有一套刻度盘，实时评估当前状态，
+      其中一个测的就是「放松 / 紧张」。</p>
+      <blockquote>放松是事情进展顺利的标志——没有障碍、没有新情况、没必要转移注意力或投入更多精力。
+      紧张说明存在某种问题，且需要不断调动系统2参与其中。<span class="who">第 5 章</span></blockquote>
+      <p>关键在于：<strong>造成放松或紧张的原因会互相影响，而系统1分不清是哪个原因。</strong></p>
+      <blockquote>如果一个句子印刷清晰，或是被多次重复，或是已经深植于脑海，
+      人们就能在认知放松的状态下顺畅地将其解读出来。<span class="who">第 5 章</span></blockquote>
+      <span class="key">所以「顺」不等于「真」</span>
+      <p>印刷清晰、重复出现、心情好——<strong>这三件事都会带来放松，而它们都与真假无关。</strong>
+      系统1却会把「放松感」直接读成「这句话可信」。</p>
+      <p><em>这就是为什么重复一遍假话就更容易被相信，也是为什么广告要反复播。</em></p>
+      <span class="pit">常见误解</span>
+      <div class="pit-b">把这条当成「要警惕广告」的道德提醒。
+      <strong>它其实是一条关于判断机制的陈述</strong>：放松感是一个信号，而这个信号会被错误归因。</div>
+      <span class="ref">对应第 5 章</span>
+    </div>
+  </details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">A3</span><span class="q-lv lv2">L2</span><span class="q-tag">启动效应</span></div>
+  <div class="q-text">「咬住一支笔」和「看到某个词」，为什么能改变你的判断？请说明这个机制的<b>作用范围</b>。</div>
+  <details><summary>展开参考答案</summary>
+    <div class="a">
+      <p>这是<strong>启动效应</strong>：一个概念被激活后，会带动一串相关概念，并<strong>改变行为</strong>，
+      而你自己察觉不到。</p>
+      <blockquote>我们将此现象称为启动效应，也就是说"喝"这个概念在"汤"之前出现，
+      "运动"先于"场"出现。<span class="who">第 4 章</span></blockquote>
+      <p>书里的经典演示是<strong>咬笔实验</strong>：咬住笔迫使面部做出「笑」的肌肉动作，
+      就会让人更容易觉得漫画好笑——<em>而受试者完全不知道自己在「笑」。</em></p>
+      <span class="key">作用范围：从词到行为，你都不知道</span>
+      <p>启动效应的关键是<strong>它绕过了意识</strong>。你感觉不到「我被启动了」，
+      所以你也没法用「更小心」来防它。</p>
+      <span class="pit">常见误解</span>
+      <div class="pit-b">以为这条意味着「我被无形操控，毫无自由」。
+      <strong>书里没有这么说。</strong>它说的是：<em>判断的输入端比你以为的多，
+      而且有一部分不在你的意识里。</em></div>
+      <span class="ref">对应第 4 章</span>
+    </div>
+  </details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">A4</span><span class="q-lv lv2">L2</span><span class="q-tag">系统2的懒惰</span></div>
+  <div class="q-text">「球拍和球一共 1.1 元，球拍比球贵 1 元，球多少钱？」为什么这道题能测出系统2懒不懒？</div>
+  <details><summary>展开参考答案</summary>
+    <div class="a">
+      <p>因为<strong>系统1会给出一个看似合理的答案（1 毛），而正确答案是 5 分。</strong></p>
+      <p>卡尼曼把这类题叫<strong>认知反思测试</strong>。它测的不是算术能力，而是
+      <strong>你愿不愿意调用系统2去检查系统1的答案</strong>。</p>
+      <span class="key">为什么它是个好测试</span>
+      <p>因为系统1的答案不是随机的错，而是一个<em>「就差一点」</em>的错——
+      1 毛看起来完全合理。要发现它错，你必须主动验算。</p>
+      <p>书里提到连一流大学的学生也有很高比例答错。<strong>这不是智力问题，是懒惰问题</strong>——
+      系统2默认接受系统1的提议，除非遇到明显障碍。</p>
+      <blockquote>系统1的运行特征，包括眼见即为事实、强度匹配和联想一致性等，
+      会产生可预测的偏见和认知错觉……对于偏见我们能做什么呢？<span class="who">第 4 章附近</span></blockquote>
+      <span class="pit">常见误解</span>
+      <div class="pit-b">以为「知道有这道题就不会再错了」。
+      <strong>卡尼曼自己反驳过这一点</strong>：知道偏见是什么，并不会让你不再犯——
+      因为你不可能时刻监督系统1。</div>
+      <span class="ref">对应第 3 章「惰性思维」</span>
+    </div>
+  </details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">A5</span><span class="q-lv lv3">L3</span><span class="q-tag">边界</span></div>
+  <div class="q-text">如果「知道偏见」不能消除偏见，那这本书的用处到底是什么？作者本人是怎么回答的？</div>
+  <details><summary>展开参考答案</summary>
+    <div class="a">
+      <p>卡尼曼的回答很克制，而且他说的是<strong>自己的经验</strong>，不是给读者的承诺：</p>
+      <blockquote>从自身经验来谈，系统1的运行方式是不能教给别人的。我除了认为年龄会有些影响外……
+      我只提升了对易犯错误的情境的识别能力，"这个数字会成为一种锚定……"，
+      "如果问题被重新架构，决策会改变……"<span class="who">结语附近</span></blockquote>
+      <p><strong>所以这本书的用处不是「纠错」，而是「识别情境」。</strong></p>
+      <span class="key">作者给的方法，原则上很简单，但代价很高</span>
+      <blockquote>避免系统1出错的方法从原则上讲是很简单的：
+      认识到你正处于的认知领域，放缓并要求系统2来加以强化。<span class="who">结语附近</span></blockquote>
+      <p><em>「原则上很简单」——难在你要在事情发生的那一刻就意识到，而那一刻正是系统1全速运行的时候。</em></p>
+      <span class="key">一个作者自己承认的不对称</span>
+      <p>他说自己在<strong>识别别人的错误</strong>上进步更大。
+      书里也解释了这个原因：「利用闲谈来发现和分析别人犯的错误比分析自己的错误更容易」。</p>
+      <span class="pit">常见误解</span>
+      <div class="pit-b">把这本书当成「偏误清单」，用来给别人挑错。
+      <strong>这恰好落进了书里描述的那个陷阱</strong>——而且作者本人也承认自己更擅长做这件事。</div>
+      <span class="ref">对应序言与结语</span>
+    </div>
+  </details>
+</div>
+
+<!-- ==================== 第二部分 ==================== -->
+<h2>第二部分 · 启发法与偏见</h2>
+<div class="s">第 10–18 章。这一部分回答：面对一个难问题，系统1是怎么偷偷换成一个容易的问题的。</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">B1</span><span class="q-lv lv1">L1</span><span class="q-tag">总纲</span></div>
+  <div class="q-text">什么是「目标问题与启发性问题」？为什么说它们是「形影不离」的？</div>
+  <details><summary>展开参考答案</summary>
+    <div class="a">
+      <p>这是第二部分的核心机制，也是全书最有用的一条。</p>
+      <p><strong>目标问题</strong>：你真正需要回答的那个难问题（比如「这个项目要花多少钱」）。<br>
+      <strong>启发性问题</strong>：系统1偷偷替换成的那个容易问题（比如「这个项目让我想起的那个项目花了多少钱」）。</p>
+      <p>你<strong>感觉自己回答了目标问题</strong>，实际上回答的是启发式问题——
+      而且替换过程完全在意识之外。</p>
+      <span class="key">为什么叫「形影不离」</span>
+      <p>因为这不是偶发失误，是系统1的<strong>默认工作方式</strong>：
+      遇到难问题，它不会说「我不会」，而是找一个相关的容易问题来答，然后把答案交上去。</p>
+      <p><em>所以后面的锚定、可得性、代表性，都是这条机制的三种具体形态。</em></p>
+      <span class="pit">常见误解</span>
+      <div class="pit-b">以为「启发法」是坏东西。
+      <strong>它恰恰是系统1之所以高效的原因</strong>——绝大多数时候它够用。
+      问题只在于：你不知道它什么时候不够用。</div>
+      <span class="ref">对应第 9 章</span>
+    </div>
+  </details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">B2</span><span class="q-lv lv2">L2</span><span class="q-tag">锚定效应</span></div>
+  <div class="q-text">为什么「锚定」连<b>明显无关</b>的数字也能生效？请举一个书里提到的、与你的直觉相反的场合。</div>
+  <details><summary>展开参考答案</summary>
+    <div class="a">
+      <p>因为锚定不依赖「这个数字有道理」，它依赖<strong>系统1的联想激活</strong>——
+      一个数字出现，就会激活与之相容的记忆和判断，无论它是否相关。</p>
+      <p>书里最反直觉的场合是<strong>陪审团的赔偿金判决</strong>：</p>
+      <blockquote>在单一评估时，陪审员判给诈骗银行的惩罚性赔偿要比判给烧伤孩子的高，
+      很可能是因为诈骗银行的案例中涉及的金额要大，是个高锚定。……平均来看几组这样的案件，
+      联合评估中人身伤害的受害者所得的赔偿是单一评估中得到的赔偿的2倍。<span class="who">第 11 章附近</span></blockquote>
+      <span class="key">真正反直觉的是「联合评估」与「单一评估」的差别</span>
+      <p>同一个案子，<strong>单独看</strong>和<strong>与其他案子一起看</strong>，判决能差一倍。</p>
+      <blockquote>我们可以看到，理性通常会受到更广泛、更综合的框架的限制，
+      而且联合评估显然比单一评估更广泛。<span class="who">同上</span></blockquote>
+      <span class="pit">常见误解</span>
+      <div class="pit-b">以为锚定只影响「不熟悉的事情」。
+      <strong>书里专门讲过：专家也会被锚定</strong>，包括法官和房地产评估师。
+      <em>知道有锚定效应，并不能让你不被锚定。</em></div>
+      <span class="ref">对应第 11 章</span>
+    </div>
+  </details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">B3</span><span class="q-lv lv2">L2</span><span class="q-tag">可得性</span></div>
+  <div class="q-text">「哪一类词更多：以 r 开头的词，还是 r 在第三个位置的词？」这道题为什么要用「词」来问，而不是直接用「飞机 vs 汽车」？</div>
+  <details><summary>展开参考答案</summary>
+    <div class="a">
+      <p>因为这道题把<strong>「容易想起来」和「实际频率」剥离得非常干净</strong>——
+      它没有情绪、没有立场，纯粹展示机制。</p>
+      <p>大多数人会说「r 开头更多」，因为<strong>按首字母检索是记忆的自然组织方式</strong>，
+      而按第三个位置检索做不到。但实际是后者更多。</p>
+      <span class="key">可得性启发法的作用方式</span>
+      <p>我们判断一件事「常不常见」，靠的是<em>「我能不能容易地想起例子」</em>，
+      而不是去数真实的频次。</p>
+      <p>用「飞机 vs 汽车」来问，会混进恐惧、新闻曝光、个人经历；
+      用「r 在哪个位置」来问，<strong>只剩提取的难易程度这一个变量</strong>。</p>
+      <p><em>这是卡尼曼和特沃斯基实验设计的典型手法：把要测的变量单独拎出来。</em></p>
+      <span class="pit">常见误解</span>
+      <div class="pit-b">以为可得性只在「罕见事件」上出错。
+      <strong>它天天在起作用</strong>——你觉得某个病很常见、某个职业人很多、
+      某个行业风险很高，很可能只是因为最近见过相关的报道。</div>
+      <span class="ref">对应第 12 章</span>
+    </div>
+  </details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">B4</span><span class="q-lv lv2">L2</span><span class="q-tag">代表性</span></div>
+  <div class="q-text">「史蒂夫是个图书管理员，还是个农民？」为什么这个问题的正确答案<b>不是</b>看史蒂夫像谁？</div>
+  <details><summary>展开参考答案</summary>
+    <div class="a">
+      <p>因为像不像（相似性、代表性）<strong>不包含基础比率</strong>，而基础比率决定了概率。</p>
+      <blockquote>对结果的先验概率（prior probability）不敏感。……
+      例如，在史蒂夫的那个例子中，在我们作出史蒂夫是个图书管理员而不是农民的理性评估时，
+      是应该将农民比图书管理员人数更多的事实考虑在内的。
+      <strong>然而，对基础比率的考虑并不会影响史蒂夫与图书管理员以及农民的典型形象的相似性。</strong>
+      <span class="who">第 14 章</span></blockquote>
+      <span class="key">所以这是一个「两个信息源冲突」的问题</span>
+      <p><strong>信息一</strong>：史蒂夫的性格描述像图书管理员（代表性）。<br>
+      <strong>信息二</strong>：农民的人数远多于图书管理员（基础比率）。</p>
+      <p>正确答案要求把两者<em>按正确的权重</em>合起来。而系统1只会用第一条——
+      因为第二条需要你去查人口统计。</p>
+      <span class="pit">常见误解</span>
+      <div class="pit-b">以为「注意基础比率」就是「不要看个案」。
+      <strong>不是。</strong>书里的立场是：<em>两个信息都要用，只是权重不能由「哪个更生动」决定。</em></div>
+      <span class="ref">对应第 14 章</span>
+    </div>
+  </details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">B5</span><span class="q-lv lv2">L2</span><span class="q-tag">小数定律</span></div>
+  <div class="q-text">书里用<b>肾癌发病率</b>的例子说明了什么？这个例子和「大数法则」是什么关系？</div>
+  <details><summary>展开参考答案</summary>
+    <div class="a">
+      <p>这个例子的结构是：<strong>发病率最低的县几乎都是人口稀少的乡村县</strong>，
+      而这些县按惯例由共和党管辖——于是很多人立刻开始编「共和党政策有利于防癌」的解释。</p>
+      <p>但真相是：<strong>人口少的地方，发病率本身波动就大</strong>，
+      所以极值（最低和最高）都更容易出现在小样本里。</p>
+      <span class="key">这就是「小数定律」——对小数法则的迷信</span>
+      <p>大数法则说：<em>样本越大，统计量越接近总体真值。</em><br>
+      而系统1的信念是：<em>小样本也能代表总体。</em></p>
+      <p>书里同一章还有一个更直观的版本：一个只有几百人的小县，
+      其发病率出现极端值的概率远高于一个大县——<strong>而这一条同样适用于「发病率最高的县」。</strong></p>
+      <span class="key">这个例子的精妙之处</span>
+      <p>卡尼曼没告诉你「别信共和党」，他告诉你的是：
+      <strong>当你在数据里看到一个整齐的模式时，先问「样本多大」。</strong></p>
+      <p><em>而他故意把这个例子放在「大数法则与小数定律」这个标题下——
+      标题本身就把答案给出来了，可大多数人读例子时会先跳到政治解释。</em></p>
+      <span class="pit">常见误解</span>
+      <div class="pit-b">以为「小数定律」是对现实的描述。
+      <strong>它是一个错误的信念</strong>——是人们对小样本的过度信任，不是一条定律。</div>
+      <span class="ref">对应第 10 章</span>
+    </div>
+  </details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">B6</span><span class="q-lv lv3">L3</span><span class="q-tag">回归平均值</span></div>
+  <div class="q-text">「飞行教练发现：表扬飞得好的学员，下次反而飞得差；批评飞得差的学员，下次反而飞得好。
+      所以他得出结论『表扬有害，批评有用』。」这个推论错在哪？为什么它<b>特别难被自己发现</b>？</div>
+  <details><summary>展开参考答案</summary>
+    <div class="a">
+      <p>错在把<strong>回归平均值</strong>读成了因果关系。</p>
+      <p>机制很简单：<em>飞得特别好是「表现 + 运气好」的组合，
+      下一次运气回归平常，表现自然回落。飞得特别差同理。</em>
+      所以「表扬后变差、批评后变好」在<strong>完全没有反馈作用</strong>的情况下也会出现。</p>
+      <span class="key">为什么特别难被发现</span>
+      <p>因为<strong>系统1最擅长的事就是给这种模式编一个因果故事</strong>，
+      而且这个故事非常自然：「表扬让他骄傲了」「批评让他努力了」。</p>
+      <p>要发现它错，你必须同时想到「如果不表扬也不批评，他下次也会回落」——
+      <em>而这个「对照组」是你没看到的。</em></p>
+      <span class="key">书里给的判断方式</span>
+      <p>看到「极值之后回到中间」，<strong>先假设是回归，再考虑因果</strong>。
+      只有在你能排除回归之后，因果解释才站得住。</p>
+      <span class="pit">常见误解</span>
+      <div class="pit-b">以为「回归平均值」等于「宿命论」或「一切都会回到平均」。
+      <strong>它只是一个统计事实</strong>：在存在随机成分时，极端观测之后的值会更接近均值。
+      <em>它不预测具体会落到哪里，也不否认干预有效——它只否认「这个特定证据支持干预有效」。</em></div>
+      <span class="ref">对应第 17 章</span>
+    </div>
+  </details>
+</div>
+
+<!-- ==================== 第三部分 ==================== -->
+<h2>第三部分 · 过度自信与决策错误</h2>
+<div class="s">第 19–24 章。前两部分讲「判断错了」，这一部分讲「我们为什么不知道自己错了」。</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">C1</span><span class="q-lv lv1">L1</span><span class="q-tag">总纲</span></div>
+  <div class="q-text">什么是「叙事谬误」？为什么说它和「后见之明」是同一个机制的两种表现？</div>
+  <details><summary>展开参考答案</summary>
+    <div class="a">
+      <p><strong>叙事谬误</strong>：我们倾向于把过去的事编成一个有因果、有主角、说得通的故事，
+      然后<em>把这个故事当成对世界的解释</em>。</p>
+      <p><strong>后见之明</strong>：知道结果之后，我们觉得「我早就知道会这样」。</p>
+      <span class="key">同一个机制：系统1要求「连贯」</span>
+      <p>系统1的核心要求是<strong>讲得通</strong>，不是<strong>讲得对</strong>。
+      一旦一个故事连贯了，它就自动被当成真的。</p>
+      <p>叙事谬误是<em>向前</em>编（把已发生的事编成必然），
+      后见之明是<em>向后</em>编（把自己的记忆改成「早就预见」）。</p>
+      <p><em>两者都服务于同一件事：让世界看起来可理解、可预测。</em></p>
+      <span class="pit">常见误解</span>
+      <div class="pit-b">以为「叙事」只是「讲故事」，跟严肃分析无关。
+      <strong>书里的立场正相反</strong>：<em>严肃分析也大量依赖叙事</em>，
+      而危险恰恰在于——叙事越连贯，你越不会去检查它。</div>
+      <span class="ref">对应第 19 章</span>
+    </div>
+  </details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">C2</span><span class="q-lv lv2">L2</span><span class="q-tag">规划谬误</span></div>
+  <div class="q-text">书里给「规划谬误」下了两个判据。请复述这两个判据，并说明<b>外部意见</b>为什么是解药。</div>
+  <details><summary>展开参考答案</summary>
+    <div class="a">
+      <p>卡尼曼和阿莫斯造这个词时给了两条判据：</p>
+      <blockquote>·不切实际地接近理想状况（的计划和预测）。<br>
+      ·可通过参考类似案例的数据得到提高（的计划和预测）。<span class="who">第 23 章</span></blockquote>
+      <span class="key">第二条判据就是解药本身</span>
+      <p>「可通过参考类似案例的数据得到提高」——
+      也就是说，<strong>规划谬误的定义里就包含了它的纠正方式</strong>。</p>
+      <p><strong>内部意见</strong>：看这个项目本身——它的计划、它的团队、它的特殊性。<br>
+      <strong>外部意见</strong>：看<em>同类项目的实际统计</em>——它们平均超支多少、延期多久。</p>
+      <p>书里举的例子极有说服力：苏格兰议会大楼的预算，
+      <strong>4000 万英镑 → 1.09 亿 → 1.95 亿 → 2.41 亿 → 2.946 亿</strong>，
+      每一次都是「最终成本」。</p>
+      <span class="key">为什么外部意见难被采纳</span>
+      <p>因为<strong>每个项目都觉得自己特殊</strong>——而「我们不一样」正是系统1最喜欢听的故事。</p>
+      <p><em>卡尼曼自己承认，他是在给一本教科书编课程时，被同事用外部意见点醒的。</em></p>
+      <span class="pit">常见误解</span>
+      <div class="pit-b">以为外部意见就是「多留预算余量」。
+      <strong>不是加余量，是换基准。</strong>加余量仍在内部意见里；<em>换基准意味着承认「我不知道这个项目，但我知道这类项目」。</em></div>
+      <span class="ref">对应第 23 章</span>
+    </div>
+  </details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">C3</span><span class="q-lv lv2">L2</span><span class="q-tag">乐观偏见</span></div>
+  <div class="q-text">书里说乐观主义是「一柄双刃剑」。请说明<b>它的好处是什么</b>，以及为什么研究者不建议简单地「去掉」它。</div>
+  <details><summary>展开参考答案</summary>
+    <div class="a">
+      <p>好处在于：<strong>它让人去行动。</strong>如果每个人都准确估计失败概率，
+      很多创业、研究、长期投入根本不会开始。</p>
+      <p>书里提到的是：我们天生<strong>高估好事发生在自己身上的概率、
+      低估坏事发生在自己身上的概率</strong>。而正是这种偏差让人敢承担风险。</p>
+      <span class="key">双刃的「另一刃」在哪</span>
+      <p>在于<strong>做计划时</strong>：乐观偏见直接导致规划谬误——
+      <em>同一个机制，在「要不要开始」的时候是资产，在「要花多少」的时候是负债。</em></p>
+      <span class="key">所以书里给的不是「消除」，而是「识别情境」</span>
+      <p>卡尼曼在全书的立场是一致的：<strong>偏误不是可以被删掉的功能，是运作方式的副作用。</strong>
+      能做的是识别出「现在这个场合，它正在害我」。</p>
+      <span class="pit">常见误解</span>
+      <div class="pit-b">以为「悲观一点更准确」。
+      <strong>书里没有推荐悲观。</strong>它推荐的是<em>在预测环节引入外部数据</em>，
+      而不是改变你对未来的情绪。</div>
+      <span class="ref">对应第 24 章</span>
+    </div>
+  </details>
+</div>
+
+<!-- ==================== 第四部分 ==================== -->
+<h2>第四部分 · 选择与风险</h2>
+<div class="s">第 25–34 章。前三部分讲「判断」，这一部分讲「选择」——人在有风险时怎么选。</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">D1</span><span class="q-lv lv1">L1</span><span class="q-tag">前景理论</span></div>
+  <div class="q-text">前景理论用「参照点」替代了传统经济学的「财富状态」作为价值载体。这个替换<b>解决了什么问题</b>？</div>
+  <details><summary>展开参考答案</summary>
+    <div class="a">
+      <p>解决了「同样一笔钱，为什么在不同处境下感觉完全不同」这个问题。</p>
+      <p>传统理论说：价值取决于<strong>绝对财富水平</strong>（有 100 万比有 10 万好）。<br>
+      前景理论说：价值取决于<strong>相对于参照点的变化</strong>（从 10 万涨到 100 万是赚，从 500 万亏到 100 万是亏——
+      而两者都是「有 100 万」）。</p>
+      <blockquote>如果前景理论有一面旗帜的话，上面画的肯定是图 10。
+      这幅图表明了盈与亏的心理学价值，而盈与亏正是前景理论中的价值"载体"
+      （这一点与伯努利理论不同，在伯努利理论中，财富状态才是价值载体）。
+      <span class="who">第 26 章</span></blockquote>
+      <span class="key">图 10 的两个特征</span>
+      <p><strong>① 它是 S 形的</strong>——离参照点越远，每多一块钱带来的变化越小（敏感度递减）。<br>
+      <strong>② 两条曲线不对称</strong>——亏损那边的斜率更陡。</p>
+      <p><em>第二条就是损失厌恶，它不是额外加的一条假设，是从图的形状里直接读出来的。</em></p>
+      <span class="pit">常见误解</span>
+      <div class="pit-b">以为「参照点」是客观的。
+      <strong>它是主观的，而且可以被操纵</strong>——这正是后面「框架效应」和「公平性」两章的基础。
+      <em>改变参照点，就能改变同一个人对同一件事的选择。</em></div>
+      <span class="ref">对应第 26 章</span>
+    </div>
+  </details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">D2</span><span class="q-lv lv2">L2</span><span class="q-tag">损失厌恶</span></div>
+  <div class="q-text">书里用<b>「灯光」</b>的比喻来解释敏感度递减。请说明这个比喻，以及它和损失厌恶<b>不是同一件事</b>。</div>
+  <details><summary>展开参考答案</summary>
+    <div class="a">
+      <p>书里原文把「心理物理学」作为方法引入，用的是感官类比：</p>
+      <blockquote>在漆黑的房间里，即使灯光再微弱，效果也会很明显。
+      而同等亮度的灯在非常明亮的房间里也许都令人难以察觉到。
+      同样，900 美元和 1000 美元之间的主观差别也比 100 美元和 200 美元之间的差别小得多。
+      <span class="who">第 26 章</span></blockquote>
+      <span class="key">这个比喻解释的是「形状」，不是「不对称」</span>
+      <p><strong>灯光比喻 → 敏感度递减</strong>：为什么曲线是弯的（S 形的两侧都变平）。<br>
+      <strong>损失厌恶 → 不对称</strong>：为什么亏损那边更陡。</p>
+      <p>也就是说：<em>灯光比喻是「韦伯-费希纳定律」在心理价值上的类比，
+      它单独推不出损失厌恶。</em></p>
+      <span class="key">书里是怎么说这条的</span>
+      <blockquote>在参照点处函数的斜率突然发生改变，即对亏损的反应比对同等数量盈余的反应要强烈得多。
+      这就是所谓的损失厌恶。<span class="who">第 26 章</span></blockquote>
+      <p><em>「斜率突然改变」——注意是「突然」，这是 S 形本身不能解释的，
+      所以要单独作为一个原则列出来。</em></p>
+      <span class="pit">常见误解</span>
+      <div class="pit-b">把「敏感度递减」和「损失厌恶」混成一条。
+      <strong>书里是分开列的</strong>：敏感度递减（心理物理学）、损失厌恶、
+      以及对可能性的高估——三条独立的规律。</div>
+      <span class="ref">对应第 26 章</span>
+    </div>
+  </details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">D3</span><span class="q-lv lv2">L2</span><span class="q-tag">框架效应</span></div>
+  <div class="q-text">「由无关紧要的措辞变化引起的巨大偏好变化」——请说明为什么这个定义里的
+      <b>「无关紧要」</b>和<b>「巨大」</b>两个词必须同时出现。</div>
+  <details><summary>展开参考答案</summary>
+    <div class="a">
+      <p>因为这两个词合起来才构成矛盾。</p>
+      <p><strong>「无关紧要」</strong>：从理性决策的角度看，措辞不改变事实，所以不该改变选择。<br>
+      <strong>「巨大」</strong>：但实际上它改变了选择，而且幅度很大。</p>
+      <blockquote>两年后，我们在《科学》杂志上发表了一篇论文解释了框架效应（framing effect）：
+      由无关紧要的措辞变化引起的巨大偏好变化。<span class="who">第 26 章附近</span></blockquote>
+      <span class="key">只留一个词，这句话就没力量了</span>
+      <p>只说「措辞会影响偏好」——那是常识，而且可以是「有一点影响」。<br>
+      只说「偏好变化很大」——那需要解释原因。</p>
+      <p><em>两个词放在一起，才指出这是对理性假设的直接反例：
+      如果选择能被措辞改变，那「偏好」就不是一个稳定的量。</em></p>
+      <span class="key">书里给的标准例子是手术存活率</span>
+      <p>「存活率 90%」和「死亡率 10%」是同一件事，但选择完全不同。</p>
+      <span class="pit">常见误解</span>
+      <div class="pit-b">以为框架效应只在「别人故意误导你」时才出现。
+      <strong>它不需要有人故意</strong>——任何一次措辞选择都是一个框架，
+      <em>包括你自己向自己描述一件事的方式。</em></div>
+      <span class="ref">对应第 34 章</span>
+    </div>
+  </details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">D4</span><span class="q-lv lv3">L3</span><span class="q-tag">反转</span></div>
+  <div class="q-text">「系统1同样的操作特点说明了三种情况」——书里用哪三种情况来说明同一件事？
+      为什么把它们放在一起是<b>有意为之</b>？</div>
+  <details><summary>展开参考答案</summary>
+    <div class="a">
+      <p>书里原文列的是这三件：<strong>琳达问题、冰手实验、以及盘子的实验</strong>。</p>
+      <blockquote>系统1同样的操作特点说明了三种情况：
+      <strong>系统1是用平均水平、规范和原型来表示集合，而不是用各条件的集合。</strong>
+      冰手实验就是多个时刻的集合，而记忆自我会将每个时刻作为典型时刻记下来。
+      这又会导致冲突。<span class="who">第 33 章附近</span></blockquote>
+      <span class="key">三种情况的共同点：把「集合」读成「典型」</span>
+      <p>· <strong>琳达问题</strong>：把「女权主义银行出纳」这个更具体的集合，
+      读成了「更像琳达」的那个典型形象。<br>
+      · <strong>冰手实验</strong>：把「90 秒的疼痛序列」这个集合，
+      读成了「最疼的时刻 + 最后的时刻」这两个典型时刻。<br>
+      · <strong>盘子实验</strong>：把「一套盘子」这个集合，用一个典型（有坏的）来代表。</p>
+      <span class="key">为什么放在一起是有意的</span>
+      <p>因为这三件事表面上毫无关系——一个是概率判断、一个是疼痛记忆、一个是商品估值。
+      <strong>把它们放在同一章，是为了证明这是一条底层机制，而不是三个孤立的偏误。</strong></p>
+      <p><em>这与第四部分整体「评估结果的逆转」的主题一致：
+      单独看和联合看，结果会反转——而原因是同一个。</em></p>
+      <span class="pit">常见误解</span>
+      <div class="pit-b">把这三个例子当成三个需要分别记住的偏误。
+      <strong>书里的意图正相反</strong>：<em>记住机制（集合被读成典型）比记住三个名字有用得多。</em></div>
+      <span class="ref">对应第 33 章（评估结果的逆转）</span>
+    </div>
+  </details>
+</div>
+
+<!-- ==================== 第五部分 ==================== -->
+<h2>第五部分 · 两个自我</h2>
+<div class="s">第 35–38 章。这一部分问一个更根本的问题：说「我过得幸福」的，到底是哪个我？</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">E1</span><span class="q-lv lv1">L1</span><span class="q-tag">总纲</span></div>
+  <div class="q-text">「经验自我」和「记忆自我」的区别是什么？为什么书里说<b>「两者间没有共性」</b>？</div>
+  <details><summary>展开参考答案</summary>
+    <div class="a">
+      <p>原文的表述是：</p>
+      <blockquote>第五部分是近期研究中关于两个自我的区别性描述，
+      即经验自我和记忆自我，<strong>两者间没有共性</strong>。<span class="who">序言</span></blockquote>
+      <p><strong>经验自我</strong>：正在经历当下的那个我。它的「幸福」是每一刻感受的累加。<br>
+      <strong>记忆自我</strong>：事后回忆和做决定的那个我。它的「幸福」是对整段经历的<em>评价</em>。</p>
+      <span class="key">为什么会冲突</span>
+      <p>书里给了一个直接的演示：让人们体验两种疼痛（一种更长、总量更痛苦），
+      然后问愿意重复哪一个。</p>
+      <blockquote>有 80% 的受试者（在做长期实验时认为最后一个阶段的痛苦减轻了）
+      选择在第三次实验时重复长期实验，<strong>称自己愿意忍受后 30 秒不必要的痛苦</strong>。
+      ……他们只是犯了一个错误。<span class="who">第 36 章附近</span></blockquote>
+      <p><strong>经验自我承受了更多痛苦，而记忆自我选择了再来一次。</strong>
+      这就是「没有共性」的意思——<em>它们衡量的是不同的东西。</em></p>
+      <span class="pit">常见误解</span>
+      <div class="pit-b">以为「记忆自我是错的，经验自我才对」。
+      <strong>书里没有这样判定。</strong>它指出的是：<em>你做决定时用的是记忆自我，
+      而你实际感受幸福的是经验自我——这个错位本身才是问题。</em></div>
+      <span class="ref">对应第 35–38 章</span>
+    </div>
+  </details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">E2</span><span class="q-lv lv2">L2</span><span class="q-tag">峰终定律</span></div>
+  <div class="q-text">峰终定律和「过程忽视」是两条，还是一条？请说明它们各自的表述，以及为什么必须分开。</div>
+  <details><summary>展开参考答案</summary>
+    <div class="a">
+      <p>书里明确把它们<strong>并列成两条</strong>：</p>
+      <blockquote>·峰终定律（peak-end rule）：整体的回顾性评级可通过将最糟糕时期和最后时刻的疼痛程度的
+      <strong>平均加权</strong>而评估出来。<br>
+      ·过程忽视（duration neglect）：<strong>过程的持续对所有疼痛的评估没有任何影响。</strong>
+      <span class="who">第 36 章附近</span></blockquote>
+      <span class="key">为什么必须分开</span>
+      <p><strong>峰终定律说「看哪两个点」（峰和终）。<br>
+      过程忽视说「不看什么」（时长）。</strong></p>
+      <p>丢掉任何一条，结论就不成立：</p>
+      <p>只有峰终定律 → 你不知道时长算不算数。<br>
+      只有过程忽视 → 你不知道那该看什么。</p>
+      <p><em>而两条合起来才给出那个反直觉的结论：一段更长、总痛苦更多的经历，
+      可以因为「结尾更缓和」而被记得更好。</em></p>
+      <span class="key">冰手实验就是这两条的直接检验</span>
+      <p>秘密地在冷水里多加 30 秒温水——<strong>总痛苦增加了，记忆却变好了。</strong></p>
+      <span class="pit">常见误解</span>
+      <div class="pit-b">以为峰终定律是「只记住高峰和结尾」这么一句描述。
+      <strong>书里给的是一个可计算的模型</strong>：「最糟糕时期和最后时刻的<em>平均加权</em>」——
+      <em>有具体算法，可以被检验，也因此可以被推翻。</em></div>
+      <span class="ref">对应第 36 章</span>
+    </div>
+  </details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">E3</span><span class="q-lv lv3">L3</span><span class="q-tag">反身</span></div>
+  <div class="q-text">最后一问：这本书用来揭示偏误的实验，<b>自己会不会也受这些偏误影响</b>？
+      请从书里找一条依据，说明作者是否意识到这一点。</div>
+  <details><summary>展开参考答案</summary>
+    <div class="a">
+      <p>作者是意识到的，而且写在了序言里：</p>
+      <blockquote>我希望我这"饮水机旁的闲谈"能明智地借鉴以往经验，
+      同时<strong>抵制后见之明和虚幻的确定之感的诱惑</strong>。
+      第四部分的重点是在决策制定的性质和经济因素为理性的前提下讨论经济的原则。
+      <span class="who">序言</span></blockquote>
+      <p><strong>「抵制后见之明和虚幻的确定之感」——这就是一句反身声明。</strong>
+      他知道自己在写一本关于人的判断有多不可靠的书，而他自己也是人。</p>
+      <span class="key">书里还有一处更硬的反身证据</span>
+      <p>卡尼曼提到，他和阿莫斯当初把前景理论的论文投给某份杂志时，</p>
+      <blockquote>我们当时作出那样的投稿决定并不是希望对经济学产生影响，
+      只是决策制定问题的顶级论文过去都是刊发在这份杂志上，于是我们也跃跃欲试。
+      ……<strong>就这个选择和许多其他选择而言，我们是很幸运的。</strong><span class="who">第 26 章附近</span></blockquote>
+      <p><em>「我们是很幸运的」——他在描述自己的一个重要决策时，
+      承认其中有运气成分，而不是把它叙述成一个必然正确的判断。</em></p>
+      <span class="key">这是全书最值得学的一个姿态</span>
+      <p>他给了读者一整套识别偏误的工具，
+      <strong>然后用同一套工具检查自己</strong>，并在书里留下痕迹。</p>
+      <p><em>而这与项目里《无穷的开始》那条判据相通：
+      一个好的解释，是能指出自己可能错在哪里的解释。</em></p>
+      <span class="pit">常见误解</span>
+      <div class="pit-b">以为「反身」意味着这本书不可信。
+      <strong>正相反</strong>：<em>一个从不检查自己的框架，比一个主动标出自己限度的框架更不可信。</em></div>
+      <span class="ref">对应序言与全书</span>
+    </div>
+  </details>
+</div>
+
+<!-- ==================== 自测清单 ==================== -->
+<h2>附 · 自测清单</h2>
+<div class="s">不看上面，只回答问题。答不出就回到对应编号。</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">S</span><span class="q-lv lv1">L1</span><span class="q-tag">概念</span></div>
+  <div class="q-text">以下 14 个概念，你能各用一句话说清吗？</div>
+  <details><summary>展开对照</summary>
+    <div class="a">
+      <ul>
+        <li><strong>系统1 / 系统2</strong> —— 自动不费力 / 受控费力，后者懒惰（A1）</li>
+        <li><strong>认知放松</strong> —— 顺畅感被误读成可信度（A2）</li>
+        <li><strong>启动效应</strong> —— 概念激活改变行为，且不被察觉（A3）</li>
+        <li><strong>目标问题 / 启发性问题</strong> —— 难问题被偷偷换成容易问题（B1）</li>
+        <li><strong>锚定效应</strong> —— 无关数字也生效，连专家也不免（B2）</li>
+        <li><strong>可得性启发法</strong> —— 用「容易想起」代替「实际频率」（B3）</li>
+        <li><strong>代表性启发法</strong> —— 用「像不像」代替「概率」，忽略基础比率（B4）</li>
+        <li><strong>小数定律</strong> —— 错误地相信小样本能代表总体（B5）</li>
+        <li><strong>回归平均值</strong> —— 极值之后回到中间，容易被读成因果（B6）</li>
+        <li><strong>叙事谬误 / 后见之明</strong> —— 系统1要求连贯，不要求正确（C1）</li>
+        <li><strong>规划谬误 / 外部意见</strong> —— 用同类项目数据换掉内部视角（C2）</li>
+        <li><strong>前景理论 / 参照点</strong> —— 价值取决于相对于参照点的变化（D1）</li>
+        <li><strong>损失厌恶</strong> —— 亏损那边斜率更陡（D2）</li>
+        <li><strong>峰终定律 / 过程忽视 / 两个自我</strong> —— 记忆挑两个点，忽略时长（E1、E2）</li>
+      </ul>
+      <span class="key">如果你能答出 10 个以上</span>
+      <p>说明概念层已经通了。<em>但注意——能说出概念，不等于在真实场合能识别出来。
+      卡尼曼本人也承认：他进步最大的是识别<strong>别人的</strong>错误。</em></p>
+    </div>
+  </details>
+</div>
+
+<footer>
+ 《思考，快与慢》问题手册 · 「底层」项目 02_心智与认知<br>
+ 丹尼尔·卡尼曼 · 全书 5 部分 38 章 · 语料 29.2 万汉字<br>
+ <em>引文取自 思考快与慢_全文_简体.txt，已逐句核对；
+ 参考答案中的判断与举例为待议读法</em>
+</footer>
+
+</div>
+</body>
+</html>
