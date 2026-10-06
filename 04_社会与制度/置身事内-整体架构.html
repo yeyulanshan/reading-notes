@@ -3,338 +3,370 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>《置身事内》整体架构 —— 中国政府与经济发展的微观机制与宏观现象</title>
+<title>置身事内 · 整体架构</title>
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
-    background: #0f172a;
-    color: #e2e8f0;
-    padding: 32px 20px;
-    line-height: 1.7;
+  :root{
+    --paper:#12100e; --card:#1b1815; --edge:#2e2822;
+    --ink:#f2ece4; --ink-mid:#bfb3a4; --ink-soft:#877a6b;
+    --micro:#c98f4a;  --micro-soft:#2a2114;
+    --macro:#6fa3c9;  --macro-soft:#141f28;
+    --key:#d9b45a;    --key-soft:#2a2417;
+    --warn:#c96a4a;   --warn-soft:#2a1813;
   }
-  .container { max-width: 900px; margin: 0 auto; }
-
-  .header {
-    text-align: center;
-    margin-bottom: 40px;
-    padding: 40px 20px;
-    background: linear-gradient(135deg, #7c2d12 0%, #0f172a 100%);
-    border-radius: 16px;
-    border: 1px solid #334155;
-  }
-  .header h1 { font-size: 26px; margin-bottom: 12px; color: #f8fafc; }
-  .header .subtitle { font-size: 15px; color: #94a3b8; }
-  .header .author { margin-top: 16px; font-size: 13px; color: #64748b; }
-
-  .section-title {
-    font-size: 20px;
-    font-weight: 700;
-    color: #f8fafc;
-    margin: 36px 0 20px;
-    padding-left: 12px;
-    border-left: 4px solid #f97316;
-  }
-
-  /* 核心框架 */
-  .framework {
-    background: #1e293b;
-    border-radius: 12px;
-    padding: 24px;
-    border: 1px solid #334155;
-    margin-bottom: 20px;
-  }
-  .framework h3 { color: #f97316; margin-bottom: 16px; font-size: 17px; }
-  .two-parts {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-  }
-  @media (max-width: 600px) {
-    .two-parts { grid-template-columns: 1fr; }
-  }
-  .part-box {
-    background: #0f172a;
-    border-radius: 8px;
-    padding: 16px;
-    border-top: 3px solid;
-  }
-  .part-box:nth-child(1) { border-top-color: #f97316; }
-  .part-box:nth-child(2) { border-top-color: #ef4444; }
-  .part-box .part-name { font-weight: 600; margin-bottom: 8px; color: #f8fafc; font-size: 14px; }
-  .part-box .part-desc { font-size: 12px; color: #94a3b8; }
-
-  /* 8章脉络 */
-  .chapters {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin-bottom: 20px;
-  }
-  .chapter {
-    background: #1e293b;
-    border-radius: 10px;
-    padding: 16px 20px;
-    border-left: 4px solid;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
-  .chapter:nth-child(1) { border-left-color: #f97316; }
-  .chapter:nth-child(2) { border-left-color: #f97316; }
-  .chapter:nth-child(3) { border-left-color: #fb923c; }
-  .chapter:nth-child(4) { border-left-color: #fb923c; }
-  .chapter:nth-child(5) { border-left-color: #ef4444; }
-  .chapter:nth-child(6) { border-left-color: #ef4444; }
-  .chapter:nth-child(7) { border-left-color: #dc2626; }
-  .chapter:nth-child(8) { border-left-color: #dc2626; }
-  .chapter-num {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: #334155;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 14px;
-    color: #e2e8f0;
-    flex-shrink: 0;
-  }
-  .chapter-content { flex: 1; }
-  .chapter-title { font-weight: 600; color: #f8fafc; font-size: 15px; margin-bottom: 4px; }
-  .chapter-desc { font-size: 13px; color: #94a3b8; }
-
-  /* 核心逻辑链 */
-  .logic-chain {
-    background: #1e293b;
-    border-radius: 12px;
-    padding: 24px;
-    border: 1px solid #334155;
-    margin-bottom: 20px;
-  }
-  .logic-chain h3 { color: #fbbf24; margin-bottom: 16px; font-size: 17px; }
-  .chain-steps {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  .chain-step {
-    background: #0f172a;
-    border-radius: 8px;
-    padding: 14px 16px;
-    border-left: 3px solid #fbbf24;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  .chain-arrow {
-    text-align: center;
-    color: #fbbf24;
-    font-size: 18px;
-  }
-  .chain-step .step-label {
-    font-weight: 600;
-    color: #fbbf24;
-    font-size: 13px;
-    min-width: 100px;
-  }
-  .chain-step .step-desc {
-    color: #cbd5e1;
-    font-size: 14px;
-  }
-
-  /* 核心思想 */
-  .core-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 16px;
-    margin-bottom: 20px;
-  }
-  .core-card {
-    background: #1e293b;
-    border-radius: 12px;
-    padding: 20px;
-    border: 1px solid #334155;
-  }
-  .core-card h4 { color: #f97316; margin-bottom: 10px; font-size: 15px; }
-  .core-card p { color: #cbd5e1; font-size: 14px; }
-
-  /* 金句 */
-  .quote {
-    background: linear-gradient(135deg, #7c2d12 0%, #1e293b 100%);
-    border-radius: 12px;
-    padding: 24px;
-    border-left: 4px solid #f97316;
-    margin: 30px 0;
-  }
-  .quote p { font-size: 16px; color: #fdba74; font-style: italic; }
-  .quote .author { margin-top: 12px; font-size: 13px; color: #94a3b8; text-align: right; }
-
-  .footer {
-    text-align: center;
-    margin-top: 40px;
-    padding: 20px;
-    color: #64748b;
-    font-size: 13px;
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--paper);color:var(--ink);line-height:1.95;padding:34px 18px 52px;
+    -webkit-font-smoothing:antialiased;}
+  .wrap{max-width:1000px;margin:0 auto;}
+  header{text-align:center;padding:40px 22px 34px;background:var(--card);
+    border:1px solid var(--edge);border-top:4px solid var(--micro);border-radius:4px;margin-bottom:26px;}
+  header .kicker{font-size:11px;letter-spacing:.28em;color:var(--ink-soft);
+    font-family:ui-monospace,Consolas,monospace;margin-bottom:14px;}
+  header h1{font-size:25px;font-weight:800;letter-spacing:.01em;line-height:1.4;margin-bottom:10px;}
+  header .sub{font-size:14px;color:var(--ink-mid);line-height:1.9;}
+  header .src{margin-top:14px;font-size:12px;color:var(--ink-soft);line-height:1.9;}
+  .lead{background:var(--card);border:1px solid var(--edge);border-radius:3px;
+    padding:20px 24px;margin-bottom:24px;font-size:14.4px;color:var(--ink-mid);}
+  .lead .t{color:var(--key);font-weight:700;margin-bottom:10px;font-size:13.6px;}
+  .lead p+p{margin-top:8px;} .lead strong{color:var(--ink);}
+  .lead em{font-style:normal;color:#cdc2b4;}
+  h2{font-size:19px;font-weight:700;margin:38px 0 6px;padding-left:13px;
+    border-left:4px solid var(--key);letter-spacing:.01em;line-height:1.55;}
+  .s{color:var(--ink-soft);font-size:13.2px;margin:0 0 16px 17px;line-height:1.85;}
+  h3{font-size:15.4px;font-weight:700;margin:24px 0 8px;}
+  p{font-size:14.2px;color:var(--ink-mid);margin-bottom:10px;}
+  p strong{color:var(--ink);} p em{font-style:normal;color:#cdc2b4;}
+  code{font-family:ui-monospace,Consolas,monospace;font-size:12.4px;
+    background:rgba(217,180,90,.12);border:1px solid #3d3520;border-radius:4px;
+    padding:1px 6px;color:#e8dca0;word-break:break-all;}
+  .q{background:var(--key-soft);border:1px solid #3d3520;border-left:3px solid var(--key);
+    border-radius:3px;padding:15px 20px;margin:14px 0;}
+  .q .cn{font-size:14.6px;color:#efe3b8;line-height:2;}
+  .q .from{margin-top:7px;font-size:12px;color:var(--ink-soft);text-align:right;}
+  .q .gl{margin-top:8px;font-size:13.2px;color:var(--ink-mid);border-top:1px dashed #4a4028;padding-top:8px;}
+  .q .gl em{font-style:normal;color:#cdc2b4;}
+  .box{border-radius:3px;padding:15px 20px;margin:16px 0;font-size:13.6px;line-height:1.9;}
+  .box.k{background:var(--key-soft);border:1px solid #3d3520;border-left:3px solid var(--key);color:#e8dca0;}
+  .box.k strong{color:var(--key);}
+  .box.w{background:var(--warn-soft);border:1px solid #3d231c;border-left:3px solid var(--warn);color:#e8b79a;}
+  .box.w strong{color:var(--warn);}
+  .box.m{background:var(--micro-soft);border:1px solid #3d2f1c;border-left:3px solid var(--micro);color:#e8d0a8;}
+  .box.m strong{color:var(--micro);}
+  .box p{color:inherit;font-size:13.6px;} .box p strong{color:inherit;}
+  .box em{font-style:normal;color:#cfc6ba;}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.2px;}
+  th,td{padding:9px 12px;border:1px solid var(--edge);text-align:left;vertical-align:top;line-height:1.8;}
+  th{background:#221d18;color:var(--key);font-weight:700;font-size:12.4px;}
+  td{color:var(--ink-mid);} td strong{color:var(--ink);}
+  td.a{color:#e8cfa8;} td.b{color:#a8cbe8;} td.c{color:#c9b8e8;}
+  .vol{display:grid;grid-template-columns:1fr 1fr;margin:18px 0;
+    border:1px solid var(--edge);border-radius:4px;overflow:hidden;}
+  .vol>div{padding:18px 20px;}
+  .vol .v1{background:var(--micro-soft);border-right:1px solid var(--edge);}
+  .vol .v2{background:var(--macro-soft);}
+  .vol .h{font-size:13px;font-weight:800;letter-spacing:.06em;margin-bottom:5px;}
+  .vol .v1 .h{color:var(--micro);} .vol .v2 .h{color:var(--macro);}
+  .vol .q2{font-size:12.6px;color:var(--ink-soft);margin-bottom:10px;}
+  .vol .txt{font-size:13.2px;color:var(--ink-mid);line-height:1.85;}
+  .vol .txt strong{color:var(--ink);}
+  .ch{display:grid;grid-template-columns:repeat(auto-fill,minmax(298px,1fr));gap:12px;margin:16px 0;}
+  .ch .item{background:var(--card);border:1px solid var(--edge);border-radius:10px;
+    padding:14px 16px;transition:border-color .2s,transform .2s;}
+  .ch .item:hover{border-color:var(--micro);transform:translateY(-2px);}
+  .ch .item.mc:hover{border-color:var(--macro);}
+  .ch .n{font-family:ui-monospace,Consolas,monospace;font-size:11px;color:var(--micro);
+    letter-spacing:.1em;margin-bottom:5px;}
+  .ch .item.mc .n{color:var(--macro);}
+  .ch .t{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:4px;}
+  .ch .st{font-size:11.8px;color:var(--ink-soft);margin-bottom:7px;line-height:1.7;}
+  .ch .d{font-size:12.6px;color:var(--ink-soft);line-height:1.8;}
+  .ch .d strong{color:var(--ink-mid);}
+  ul,ol{margin:10px 0 0 22px;} li{font-size:13.6px;color:var(--ink-mid);margin-bottom:8px;line-height:1.9;}
+  li strong{color:var(--ink);} li em{font-style:normal;color:#cdc2b4;}
+  footer{margin-top:46px;padding-top:22px;border-top:1px solid var(--edge);
+    text-align:center;font-size:12.2px;color:var(--ink-soft);line-height:2;}
+  @media(max-width:720px){
+    .vol{grid-template-columns:1fr;}
+    .vol .v1{border-right:none;border-bottom:1px solid var(--edge);}
+    header h1{font-size:20px;} h2{font-size:17px;}
+    body{padding:20px 12px 40px;}
   }
 </style>
 </head>
 <body>
-<div class="container">
+<div class="wrap">
 
-  <div class="header">
-    <h1>置身事内：中国政府与经济发展</h1>
-    <div class="subtitle">从地方政府的微观机制，到宏观经济现象的完整脉络</div>
-    <div class="author">兰小欢 · 上海人民出版社 · 2021 · 159页 · 21.6万字</div>
-  </div>
+<header>
+  <div class="kicker">GOVERNMENT AND ECONOMY · 复旦大学</div>
+  <h1>置身事内：政府与经济发展</h1>
+  <div class="sub">一部上下两篇的书 —— 上篇问「政府怎么运作」，下篇问「这些行为如何长成宏观现象」</div>
+  <div class="src">兰小欢 · 上海人民出版社 · 2021 · 8 章<br>
+    全书约 15.5 万汉字（本项目全文语料）</div>
+</header>
 
-  <!-- 核心框架 -->
-  <div class="section-title">核心框架：上下两篇</div>
-  <div class="framework">
-    <h3>以地方政府投融资为主线</h3>
-    <div class="two-parts">
-      <div class="part-box">
-        <div class="part-name">上篇 · 微观机制</div>
-        <div class="part-desc">地方政府的权力、收入、支出、土地融资、投资和债务<br>回答"政府怎么运作"</div>
-      </div>
-      <div class="part-box">
-        <div class="part-name">下篇 · 宏观现象</div>
-        <div class="part-desc">城市化、房价、地区差异、债务风险、经济失衡、贸易冲突<br>回答"微观行为如何影响宏观"</div>
-      </div>
-    </div>
-  </div>
+<div class="lead">
+  <div class="t">先看这本书的立场，否则会读成一本政策手册</div>
+  <p><strong>它有一个明确的方法主张</strong>：<br>
+  <strong>「了解」政府认为应该怎么办，比了解「我」认为应该怎么办，重要得多。</strong></p>
+  <p>这句话是作者在前言里写的。它决定了这本书的写法：
+  <em>不是评价政策好不好，而是先把政府面对的约束条件说清楚。</em></p>
+  <p>看书时抓住三件事：</p>
+  <p>① <strong>「主角」是地方政府</strong> —— 不是市场，也不是中央；<br>
+     ② <strong>一条主线</strong>：地方政府投融资 —— 全书 8 章都挂在它上面；<br>
+     ③ <strong>上下两篇是因果链，不是并列的两块</strong> —— 上篇是原因，下篇是结果。</p>
+</div>
 
-  <!-- 8章脉络 -->
-  <div class="section-title">8章脉络：从微观到宏观</div>
-  <div class="chapters">
-    <div class="chapter">
-      <div class="chapter-num">1</div>
-      <div class="chapter-content">
-        <div class="chapter-title">地方政府的权力与事务</div>
-        <div class="chapter-desc">五级政府体系、事权划分三原则（外部性、信息复杂性、激励相容）、招商引资</div>
-      </div>
-    </div>
-    <div class="chapter">
-      <div class="chapter-num">2</div>
-      <div class="chapter-content">
-        <div class="chapter-title">财税与政府行为</div>
-        <div class="chapter-desc">1994年分税制改革、土地财政的诞生、纵向与横向不平衡</div>
-      </div>
-    </div>
-    <div class="chapter">
-      <div class="chapter-num">3</div>
-      <div class="chapter-content">
-        <div class="chapter-title">政府投融资与债务</div>
-        <div class="chapter-desc">城投公司与土地金融、地方政府债务、招商引资中的官员角色</div>
-      </div>
-    </div>
-    <div class="chapter">
-      <div class="chapter-num">4</div>
-      <div class="chapter-content">
-        <div class="chapter-title">工业化中的政府角色</div>
-        <div class="chapter-desc">京东方案例、光伏产业与政府补贴、政府产业引导基金</div>
-      </div>
-    </div>
-    <div class="chapter">
-      <div class="chapter-num">5</div>
-      <div class="chapter-content">
-        <div class="chapter-title">城市化与不平衡</div>
-        <div class="chapter-desc">房价与居民债务、要素市场改革、经济发展与贫富差距</div>
-      </div>
-    </div>
-    <div class="chapter">
-      <div class="chapter-num">6</div>
-      <div class="chapter-content">
-        <div class="chapter-title">债务与风险</div>
-        <div class="chapter-desc">债务与经济衰退、欧美的教训、中国的债务风险、化解之道</div>
-      </div>
-    </div>
-    <div class="chapter">
-      <div class="chapter-num">7</div>
-      <div class="chapter-content">
-        <div class="chapter-title">国内国际失衡</div>
-        <div class="chapter-desc">低消费与产能过剩、中美贸易冲突、再平衡与国内大循环</div>
-      </div>
-    </div>
-    <div class="chapter">
-      <div class="chapter-num">8</div>
-      <div class="chapter-content">
-        <div class="chapter-title">总结：政府与经济发展</div>
-        <div class="chapter-desc">地区间竞争、政府的发展与转型、发展目标与发展过程</div>
-      </div>
-    </div>
-  </div>
+<!-- ================= 一 ================= -->
+<h2>一 · 中心立场：从了解现状开始</h2>
 
-  <!-- 核心逻辑链 -->
-  <div class="section-title">核心逻辑链：一件事如何引发另一件事</div>
-  <div class="logic-chain">
-    <h3>从分税制改革到中美贸易冲突</h3>
-    <div class="chain-steps">
-      <div class="chain-step">
-        <span class="step-label">1994年分税制</span>
-        <span class="step-desc">中央集中财权，地方事权不变 → 地方财政收不抵支</span>
-      </div>
-      <div class="chain-arrow">↓</div>
-      <div class="chain-step">
-        <span class="step-label">土地财政</span>
-        <span class="step-desc">地方政府靠卖地收入弥补财政缺口 → 土地成为核心资产</span>
-      </div>
-      <div class="chain-arrow">↓</div>
-      <div class="chain-step">
-        <span class="step-label">土地金融</span>
-        <span class="step-desc">以土地为抵押成立城投公司融资 → 地方政府债务累积</span>
-      </div>
-      <div class="chain-arrow">↓</div>
-      <div class="chain-step">
-        <span class="step-label">快速城市化</span>
-        <span class="step-desc">大搞基建、招商引资、推动工业化 → 房价上涨、居民债务增加</span>
-      </div>
-      <div class="chain-arrow">↓</div>
-      <div class="chain-step">
-        <span class="step-label">产能过剩</span>
-        <span class="step-desc">投资驱动增长，消费不足 → 产能过剩，依赖出口</span>
-      </div>
-      <div class="chain-arrow">↓</div>
-      <div class="chain-step">
-        <span class="step-label">贸易失衡</span>
-        <span class="step-desc">出口远大于进口 → 中美贸易冲突 → 国内大循环战略</span>
-      </div>
-    </div>
-  </div>
+<div class="q">
+  <div class="cn">了解政府认为应该怎么办，比了解"我"认为应该怎么办，重要得多。</div>
+  <div class="from">「前言 · 从了解现状开始」</div>
+  <div class="gl"><strong>这是本书的方法论起点，也是它区别于一般经济学著作的地方。</strong><br>
+  <em>大多数经济学书从「应该怎样」出发（福利最大化、最优制度设计）；
+  这本书从「实际在怎样」出发，先接受约束条件的存在，再解释行为。</em></div>
+</div>
 
-  <!-- 核心思想 -->
-  <div class="section-title">三个最核心的思想</div>
-  <div class="core-grid">
-    <div class="core-card">
-      <h4>① 政府不仅分蛋糕，也做蛋糕</h4>
-      <p>在中国，政府不只是"守夜人"，它深度参与经济生产——通过土地、融资、补贴、产业基金等方式直接推动工业化。理解中国经济，必须理解政府。</p>
-    </div>
-    <div class="core-card">
-      <h4>② 地方竞争是发展的核心动力</h4>
-      <p>地方政府之间的"锦标赛"——GDP竞争、招商引资竞争——是中国经济快速发展的重要机制。但这种竞争也带来了重复建设、债务累积等问题。</p>
-    </div>
-    <div class="core-card">
-      <h4>③ 微观机制决定宏观现象</h4>
-      <p>房价高、债务重、消费低、贸易顺差——这些宏观现象都不是凭空出现的，而是地方政府微观行为的必然结果。要改变宏观，必须改变微观激励。</p>
-    </div>
-  </div>
+<div class="q">
+  <div class="cn">社会进程本是整体，密不可分。所谓经济，不过是研究者从这洪流中人工提炼出的部分事实。
+  何谓经济，本身已然是种抽象，而之后大脑还须经过若干抽象，方能复刻现实。
+  <strong>没有什么事是纯粹经济的，其他维度永远存在，且往往更为重要。</strong></div>
+  <div class="from">卷首引 约瑟夫·熊彼特《经济发展理论》</div>
+  <div class="gl"><strong>卷首引不止一句。</strong>另一句是王充《论衡》的
+  「事莫明于有效，论莫定于有证」——<em>两句合起来，是这本书的双重自律：
+  不把经济从社会里切出来单看，但也不放弃证据。</em></div>
+</div>
 
-  <!-- 金句 -->
-  <div class="quote">
-    <p>"在我国，政府不但影响'蛋糕'的分配，也参与'蛋糕'的生产，所以我们不可能脱离政府谈经济。"</p>
-    <div class="author">—— 兰小欢《置身事内》</div>
-  </div>
+<!-- ================= 二 ================= -->
+<h2>二 · 上下两篇：一条因果链，不是两块内容</h2>
+<div class="s">这是全书最容易被读错的结构 —— 下篇的每个宏观现象，都能在上篇找到微观源头</div>
 
-  <div class="quote">
-    <p>"生活在这个机体中，我们的发展有赖于对这个机体的认知。要避免把舶来的理论化成先入为主的判断——看到现实与理论不符，便直斥现实之非。"</p>
-    <div class="author">—— 兰小欢《置身事内》</div>
-  </div>
+<div class="q">
+  <div class="cn">本书以我国<strong>地方政府投融资</strong>为主线，分上下两篇。<br>
+  上篇解释<strong>微观机制</strong>，包括地方政府的基本事务、收入、支出、土地融资和开发、投资和债务等；<br>
+  下篇解释这些微观行为对<strong>宏观现象</strong>的影响，包括城市化和工业化、房价、地区差异、
+  债务风险、国内经济结构失衡、国际贸易冲突等。</div>
+  <div class="from">「本书结构与数据说明」</div>
+</div>
 
-  <div class="footer">
-    《置身事内：中国政府与经济发展》· 兰小欢 · 2021<br>
-    复旦经院"毕业课" · 解读经济生活背后的政府角色
+<div class="vol">
+  <div class="v1">
+    <div class="h">上篇 · 微观机制</div>
+    <div class="q2">「政府怎么运作」</div>
+    <div class="txt">地方政府的基本事务、收入、支出、土地融资与开发、投资与债务。<br><br>
+      <strong>核心链条：</strong>事权划分 → 收支矛盾 → 土地财政 → 土地金融 → 政府投资与债务</div>
   </div>
+  <div class="v2">
+    <div class="h">下篇 · 宏观现象</div>
+    <div class="q2">「微观行为如何长成宏观结果」</div>
+    <div class="txt">城市化与工业化、房价、地区差异、债务风险、经济结构失衡、国际贸易冲突。<br><br>
+      <strong>核心追问：</strong>这些现象里，哪些是微观机制的产物？</div>
+  </div>
+</div>
+
+<div class="box k">
+  <p><strong>★ 为什么必须按这个顺序读</strong></p>
+  <p>因为下篇要解释的那些现象（房价、地方债、产能过剩、中美贸易冲突）
+  单独拿出来看，每一个都有无数种解释。</p>
+  <p>本书的主张是：<strong>它们共享同一个微观源头</strong> ——
+  地方政府在特定财税结构下的投融资行为。</p>
+  <p><em>所以如果跳过上篇直接读下篇，会把这本书读成一本「时评合集」，
+  而它其实是一本机制分析。</em></p>
+</div>
+
+<!-- ================= 三 ================= -->
+<h2>三 · 8 章脉络</h2>
+<div class="s">章名与节名均取自书中目录（原文）</div>
+
+<div class="ch">
+  <div class="item">
+    <div class="n">上篇 CH 1</div>
+    <div class="t">地方政府的权力与事务</div>
+    <div class="st">政府治理的特点 / 外部性与规模经济 / 复杂信息 / 激励相容 / 招商引资</div>
+    <div class="d">给出全书的分析框架：<strong>事权划分三原则</strong>。
+      这一章不涉及钱，但它决定了后面每一章的范围。</div>
+  </div>
+  <div class="item">
+    <div class="n">上篇 CH 2</div>
+    <div class="t">财税与政府行为</div>
+    <div class="st">分税制改革 / 土地财政 / 纵向不平衡与横向不平衡</div>
+    <div class="d"><strong>全书最关键的一章。</strong>1994 年分税制改革改变了地方政府的收入结构，
+      从而催生了「土地财政」与「土地金融」——<em>后面 6 章都在处理它的后果。</em></div>
+  </div>
+  <div class="item">
+    <div class="n">上篇 CH 3</div>
+    <div class="t">政府投融资与债务</div>
+    <div class="st">城投公司与土地金融 / 地方政府债务 / 招商引资中的地方官员</div>
+    <div class="d">从「钱从哪来」到「钱怎么花出去」。<strong>城投公司</strong>是这一章的核心机制，
+      也是理解地方债的钥匙。</div>
+  </div>
+  <div class="item">
+    <div class="n">上篇 CH 4</div>
+    <div class="t">工业化中的政府角色</div>
+    <div class="st">京东方与政府投资 / 光伏发展与政府补贴 / 政府产业引导基金</div>
+    <div class="d">三个案例，回答同一个问题：<strong>政府为什么能、以及怎样参与实业投资。</strong></div>
+  </div>
+  <div class="item mc">
+    <div class="n">下篇 CH 5</div>
+    <div class="t">城市化与不平衡</div>
+    <div class="st">房价与居民债务 / 不平衡与要素市场改革 / 经济发展与贫富差距</div>
+    <div class="d">把上篇的土地财政接到<strong>房价</strong>上，再接到<strong>居民债务与贫富差距</strong>上。</div>
+  </div>
+  <div class="item mc">
+    <div class="n">下篇 CH 6</div>
+    <div class="t">债务与风险</div>
+    <div class="st">债务与经济衰退 / 债台为何高筑：欧美的教训 / 中国的债务与风险 / 化解债务风险</div>
+    <div class="d">先讲欧美的教训作为对照，再讲中国。<strong>这一章的关键词是「风险」而非「危机」。</strong></div>
+  </div>
+  <div class="item mc">
+    <div class="n">下篇 CH 7</div>
+    <div class="t">国内国际失衡</div>
+    <div class="st">低消费与产能过剩 / 中美贸易冲突 / 再平衡与国内大循环</div>
+    <div class="d">把国内的<strong>低消费—高投资</strong>结构，接到国际<strong>贸易冲突</strong>上。
+      这是全书视野最宽的一章。</div>
+  </div>
+  <div class="item mc">
+    <div class="n">下篇 CH 8</div>
+    <div class="t">总结：政府与经济发展</div>
+    <div class="st">地区间竞争 / 政府的发展与转型 / 发展目标与发展过程</div>
+    <div class="d">提炼全书。<strong>「地区间竞争」是作者给出的、贯穿上下两篇的那条暗线。</strong></div>
+  </div>
+</div>
+
+<!-- ================= 四 ================= -->
+<h2>四 · 分析框架：事权划分三原则</h2>
+<div class="s">第一章给出的工具，全书都在用它 —— 这是这本书最「可迁移」的部分</div>
+
+<div class="q">
+  <div class="cn">第二节至第四节结合实际情况，详述事权划分三原则：
+  <strong>外部性和受益范围原则、信息复杂性原则、激励相容原则。</strong></div>
+  <div class="from">第一章「地方政府的权力与事务」</div>
+</div>
+
+<table>
+  <tr><th style="width:22%">原则</th><th>它回答什么</th><th>推论</th></tr>
+  <tr>
+    <td><strong>外部性与<br>受益范围</strong></td>
+    <td class="a">这件事的影响范围有多大？受益的是谁？</td>
+    <td>影响范围越大（越跨辖区），越应上收；只影响本地，则下沉</td>
+  </tr>
+  <tr>
+    <td><strong>信息复杂性</strong></td>
+    <td class="b">谁掌握做这件事所需的信息？</td>
+    <td>信息越本地化、越难上传，越应由地方办 —— <em>这是地方自主权的主要来源</em></td>
+  </tr>
+  <tr>
+    <td><strong>激励相容</strong></td>
+    <td class="c">办事的人有没有动力把事情办好？</td>
+    <td>若上级目标与下级利益冲突，制度设计要让它「不冲突」</td>
+  </tr>
+</table>
+
+<div class="box k">
+  <p><strong>★ 这三条为什么值得单独记</strong></p>
+  <p>因为它们不只是中国政府的解释工具 —— <strong>任何多层级的组织，权责划分都能用这三条问一遍</strong>：
+  <em>影响范围多大（外部性）、信息在哪一层（信息复杂性）、谁有动力（激励相容）。</em></p>
+  <p><strong>这是本书里最容易迁移到别处的部分。</strong>
+  （这是我的读法，不是原文的主张。）</p>
+</div>
+
+<!-- ================= 五 ================= -->
+<h2>五 · 关键概念对照</h2>
+
+<table>
+  <tr><th style="width:22%">概念</th><th>它指的是什么</th><th>在全书中的位置</th></tr>
+  <tr><td><strong>土地财政</strong></td>
+    <td class="a">地方政府通过出让土地获取收入，以弥补分税制后的收支缺口</td>
+    <td>第 2 章提出，第 5 章接房价</td></tr>
+  <tr><td><strong>土地金融</strong></td>
+    <td class="a">以土地未来的收益为抵押去融资（而不只是卖地换钱）</td>
+    <td>第 2 章提出，第 3 章展开机制</td></tr>
+  <tr><td><strong>城投公司</strong></td>
+    <td class="b">地方政府设立的投资融资平台，承担基建与产业投资</td>
+    <td>第 3 章核心机制</td></tr>
+  <tr><td><strong>地区间竞争</strong></td>
+    <td class="b">地方政府之间为增长与投资展开的竞争</td>
+    <td>第 8 章提炼为全书暗线</td></tr>
+</table>
+
+<div class="box m">
+  <p><strong>★ 一处要留意的区分：「土地财政」与「土地金融」不是一回事</strong></p>
+  <p><strong>土地财政</strong>是<em>卖地换当期收入</em>；<strong>土地金融</strong>是<em>用土地的未来收益去抵押融资</em>。</p>
+  <p>前者是流量，后者是杠杆。书里把它们分开讲，而日常讨论常混为一谈 ——
+  <strong>混起来谈，就没法解释地方债务为什么可以远超当期卖地收入。</strong></p>
+</div>
+
+<!-- ================= 六 ================= -->
+<h2>六 · 它在项目里的位置</h2>
+
+<table>
+  <tr><th style="width:28%">与什么</th><th>关系</th></tr>
+  <tr><td><strong>与《枪炮、病菌与钢铁》<br>同项目 05 域</strong></td>
+    <td class="a">这是最值得对照的一对。<strong>戴蒙德问「为什么是欧亚大陆」，
+      兰小欢问「为什么中国的地方政府这样运作」。</strong><br>
+      两者解释尺度不同：戴蒙德用地理与生物（千年尺度），兰小欢用财税与激励（几十年尺度）。<br>
+      <em>而《无穷的开始》第 17 章正好反对戴蒙德的地理决定论 —— 三条线在这里交汇。</em></td></tr>
+  <tr><td><strong>与《非对称风险》<br>同项目 01 域</strong></td>
+    <td class="b">塔勒布的「风险共担」问的是：<strong>做决策的人是否承担后果</strong>。<br>
+      本书第 3 章「招商引资中的地方官员」讲的正是这件事的一个具体形态：
+      <em>官员的评价与激励机制怎样影响投融资行为。</em></td></tr>
+  <tr><td><strong>与本书自己的<br>问题手册 / 精读笔记</strong></td>
+    <td class="c">本书 8 章里有大量具体数据与案例。本项目的
+      <code>置身事内-问题手册</code>（2,736 字）与
+      <code>置身事内-精读笔记与专业问题</code>（16,838 字）承接了那些细节。<br>
+      <em>本页只给骨架，细节在那两份里。</em></td></tr>
+</table>
+
+<!-- ================= 七 ================= -->
+<h2>七 · 边界：这本书不承诺什么</h2>
+
+<div class="q">
+  <div class="cn">一套严格的概念框架无疑有助于厘清问题，
+  但也经常让人<strong>错把问题当成答案</strong>。社会科学总渴望发现一套"放之四海而皆准"的方法和规律，
+  但这种心态需要成熟起来。<strong>不要低估经济现实的复杂性，也不要高估科学工具的质量。</strong></div>
+  <div class="from">卷首引（作者自述）</div>
+  <div class="gl">这是全书最重的一句自我限制。<strong>它明确说了：本书的框架是工具，不是答案。</strong>
+  <em>而它恰恰写在卷首 —— 作者不希望读者读完 8 章之后，拿这三条原则去套一切。</em></div>
+</div>
+
+<div class="box w">
+  <p><strong>① 它是「解释」，不是「预测」</strong></p>
+  <p>全书用的是已发生的事实与数据。<strong>它不承诺告诉你下一步会怎样。</strong></p>
+
+  <p style="margin-top:12px;"><strong>② 它是「中国的地方政府」，不是「政府」</strong></p>
+  <p>「事权划分三原则」在别处也适用，但书里所有案例都取自中国。
+  <em>把结论直接搬到别的国家之前，要重新检查约束条件。</em></p>
+
+  <p style="margin-top:12px;"><strong>③ 它明确放弃细节</strong></p>
+  <p>作者自述：「本书力求简明扼要，突出主要逻辑和重点事实，<strong>不会过多展开细节</strong>。
+  有兴趣深究的读者可以参考每章末尾'扩展阅读'中推荐的读物。」<br>
+  <em>所以这本书是入口，不是终点 —— 每章末尾的「扩展阅读」才是。</em></p>
+</div>
+
+<!-- ================= 八 ================= -->
+<h2>八 · 读法建议</h2>
+
+<ol>
+  <li><strong>先读前言与第 8 章，再回头按顺序读。</strong><br>
+  前言给立场（从了解现状开始），第 8 章给暗线（地区间竞争）。
+  <em>先拿到这两个，中间 6 章才知道自己在看什么。</em></li>
+
+  <li><strong>第 2 章（分税制与土地财政）是全书地基，要精读。</strong><br>
+  第 3、5、6 章都在处理它的后果。<em>这一章没读通，后面几章会变成一堆孤立的现象。</em></li>
+
+  <li><strong>第 5–7 章要连着读，它们是一条链。</strong><br>
+  房价（5）→ 债务（6）→ 失衡与贸易冲突（7）。
+  <em>拆开读会以为是三个话题，连起来才看得出是同一个结构的不同侧面。</em></li>
+
+  <li><strong>每章末尾的「扩展阅读」别跳过。</strong><br>
+  作者自己说了本书不展开细节 —— <em>那些细节就在扩展阅读里。</em></li>
+</ol>
+
+<footer>
+ 《置身事内：中国政府与经济发展》整体架构 · 「底层」项目 04_社会与制度<br>
+ 兰小欢 · 上海人民出版社 2021 · 8 章 · 约 15.5 万汉字（全文）<br>
+ <em>引文均可在全文语料中核对；架构梳理与读法建议为待议读法</em>
+</footer>
 
 </div>
 </body>

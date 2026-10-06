@@ -3,295 +3,363 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>《数字图像处理》整体架构 —— 从像素到理解的12级台阶</title>
+<title>数字图像处理 · 整体架构</title>
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
-    background: #0f172a;
-    color: #e2e8f0;
-    padding: 32px 20px;
-    line-height: 1.7;
+  :root{
+    --paper:#0d1117; --card:#161b22; --edge:#262d38;
+    --ink:#e8eef5; --ink-mid:#9fb0c2; --ink-soft:#6b7a8c;
+    --low:#4a9de0;  --low-soft:#0f2233;
+    --mid:#c99a4a;  --mid-soft:#2a2213;
+    --high:#8b7ae0; --high-soft:#1c1832;
+    --key:#d9c26a;  --key-soft:#2a2517;
+    --warn:#d4693c; --warn-soft:#2a1a13;
   }
-  .container { max-width: 900px; margin: 0 auto; }
-
-  .header {
-    text-align: center;
-    margin-bottom: 40px;
-    padding: 40px 20px;
-    background: linear-gradient(135deg, #1e3a5f 0%, #0f172a 100%);
-    border-radius: 16px;
-    border: 1px solid #334155;
-  }
-  .header h1 { font-size: 26px; margin-bottom: 12px; color: #f8fafc; }
-  .header .subtitle { font-size: 15px; color: #94a3b8; }
-  .header .author { margin-top: 16px; font-size: 13px; color: #64748b; }
-
-  .section-title {
-    font-size: 20px;
-    font-weight: 700;
-    color: #f8fafc;
-    margin: 36px 0 20px;
-    padding-left: 12px;
-    border-left: 4px solid #3b82f6;
-  }
-
-  /* 连续体模型 */
-  .continuum {
-    background: #1e293b;
-    border-radius: 12px;
-    padding: 24px;
-    border: 1px solid #334155;
-    margin-bottom: 20px;
-  }
-  .continuum h3 { color: #3b82f6; margin-bottom: 16px; font-size: 17px; }
-  .levels {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 12px;
-  }
-  @media (max-width: 600px) {
-    .levels { grid-template-columns: 1fr; }
-  }
-  .level-box {
-    background: #0f172a;
-    border-radius: 8px;
-    padding: 16px;
-    text-align: center;
-    border-top: 3px solid;
-  }
-  .level-box:nth-child(1) { border-top-color: #10b981; }
-  .level-box:nth-child(2) { border-top-color: #f59e0b; }
-  .level-box:nth-child(3) { border-top-color: #ef4444; }
-  .level-box .level-name { font-weight: 600; margin-bottom: 8px; color: #f8fafc; font-size: 14px; }
-  .level-box .level-desc { font-size: 12px; color: #94a3b8; }
-
-  /* 12章阶梯 */
-  .stairs {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin-bottom: 20px;
-  }
-  .stair {
-    background: #1e293b;
-    border-radius: 10px;
-    padding: 16px 20px;
-    border-left: 4px solid;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
-  .stair:nth-child(1) { border-left-color: #6366f1; }
-  .stair:nth-child(2) { border-left-color: #6366f1; }
-  .stair:nth-child(3) { border-left-color: #8b5cf6; }
-  .stair:nth-child(4) { border-left-color: #8b5cf6; }
-  .stair:nth-child(5) { border-left-color: #a855f7; }
-  .stair:nth-child(6) { border-left-color: #a855f7; }
-  .stair:nth-child(7) { border-left-color: #d946ef; }
-  .stair:nth-child(8) { border-left-color: #d946ef; }
-  .stair:nth-child(9) { border-left-color: #ec4899; }
-  .stair:nth-child(10) { border-left-color: #ec4899; }
-  .stair:nth-child(11) { border-left-color: #f43f5e; }
-  .stair:nth-child(12) { border-left-color: #f43f5e; }
-  .stair-num {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: #334155;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 14px;
-    color: #e2e8f0;
-    flex-shrink: 0;
-  }
-  .stair-content { flex: 1; }
-  .stair-title { font-weight: 600; color: #f8fafc; font-size: 15px; margin-bottom: 4px; }
-  .stair-desc { font-size: 13px; color: #94a3b8; }
-
-  /* 核心思想 */
-  .core-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 16px;
-    margin-bottom: 20px;
-  }
-  .core-card {
-    background: #1e293b;
-    border-radius: 12px;
-    padding: 20px;
-    border: 1px solid #334155;
-  }
-  .core-card h4 { color: #f59e0b; margin-bottom: 10px; font-size: 15px; }
-  .core-card p { color: #cbd5e1; font-size: 14px; }
-
-  /* 金句 */
-  .quote {
-    background: linear-gradient(135deg, #1e3a5f 0%, #1e293b 100%);
-    border-radius: 12px;
-    padding: 24px;
-    border-left: 4px solid #f59e0b;
-    margin: 30px 0;
-  }
-  .quote p { font-size: 16px; color: #fbbf24; font-style: italic; }
-  .quote .author { margin-top: 12px; font-size: 13px; color: #94a3b8; text-align: right; }
-
-  .footer {
-    text-align: center;
-    margin-top: 40px;
-    padding: 20px;
-    color: #64748b;
-    font-size: 13px;
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--paper);color:var(--ink);line-height:1.95;padding:34px 18px 52px;
+    -webkit-font-smoothing:antialiased;}
+  .wrap{max-width:1000px;margin:0 auto;}
+  header{text-align:center;padding:40px 22px 34px;background:var(--card);
+    border:1px solid var(--edge);border-top:4px solid var(--low);border-radius:4px;margin-bottom:26px;}
+  header .kicker{font-size:11px;letter-spacing:.28em;color:var(--ink-soft);
+    font-family:ui-monospace,Consolas,monospace;margin-bottom:14px;}
+  header h1{font-size:25px;font-weight:800;letter-spacing:.01em;line-height:1.4;margin-bottom:10px;}
+  header .sub{font-size:14px;color:var(--ink-mid);line-height:1.9;}
+  header .src{margin-top:14px;font-size:12px;color:var(--ink-soft);line-height:1.9;}
+  .lead{background:var(--card);border:1px solid var(--edge);border-radius:3px;
+    padding:20px 24px;margin-bottom:24px;font-size:14.4px;color:var(--ink-mid);}
+  .lead .t{color:var(--key);font-weight:700;margin-bottom:10px;font-size:13.6px;}
+  .lead p+p{margin-top:8px;} .lead strong{color:var(--ink);}
+  .lead em{font-style:normal;color:#b9c9d8;}
+  h2{font-size:19px;font-weight:700;margin:38px 0 6px;padding-left:13px;
+    border-left:4px solid var(--key);letter-spacing:.01em;line-height:1.55;}
+  .s{color:var(--ink-soft);font-size:13.2px;margin:0 0 16px 17px;line-height:1.85;}
+  h3{font-size:15.4px;font-weight:700;margin:24px 0 8px;}
+  p{font-size:14.2px;color:var(--ink-mid);margin-bottom:10px;}
+  p strong{color:var(--ink);}
+  p em{font-style:normal;color:#b9c9d8;}
+  code{font-family:ui-monospace,Consolas,monospace;font-size:12.4px;
+    background:rgba(217,194,106,.12);border:1px solid #3d3520;border-radius:4px;
+    padding:1px 6px;color:#e8dca0;word-break:break-all;}
+  .q{background:var(--key-soft);border:1px solid #3d3520;border-left:3px solid var(--key);
+    border-radius:3px;padding:15px 20px;margin:14px 0;}
+  .q .cn{font-size:14.6px;color:#efe3b8;line-height:2;}
+  .q .from{margin-top:7px;font-size:12px;color:var(--ink-soft);text-align:right;}
+  .q .gl{margin-top:8px;font-size:13.2px;color:var(--ink-mid);border-top:1px dashed #4a4028;padding-top:8px;}
+  .q .gl em{font-style:normal;color:#b9c9d8;}
+  .box{border-radius:3px;padding:15px 20px;margin:16px 0;font-size:13.6px;line-height:1.9;}
+  .box.k{background:var(--key-soft);border:1px solid #3d3520;border-left:3px solid var(--key);color:#e8dca0;}
+  .box.k strong{color:var(--key);}
+  .box.w{background:var(--warn-soft);border:1px solid #3d231c;border-left:3px solid var(--warn);color:#e8b79a;}
+  .box.w strong{color:var(--warn);}
+  .box em{font-style:normal;color:#cfd8e2;}
+  .box p{color:inherit;font-size:13.6px;}
+  .box p strong{color:inherit;}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.2px;}
+  th,td{padding:9px 12px;border:1px solid var(--edge);text-align:left;vertical-align:top;line-height:1.8;}
+  th{background:#1a212a;color:var(--key);font-weight:700;font-size:12.4px;}
+  td{color:var(--ink-mid);} td strong{color:var(--ink);}
+  td.a{color:#a8cfe8;} td.b{color:#e8cc9a;} td.c{color:#c0b4ee;}
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);margin:18px 0;
+    border:1px solid var(--edge);border-radius:4px;overflow:hidden;}
+  .steps>div{padding:16px 18px;}
+  .steps .s1{background:var(--low-soft);border-right:1px solid var(--edge);}
+  .steps .s2{background:var(--mid-soft);border-right:1px solid var(--edge);}
+  .steps .s3{background:var(--high-soft);}
+  .steps .h{font-size:12px;font-weight:700;letter-spacing:.08em;margin-bottom:8px;
+    font-family:ui-monospace,Consolas,monospace;}
+  .steps .s1 .h{color:var(--low);} .steps .s2 .h{color:var(--mid);} .steps .s3 .h{color:var(--high);}
+  .steps .io{font-size:12.4px;color:var(--ink-soft);margin-bottom:6px;}
+  .steps .txt{font-size:13.2px;color:var(--ink-mid);line-height:1.8;}
+  .ch{display:grid;grid-template-columns:repeat(auto-fill,minmax(298px,1fr));gap:12px;margin:16px 0;}
+  .ch .item{background:var(--card);border:1px solid var(--edge);border-radius:10px;
+    padding:14px 16px;transition:border-color .2s,transform .2s;}
+  .ch .item:hover{border-color:var(--low);transform:translateY(-2px);}
+  .ch .n{font-family:ui-monospace,Consolas,monospace;font-size:11px;color:var(--low);
+    letter-spacing:.1em;margin-bottom:5px;}
+  .ch .t{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:6px;}
+  .ch .d{font-size:12.6px;color:var(--ink-soft);line-height:1.8;}
+  .ch .d strong{color:var(--ink-mid);}
+  ul,ol{margin:10px 0 0 22px;} li{font-size:13.6px;color:var(--ink-mid);margin-bottom:8px;line-height:1.9;}
+  li strong{color:var(--ink);} li em{font-style:normal;color:#b9c9d8;}
+  footer{margin-top:46px;padding-top:22px;border-top:1px solid var(--edge);
+    text-align:center;font-size:12.2px;color:var(--ink-soft);line-height:2;}
+  @media(max-width:720px){
+    .steps{grid-template-columns:1fr;}
+    .steps .s1,.steps .s2{border-right:none;border-bottom:1px solid var(--edge);}
+    header h1{font-size:20px;} h2{font-size:17px;}
+    body{padding:20px 12px 40px;}
   }
 </style>
 </head>
 <body>
-<div class="container">
+<div class="wrap">
 
-  <div class="header">
-    <h1>数字图像处理：从像素到理解的12级台阶</h1>
-    <div class="subtitle">Gonzalez & Woods · 第四版 · 40年经典教材</div>
-    <div class="author">电子工业出版社 · 136万字 · 12章</div>
-  </div>
+<header>
+  <div class="kicker">DIGITAL IMAGE PROCESSING · 4TH ED.</div>
+  <h1>数字图像处理：从像素到理解</h1>
+  <div class="sub">一部 12 章的连续体 —— 每一章都在回答「这一层能从上几层拿到什么」</div>
+  <div class="src">Gonzalez &amp; Woods · 第四版 · 电子工业出版社 · 阮秋琦 等译<br>
+    全书 12 章 · 约 47.6 万汉字</div>
+</header>
 
-  <!-- 核心连续体 -->
-  <div class="section-title">核心框架：图像处理是一个连续体</div>
-  <div class="continuum">
-    <h3>从"低级处理"到"高级理解"</h3>
-    <div class="levels">
-      <div class="level-box">
-        <div class="level-name">低级处理</div>
-        <div class="level-desc">输入输出都是图像<br>滤波、增强、去噪</div>
-      </div>
-      <div class="level-box">
-        <div class="level-name">中级处理</div>
-        <div class="level-desc">输入是图像，输出是特征<br>分割、边缘检测、特征提取</div>
-      </div>
-      <div class="level-box">
-        <div class="level-name">高级处理</div>
-        <div class="level-desc">理解图像内容<br>分类、识别、场景理解</div>
-      </div>
-    </div>
-  </div>
+<div class="lead">
+  <div class="t">先看这张图怎么用</div>
+  <p><strong>这本书只有一个中心命题</strong>，12 章都在为它服务：<br>
+  <strong>「图像」不是一个东西，是一段连续体 —— 从像素到理解。</strong></p>
+  <p>看的时候抓住三件事：</p>
+  <p>① <strong>三级处理</strong>（低级 / 中级 / 高级）—— 全书的总框架，也是它的边界声明；<br>
+     ② <strong>每一步都是「逆问题」</strong> —— 这决定了为什么到处都要做假设；<br>
+     ③ <strong>12 章的实际顺序</strong> —— 它为什么这样排，而不是按算法分类排。</p>
+  <p><em>最后看「这本书不承诺什么」—— 它把计算机视觉划在了自己之外。</em></p>
+</div>
 
-  <!-- 12章阶梯 -->
-  <div class="section-title">12级台阶：全书的技术脉络</div>
-  <div class="stairs">
-    <div class="stair">
-      <div class="stair-num">1</div>
-      <div class="stair-content">
-        <div class="stair-title">绪论</div>
-        <div class="stair-desc">什么是数字图像处理？应用领域、发展历史、系统组成</div>
-      </div>
-    </div>
-    <div class="stair">
-      <div class="stair-num">2</div>
-      <div class="stair-content">
-        <div class="stair-title">数字图像基础</div>
-        <div class="stair-desc">像素、采样、量化、灰度、坐标系统、像素间关系</div>
-      </div>
-    </div>
-    <div class="stair">
-      <div class="stair-num">3</div>
-      <div class="stair-content">
-        <div class="stair-title">灰度变换与空间滤波</div>
-        <div class="stair-desc">点操作（对比度拉伸、阈值）、空间滤波（平滑、锐化、卷积）</div>
-      </div>
-    </div>
-    <div class="stair">
-      <div class="stair-num">4</div>
-      <div class="stair-content">
-        <div class="stair-title">频率域滤波</div>
-        <div class="stair-desc">傅里叶变换、低通/高通滤波、频率域与空间域的对应</div>
-      </div>
-    </div>
-    <div class="stair">
-      <div class="stair-num">5</div>
-      <div class="stair-content">
-        <div class="stair-title">图像复原与重建</div>
-        <div class="stair-desc">噪声模型、退化函数、逆滤波、维纳滤波、从投影重建</div>
-      </div>
-    </div>
-    <div class="stair">
-      <div class="stair-num">6</div>
-      <div class="stair-content">
-        <div class="stair-title">小波变换和其他图像变换</div>
-        <div class="stair-desc">多分辨率分析、小波变换、图像金字塔</div>
-      </div>
-    </div>
-    <div class="stair">
-      <div class="stair-num">7</div>
-      <div class="stair-content">
-        <div class="stair-title">彩色图像处理</div>
-        <div class="stair-desc">RGB/CMY/HSV彩色模型、彩色变换、彩色滤波</div>
-      </div>
-    </div>
-    <div class="stair">
-      <div class="stair-num">8</div>
-      <div class="stair-content">
-        <div class="stair-title">图像压缩和水印</div>
-        <div class="stair-desc">压缩原理、熵编码、JPEG标准、数字水印</div>
-      </div>
-    </div>
-    <div class="stair">
-      <div class="stair-num">9</div>
-      <div class="stair-content">
-        <div class="stair-title">形态学图像处理</div>
-        <div class="stair-desc">腐蚀、膨胀、开运算、闭运算、骨架提取、区域描述</div>
-      </div>
-    </div>
-    <div class="stair">
-      <div class="stair-num">10</div>
-      <div class="stair-content">
-        <div class="stair-title">图像分割</div>
-        <div class="stair-desc">边缘检测（Sobel、Canny）、阈值处理、区域分割、K均值、超像素</div>
-      </div>
-    </div>
-    <div class="stair">
-      <div class="stair-num">11</div>
-      <div class="stair-content">
-        <div class="stair-title">特征提取</div>
-        <div class="stair-desc">边界描述、区域描述、纹理分析、SIFT尺度不变特征</div>
-      </div>
-    </div>
-    <div class="stair">
-      <div class="stair-num">12</div>
-      <div class="stair-content">
-        <div class="stair-title">图像模式分类</div>
-        <div class="stair-desc">神经网络、深度学习、卷积神经网络（CNN）</div>
-      </div>
-    </div>
-  </div>
+<!-- ================= 一 ================= -->
+<h2>一 · 中心命题：一个连续体，不是一门学科</h2>
+<div class="s">这一句是全书总纲，也是理解 12 章为什么这样排的钥匙</div>
 
-  <!-- 核心思想 -->
-  <div class="section-title">三个最核心的思想</div>
-  <div class="core-grid">
-    <div class="core-card">
-      <h4>① 图像处理是"算出来"的，不是"看出来"的</h4>
-      <p>一幅图像就是一个二维函数f(x,y)。所有的操作——滤波、增强、分割——都是数学变换。你以为你在"修图"，其实你在做矩阵运算。</p>
-    </div>
-    <div class="core-card">
-      <h4>② 空间域和频率域是同一枚硬币的两面</h4>
-      <p>空间域里的"卷积"，在频率域里就是"乘法"。有时候在空间域难做的事，换到频率域就变简单了。理解了这一点，你就理解了信号处理的本质。</p>
-    </div>
-    <div class="core-card">
-      <h4>③ 从"图像"到"理解"是一个连续谱</h4>
-      <p>没有明确的边界说"这里是图像处理，那里是计算机视觉"。从滤波（低级）到分割（中级）到分类（高级），是一步步从像素走向意义的过程。</p>
-    </div>
-  </div>
+<div class="q">
+  <div class="cn">图像分析（也称图像理解）领域则处在图像处理和计算机视觉之间。
+  <strong>在从图像处理到计算机视觉的连续体内，并不存在清晰的边界。</strong></div>
+  <div class="from">第 1 章「绪论」</div>
+  <div class="gl"><strong>「并不存在清晰的边界」是作者的立场，不是含糊其辞。</strong>
+  他要处理的正是这条连续体，所以本书不接受「图像处理只管算法、不管理解」这种切法。</div>
+</div>
 
-  <!-- 金句 -->
-  <div class="quote">
-    <p>"视觉是人类最高级的感知，因此图像在人类感知中起着最重要的作用。"</p>
-    <div class="author">—— Gonzalez & Woods</div>
-  </div>
+<h3>三级处理：全书的总框架</h3>
 
-  <div class="footer">
-    《数字图像处理》第四版 · Gonzalez & Woods · 2018<br>
-    数字图像处理领域的"圣经" · 40年经典 · 全世界通用教材
+<div class="steps">
+  <div class="s1">
+    <div class="h">低级处理</div>
+    <div class="io">输入 = 图像　输出 = 图像</div>
+    <div class="txt">降低噪声的预处理、对比度增强、图像锐化。</div>
   </div>
+  <div class="s2">
+    <div class="h">中级处理</div>
+    <div class="io">输入 = 图像　输出 = 特征</div>
+    <div class="txt">分割、把目标简化为适合计算机处理的形式、各目标的分类（识别）。
+      输出是边缘、轮廓、目标标识。</div>
+  </div>
+  <div class="s3">
+    <div class="h">高级处理</div>
+    <div class="io">输入 = 特征　输出 = 理解</div>
+    <div class="txt">「理解」识别出的一组目标，执行通常与人类视觉相关的认知功能。</div>
+  </div>
+</div>
+
+<div class="q">
+  <div class="cn"><strong>低级处理由其输入和输出都是图像的事实来表征。</strong><br>
+  <strong>中级处理由其输入是图像但输出是从这些图像中提取的特征来表征。</strong></div>
+  <div class="from">第 1 章「绪论」</div>
+  <div class="gl"><strong>注意这个判据是「输入输出是什么」，不是「用了什么算法」。</strong>
+  <em>这是本书分类学的地基：一件事属于哪一级，看它吃什么、吐什么。</em></div>
+</div>
+
+<div class="box k">
+  <p><strong>★ 为什么这个框架重要</strong></p>
+  <p>因为它同时做了两件事：<strong>给出全书的路线图</strong>，
+  并且<strong>声明了边界</strong>——原文明说「本书将数字图像处理界定为其输入和输出都是图像的处理，
+  它包含从图像中提取特征的处理，直至包含各个目标的识别」。</p>
+  <p><em>换句话说：它管到「识别」为止，再往后的「认知功能」它交给计算机视觉。</em></p>
+</div>
+
+<!-- ================= 二 ================= -->
+<h2>二 · 12 章的实际顺序，以及为什么这样排</h2>
+<div class="s">作者的原始书单（引自前言）—— 不是算法分类，而是一条技术依赖链</div>
+
+<div class="q">
+  <div class="cn">全书共 12 章，即绪论、数字图像基础、灰度变换与空间滤波、频率域滤波、
+  图像复原与重建、小波变换和其他图像变换、彩色图像处理、图像压缩和水印、
+  形态学图像处理、图像分割、特征提取、图像模式分类。</div>
+  <div class="from">第四版「前言」</div>
+</div>
+
+<div class="ch">
+  <div class="item"><div class="n">CH 1</div><div class="t">绪论</div>
+    <div class="d">什么是数字图像处理、起源、应用领域、基本步骤、系统组成。给出三级处理框架。</div></div>
+  <div class="item"><div class="n">CH 2</div><div class="t">数字图像基础</div>
+    <div class="d">视觉感知要素、光与电磁波谱、图像感知与获取、<strong>采样与量化</strong>、像素间关系、
+      数学工具（集合与逻辑运算、空间运算、向量与矩阵、图像变换、灰度与随机变量）。</div></div>
+  <div class="item"><div class="n">CH 3</div><div class="t">灰度变换与空间滤波</div>
+    <div class="d"><strong>不依赖变换域</strong>的两件事：点操作（反转、对数、伽马、分段线性）
+      与邻域操作（平滑、锐化）。含直方图处理（均衡化、匹配、局部）。</div></div>
+  <div class="item"><div class="n">CH 4</div><div class="t">频率域滤波</div>
+    <div class="d">傅里叶级数与变换、采样与频率域的关系、平滑与锐化滤波器、
+      选择性滤波、<strong>快速傅里叶变换</strong>。</div></div>
+  <div class="item"><div class="n">CH 5</div><div class="t">图像复原与重建</div>
+    <div class="d">噪声模型、<strong>退化函数</strong>、逆滤波、维纳滤波、从投影重建。</div></div>
+  <div class="item"><div class="n">CH 6</div><div class="t">小波变换和其他图像变换</div>
+    <div class="d">第四版新增的一章。小波、若干新变换，以及散落在全书各处的图像变换。</div></div>
+  <div class="item"><div class="n">CH 7</div><div class="t">彩色图像处理</div>
+    <div class="d">彩色模型（RGB / CMY / CMYK / HSI 等）、伪彩色、彩色变换与分割。</div></div>
+  <div class="item"><div class="n">CH 8</div><div class="t">图像压缩和水印</div>
+    <div class="d">冗余类型、编码理论、有损与无损压缩、水印。</div></div>
+  <div class="item"><div class="n">CH 9</div><div class="t">形态学图像处理</div>
+    <div class="d">膨胀、腐蚀、开闭、击中击不中，以及灰度形态学。</div></div>
+  <div class="item"><div class="n">CH 10</div><div class="t">图像分割</div>
+    <div class="d">边缘检测（含<strong>有限差分</strong>）、阈值、区域生长、聚类、超像素、图割。</div></div>
+  <div class="item"><div class="n">CH 11</div><div class="t">特征提取</div>
+    <div class="d">边界描述、区域描述、<strong>SIFT</strong>、最大稳定极值区域、特征类型分类。</div></div>
+  <div class="item"><div class="n">CH 12</div><div class="t">图像模式分类</div>
+    <div class="d">分类器、<strong>深度卷积神经网络</strong>、反向传播、深度学习。</div></div>
+</div>
+
+<div class="box k">
+  <p><strong>★ 顺序里藏着的两件事</strong></p>
+  <p><strong>① 它先给「不依赖变换域」的做法（第 3 章），再给「依赖变换域」的做法（第 4 章）。</strong><br>
+  <em>任何按数学工具分类的书都会把这顺序倒过来。Gonzalez 这样排，是因为第 3 章是最直观的入口
+  ——像素对像素，效果立刻看得见。</em></p>
+  <p style="margin-top:10px;"><strong>② 压缩（第 8 章）夹在彩色（第 7 章）和形态学（第 9 章）之间，看起来突兀。</strong><br>
+  但它必须在这里：<em>前面 7 章的产物都是「要存、要传的图像」，压缩是第一次把「图像」当数据看；
+  而第 9 章起，处理对象从「像素」变成了「形状」。</em></p>
+</div>
+
+<!-- ================= 三 ================= -->
+<h2>三 · 两个坐标系：空间域与频率域</h2>
+<div class="s">全书最大的一处对偶，第 3–4 章就是它的两张脸</div>
+
+<div class="q">
+  <div class="cn">由图像的坐标张成的实平面部分称为<strong>空间域</strong>，x 和 y 称为空间变量或空间坐标。</div>
+  <div class="from">第 2 章「数字图像基础」</div>
+</div>
+
+<table>
+  <tr><th style="width:20%"></th><th>空间域</th><th>频率域</th></tr>
+  <tr><td><strong>坐标是什么</strong></td><td class="a">位置（x, y）</td><td class="b">变化的快慢</td></tr>
+  <tr><td><strong>操作是什么</strong></td><td class="a">模板／核在图像上滑动（卷积）</td><td class="b">把图像分解成不同频率成分，对成分加权</td></tr>
+  <tr><td><strong>擅长什么</strong></td><td class="a">局部、直观、可实时</td><td class="b">全局、规律性强、能一次处理整幅图</td></tr>
+  <tr><td><strong>典型用途</strong></td><td class="a">锐化、去噪、对比度</td><td class="b">周期性噪声去除、陷波滤波、频带选择</td></tr>
+</table>
+
+<div class="box k">
+  <p><strong>★ 为什么必须两个都学</strong></p>
+  <p>因为<strong>它们是同一件事的两种算法</strong>：卷积定理说，
+  空间域的卷积等价于频率域的乘法。</p>
+  <p><em>但「等价」不等于「一样好用」：有些滤波在频率域里只要乘一个函数，
+  换到空间域就需要一个无限大的核（无法实现）；反过来，有些局部自适应操作
+  在空间域三行代码，在频率域没有对应。</em></p>
+  <p><strong>所以两章不是重复，是在告诉你：一个问题该去哪一边做。</strong></p>
+</div>
+
+<!-- ================= 四 ================= -->
+<h2>四 · 贯穿全书的一个难点：这些问题都是「逆问题」</h2>
+<div class="s">作者没有单独用一章讲，但它决定了为什么到处都要「假设」</div>
+
+<table>
+  <tr><th style="width:24%">章</th><th>正向（容易）</th><th>逆向（书里真正要做的）</th></tr>
+  <tr><td><strong>第 5 章 复原</strong></td><td>已知原图与退化函数 → 算出退化图</td>
+    <td class="a">已知退化图 → 反推原图<br><strong>难点：退化函数未知，且噪声不可逆</strong></td></tr>
+  <tr><td><strong>第 10 章 分割</strong></td><td>已知区域 → 算出边缘</td>
+    <td class="b">已知边缘 → 反推区域<br><strong>难点：边缘不闭合、有断裂</strong></td></tr>
+  <tr><td><strong>第 8 章 压缩</strong></td><td>已知原图 → 编码（无损）</td>
+    <td class="c">已知码流 → 尽量还原<br><strong>难点：丢掉的不可恢复</strong></td></tr>
+  <tr><td><strong>第 12 章 分类</strong></td><td>已知类别 → 生成样本</td>
+    <td class="c">已知样本 → 反推类别<br><strong>难点：类内差异可能大于类间差异</strong></td></tr>
+</table>
+
+<div class="box w">
+  <p><strong>★ 这是本书最容易被读漏的一层</strong></p>
+  <p>「逆问题」三个字，全书没有当成一个专题来讲，
+  但<strong>每一章的技术难点都来自它</strong>。</p>
+  <p>正因为逆问题没有唯一解，才需要在每一步引入<strong>先验假设</strong>
+  ——噪声服从什么分布、退化函数是线性的还是空不变的、边缘应该连续还是允许断裂。</p>
+  <p><em>读这本书的一个有效方式：每读到一个方法，先问「它假设了什么」。
+  假设不同，同一个问题上就会有两个都"正确"的算法。</em></p>
+</div>
+
+<!-- ================= 五 ================= -->
+<h2>五 · 它在项目里的位置</h2>
+<div class="s">三个跨域连接，都是实际存在的，不是硬凑</div>
+
+<table>
+  <tr><th style="width:26%">与什么</th><th>关系</th></tr>
+  <tr><td><strong>与《视觉》（Marr）<br>同项目 06 域</strong></td>
+    <td class="a">这是最直接的一对。<strong>Marr 问「人脑怎么从图像算出物体」，
+      Gonzalez 问「怎么用算法从像素算出特征」。</strong><br>
+      Marr 的三层表述（基元草图 → 2.5 维草图 → 三维模型）与本书的三级处理
+      （低级 / 中级 / 高级）<em>结构上几乎平行</em>，但出发点不同：
+      Marr 要解释生物视觉，本书要造工具。<br>
+      <strong>合起来读，才知道「从像素到理解」有两种完全不同的做法。</strong></td></tr>
+  <tr><td><strong>与《信息论》（MacKay）<br>同项目 03 域</strong></td>
+    <td class="b">第 8 章「图像压缩」整章建立在信息论上：<strong>熵给出压缩的下界</strong>。<br>
+      MacKay 讲的是这个下界为什么存在；本书讲的是<em>怎么逼近它</em>。<br>
+      两本合起来，是「理论极限」与「工程逼近」的标准配对。</td></tr>
+  <tr><td><strong>与《动手学深度学习》<br>同项目 07 域</strong></td>
+    <td class="c">第 12 章已包含<strong>深度卷积神经网络、反向传播、深度学习</strong>
+      ——第四版专门扩写了这部分。<br>
+      <em>而 d2l 讲的正是这些内容的现代版本。所以这一章是两本书的接缝处：
+      从这里可以往 d2l 走。</em></td></tr>
+</table>
+
+<!-- ================= 六 ================= -->
+<h2>六 · 边界：这本书不承诺什么</h2>
+
+<div class="box w">
+  <p><strong>① 它不管「认知」</strong></p>
+  <p>原文明说高级处理「涉及'理解'……以及执行通常与人类视觉相关的认知功能」，
+  但紧接着界定「本书将数字图像处理界定为其输入和输出都是图像的处理」。
+  <strong>即：认知功能只被描述，不被解决。</strong></p>
+
+  <p style="margin-top:12px;"><strong>② 它不管「三维」</strong></p>
+  <p>全书处理的是<strong>二维图像</strong>。从投影重建（第 5 章）是唯一的例外，
+  而且它是「从多个二维投影重建三维」，不是三维视觉。</p>
+
+  <p style="margin-top:12px;"><strong>③ 它不承诺「唯一正确的答案」</strong></p>
+  <p>因为每一章面临的都是逆问题。<em>所以这本书的价值不在于给出标准答案，
+  而在于给出「在什么假设下、用什么方法、代价是什么」这张对照表。</em></p>
+</div>
+
+<div class="q">
+  <div class="cn">在包含新内容和重组内容的这一版中，我们试图在
+  <strong>严谨性、表述的明确性和调查结果之间保持合理的平衡</strong>。</div>
+  <div class="from">第四版「前言」</div>
+  <div class="gl">作者自己承认了取舍。<strong>这本书是教材，不是专著</strong>
+  ——它选了「能被学会」而不是「穷尽所有」。</div>
+</div>
+
+<!-- ================= 七 ================= -->
+<h2>七 · 读法建议</h2>
+
+<ol>
+  <li><strong>先读第 1 章的三级处理，然后跳到第 3 章。</strong><br>
+  第 2 章（采样、量化、数学工具）是工具箱，第一遍可以只记「有这么些东西」，
+  <em>用到时再回来查。</em></li>
+
+  <li><strong>第 3 章和第 4 章要对照读，不要顺序读。</strong><br>
+  同一个问题（比如锐化）在两边的做法，才是这两章的价值。
+  <em>单独读任何一章，都会以为「这就是唯一的做法」。</em></li>
+
+  <li><strong>第 5、10 章是全书最难的两章，因为它们是最典型的逆问题。</strong><br>
+  <em>如果这两章读不下去，不要怀疑自己——问题本身没有唯一解，
+  书里给的是一族方法加各自的假设。</em></li>
+
+  <li><strong>第 12 章读完后，直接接《动手学深度学习》。</strong><br>
+  这本书到「图像模式分类」为止；再往后是另一本书的事。
+  <em>这是我的读法，不是原文要求。</em></li>
+</ol>
+
+<!-- ================= 附录 ================= -->
+<h2>附 · 底本状况说明（必读）</h2>
+
+<div class="box w">
+  <p><strong>本书全文是 OCR 扫描版，文本层有损伤。本项目已做一处确证的修正：</strong></p>
+  <p>把「于」系统性错认成「千」—— 全文 816 次，替换后剩余「千」<strong>0 次</strong>
+  （即没有一处是正当用法）。已修正，修正版另存为
+  <code>数字图像处理_全文_修正版.txt</code>。</p>
+  <p style="margin-top:12px;"><strong>但仍有两处限制：</strong></p>
+  <p>① 「巳」（98 次，应为「已」）、「圆」（部分应为「图」）、「士」（部分应为「土」）
+  未修 —— 因为无法与正当用法机械区分。</p>
+  <p>② <strong>公式与图注区域有大段乱码</strong>（如「三三11111 三三沦头也屯饶」），
+  扫描质量导致，<strong>不可修复</strong>。</p>
+  <p style="margin-top:12px;"><em>因此：本页所引正文叙述句均可在修正版语料中核对；
+  但涉及公式、图注的内容不作逐字引用。详见 <code>数字图像处理_底本说明.txt</code>。</em></p>
+</div>
+
+<footer>
+ 《数字图像处理》整体架构 · 「底层」项目 07_技术<br>
+ Gonzalez &amp; Woods 第四版 · 12 章 · 约 47.6 万汉字<br>
+ <em>引文取自修正版语料；架构梳理与读法建议为待议读法</em>
+</footer>
 
 </div>
 </body>
