@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>无穷的开始 · 助人手册</title>
+<style>
+  :root{
+    --paper:#f2f8fc; --card:#ffffff; --edge:#cfe0ec; --edge-lit:#a8c8de;
+    --ink:#12232e; --ink-mid:#3f5b6b; --ink-soft:#5c7a8c;
+    --dd:#2b7fa8; --dd-soft:#eaf4fb;
+    --dont:#a85035; --dont-soft:#fcf1ec;
+    --do:#2f7a5c; --do-soft:#eef8f3;
+    --why:#7e713d; --why-soft:#fbf8ef;
+    --lbl:#7a4f96; --lbl-soft:#f4eef8;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--paper);color:var(--ink);line-height:1.9;padding:32px 16px 56px;
+    -webkit-font-smoothing:antialiased;}
+  .wrap{max-width:920px;margin:0 auto;}
+  header{text-align:center;padding:38px 20px 32px;background:var(--card);
+    border:1px solid var(--edge);border-top:4px solid var(--dd);border-radius:8px;margin-bottom:22px;}
+  header .kicker{font-size:11px;letter-spacing:.26em;color:var(--ink-soft);
+    font-family:ui-monospace,Consolas,monospace;margin-bottom:13px;}
+  header h1{font-size:24px;font-weight:800;letter-spacing:.01em;line-height:1.4;margin-bottom:10px;}
+  header .sub{font-size:13.8px;color:var(--ink-mid);line-height:1.9;}
+  header .src{margin-top:12px;font-size:12px;color:var(--ink-soft);line-height:1.9;}
+  .lead{background:var(--card);border:1px solid var(--edge);border-radius:8px;
+    padding:19px 22px;margin-bottom:24px;font-size:13.9px;color:var(--ink-mid);}
+  .lead .t{color:var(--why);font-weight:700;margin-bottom:9px;font-size:13.4px;}
+  .lead p+p{margin-top:8px;} .lead strong{color:var(--ink);}
+  .lead em{font-style:normal;color:var(--ink-mid);}
+  .lead .warn{margin-top:12px;padding:11px 15px;background:var(--dont-soft);
+    border:1px solid #e8cfc4;border-left:3px solid var(--dont);border-radius:4px;
+    font-size:13.2px;color:#8a4630;line-height:1.9;}
+  h2{font-size:17.5px;font-weight:700;margin:36px 0 16px;padding-left:12px;
+    border-left:4px solid var(--why);line-height:1.55;}
+  .scenario{background:var(--card);border:1px solid var(--edge);border-radius:10px;
+    padding:20px 22px;margin-bottom:16px;transition:border-color .2s,box-shadow .2s;}
+  .scenario:hover{border-color:var(--edge-lit);box-shadow:0 4px 16px -8px rgba(28,74,110,.20);}
+  .s-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px;}
+  .s-num{font-family:ui-monospace,Consolas,monospace;font-size:11.4px;font-weight:700;
+    color:#fff;background:var(--dd);border-radius:4px;padding:2px 8px;letter-spacing:.06em;}
+  .s-title{font-size:15.6px;font-weight:700;color:var(--ink);line-height:1.6;}
+  .s-desc{font-size:13.8px;color:var(--ink-mid);line-height:1.9;margin-bottom:14px;
+    padding-bottom:13px;border-bottom:1px dashed var(--edge);}
+  .cmp{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;}
+  .dont,.do{border-radius:7px;padding:13px 15px;font-size:13.4px;line-height:1.85;}
+  .dont{background:var(--dont-soft);border:1px solid #edd6cd;}
+  .do{background:var(--do-soft);border:1px solid #cfe6dc;}
+  .dont .lbl{color:var(--dont);} .do .lbl{color:var(--do);}
+  .lbl{display:block;font-size:12px;font-weight:700;margin-bottom:6px;
+    font-family:ui-monospace,Consolas,monospace;letter-spacing:.04em;}
+  .dont .lbl::before{content:"✕ ";} .do .lbl::before{content:"✓ ";}
+  .dont p,.do p{color:var(--ink-mid);} .dont em,.do em{font-style:normal;color:var(--ink);}
+  .why{background:var(--why-soft);border:1px solid #e6dcbe;border-left:3px solid var(--why);
+    border-radius:4px;padding:13px 16px;font-size:13.4px;color:#5f5527;line-height:1.9;}
+  .why .lbl{color:var(--why);} .why p+p{margin-top:8px;}
+  .why strong{color:#4a4220;} .why em{font-style:normal;color:#5f5527;}
+  .src{margin-top:11px;font-size:12px;color:var(--ink-soft);line-height:1.85;
+    padding-top:9px;border-top:1px dashed var(--edge);}
+  .src::before{content:"原文依据 · ";color:var(--dd);font-weight:700;}
+  blockquote{margin:9px 0;padding:9px 13px;background:#f8fbfd;border-left:3px solid var(--dd);
+    border-radius:3px;font-size:13px;color:var(--ink-mid);line-height:1.85;}
+  .sect{background:var(--card);border:1px solid var(--edge);border-radius:8px;
+    padding:19px 22px;margin:26px 0;font-size:13.8px;color:var(--ink-mid);}
+  .sect h3{font-size:15px;color:var(--ink);margin-bottom:10px;}
+  .sect p+p{margin-top:8px;} .sect strong{color:var(--ink);}
+  ol,ul{margin:9px 0 0 21px;} li{font-size:13.5px;color:var(--ink-mid);margin-bottom:7px;line-height:1.9;}
+  li strong{color:var(--ink);}
+  footer{margin-top:44px;padding-top:20px;border-top:1px solid var(--edge);
+    text-align:center;font-size:12px;color:var(--ink-soft);line-height:2;}
+  @media(max-width:660px){
+    .cmp{grid-template-columns:1fr;} header h1{font-size:20px;} h2{font-size:16px;}
+    body{padding:18px 11px 40px;} .scenario{padding:16px 15px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="kicker">THE BEGINNING OF INFINITY · HELPING MANUAL</div>
+  <h1>《无穷的开始》助人手册</h1>
+  <div class="sub">12 个场景 · 当别人陷在一个「坏解释」里时，你可以怎么问</div>
+  <div class="src">戴维·多伊奇 · 18 章 · 底本 30.2 万汉字<br>
+    全部场景的原文依据均可在 <code>分章/</code> 中核对</div>
+</header>
+
+<div class="lead">
+  <div class="t">先说这本书能帮什么、不能帮什么</div>
+  <p>它给的工具是<strong>一个判据</strong>：<em>一个解释是好是坏，看它「改变细节之后还能不能说明它声称能说明的事」。</em>
+  好东西改了就垮，坏东西怎么改都行。</p>
+  <p>这个判据的用处不是<strong>替别人判断对错</strong>，而是<strong>让一个说不清的争论变得可以往下走</strong>——
+  从「你错了 / 我没错」变成「我们来看看：这个说法如果错了，会是什么样子」。</p>
+  <div class="warn">
+    <strong>⚠️ 使用之前请先看这一条</strong><br>
+    这本书的主张全是<strong>认识论的</strong>，不是心理学的。它<em>没有</em>告诉你「怎么让人接受你的观点」，
+    也没有技巧去「说服」谁。<br>
+    而且按作者自己的标准，<strong>这套判据也适用于你自己</strong>——
+    当你想用它去纠正别人时，先问一遍：「如果我是错的，会是什么样子？」
+    <em>做不到这一条，这份手册会变成一种更精致的辩论技巧，那就背离它了。</em>
+  </div>
+</div>
+
+<!-- ============ 场景 ============ -->
+
+<h2>一 · 当别人在转述一个说法</h2>
+
+<div class="scenario">
+  <div class="s-head"><span class="s-num">01</span>
+    <span class="s-title">朋友转来一条消息，说「这是科学证明的」，但你怀疑</span></div>
+  <div class="s-desc">他转的不是谣言，看起来还挺有道理。你直接说「这是假的」他会觉得你在否定他；
+  不说又觉得不对。</div>
+  <div class="cmp">
+    <div class="dont"><span class="lbl">不要这么说</span>
+      <p>「这个不靠谱，别信」／「你又被骗了」</p></div>
+    <div class="do"><span class="lbl">可以这样问</span>
+      <p>「它要是错的，会是哪里错？」</p></div>
+  </div>
+  <div class="why"><span class="lbl">为什么这样问</span>
+    <p>因为这句话把判断标准从「你信不信」换成了<strong>「它有没有可能错」</strong>——
+    而后者是可讨论的。</p>
+    <p>一个真的科学结论，能清楚说出「哪种观察会推翻它」。<em>说不出来的，问题不在真假，在于它没接上现实。</em></p>
+  </div>
+  <div class="src">
+    <blockquote>好解释是难以改变的，改变细节会毁掉整个解释。<span class="who">第 1 章「小结」</span></blockquote>
+    <blockquote>如果某些转换无论用什么样的知识都无法从技术上实现，则该事实本身就是一种可检验的……
+    <span class="who">第 3 章</span></blockquote>
+  </div>
+</div>
+
+<div class="scenario">
+  <div class="s-head"><span class="s-num">02</span>
+    <span class="s-title">他的依据是「权威说了」「专家研究了十年」</span></div>
+  <div class="s-desc">你指出专家也会错，他说「那你比专家还懂？」——对话卡在这里。</div>
+  <div class="cmp">
+    <div class="dont"><span class="lbl">不要这么说</span>
+      <p>「专家也会错」（这会被听成「你凭什么」）</p></div>
+    <div class="do"><span class="lbl">可以这样问</span>
+      <p>「哪个专家、在哪本书里说的？我想看看他是怎么得出结论的。」</p></div>
+  </div>
+  <div class="why"><span class="lbl">为什么这样问</span>
+    <p>因为「专家也会错」这句本身没有出路——它只是把权威换成了「反权威」，结构没变。</p>
+    <p>而<strong>「他是怎么得出结论的」把问题从「谁说的」移到「依据什么」</strong>。
+    这是这本书最核心的一次转移：从权威转到批评。</p>
+  </div>
+  <div class="src">
+    <blockquote>易谬主义让我们不要寻求权威，而是承认我们可能一直在犯错，并努力纠正错误。
+    <span class="who">第 1 章「小结」</span></blockquote>
+    <blockquote>它把对真理的追寻变成了对确定性（一种感觉）或认可（一种社会地位）的追寻。
+    <span class="who">第 1 章</span></blockquote>
+  </div>
+</div>
+
+<div class="scenario">
+  <div class="s-head"><span class="s-num">03</span>
+    <span class="s-title">他说「大家都这么认为」，你觉得这是一个理由，但说不上哪里不对</span></div>
+  <div class="s-desc">他并没有说「所以它一定对」，他只是觉得「那么多人信，总有点道理吧」。
+  这个感觉不好反驳。</div>
+  <div class="cmp">
+    <div class="dont"><span class="lbl">不要这么说</span>
+      <p>「多数人信不代表对」（正确，但没用——他会说「我知道啊」）</p></div>
+    <div class="do"><span class="lbl">可以这样问</span>
+      <p>「这个说法是怎么传开的？它有没有让人更难去质疑它？」</p></div>
+  </div>
+  <div class="why"><span class="lbl">为什么这样问</span>
+    <p>因为这本书给了「传得开」一个<strong>不带道德判断的分类</strong>：
+    谜米有两种复制策略——<em>帮助持有者，或者让持有者丧失批评能力</em>。</p>
+    <p>所以「大家都这么说」本身不是证据，但<strong>「它是靠什么传开的」是一个可以查的事实</strong>。</p>
+  </div>
+  <div class="src">
+    <blockquote>谜米复制只有两种基本策略：帮助预期的持有者，或者使持有者丧失批评能力。
+    <span class="who">第 15 章「小结」</span></blockquote>
+    <blockquote>如果静态社会里出现了一个迅速传播的想法，没有理由期待它会是正确或有用的。
+    <span class="who">第 15 章</span></blockquote>
+  </div>
+</div>
+
+<div class="scenario">
+  <div class="s-head"><span class="s-num">04</span>
+    <span class="s-title">你想质疑，但气氛变得不对了——不是有人禁止，是「感觉不该问」</span></div>
+  <div class="s-desc">没有人说你不能问。但问出来之后，对方沉默了一下，话题转走了，或者你被看成「不太懂事」。
+  你说不清这算不算不自由。</div>
+  <div class="cmp">
+    <div class="dont"><span class="lbl">不要这么说</span>
+      <p>「你们这是不让我说话」（会把事情变成立场对抗）</p></div>
+    <div class="do"><span class="lbl">可以这样问自己</span>
+      <p>「如果我真的相信它是错的，会付出什么代价？——是会被说错，还是会被说『不该问』？」</p></div>
+  </div>
+  <div class="why"><span class="lbl">为什么问这个</span>
+    <p>因为这里要区分两种情况，而它们表面上看是一样的：</p>
+    <p><strong>「我暂时没能力质疑」</strong>——当年没人能质疑牛顿，那是能力问题。
+    牛顿力学本身并不禁止你去试。</p>
+    <p><strong>「质疑这件事本身被惩罚」</strong>——惩罚的不是你的结论，是你问了。</p>
+    <p><em>第二种就是这本书说的「反理性谜米」：它靠使持有者丧失批评能力来生存。</em>
+    而它的特征不是「内容假」，是<strong>它把「不要问」也变成了内容的一部分</strong>。</p>
+  </div>
+  <div class="src">
+    <blockquote>老式的、静态社会的那类谜米，通过使持有者失去批评能力来生存，我将称之为反理性谜米。
+    <span class="who">第 15 章</span></blockquote>
+    <blockquote>如果一个谜米包含对接收者来说真实而有益的知识，但会使接收者丧失批评该谜米的能力，
+    那么接收者纠正这些知识中的错误的能力会降低。<span class="who">第 15 章</span></blockquote>
+  </div>
+</div>
+
+<!-- ============ 场景 ============ -->
+
+<h2>二 · 当别人在看自己的处境</h2>
+
+<div class="scenario">
+  <div class="s-head"><span class="s-num">05</span>
+    <span class="s-title">他把一个反复出现的模式，当成了因果解释</span></div>
+  <div class="s-desc">「上次我表扬他，他下次就退步了，所以我不能表扬」——他有一套自己的因果理论，
+  而且是从真实观察里来的。</div>
+  <div class="cmp">
+    <div class="dont"><span class="lbl">不要这么说</span>
+      <p>「你这是巧合」（他不会接受，因为他真的看到了）</p></div>
+    <div class="do"><span class="lbl">可以这样问</span>
+      <p>「如果一个人表现特别好，下一次一般会怎么样——不管有没有人表扬他？」</p></div>
+  </div>
+  <div class="why"><span class="lbl">为什么这样问</span>
+    <p>因为这句话让他自己想到那个「对照组」。</p>
+    <p><strong>「表现特别好」本身就是「能力 + 运气好」的组合</strong>，下一次运气回归平常，表现自然回落——
+    <em>这在完全没有反馈作用的情况下也会发生。</em></p>
+    <p>但如果直接说「你错了，那是回归平均值」，他只是在接受一个术语；
+    <strong>让他自己想出对照组，他才能真正用上它。</strong></p>
+  </div>
+  <div class="src">
+    <p style="font-size:12.6px;color:var(--ink-soft);">
+      ⚠️ <strong>注意：这个场景用的是《思考，快与慢》的「回归平均值」，不是《无穷的开始》。</strong>
+      放在这里是因为它和多伊奇的判据是同一类操作——<em>都是给一个「看起来有因果」的说法，
+      补上一个它没考虑到的可能。</em></p>
+    <blockquote>所有表现都会回归平均值。<span class="who">该书第 17 章标题</span></blockquote>
+  </div>
+</div>
+
+<div class="scenario">
+  <div class="s-head"><span class="s-num">06</span>
+    <span class="s-title">他说「我早就知道会这样」——你想指出这不是真的，但那样很伤人</span></div>
+  <div class="s-desc">事情发生了，他确实说过类似的话，但你自己记得当时他并不确定。
+  直接说「你当时可不是这么说的」会变成翻旧账。</div>
+  <div class="cmp">
+    <div class="dont"><span class="lbl">不要这么说</span>
+      <p>「你当时根本没这么说」（变成争论记忆）</p></div>
+    <div class="do"><span class="lbl">可以这样问</span>
+      <p>「那你当时做了什么准备吗？」</p></div>
+  </div>
+  <div class="why"><span class="lbl">为什么这样问</span>
+    <p>因为「早就知道」和「早就准备」是可以分开的两件事，而后者是可查的。</p>
+    <p><strong>如果他真的早预见到，通常会有相应的准备</strong>；
+    如果没有准备，这个「早知道」多半是事后重构的。</p>
+    <p><em>而这个问题不带指责——它问的是行为，不是记忆。</em></p>
+  </div>
+  <div class="src">
+    <p style="font-size:12.6px;color:var(--ink-soft);">
+      ⚠️ 同样借助《思考，快与慢》的「后见之明」。<strong>它和多伊奇判据的连接点在这里：</strong>
+      多伊奇要求「假设必须在知道结果之前锁定细节」；后见之明恰恰是<em>知道结果之后才感觉显然</em>。
+      <strong>两者体感很像，区别只在时间。</strong></p>
+  </div>
+</div>
+
+<div class="scenario">
+  <div class="s-head"><span class="s-num">07</span>
+    <span class="s-title">他陷在「这一切都没意义」里，而你想说的「会好起来的」听起来很空</span></div>
+  <div class="s-desc">他不是抑郁到需要专业帮助的程度，就是觉得努力没用、事情不会变。
+  你不想敷衍他，但也不想说教。</div>
+  <div class="cmp">
+    <div class="dont"><span class="lbl">不要这么说</span>
+      <p>「会好起来的」／「你要乐观一点」</p></div>
+    <div class="do"><span class="lbl">可以这样问</span>
+      <p>「现在让你觉得没法动的，是缺什么具体的东西？——是不知道怎么做，还是做了也没用？」</p></div>
+  </div>
+  <div class="why"><span class="lbl">为什么这样问</span>
+    <p>因为这本书对「失败」有一个很硬的主张：<strong>所有的失败都是知识不足造成的</strong>——
+    而它把这个主张变成了一个<em>可以问下去的问题</em>，而不是一句安慰。</p>
+    <p>「不知道怎么做」和「做了也没用」是两个完全不同的问题：
+    <em>前者有下一步，后者没有。而大多数「没意义」其实卡在第一种。</em></p>
+    <p>这个问法不给答案，只帮他把一团灰分成两类。</p>
+  </div>
+  <div class="src">
+    <blockquote>乐观主义原则<strong>所有的恶是知识不足造成的</strong>。<span class="who">第 9 章「小结」</span></blockquote>
+    <blockquote>有些问题很困难，但把困难的问题和不可能解决的问题混为一谈是错误的。
+    <span class="who">第 9 章「小结」</span></blockquote>
+    <p style="font-size:12.6px;color:var(--ink-soft);margin-top:9px;">
+      ⚠️ <strong>这一条的边界要说清</strong>：多伊奇的乐观主义是关于「知识增长没有根本限制」的<em>主张</em>，
+      不是心理治疗。<strong>如果对方的状态到了需要专业帮助的程度，这份手册不适用。</strong></p>
+  </div>
+</div>
+
+<!-- ============ 场景 ============ -->
+
+<h2>三 · 当你自己也在场里</h2>
+
+<div class="scenario">
+  <div class="s-head"><span class="s-num">08</span>
+    <span class="s-title">你想用这套判据去纠正别人，但不确定自己是不是也在犯同一个错</span></div>
+  <div class="s-desc">你已经看出他的说法「怎么改都行」，正准备指出。但你也知道，
+  自己相信的一些东西可能经不起同样的检查。</div>
+  <div class="cmp">
+    <div class="dont"><span class="lbl">不要这么说</span>
+      <p>（直接开始分析他的问题）</p></div>
+    <div class="do"><span class="lbl">可以先这样</span>
+      <p>先对自己用一遍这个判据：<em>「我手上这个说法，改了哪个细节就垮？」</em>——答不上来就先别说。</p></div>
+  </div>
+  <div class="why"><span class="lbl">为什么必须先过这一道</span>
+    <p>因为多伊奇<strong>把易谬主义写成了对自己也生效的规则</strong>：
+    「就算是他们最好、最重要的解释性理论，在真理之外也包含着谬误」。</p>
+    <p>如果这套判据只用来查别人，它就退化成了辩论技巧——
+    <em>而「只用来查别人」恰恰是它要治的那种毛病。</em></p>
+  </div>
+  <div class="src">
+    <blockquote>易谬主义者认为，就算是他们最好、最重要的解释性理论，在真理之外也包含着谬误，
+    因此他们随时准备着努力修正理论以做到更好。<span class="who">第 1 章</span></blockquote>
+    <blockquote>易谬主义让我们不要寻求权威，而是承认我们可能一直在犯错，并努力纠正错误。
+    <span class="who">第 1 章「小结」</span></blockquote>
+  </div>
+</div>
+
+<div class="scenario">
+  <div class="s-head"><span class="s-num">09</span>
+    <span class="s-title">对方说「你不在我这个位置，你不懂」——而他这句话可能是对的</span></div>
+  <div class="s-desc">你想给建议，他回你一句「你没经历过」。你不确定这是有效的反驳，还是在挡你。</div>
+  <div class="cmp">
+    <div class="dont"><span class="lbl">不要这么说</span>
+      <p>「道理是普遍的，跟经历无关」（会显得你不在意他的处境）</p></div>
+    <div class="do"><span class="lbl">可以这样问</span>
+      <p>「你说的哪一部分是我不知道的？说给我听，我可能会改主意。」</p></div>
+  </div>
+  <div class="why"><span class="lbl">为什么这样问</span>
+    <p>因为这里有一个真实的区分，而这本书给了它一个名字：</p>
+    <p><strong>「你不在我的位置」是在说「你缺信息」</strong>——那是可以补的。<br>
+    <strong>还是在说「这个位置上的经验本质上无法传达」</strong>——那是不可以补的。</p>
+    <p>这个问法把两种可能摆到桌面上，让他自己选。<em>如果他能说出具体缺什么，那你们就有的聊了。</em></p>
+    <p>而且这句「我可能会改主意」是<strong>真的把你的立场也放上了桌面</strong>——
+    它和你要求他做的是同一件事。</p>
+  </div>
+  <div class="src">
+    <blockquote>并不存在权威的知识来源，也不存在任何可靠手段能证明观念是真实的或概然的。
+    <span class="who">第 1 章</span></blockquote>
+    <p style="font-size:12.6px;color:var(--ink-soft);margin-top:9px;">
+      ⚠️ <strong>这本书没有直接处理「经验能否被传达」这个问题。</strong>
+      上面这个问法是<em>从它的判据推出来的</em>，不是原文的主张。</p>
+  </div>
+</div>
+
+<div class="scenario">
+  <div class="s-head"><span class="s-num">10</span>
+    <span class="s-title">他相信「这事没办法」，而你想说「总会有办法」——但你也不知道办法在哪</span></div>
+  <div class="s-desc">他面对的是具体的困境（钱、身体、一段关系）。你不想给虚假的希望，
+  但也不想陪他一起认命。</div>
+  <div class="cmp">
+    <div class="dont"><span class="lbl">不要这么说</span>
+      <p>「总会有办法的」（你不知道办法，这话就没有分量）</p></div>
+    <div class="do"><span class="lbl">可以这样问</span>
+      <p>「你说没办法——是『试过了都不行』，还是『想不出可以试的』？」</p></div>
+  </div>
+  <div class="why"><span class="lbl">为什么这样问</span>
+    <p>因为<strong>这两句的下一句完全不同</strong>：</p>
+    <p><strong>「试过了都不行」</strong>→ 可以问「试的是哪几种？有没有一种是因为条件不够而不是方向不对？」<br>
+    <strong>「想不出可以试的」</strong>→ 那是知识不足，可以直接一起找。</p>
+    <p><em>而多数「没办法」是第一句的语气在说第二句的内容。</em></p>
+    <p>这个问题的价值在于：<strong>它不承诺有办法，它只把「没办法」拆成两种可处理的形态。</strong></p>
+  </div>
+  <div class="src">
+    <blockquote>它认为，没有什么根本性的障碍、自然规律或超自然法令能阻碍进步……永远都是因为我们没有及时知道得够多。
+    <span class="who">第 9 章</span></blockquote>
+    <blockquote>我们把困难的问题和不可能解决的问题混为一谈是错误的。<span class="who">第 9 章「小结」</span></blockquote>
+  </div>
+</div>
+
+<!-- ============ 场景 ============ -->
+
+<h2>四 · 两个更难的场合</h2>
+
+<div class="scenario">
+  <div class="s-head"><span class="s-num">11</span>
+    <span class="s-title">他问「那你凭什么说你是对的」——而你真的不打算说自己是对的</span></div>
+  <div class="s-desc">你一直在指出他说法里的问题，他反问这一句。这个反问是合理的。</div>
+  <div class="cmp">
+    <div class="dont"><span class="lbl">不要这么说</span>
+      <p>「我不是说我一定对，我只是说你不严谨」（听起来像在推卸）</p></div>
+    <div class="do"><span class="lbl">可以这样答</span>
+      <p>「我不打算说我对。我只是想问：<em>你这个说法，如果错了，会是什么样子？</em>
+      我自己的说法也一样要过这一问。」</p></div>
+  </div>
+  <div class="why"><span class="lbl">为什么这样答站得住</span>
+    <p>因为你要求的不是「你承认我对」，而是<strong>「我们两个都用同一个标准过一遍」</strong>。</p>
+    <p>这正是易谬主义的结构：<em>它不提供替代答案，它提供的是「怎么继续找」的方法。</em>
+    所以「我不说我对」不是退让，而是这套方法的准确表述。</p>
+  </div>
+  <div class="src">
+    <blockquote>启蒙运动是对权威的反叛，它与大多数此类反叛都不同，并不试图为理论寻求权威证明，
+    而是建立了一种批评的传统。<span class="who">第 1 章「小结」</span></blockquote>
+  </div>
+</div>
+
+<div class="scenario">
+  <div class="s-head"><span class="s-num">12</span>
+    <span class="s-title">他想放弃一件事，理由听起来合理，但你觉得他是被一次失败劝退的</span></div>
+  <div class="s-desc">「我试过了，这条路走不通」——他说得很平静，理由也成体系。你不确定该不该劝。</div>
+  <div class="cmp">
+    <div class="dont"><span class="lbl">不要这么说</span>
+      <p>「别放弃，再试一次」（你不知道该试什么，这句话帮不上）</p></div>
+    <div class="do"><span class="lbl">可以这样问</span>
+      <p>「你放弃的是这个方法，还是这件事本身？」</p></div>
+  </div>
+  <div class="why"><span class="lbl">为什么这样问</span>
+    <p>因为这本书对失败的定位很明确：<strong>失败说明「思想不合规律」，要求的是改思想，不是放弃目标。</strong></p>
+    <p>所以「这条路走不通」和「这件事做不成」之间有一个空格——
+    <em>而那个空格里，通常放着几个还没试过的方向。</em></p>
+    <p>这个问法<strong>不预设他应该继续</strong>：如果他答的是「这件事本身」，那就尊重他的判断。
+    它只是让「放弃」这个决定建立在正确的那一层上。</p>
+  </div>
+  <div class="src">
+    <blockquote>如果知识创造有根本限制，那乐观主义就空洞无物，但不存在这样的限制。
+    <span class="who">第 9 章「小结」</span></blockquote>
+    <blockquote>有些问题很困难，但把困难的问题和不可能解决的问题混为一谈是错误的。
+    <span class="who">第 9 章「小结」</span></blockquote>
+  </div>
+</div>
+
+<!-- ============ 一页总结 ============ -->
+<h2>附 · 一页总结</h2>
+
+<div class="sect">
+  <h3>这本书教的一招，可以压缩成三句话</h3>
+  <ol>
+    <li><strong>不要问「你对不对」，问「它要是错的会是什么样」。</strong><br>
+    ——把争论从立场移到结构上。</li>
+    <li><strong>说不出来的，问题往往不在真假，在于它没接上现实。</strong><br>
+    ——「怎么改都行」的说法，无论多正确都不能指导行动。</li>
+    <li><strong>先对自己用一遍，再用在别人身上。</strong><br>
+    ——做不到这一条，这一招就变成了辩论技巧。</li>
+  </ol>
+</div>
+
+<div class="sect">
+  <h3>三个不要用它的场合</h3>
+  <ul>
+    <li><strong>对方处于情绪危机中。</strong>这套判据是认识论工具，不是心理支持。
+    那种时候需要的是陪伴，不是分析。</li>
+    <li><strong>你只是想赢。</strong>如果目的是让他承认你对他错，
+    你会本能地只挑他的漏洞，而对自己的说法放水——那就完全反了。</li>
+    <li><strong>涉及需要专业判断的事</strong>（医疗、法律、安全）。
+    这本书讲的是怎么分辨解释的好坏，<em>不是替专家下判断</em>。</li>
+  </ul>
+</div>
+
+<div class="sect">
+  <h3>一个诚实的说明</h3>
+  <p>这份手册里 <strong>12 个场景，有 10 个的「怎么问」是我从原文判据推出来的，不是原文直述的。</strong>
+  多伊奇没有写过助人手册——他写的是认识论。</p>
+  <p><em>所以这份手册的定位是：把这套判据翻译成可以对人说的话。
+  翻译得对不对，你可以用他自己的标准来检验——找一个场景，看看它的问法改了会怎么样。</em></p>
+  <p style="margin-top:9px;color:var(--ink-soft);font-size:13px;">
+    场景 05 与 06 借助了《思考，快与慢》的「回归平均值」与「后见之明」——
+    这一点已在场景内单独标注，不冒充本书内容。</p>
+</div>
+
+<footer>
+ 《无穷的开始》助人手册 · 「底层」项目 01_哲学与思维地基<br>
+ 戴维·多伊奇 · 18 章 · 底本 30.2 万汉字<br>
+ <em>引文取自 分章/，已逐句核对；场景问法除标注外均为从判据推出的待议读法</em>
+</footer>
+
+</div>
+</body>
+</html>

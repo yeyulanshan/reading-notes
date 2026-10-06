@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>无穷的开始 · 问题手册</title>
+<style>
+  :root{
+    --paper:#f2f8fc; --card:#ffffff; --edge:#cfe0ec;
+    --ink:#12232e; --ink-mid:#3f5b6b; --ink-soft:#5c7a8c;
+    --l1:#2c6f9e; --l2:#8a6a24; --l3:#7a4f96;
+    --key:#7e713d; --key-soft:#fbf8ef;
+    --pit:#a85035; --pit-soft:#fcf1ec;
+    --ref:#33765a; --ref-soft:#eef8f3;
+    --dd:#2b7fa8; --dd-soft:#eaf4fb;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--paper);color:var(--ink);line-height:1.9;padding:32px 16px 56px;
+    -webkit-font-smoothing:antialiased;}
+  .wrap{max-width:940px;margin:0 auto;}
+  header{text-align:center;padding:38px 20px 32px;background:var(--card);
+    border:1px solid var(--edge);border-top:4px solid var(--dd);border-radius:8px;margin-bottom:22px;}
+  header .kicker{font-size:11px;letter-spacing:.26em;color:var(--ink-soft);
+    font-family:ui-monospace,Consolas,monospace;margin-bottom:13px;}
+  header h1{font-size:24px;font-weight:800;letter-spacing:.01em;line-height:1.4;margin-bottom:10px;}
+  header .sub{font-size:13.8px;color:var(--ink-mid);line-height:1.9;}
+  header .src{margin-top:12px;font-size:12px;color:var(--ink-soft);line-height:1.9;}
+  .howto{background:var(--card);border:1px solid var(--edge);border-radius:8px;
+    padding:18px 22px;margin-bottom:22px;font-size:13.8px;color:var(--ink-mid);}
+  .howto .t{color:var(--key);font-weight:700;margin-bottom:9px;font-size:13.4px;}
+  .howto p+p{margin-top:7px;} .howto strong{color:var(--ink);}
+  .howto em{font-style:normal;color:var(--ink-mid);}
+  .lvkey{display:flex;gap:16px;flex-wrap:wrap;margin-top:11px;font-size:12.4px;}
+  .lvkey span{display:inline-flex;align-items:center;gap:6px;color:var(--ink-soft);}
+  .lvkey i{font-style:normal;font-family:ui-monospace,Consolas,monospace;font-size:10.6px;
+    padding:1px 7px;border-radius:3px;font-weight:700;}
+  .lv1c{background:#e3eff8;color:var(--l1);border:1px solid #bcd8ec;}
+  .lv2c{background:#f7f0dd;color:var(--l2);border:1px solid #e3d3a8;}
+  .lv3c{background:#f2eaf7;color:var(--l3);border:1px solid #d9c4e6;}
+  h2{font-size:17.5px;font-weight:700;margin:34px 0 5px;padding-left:12px;
+    border-left:4px solid var(--key);line-height:1.55;}
+  .s{color:var(--ink-soft);font-size:12.8px;margin:0 0 15px 16px;line-height:1.85;}
+  .q{background:var(--card);border:1px solid var(--edge);border-radius:9px;
+    padding:16px 19px;margin-bottom:12px;transition:border-color .2s,box-shadow .2s;}
+  .q:hover{border-color:var(--edge-lit,#a8c8de);box-shadow:0 3px 12px -6px rgba(28,74,110,.18);}
+  .q-head{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:9px;}
+  .q-id{font-family:ui-monospace,Consolas,monospace;font-size:12px;font-weight:700;
+    color:var(--ink-soft);letter-spacing:.06em;}
+  .q-lv{font-family:ui-monospace,Consolas,monospace;font-size:10.4px;font-weight:700;
+    padding:1px 7px;border-radius:3px;}
+  .lv1{background:#e3eff8;color:var(--l1);border:1px solid #bcd8ec;}
+  .lv2{background:#f7f0dd;color:var(--l2);border:1px solid #e3d3a8;}
+  .lv3{background:#f2eaf7;color:var(--l3);border:1px solid #d9c4e6;}
+  .q-tag{font-size:11.4px;color:var(--ink-soft);border:1px solid var(--edge);
+    border-radius:999px;padding:1px 9px;background:#f7fbfe;}
+  .q-text{font-size:14.4px;color:var(--ink);line-height:1.9;}
+  .q-text strong{color:#0b1a24;}
+  details{margin-top:11px;}
+  summary{font-size:12.8px;color:var(--l1);cursor:pointer;list-style:none;
+    padding:5px 0;user-select:none;transition:color .18s;}
+  summary::-webkit-details-marker{display:none;}
+  summary::before{content:"▸ ";font-size:11px;}
+  details[open] summary::before{content:"▾ ";}
+  summary:hover{color:#1d5c86;}
+  .a{margin-top:11px;padding:15px 17px;background:#f8fbfd;border:1px solid var(--edge);
+    border-radius:7px;font-size:13.8px;color:var(--ink-mid);line-height:1.95;}
+  .a p+p{margin-top:9px;}
+  .a strong{color:var(--ink);}
+  .a em{font-style:normal;color:var(--ink-mid);}
+  .a .key{display:block;margin:13px 0 6px;font-size:13px;font-weight:700;color:var(--key);}
+  .a .key::before{content:"◆ ";font-size:10px;}
+  blockquote{margin:11px 0;padding:10px 15px;background:var(--key-soft);
+    border-left:3px solid var(--key);border-radius:4px;
+    font-size:13.4px;color:#5f5527;line-height:1.9;}
+  blockquote .who{display:block;margin-top:6px;font-size:11.6px;color:var(--ink-soft);
+    text-align:right;}
+  .pit{display:block;margin:13px 0 6px;font-size:13px;font-weight:700;color:var(--pit);}
+  .pit::before{content:"⚠ ";font-size:11px;}
+  .pit-b{background:var(--pit-soft);border:1px solid #e8cfc4;border-radius:4px;
+    padding:11px 15px;font-size:13.2px;color:#8a4630;line-height:1.9;margin-top:6px;}
+  .ref{display:block;margin:12px 0 5px;font-size:12.4px;color:var(--ref);}
+  .ref::before{content:"→ ";font-size:11px;}
+  ul{margin:8px 0 0 20px;} li{font-size:13.4px;color:var(--ink-mid);margin-bottom:6px;line-height:1.9;}
+  li strong{color:var(--ink);}
+  footer{margin-top:42px;padding-top:20px;border-top:1px solid var(--edge);
+    text-align:center;font-size:12px;color:var(--ink-soft);line-height:2;}
+  @media(max-width:680px){
+    header h1{font-size:20px;} h2{font-size:16px;}
+    body{padding:18px 11px 40px;} .q{padding:14px 15px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="kicker">THE BEGINNING OF INFINITY · QUESTION MANUAL</div>
+  <h1>《无穷的开始》问题手册</h1>
+  <div class="sub">24 个问题 · 三档难度 · 按全书四段组织</div>
+  <div class="src">戴维·多伊奇 · 18 章 · 底本 30.2 万汉字<br>
+    18 章已分章落盘；16 章有「小结」，15 章有「术语」</div>
+</header>
+
+<div class="howto">
+  <div class="t">怎么用这本手册</div>
+  <p>每个问题配一份参考答案，<strong>答案里引了原文</strong>（均可在
+  <code>分章/</code> 与 <code>无穷的开始_全文.txt</code> 中核对）。</p>
+  <p><strong>先自己想，再展开。</strong>这本书的核心主张是
+  「<em>理论的源头是猜想，不是经验</em>」——所以一上来就看答案，恰好违背它的方法。</p>
+  <p><em>L1 是「作者说了什么」，L2 是「这个主张能推到哪」，L3 是「它的边界在哪、什么能推翻它」。</em></p>
+  <p style="margin-top:8px;color:var(--ink-soft);font-size:13px;">
+    按项目惯例：<strong>引文逐句核对原文；区分「原文说了什么」与「我的判断」。</strong></p>
+  <div class="lvkey">
+    <span><i class="lv1c">L1</i>读懂主张</span>
+    <span><i class="lv2c">L2</i>推到应用</span>
+    <span><i class="lv3c">L3</i>边界与反驳</span>
+  </div>
+</div>
+
+<!-- ========== 模块 A ========== -->
+<h2>模块 A · 总纲：这本书到底在问什么</h2>
+<div class="s">第 1 章是全书地基 —— 后面 17 章都在用它造出来的工具。</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">A1</span><span class="q-lv lv1">L1</span><span class="q-tag">总纲</span></div>
+  <div class="q-text">这本书的书名是《无穷的开始》。请用作者自己的话说明：<b>「开始」指的是什么事件</b>，以及为什么它配得上「无穷」这个词。</div>
+  <details><summary>展开参考答案</summary>
+    <div class="a">
+      <p>指的不是某个发明，而是<strong>启蒙运动</strong>——更准确地说，是它带来的那个转折：
+      <strong>人类第一次不再为理论寻求权威证明，而是建立了一种批评的传统。</strong></p>
+      <blockquote>启蒙运动是对权威的反叛，它与大多数此类反叛都不同，并不试图为理论寻求权威证明，
+      而是建立了一种批评的传统。<span class="who">第 1 章「小结」</span></blockquote>
+      <span class="key">为什么是「无穷」</span>
+      <p>因为一旦知识的增长<strong>不再依赖权威</strong>，它就没有天然上限了。多伊奇的论证是：
+      好解释的判据是「难以改变」，而这样的解释一旦得到，就能不断<strong>延伸</strong>——
+      它能解决的问题超出它被提出来要解决的范围。</p>
+      <blockquote>由此产生的一些观念有着极大的延伸范围：它们能够解释的东西，
+      比它们被创建出来用于解释的东西更多。解释的延伸是一种内在属性，
+      不是经验主义和归纳主义所说的那种由我们提出的假设。<span class="who">第 1 章「小结」</span></blockquote>
+      <span class="pit">常见误解</span>
+      <div class="pit-b">以为「无穷的开始」是一句乐观口号，意思是「未来会越来越好」。
+      <strong>它是一个技术性判断</strong>：<em>只要知识的增长机制是「猜想 + 批评」，
+      这个过程就没有已知的终点。</em>作者在后面（第 8 章）还专门用希尔伯特旅馆证明了一件事——
+      即使在无穷的进步之后，我们<strong>仍然处在接近起点的地方</strong>。</div>
+      <span class="ref">对应第 1 章；与第 8 章合读</span>
+    </div>
+  </details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">A2</span><span class="q-lv lv1">L1</span><span class="q-tag">核心判据</span></div>
+  <div class="q-text">「好解释」的定义是什么？请写出它<b>两个必要条件</b>，并说明为什么作者说
+      <b>「实验检验不是」</b>科学革命的决定性因素。</div>
+  <details><summary>展开参考答案</summary>
+    <div class="a">
+      <blockquote>这是一个好解释——<strong>很难改变，因为所有的细节有实际作用</strong>。
+      <span class="who">第 1 章（讲季节成因时）</span></blockquote>
+      <p>两个条件是：<strong>① 它说明了某些事物（有解释力）；② 它很难被改变（细节被锁定）。</strong></p>
+      <p>而「细节有实际作用」是第二条的<em>理由</em>——
+      所以判据比的是：<strong>把某个细节换掉之后，这个解释还能不能说明它声称能说明的事。</strong></p>
+      <span class="key">为什么说「实验检验不是」</span>
+      <blockquote>我们通过寻求好解释来做到这一点，好解释是难以改变的，改变细节会毁掉整个解释。
+      这才是科学革命的决定性因素，也是启蒙运动其他领域取得独特、迅速、持续的进步的决定性因素，
+      <strong>而实验检验不是</strong>。<span class="who">第 1 章「小结」</span></blockquote>
+      <p>原因是他对实验的定位：</p>
+      <blockquote>实验和观测的功能是<strong>在现有理论中作出选择</strong>，并不是作为新理论的来源。
+      <span class="who">第 1 章「小结」</span></blockquote>
+      <p><em>即：实验是裁判，不是源头。没有猜想在先，实验无从设计；没有批评传统，实验结论也无从争论。</em></p>
+      <span class="pit">常见误解</span>
+      <div class="pit-b">以为他在贬低实验。他不是——他说的是<strong>顺序和角色</strong>。
+      <em>他的对手是「经验主义」这个主张：知识从感觉经验推演而来。</em></div>
+      <span class="ref">对应第 1 章；与《实践论》对照见 02 域</span>
+    </div>
+  </details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">A3</span><span class="q-lv lv1">L1</span><span class="q-tag">术语</span></div>
+  <div class="q-text">什么叫「证明主义」？什么叫「易谬主义」？为什么作者说前者把
+      <b>「对真理的追寻」偷换成了别的东西</b>？</div>
+  <details><summary>展开参考答案</summary>
+    <div class="a">
+      <blockquote>这种错误观念称为<strong>证明主义</strong>。与此相反的主张称为<strong>易谬主义</strong>，
+      它认为并不存在权威的知识来源，也不存在任何可靠手段能证明观念是真实的或概然的。
+      <span class="who">第 1 章</span></blockquote>
+      <span class="key">偷换成了什么</span>
+      <p>原文说得极准：</p>
+      <blockquote>它把对真理的追寻变成了对<strong>确定性（一种感觉）</strong>或
+      <strong>认可（一种社会地位）</strong>的追寻。<span class="who">第 1 章</span></blockquote>
+      <p>关键在于：<strong>「确定性」是感觉，「认可」是社会地位——两者都不是真理。</strong>
+      它们只是<em>让人觉得可以停下来</em>的东西。</p>
+      <span class="key">易谬主义的实际含义</span>
+      <blockquote>易谬主义者认为，就算是他们最好、最重要的解释性理论，<strong>在真理之外也包含着谬误</strong>，
+      因此他们随时准备着努力修正理论以做到更好。<span class="who">第 1 章</span></blockquote>
+      <p><em>注意这不是谦虚，而是判据：一个理论如果「在真理之外不含谬误」，那它也就不可能被改进。</em></p>
+      <span class="pit">常见误解</span>
+      <div class="pit-b">把易谬主义理解成「什么都不可信、所以别认真」。
+      <strong>原文专门反驳了这一点</strong>：对证明主义者来说易谬主义是「绝望或玩世不恭的起因」，
+      但对那些认为「创造知识意味着更好地理解现实」的人来说，
+      <em>易谬主义正是做到这一点的方法之一。</em></div>
+      <span class="ref">对应第 1 章</span>
+    </div>
+  </details>
+</div>
+
+<!-- ========== 模块 B ========== -->
+<h2>模块 B · 知识从哪来：与经验主义的分歧</h2>
+<div class="s">第 2–4 章。这一段是全书的「认识论」，也是最容易与常识冲突的一段。</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">B1</span><span class="q-lv lv1">L1</span><span class="q-tag">反经验主义</span></div>
+  <div class="q-text">作者说「我们对什么东西都不是直接观察的」「所有的观察都是理论负载的」。
+      请解释这两句话，并举出书里用来说明它的<b>具体例子</b>。</div>
+  <details><summary>展开参考答案</summary>
+    <div class="a">
+      <blockquote>但不管怎样，我们对什么东西都不是直接观察的。<strong>所有的观察都是理论负载的。</strong>
+      同样地，每当我们犯错，它都是对某种事物的解释里的错误。
+      这就是为什么表象会具有欺骗性，也是为什么我们以及我们的仪器能够防止这种欺骗。
+      <span class="who">第 2 章「小结」</span></blockquote>
+      <span class="key">书里的例子</span>
+      <p>多伊奇讲他念研究生时，同学让他用显微镜看星系团的巡天底片。
+      底片上「模模糊糊的东西是星系，边缘清晰的黑点是银河系里的恒星」——
+      而<strong>要区分它们，必须先有理论</strong>：知道星系比那些恒星远成千上万倍。</p>
+      <p>他还提到脉冲星的发现：</p>
+      <blockquote>只有通过复杂的理论解释链，她才能从纸上抖动的线条里"看"到那颗星。
+      <span class="who">第 2 章</span></blockquote>
+      <span class="key">为什么「仪器让我们更接近现实」不矛盾</span>
+      <p>从纯物理角度，仪器让我们<strong>离对象更远</strong>（我们看的是底片，不是星系）。
+      但作者说这「看上去似乎有点儿怪」——因为<strong>接近现实靠的不是距离，是解释</strong>。</p>
+      <blockquote>科学仪器使我们更接近现实，尽管在纯物理的角度上它们让我们离现实更远。
+      <span class="who">第 2 章「小结」</span></blockquote>
+      <span class="pit">常见误解</span>
+      <div class="pit-b">把「观察是理论负载的」读成「观察不可靠、所以别信观察」。
+      <strong>作者的结论正相反</strong>：<em>正因如此，我们以及我们的仪器才能防止表象的欺骗</em>——
+      因为我们可以修改理论。</div>
+      <span class="ref">对应第 2 章</span>
+    </div>
+  </details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">B2</span><span class="q-lv lv2">L2</span><span class="q-tag">类比与迁移</span></div>
+  <div class="q-text">第 4 章把<b>生物进化</b>与<b>人类知识创造</b>做了对照。请说出书里给的
+      <b>一处相似</b>与<b>一处关键差异</b>，并解释「拉马克主义对应归纳主义」是什么意思。</div>
+  <details><summary>展开参考答案</summary>
+    <div class="a">
+      <blockquote>主要的相似之处是：<strong>基因和思想观念都是复制因子，知识和适应性都很难改变。</strong>
+      主要差异是：<strong>人类知识可以是解释性的，并有着广阔的延伸范围；
+      适应性不具备解释性，延伸范围很少超出它进化时所处的环境。</strong>
+      <span class="who">第 4 章「小结」</span></blockquote>
+      <span class="key">「拉马克主义对应归纳主义」怎么理解</span>
+      <p><strong>拉马克主义</strong>：认为后天获得的性状可以遗传——
+      即<em>环境直接把信息写进生物体</em>。<br>
+      <strong>归纳主义</strong>：认为知识从经验中推演而来——
+      即<em>经验直接把信息写进头脑</em>。</p>
+      <p>两者犯的是同一个错：<strong>把「来源」和「选择」搞混了。</strong>
+      环境不提供变异，只筛选变异；经验不提供猜想，只筛选猜想。</p>
+      <blockquote>对于生物进化的错误解释，可在对于人类知识增长的错误解释中找到对应。
+      例如，拉马克主义对应归纳主义。<span class="who">第 4 章「小结」</span></blockquote>
+      <span class="pit">常见误解</span>
+      <div class="pit-b">以为「进化 = 随机变异 + 自然选择」就已经是完整解释，类比过去就成立。
+      <strong>作者特意区分了「复制因子」和道金斯的用法</strong>（原注）：
+      <em>道金斯把任何得到复制的东西都叫复制因子，多伊奇只把能导致自身复制的实体叫复制因子。</em></div>
+      <span class="ref">对应第 4 章</span>
+    </div>
+  </details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">B3</span><span class="q-lv lv3">L3</span><span class="q-tag">边界</span></div>
+  <div class="q-text">第 4 章驳斥了「物理常数微调」的设计论和「人择」解释。请说明
+      <b>他驳这两者的理由是不是同一个</b>；如果不是，分别是什么。</div>
+  <details><summary>展开参考答案</summary>
+    <div class="a">
+      <p><strong>不是同一个理由。</strong>原文把它们分开处理：</p>
+      <blockquote>物理规律或常数的"微调"曾被用作设计论的现代形式。
+      <strong>出于通常的原因，它诉诸超自然因素，因而不是好解释。</strong>
+      但"人择"理论也是坏解释，此类理论将微调归因于对无穷多个不同宇宙的纯粹选择，
+      <strong>它们是坏解释的一部分原因是，大多数逻辑上可能的物理规律本身就是坏解释。</strong>
+      <span class="who">第 4 章「小结」</span></blockquote>
+      <span class="key">两个理由要分清</span>
+      <p><strong>驳设计论</strong>：诉诸超自然 → <em>如果上帝能做任何事，这个解释就不能被任何观察推翻</em>
+      （容易改变而仍然成立）。</p>
+      <p><strong>驳人择</strong>：不是「超自然」，而是<strong>选择池本身有问题</strong>——
+      它假定「逻辑上可能的物理规律」是一个有意义的候选集合，
+      但<em>大多数逻辑上可能的规律本身就是坏解释</em>，所以从这样的池子里"选择"不产生解释力。</p>
+      <span class="key">这一处的分量</span>
+      <p><strong>这是全书里少见的、他对一个「非超自然」论证的否定。</strong>
+      说明他的判据不只是「反对超自然」，而是更严格的——
+      <em>一个解释必须真的能排除掉什么。</em></p>
+      <span class="pit">常见误解</span>
+      <div class="pit-b">以为「反设计论 = 反宗教」就够了。
+      <strong>作者的靶子比宗教宽</strong>：<em>他把人择原理也列为坏解释，
+      而人择原理在物理学界是被认真对待的。</em></div>
+      <span class="ref">对应第 4 章；延伸见第 8 章对无穷宇宙序列的批驳</span>
+    </div>
+  </details>
+</div>
+
+<!-- ========== 模块 C ========== -->
+<h2>模块 C · 通用性：人类凭什么特殊</h2>
+<div class="s">第 5–7 章。这一段回答「人为什么能，而别的物种不能」。</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">C1</span><span class="q-lv lv1">L1</span><span class="q-tag">通用建造者</span></div>
+  <div class="q-text">什么是「通用建造者」？书里说人类能把「任意事物转换成任意事物」，
+      这个主张的<b>限定条件</b>是什么？为什么必须加上这个条件？</div>
+  <details><summary>展开参考答案</summary>
+    <div class="a">
+      <blockquote>人类的身体（包括大脑）可以把任意事物转换成任意事物，<strong>只要自然法则允许</strong>。
+      他们是"通用建造者"。<span class="who">第 3 章</span></blockquote>
+      <span class="key">限定条件为什么必须存在</span>
+      <p>因为去掉它，这个主张就变成了「人能做成任何事」——<strong>一个不可能被推翻的说法。</strong>
+      加上「只要自然法则允许」，它就变成了一个<em>可检验的</em>主张：
+      遇到做不到的事，先问「是自然法则禁止，还是我们知识不够」。</p>
+      <p>作者在第 3 章把这个二分说得很明确：</p>
+      <blockquote>不可能发生，因为被自然法则所禁止；——可以发生，在有正确知识的情况下。
+      之所以存在这种重要的二元划分，是因为如果某些转换无论用什么样的知识都无法从技术上实现，
+      则该事实本身就是一种可检验的……<span class="who">第 3 章</span></blockquote>
+      <span class="key">与「宇宙飞船地球号」的关系</span>
+      <p>同一个论证的另一面：<strong>生物圈并不「支持」我们</strong>。人类不是被环境供养的，
+      是靠创造知识自我支持的。所以「资源有限」的担心，在作者看来是<em>知识不足</em>的另一种说法。</p>
+      <span class="pit">常见误解</span>
+      <div class="pit-b">把「通用建造者」读成人类中心主义。
+      <strong>作者的论证方向相反</strong>：<em>他正是用它来反对「宇宙飞船地球号」和「平庸原则」——
+      那两个观念把人类看小了。</em></div>
+      <span class="ref">对应第 3 章</span>
+    </div>
+  </details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">C2</span><span class="q-lv lv2">L2</span><span class="q-tag">向通用性跳转</span></div>
+  <div class="q-text">什么是「向通用性跳转」？为什么书里说<b>这种跳转只能发生在数字化系统中</b>？</div>
+  <details><summary>展开参考答案</summary>
+    <div class="a">
+      <blockquote>所有的知识增长都是通过渐进的改进实现的，但在许多领域里有一个节点，
+      知识或技术系统一项渐进的改进在此时会导致延伸范围突然扩大，
+      使系统成为相关领域的一个通用系统。<span class="who">第 6 章「小结」</span></blockquote>
+      <span class="key">为什么必须数字化</span>
+      <blockquote>因为<strong>纠错对有潜力拥有无限长度的过程至关重要，
+      向通用性的跳转只能发生在数字化系统中。</strong><span class="who">第 6 章「小结」</span></blockquote>
+      <p>逻辑是：通用性意味着<em>这个过程可以无限延长</em>（不断加功能而不失真）。
+      而任何模拟系统在延长中都会累积误差，最终失真。
+      <strong>只有把信息离散化的系统，才能无限复制而不衰减。</strong></p>
+      <p><em>这与第 4 章「复制因子」的讨论是同一个机制：
+      基因是数字的（碱基序列），所以能跨代保真；思想要成为谜米，也必须能被离散地复制。</em></p>
+      <span class="pit">常见误解</span>
+      <div class="pit-b">以为「数字化」只是指计算机。
+      <strong>书里的「数字」是信息论意义上的</strong>——<em>离散、可纠错。
+      文字、货币、乐谱都是数字系统。</em></div>
+      <span class="ref">对应第 6 章；与第 4、15 章合读</span>
+    </div>
+  </details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">C3</span><span class="q-lv lv3">L3</span><span class="q-tag">反身</span></div>
+  <div class="q-text">第 7 章说「人工智能领域没有取得任何进展，因为其核心里有一个悬而未决的哲学问题」。
+      请说明他指的是什么问题，以及这个判断<b>对他自己的理论构成什么风险</b>。</div>
+  <details><summary>展开参考答案</summary>
+    <div class="a">
+      <blockquote>（通用）人工智能领域没有取得任何进展，因为在其核心里有一个悬而未决的哲学问题：
+      <strong>我们还不了解创造性如何运作。</strong>一旦解决了这个问题，
+      编程实现人工智能将不是难事。<span class="who">第 7 章「小结」</span></blockquote>
+      <span class="key">他说的「哲学问题」是什么</span>
+      <p>就是全书一直在处理的：<strong>新知识怎么产生</strong>。
+      他的立场是「猜想 + 批评」，而这套机制<em>还没有被写成算法</em>。
+      所以在他看来，AI 的瓶颈不在算力，在<strong>缺少一个创造性的理论</strong>。</p>
+      <span class="key">这对他的理论构成什么风险</span>
+      <p><strong>这是一个可被现实推翻的预测。</strong>
+      如果他关于创造性的理论是对的，那么「一旦理解了创造性，实现 AI 就不难」；
+      <em>但如果 AI 在创造性理论还不完备的情况下就被做出来了，
+      那就说明「创造性」并不是一个必须先解决的拦路虎。</em></p>
+      <p>他把这个判断写得很硬（「没有取得任何进展」「不是难事」）——
+      <strong>按他自己的判据，这种硬度是好解释的标志；但硬度也意味着它承担了被推翻的风险。</strong></p>
+      <span class="pit">常见误解</span>
+      <div class="pit-b">把这一章当成「AI 悲观论」。
+      <strong>他不是说 AI 做不到</strong>，而是说<em>顺序错了</em>：
+      哲学问题不解决，工程上的努力会一直卡在同一处。</div>
+      <span class="ref">对应第 7 章；这是全书最容易被现实验证的一处预言</span>
+    </div>
+  </details>
+</div>
+
+<!-- ========== 模块 D ========== -->
+<h2>模块 D · 无穷与乐观主义</h2>
+<div class="s">第 8–9 章。这一段把全书推向它最有争议的两个断言。</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">D1</span><span class="q-lv lv1">L1</span><span class="q-tag">无穷</span></div>
+  <div class="q-text">书里用希尔伯特旅馆说明「无穷的反直觉属性」。请说出其中<b>最要紧的那一条</b>，
+      并解释它为什么对「进步」这件事是一个严肃的结论。</div>
+  <details><summary>展开参考答案</summary>
+    <div class="a">
+      <blockquote>属性之一是，<strong>如果真的会出现无穷的进步，那么我们不仅是目前处于接近起点的地方，
+      还将永远处在接近起点的地方。</strong><span class="who">第 8 章「小结」</span></blockquote>
+      <span class="key">为什么这是严肃结论而不是修辞</span>
+      <p>因为它<strong>否掉了一个具体的期待</strong>：不会有一个「问题都解决完了」的状态。
+      无论走多远，剩下的距离仍是无穷。</p>
+      <p>作者把它落到一个技术点上：</p>
+      <blockquote>问题是不可避免的，因为<strong>我们的知识与完备状态之间永远隔着无穷远的距离</strong>。
+      <span class="who">第 9 章「小结」</span></blockquote>
+      <span class="key">它怎么和第 9 章的乐观主义对上</span>
+      <p>这两条看起来矛盾（既然永远追不上，乐观什么？），其实是同一条：
+      <strong>正因为没有终点，失败才总是「知识不足」而不是「能力上限」。</strong></p>
+      <span class="pit">常见误解</span>
+      <div class="pit-b">把「永远处在接近起点」读成悲观（我们永远很无知）。
+      <strong>作者的意思是中性的</strong>：<em>它同时意味着「永远还有可做的」
+      和「永远会有问题」。</em></div>
+      <span class="ref">对应第 8 章；与第 9 章合读</span>
+    </div>
+  </details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">D2</span><span class="q-lv lv1">L1</span><span class="q-tag">乐观主义</span></div>
+  <div class="q-text">写出一句作者对「乐观主义原则」的原文陈述，并说明他给这个原则
+      <b>附加了什么前提</b>——如果没有这个前提，这个原则会变成什么。</div>
+  <details><summary>展开参考答案</summary>
+    <div class="a">
+      <blockquote>乐观主义原则<strong>所有的恶是知识不足造成的</strong>。
+      <span class="who">第 9 章「小结」（原文无冒号，是小标题后直接接句子）</span></blockquote>
+      <p>他也给了另一种表述：</p>
+      <blockquote>它认为，没有什么根本性的障碍、自然规律或超自然法令能阻碍进步。
+      每当我们改善事物的努力失败……<strong>永远都是因为我们没有及时知道得够多。</strong>
+      <span class="who">第 9 章</span></blockquote>
+      <span class="key">他附加的前提</span>
+      <blockquote><strong>如果知识创造有根本限制，那乐观主义就空洞无物，但不存在这样的限制。</strong>
+      <span class="who">第 9 章「小结」</span></blockquote>
+      <p>即：<strong>乐观主义不是无条件的信心，它依赖于一个主张——知识创造没有根本限制。</strong>
+      去掉这个前提，它就只是「相信一切都会好的」。</p>
+      <span class="key">他还自己划了一处可能与事实冲突的边界</span>
+      <blockquote>假如存在着没有客观进步的领域（特别是道德之类的哲学领域），那乐观主义就是错误的，
+      但所有这些领域里都存在着真理，朝向真理的进步通过寻求好解释来实现。
+      <span class="who">第 9 章「小结」</span></blockquote>
+      <p><em>注意这个句式：他先承认「假如……那乐观主义就是错误的」，
+      再给出「但这个假如不成立」的理由。这是一个明确承担被反驳风险的写法。</em></p>
+      <span class="pit">常见误解</span>
+      <div class="pit-b">把乐观主义读成「积极心态」。
+      <strong>它是一个关于世界的主张，不是一种情绪</strong>——
+      <em>它说「所有失败都是知识不足」，这是一个可被反例攻击的断言。</em></div>
+      <span class="ref">对应第 9 章</span>
+    </div>
+  </details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">D3</span><span class="q-lv lv3">L3</span><span class="q-tag">反身</span></div>
+  <div class="q-text">用作者自己的判据审查「所有的恶是知识不足造成的」这句话：
+      <b>什么样的观察能推翻它？</b>如果你找不到这样的观察，按他自己的标准，
+      这句话属于好解释还是坏解释？</div>
+  <details><summary>展开参考答案</summary>
+    <div class="a">
+      <p><strong>这一问没有来自原文的答案</strong>——它是用原文的判据去审原文。
+      所以要分两步：先看他怎么防守，再看防守是否够。</p>
+      <span class="key">作者的防守方式</span>
+      <p>他确实预见了这个攻击，并给了一个条件式：</p>
+      <blockquote>假如存在着没有客观进步的领域（特别是道德之类的哲学领域），那乐观主义就是错误的。
+      <span class="who">第 9 章「小结」</span></blockquote>
+      <p>即：<strong>他能说出的反例类型是「一个没有客观进步、但有真理的领域」。</strong>
+      这满足「必须先给出可能失败的样子」这个要求。</p>
+      <span class="key">但这个防守足够吗</span>
+      <p>问题在于<strong>这个条件本身很难检验</strong>：要判定一个领域「没有客观进步」，
+      需要先知道这个领域里什么算进步。<em>而这正是争论的焦点。</em></p>
+      <p>所以他给的不是一个可直接观察的反例，而是一个<strong>需要另一个可检验理论才能判定</strong>的条件。</p>
+      <span class="key">我的判断（不是原文的）</span>
+      <p>按第 1 章的判据，好解释的标准是「<strong>改变细节会毁掉整个解释</strong>」。
+      试改「所有的恶」→「绝大多数的恶」：<strong>整句话仍然成立</strong>，只是弱了一点。</p>
+      <p><em>这说明它的细节没有被现实锁住——也就是说，它比作者自己承认的更接近「容易改变」那一侧。</em></p>
+      <p><strong>但有一个重要限定</strong>：这一条只否定「它作为普遍命题的强度」，
+      不否定「它在具体场合是有用的启发」。<em>这两件事该分开。</em></p>
+      <span class="pit">常见误解</span>
+      <div class="pit-b">以为指出这一处就否掉了全书。
+      <strong>不是。</strong>这一处是全书<em>最强的乐观断言</em>，也是最弱的一环；
+      而他的核心判据（难以改变）与这条断言是两回事。</div>
+      <span class="ref">对应第 1 章与第 9 章；这一问是待议读法</span>
+    </div>
+  </details>
+</div>
+
+<!-- ========== 模块 E ========== -->
+<h2>模块 E · 谜米与文化：这一段的实用价值最高</h2>
+<div class="s">第 15–16 章。它是全书最直接可用于「看清你身边的事」的一部分。</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">E1</span><span class="q-lv lv1">L1</span><span class="q-tag">两种谜米</span></div>
+  <div class="q-text">谜米复制的<b>两种基本策略</b>是什么？请给出原文，并说明为什么作者说
+      「谜米与基因不同，它在每次复制中经受分别选择」。</div>
+  <details><summary>展开参考答案</summary>
+    <div class="a">
+      <blockquote>谜米复制只有两种基本策略：<strong>帮助预期的持有者，或者使持有者丧失批评能力。</strong>
+      <span class="who">第 15 章「小结」</span></blockquote>
+      <p>他把这两类分别叫<strong>理性谜米</strong>与<strong>反理性谜米</strong>：</p>
+      <blockquote>老式的、静态社会的那类谜米，<strong>通过使持有者失去批评能力来生存</strong>，
+      我将称之为反理性谜米。<span class="who">第 15 章</span></blockquote>
+      <span class="key">为什么「每次复制中经受分别选择」</span>
+      <blockquote>最主要的差异是，<strong>每个谜米都必须包含自身的复制机制</strong>，
+      并且以两种不同的物理形式交替存在：一种思想上的表达，以及一种行为。
+      因此，谜米与基因不同，它在每次复制中经受分别选择，
+      选择标准是它引发行为的能力，以及该行为导致新的接收者采纳该谜米的能力。
+      <span class="who">第 15 章「小结」</span></blockquote>
+      <p>即：基因有专门的复制机器（细胞），谜米没有——<strong>它必须自己说服宿主去传播它。</strong>
+      这解释了为什么谜米的「说服力」和「是否为真」可以完全脱钩。</p>
+      <span class="pit">常见误解</span>
+      <div class="pit-b">以为「反理性谜米」就是「假的东西」。
+      <strong>书里没有这么说。</strong>反理性谜米的定义特征是<em>复制策略</em>——
+      <strong>它靠让持有者丧失批评能力来存活，而不管内容真假。</strong></div>
+      <span class="ref">对应第 15 章</span>
+    </div>
+  </details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">E2</span><span class="q-lv lv2">L2</span><span class="q-tag">应用</span></div>
+  <div class="q-text">用「两种复制策略」这个判据，怎么区分
+      <b>「一个你不许质疑的说法」</b>和<b>「一个你暂时没能力质疑的说法」</b>？
+      这两种在表面上看是一样的。</div>
+  <details><summary>展开参考答案</summary>
+    <div class="a">
+      <p>这是全书判据最实用的一次应用。区别<strong>不在你此刻能不能质疑，在于那个说法对质疑的态度</strong>。</p>
+      <span class="key">区分方法：看「推翻了会怎样」</span>
+      <p><strong>反理性谜米</strong>：它把「不要质疑」本身作为内容的一部分。
+      所以质疑它<em>在它自己的框架里就是错的</em>——你被要求先接受，才被允许讨论。</p>
+      <p><strong>你暂时没能力质疑的</strong>：它允许质疑，只是你现在缺少必要知识。
+      当年没人能质疑牛顿，是<em>能力问题</em>；而牛顿力学本身并不禁止你去试。</p>
+      <span class="key">书里给的对照</span>
+      <blockquote>如果一个谜米包含对接收者来说真实而有益的知识，但会使接收者丧失批评该谜米的能力，
+      那么接收者纠正这些知识中的错误的能力会降低……<span class="who">第 15 章</span></blockquote>
+      <p><em>注意这一句承认了「既有用又反理性」的谜米是存在的——
+      所以「有用」不能作为它不属于反理性的理由。</em></p>
+      <span class="key">一个可操作的问法</span>
+      <p><strong>「如果我明天真的相信它是错的，会发生什么？」</strong><br>
+      如果答案是「你会失去某种身份 / 会被排斥 / 会显得不敬」——
+      那它惩罚的是<em>质疑行为本身</em>，不只是质疑结论。</p>
+      <p><em>反之，如果答案是「你会错过一些你现在不懂的东西」，那是能力问题。</em></p>
+      <span class="pit">常见误解</span>
+      <div class="pit-b">用「这个说法有没有用」来区分。
+      <strong>没用</strong>——原文明确说反理性谜米可以包含真实有益的知识。
+      <em>判据是复制策略，不是内容质量。</em></div>
+      <span class="ref">对应第 15 章；这一问的答案是推论，不是原文直述</span>
+    </div>
+  </details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">E3</span><span class="q-lv lv2">L2</span><span class="q-tag">威胁</span></div>
+  <div class="q-text">作者说西方文明处在「一个不稳定的过渡期」。请说明这个过渡期
+      <b>从什么状态到什么状态</b>，以及为什么他说它是「不稳定的」。</div>
+  <details><summary>展开参考答案</summary>
+    <div class="a">
+      <blockquote>西方文明处于一个不稳定的过渡期，正从包含反理性谜米的稳定、静态社会
+      转向包含理性谜米的稳定动态社会。<span class="who">第 15 章「小结」</span></blockquote>
+      <span class="key">为什么「不稳定」</span>
+      <p>因为他把两端都描述为<strong>稳定</strong>——静态社会靠压制批评稳定，
+      动态社会靠批评机制稳定。而<strong>中间状态两者都不具备</strong>：
+      旧的反理性谜米已经失效，新的理性谜米还没有成为默认。</p>
+      <p>他还点出了一种很特别的危险：<em>在缺乏批评能力的社会里，
+      「传播得快」和「是对的」完全没有关系</em>：</p>
+      <blockquote>如果静态社会里出现了一个迅速传播的想法，没有理由期待它会是正确或有用的。
+      <span class="who">第 15 章</span></blockquote>
+      <p>他举的例子是 14 世纪黑死病期间的防疫想法——「传播得最快的防疫想法都极其之坏」。</p>
+      <span class="key">一个他自认为「具有讽刺意味」的转折</span>
+      <blockquote>然而具有讽刺意味的是，<strong>认为任何改变的弊端都会远远大于利益，
+      这种静态社会的典型恐惧在很大程度上是正确的。</strong>
+      静态社会确实一直面临着被功能异常的新生谜米损害或……<span class="who">第 15 章</span></blockquote>
+      <p><em>他承认了保守派的担忧有道理——但结论不是「所以别变」，而是
+      「所以要靠批评传统来筛，而不是靠不改变来防」。</em></p>
+      <span class="pit">常见误解</span>
+      <div class="pit-b">把「静态 / 动态」读成「传统 / 现代」的时间标签。
+      <strong>它描述的是机制</strong>：<em>社会靠什么抵挡坏观念。
+      静态社会靠禁止改变，动态社会靠批评筛选。</em></div>
+      <span class="ref">对应第 15 章；与第 17 章的「不可维持」直接相连</span>
+    </div>
+  </details>
+</div>
+
+<!-- ========== 模块 F ========== -->
+<h2>模块 F · 争议与边界：这本书被反对的地方</h2>
+<div class="s">第 17 章与几处跨域冲突 —— 这些是这本书最需要被审查的部分。</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">F1</span><span class="q-lv lv1">L1</span><span class="q-tag">冲突</span></div>
+  <div class="q-text">第 17 章明确反对戴蒙德。请引出原文，并说明<b>他对戴蒙德的具体指控是什么</b>
+      ——是「事实错了」还是「解释类型错了」？</div>
+  <details><summary>展开参考答案</summary>
+    <div class="a">
+      <blockquote>戴蒙德对不同社会的不同历史所作的"终极解释"是错的：
+      <strong>历史是思想的历史，不是生物地理学的机械影响的历史。</strong>
+      <span class="who">第 17 章「小结」</span></blockquote>
+      <span class="key">是解释类型错，不是事实错</span>
+      <p>他并不否认地理有影响。他在同一章里承认：</p>
+      <blockquote>相似，大部分的事情确实可以用生物地理学来解释。但是，抽象语言、解释、
+      高于最低生存水平的财富、远距离贸易之类的发展，全都<strong>有潜力突破狭隘</strong>，
+      从而使思想观念具有因果力。<span class="who">第 17 章</span></blockquote>
+      <p>他还说了更精确的一句：</p>
+      <blockquote>植物、动物和矿物之类的物理资源提供了机会，可能会激发新的思想观念，
+      但它们<strong>从来不能创造观念，也不能让人拥有特定的观念</strong>。
+      它们还会引发问题，但不会阻止人们找到解决这些问题的方法。<span class="who">第 17 章</span></blockquote>
+      <span class="key">所以指控是：把「机会」当成了「原因」</span>
+      <p><strong>地理提供可能性，不提供必然性。</strong>
+      在作者看来，戴蒙德的解释把<em>「为什么没发生」归因于条件不允许</em>，
+      而正确的问法是<em>「他们为什么没能解决那个问题」</em>——后者是知识问题。</p>
+      <span class="pit">常见误解</span>
+      <div class="pit-b">以为这是一场「地理 vs 文化」的口水战。
+      <strong>作者给的是一条更硬的界线</strong>：<em>物理条件可以「引发问题」，
+      但不能「创造观念」——所以它不是历史的原因，只是历史的素材。</em></div>
+      <span class="ref">对应第 17 章；戴蒙德是本项目 05 域底本</span>
+    </div>
+  </details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">F2</span><span class="q-lv lv2">L2</span><span class="q-tag">可维持性</span></div>
+  <div class="q-text">作者对「可维持性」（sustainability）和「预防性原则」的态度是什么？
+      请给出原文依据，并说明他<b>给出的替代方案</b>是什么。</div>
+  <details><summary>展开参考答案</summary>
+    <div class="a">
+      <blockquote>预防可预见灾难的战略最终必将失败，
+      而且<strong>对不可预见的灾难连讨论一下都做不到</strong>。
+      为了防备不可预见的灾难，我们需在科学技术方面取得迅速进步，
+      还需要<strong>尽可能多的财富</strong>。<span class="who">第 17 章「小结」</span></blockquote>
+      <span class="key">替代方案是「财富 + 知识」，不是「节约 + 不发展」</span>
+      <p>他的论证结构是：<strong>灾难分两种</strong>。
+      可预见的，预防可能有效但成本极高；<em>不可预见的，预防无从谈起</em>——
+      而你无法选择只遇到哪一种。</p>
+      <p>所以他的结论是<strong>提高应对能力</strong>（知识创造的速率 + 财富存量），
+      而不是<strong>降低暴露</strong>。</p>
+      <span class="key">一个他给出的具体论证</span>
+      <p>他引用复活节岛与更近代的例子说明：静态社会崩溃的机制不是「资源耗尽」，
+      而是<strong>无法迅速创造知识，所以任何问题都会变成灾难</strong>。</p>
+      <blockquote>复活节岛文明崩溃了，因为人类不可能不遇到新问题，而静态社……
+      <span class="who">第 17 章</span></blockquote>
+      <span class="pit">常见误解</span>
+      <div class="pit-b">把这一章读成「反环保」。
+      <strong>它反对的是「可维持性作为战略」这个定位</strong>，
+      不是反对节约。<em>理由是可检验的：预防只能对付你能预见的东西。</em></div>
+      <span class="ref">对应第 17 章</span>
+    </div>
+  </details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">F3</span><span class="q-lv lv3">L3</span><span class="q-tag">承担风险</span></div>
+  <div class="q-text">第 4 章有一处，作者<b>主动列出了「什么会推翻达尔文主义」</b>。请引出那段原文，
+      并说明：为什么一个主张「好解释难以改变」的作者，
+      <b>必须去写「什么能推翻它」</b>——这两件事看起来是相反的。</div>
+  <details><summary>展开参考答案</summary>
+    <div class="a">
+      <p>原文在讨论达尔文主义可不可以被检验时，他写下了这一串：</p>
+      <blockquote>如果发现一种生物仅仅（或者主要）发生有利突变，像拉马克主义或自然发生论所预测的一样，
+      那达尔文主义的"随机变异"这个先决条件就会被推翻。如果发现有生物天生就拥有新的复杂适应性
+      （不管是适应什么的），而其父母体内没有任何此类适应性的前体，
+      那么达尔文主义的渐变预测或知识创造机制就会被推翻。……<span class="who">第 4 章</span></blockquote>
+      <p>这一段的句式是<strong>「如果……就会被推翻」</strong>——
+      他给出的不是支持证据，而是<em>一批足以杀死这个理论的具体观察</em>。</p>
+      <span class="key">为什么「难以改变」与「列出反例」不矛盾</span>
+      <p>这是全书最容易被误读的一处。要分清两件事：</p>
+      <p><strong>「难以改变」说的是「细节被锁住了」</strong>——<em>改一个细节，别的细节就不成立了。
+      这正是「可以被推翻」的技术含义：因为它承诺了太多，所以只要有一处不成立，整座建筑就塌。</em></p>
+      <p><strong>「容易改变」说的是「细节可以随便换」</strong>——<em>换了也不影响它成立，
+      所以它反而不可能被推翻。</em></p>
+      <p>于是他写「什么能推翻达尔文主义」，恰恰是在<strong>证明它是一个好解释</strong>：
+      <em>一个能说清自己怎么死掉的理论，才是承担了风险的理论。</em></p>
+      <span class="key">这一点与第 1 章的易谬主义是同一件事</span>
+      <blockquote>易谬主义让我们不要寻求权威，而是<strong>承认我们可能一直在犯错</strong>，并努力纠正错误。
+      <span class="who">第 1 章「小结」</span></blockquote>
+      <p><em>「承认我们可能一直在犯错」不是态度问题，是结构问题：
+      如果一个理论不能说明自己错在哪里，那它连「犯错」的资格都没有。</em></p>
+      <span class="key">顺着这一条，可以看到全书最大的风险点</span>
+      <p>他的判据（难以改变）是<strong>结构性的</strong>，本身不要求已被检验。
+      所以理论上可以存在这样的东西：<em>细节严密自洽、却从无人检验过的坏解释</em>——
+      按字面判据它也算「好解释」。<strong>这一处原文没有处理。</strong></p>
+      <p><em>而本项目 02 域的《实践论》正好从这个方向提出了质疑：
+      「判定认识或理论之是否真理……而是依客观上社会实践的结果如何而定」。</em></p>
+      <span class="pit">常见误解</span>
+      <div class="pit-b">以为「好解释难以改变」=「好解释不会错」。
+      <strong>恰好相反</strong>：<em>正因为它锁定了细节，现实才能指出它错在哪。
+      一个什么都解释得通的说法，你拿它没办法——它也不会因此变得正确。</em></div>
+      <span class="ref">对应第 1、4 章；与《实践论》对照见 02 域「好解释与实践论-对照」</span>
+    </div>
+  </details>
+</div>
+
+<!-- ========== 自测 ========== -->
+<h2>附 · 自测清单</h2>
+<div class="s">不看上面，只回答。答不出就回到对应编号。</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">S</span><span class="q-lv lv1">L1</span><span class="q-tag">概念</span></div>
+  <div class="q-text">以下 13 个概念，你能各用一句话说清吗？</div>
+  <details><summary>展开对照</summary>
+    <div class="a">
+      <ul>
+        <li><strong>好／坏解释</strong> —— 很难／容易改变，且仍能说明它声称能说明的事物（A2）</li>
+        <li><strong>延伸</strong> —— 解释能解决的问题超出它被提出要解决的范围（A1）</li>
+        <li><strong>证明主义 / 易谬主义</strong> —— 寻求确定性感觉与社会认可 / 承认一直在犯错并纠正（A3）</li>
+        <li><strong>理论负载</strong> —— 没有直接观察，犯错总是解释里的错（B1）</li>
+        <li><strong>复制因子</strong> —— 能导致自身复制的实体；基因与思想观念都是（B2）</li>
+        <li><strong>通用建造者</strong> —— 可把任意事物转换成任意事物，只要自然法则允许（C1）</li>
+        <li><strong>向通用性跳转</strong> —— 渐进改进到某点，延伸范围突然扩大；只发生在数字化系统中（C2）</li>
+        <li><strong>无穷的窗口</strong> —— 即使在无穷的进步之后，我们仍处在接近起点的地方（D1）</li>
+        <li><strong>乐观主义原则</strong> —— 所有的恶是知识不足造成的（D2）</li>
+        <li><strong>理性 / 反理性谜米</strong> —— 靠批评复制 / 靠使持有者丧失批评能力复制（E1）</li>
+        <li><strong>静态 / 动态社会</strong> —— 靠禁止改变抵挡坏观念 / 靠批评传统筛选（E3）</li>
+        <li><strong>不可维持</strong> —— 预防只能对付可预见的灾难（F2）</li>
+        <li><strong>抵制后见之明</strong> —— 把「知道结论后觉得显然」与「事先锁定细节」分开（F3）</li>
+      </ul>
+      <span class="key">如果你能答出 10 个以上</span>
+      <p>概念层通了。<em>但按这本书自己的标准，能说出概念不等于理解——
+      要看你能否说出每个概念「改变了哪个细节就会垮掉」。</em></p>
+    </div>
+  </details>
+</div>
+
+<footer>
+ 《无穷的开始》问题手册 · 「底层」项目 01_哲学与思维地基<br>
+ 戴维·多伊奇 · 18 章 · 底本 30.2 万汉字<br>
+ <em>引文取自 分章/ 与 无穷的开始_全文.txt，已逐句核对；<br>
+ 参考答案中标「我的判断」「推论」处为待议读法</em>
+</footer>
+
+</div>
+</body>
+</html>
