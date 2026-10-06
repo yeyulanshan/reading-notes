@@ -1,378 +1,1184 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>《数字图像处理》直击心灵的15个问题 —— 你以为你在"看图"，其实你在"算图"</title>
+<title>数字图像处理 · 问题手册</title>
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
-    background: #f2f8fc;
-    color: #1b2a33;
-    padding: 32px 20px;
-    line-height: 1.8;
+  :root{
+    --paper:#f2f8fc; --card:#ffffff; --edge:#cfe0ec; --edge-lit:#a8c8de;
+    --ink:#12232e; --ink-mid:#3f5b6b; --ink-soft:#5c7a8c;
+    --l1:#2c6f9e; --l2:#8a6a24; --l3:#7a4f96;
+    --key:#7e713d; --key-soft:#fbf8ef;
+    --pit:#a85035; --pit-soft:#fcf1ec;
+    --ref:#2f7a5c;
+    --dip:#2b7fa8; --dip-soft:#eaf4fb;
   }
-  .container { max-width: 800px; margin: 0 auto; }
-
-  .header {
-    text-align: center;
-    margin-bottom: 40px;
-    padding: 40px 20px;
-    background: linear-gradient(135deg, #e9f4fb 0%, #f2f8fc 100%);
-    border-radius: 16px;
-    border: 1px solid #cfe0ec;
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--paper);color:var(--ink);line-height:1.9;padding:32px 16px 56px;
+    -webkit-font-smoothing:antialiased;}
+  .wrap{max-width:940px;margin:0 auto;}
+  header{text-align:center;padding:38px 20px 32px;background:var(--card);
+    border:1px solid var(--edge);border-top:4px solid var(--dip);border-radius:8px;margin-bottom:22px;}
+  header .kicker{font-size:11px;letter-spacing:.26em;color:var(--ink-soft);
+    font-family:ui-monospace,Consolas,monospace;margin-bottom:13px;}
+  header h1{font-size:24px;font-weight:800;letter-spacing:.01em;line-height:1.4;margin-bottom:10px;}
+  header .sub{font-size:13.8px;color:var(--ink-mid);line-height:1.9;}
+  header .src{margin-top:12px;font-size:12px;color:var(--ink-soft);line-height:1.9;}
+  .howto{background:var(--card);border:1px solid var(--edge);border-radius:8px;
+    padding:18px 22px;margin-bottom:22px;font-size:13.8px;color:var(--ink-mid);}
+  .howto .t{color:var(--key);font-weight:700;margin-bottom:9px;font-size:13.4px;}
+  .howto p+p{margin-top:7px;} .howto strong{color:var(--ink);}
+  .howto em{font-style:normal;color:var(--ink-mid);}
+  .howto code{font-family:ui-monospace,Consolas,monospace;font-size:12.4px;
+    background:#eef6fb;border:1px solid var(--edge);border-radius:4px;
+    padding:1px 6px;color:#1d5c86;}
+  .lvkey{display:flex;gap:16px;flex-wrap:wrap;margin-top:11px;font-size:12.4px;}
+  .lvkey span{display:inline-flex;align-items:center;gap:6px;color:var(--ink-soft);}
+  .lvkey i{font-style:normal;font-family:ui-monospace,Consolas,monospace;font-size:10.6px;
+    padding:1px 7px;border-radius:3px;font-weight:700;}
+  .lv1c{background:#e3eff8;color:var(--l1);border:1px solid #bcd8ec;}
+  .lv2c{background:#f7f0dd;color:var(--l2);border:1px solid #e3d3a8;}
+  .lv3c{background:#f2eaf7;color:var(--l3);border:1px solid #d9c4e6;}
+  h2{font-size:17.5px;font-weight:700;margin:34px 0 5px;padding-left:12px;
+    border-left:4px solid var(--key);line-height:1.55;}
+  .s{color:var(--ink-soft);font-size:12.8px;margin:0 0 15px 16px;line-height:1.85;}
+  .q{background:var(--card);border:1px solid var(--edge);border-radius:9px;
+    padding:16px 19px;margin-bottom:12px;transition:border-color .2s,box-shadow .2s;}
+  .q:hover{border-color:var(--edge-lit);box-shadow:0 3px 12px -6px rgba(28,74,110,.18);}
+  .q-head{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:9px;}
+  .q-id{font-family:ui-monospace,Consolas,monospace;font-size:12px;font-weight:700;
+    color:var(--ink-soft);letter-spacing:.06em;}
+  .q-lv{font-family:ui-monospace,Consolas,monospace;font-size:10.4px;font-weight:700;
+    padding:1px 7px;border-radius:3px;}
+  .lv1{background:#e3eff8;color:var(--l1);border:1px solid #bcd8ec;}
+  .lv2{background:#f7f0dd;color:var(--l2);border:1px solid #e3d3a8;}
+  .lv3{background:#f2eaf7;color:var(--l3);border:1px solid #d9c4e6;}
+  .q-tag{font-size:11.4px;color:var(--ink-soft);border:1px solid var(--edge);
+    border-radius:999px;padding:1px 9px;background:#f7fbfe;}
+  .q-text{font-size:14.4px;color:var(--ink);line-height:1.9;}
+  .q-text strong{color:#0b1a24;}
+  details{margin-top:11px;}
+  summary{font-size:12.8px;color:var(--dip);cursor:pointer;list-style:none;
+    padding:5px 0;user-select:none;transition:color .18s;}
+  summary::-webkit-details-marker{display:none;}
+  summary::before{content:"▸ ";}
+  details[open] summary::before{content:"▾ ";}
+  summary:hover{color:#1d5c86;}
+  .a{margin-top:11px;padding:15px 17px;background:#f8fbfd;border:1px solid var(--edge);
+    border-radius:7px;font-size:13.8px;color:var(--ink-mid);line-height:1.95;}
+  .a p+p{margin-top:9px;}
+  .a strong{color:var(--ink);}
+  .a em{font-style:normal;color:var(--ink-mid);}
+  .a code{font-family:ui-monospace,Consolas,monospace;font-size:12.4px;
+    background:#eef6fb;border:1px solid var(--edge);border-radius:4px;
+    padding:1px 6px;color:#1d5c86;}
+  .a .key{display:block;margin:13px 0 6px;font-size:13px;font-weight:700;color:var(--key);}
+  .a .key::before{content:"◆ ";font-size:10px;}
+  blockquote{margin:11px 0;padding:10px 15px;background:var(--key-soft);
+    border-left:3px solid var(--key);border-radius:4px;
+    font-size:13.4px;color:#5f5527;line-height:1.9;}
+  blockquote .who{display:block;margin-top:6px;font-size:11.6px;color:var(--ink-soft);
+    text-align:right;}
+  .pit{display:block;margin:13px 0 6px;font-size:13px;font-weight:700;color:var(--pit);}
+  .pit::before{content:"⚠ ";font-size:11px;}
+  .pit-b{background:var(--pit-soft);border:1px solid #e8cfc4;border-radius:4px;
+    padding:11px 15px;font-size:13.2px;color:#8a4630;line-height:1.9;margin-top:6px;}
+  .ref{display:block;margin:12px 0 5px;font-size:12.4px;color:var(--ref);}
+  .ref::before{content:"→ ";font-size:11px;}
+  .life{display:block;margin:13px 0 6px;font-size:13px;font-weight:700;color:var(--dip);}
+  .life::before{content:"◎ ";font-size:11px;}
+  .life-b{background:var(--dip-soft);border:1px solid #cfe4f0;border-radius:4px;
+    padding:11px 15px;font-size:13.2px;color:#1d5c86;line-height:1.9;margin-top:6px;}
+  table{width:100%;border-collapse:collapse;margin:13px 0;font-size:13px;}
+  th,td{padding:8px 11px;border:1px solid var(--edge);text-align:left;vertical-align:top;line-height:1.8;}
+  th{background:var(--dip-soft);color:#1d5c86;font-weight:700;font-size:12.2px;}
+  td{color:var(--ink-mid);} td strong{color:var(--ink);}
+  ul,ol{margin:8px 0 0 20px;} li{font-size:13.4px;color:var(--ink-mid);margin-bottom:6px;line-height:1.9;}
+  li strong{color:var(--ink);}
+  footer{margin-top:42px;padding-top:20px;border-top:1px solid var(--edge);
+    text-align:center;font-size:12px;color:var(--ink-soft);line-height:2;}
+  @media(max-width:680px){
+    header h1{font-size:20px;} h2{font-size:16px;}
+    body{padding:18px 11px 40px;} .q{padding:14px 15px;} table{font-size:11.6px;}
   }
-  .header h1 { font-size: 24px; margin-bottom: 12px; color: #12232e; }
-  .header .subtitle { font-size: 14px; color: #3f5b6b; }
-
-  .intro {
-    background: #ffffff;
-    border-radius: 12px;
-    padding: 20px 24px;
-    border: 1px solid #cfe0ec;
-    margin-bottom: 30px;
-    color: #2c3f4c;
-    font-size: 15px;
-  }
-
-  .question-card {
-    background: #ffffff;
-    border-radius: 12px;
-    padding: 24px;
-    border: 1px solid #cfe0ec;
-    margin-bottom: 20px;
-  }
-  .question-num {
-    display: inline-block;
-    background: #d8e6fd;
-    color: white;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    text-align: center;
-    line-height: 32px;
-    font-weight: 700;
-    margin-bottom: 12px;
-    font-size: 14px;
-  }
-  .question-title {
-    font-size: 17px;
-    font-weight: 600;
-    color: #12232e;
-    margin-bottom: 12px;
-  }
-  .scenario {
-    background: #f2f8fc;
-    border-radius: 8px;
-    padding: 14px 16px;
-    margin-bottom: 14px;
-    border-left: 3px solid #9d6507;
-  }
-  .scenario .label { font-size: 12px; color: #9d6507; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
-  .scenario p { color: #2c3f4c; font-size: 14px; }
-  .book-view { margin-bottom: 14px; }
-  .book-view .label { font-size: 12px; color: #d8e6fd; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
-  .book-view p { color: #557293; font-size: 14px; }
-  .reflection {
-    background: #ffffff;
-    border-radius: 8px;
-    padding: 14px 16px;
-    border: 1px dashed #b8cbda;
-  }
-  .reflection .label { font-size: 12px; color: #0b825a; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
-  .reflection p { color: #39785f; font-size: 14px; }
-
-  .footer { text-align: center; margin-top: 40px; padding: 20px; color: #5c7a8c; font-size: 13px; }
 </style>
 </head>
 <body>
-<div class="container">
+<div class="wrap">
 
-  <div class="header">
-    <h1>你以为你在"看图"，其实你在"算图"</h1>
-    <div class="subtitle">《数字图像处理》· 15个让你重新审视"图像"这件事的问题</div>
-  </div>
+<header>
+  <div class="kicker">DIGITAL IMAGE PROCESSING · QUESTION MANUAL</div>
+  <h1>《数字图像处理》问题手册</h1>
+  <div class="sub">27 个问题 · 三档难度 · 按全书四段组织</div>
+  <div class="src">Gonzalez &amp; Woods · 第四版（2018）· 12 章 · 底本 47.6 万汉字<br>
+    引文取自 <code>数字图像处理_全文_修正版.txt</code>（两轮 OCR 修正后）</div>
+</header>
 
-  <div class="intro">
-    💡 读完每个问题，先停下来想想自己的答案。<br>
-    这些问题不是考你算法，而是让你意识到：你每天看的照片、视频、屏幕，本质上都是数学运算。
+<div class="howto">
+  <div class="t">怎么用这本手册</div>
+  <p>每个问题配一份参考答案，<strong>答案里引了原文</strong>
+  （均可在修正版语料中逐字核对；<em>图注与图形区域的文字不可引用</em>）。</p>
+  <p><strong>先自己想，再展开。</strong>这本书是技术书，但它的难点不在算法——
+  在<strong>每个方法成立的前提</strong>。所以 C 模块（边界与反驳）才是这本手册的重点。</p>
+  <p><em>L1 是「书里说了什么」，L2 是「这个方法能用到哪」，L3 是「它在什么时候不成立、什么能反驳它」。</em></p>
+  <p style="margin-top:8px;color:var(--ink-soft);font-size:13px;">
+    带 <strong>◎</strong> 标记的段落是<strong>生活类比</strong>——
+    把某个方法的结构换成日常经验。它不是本书内容，是帮助记忆的抓手。</p>
+  <div class="lvkey">
+    <span><i class="lv1c">L1</i>读懂概念</span>
+    <span><i class="lv2c">L2</i>应用与辨认</span>
+    <span><i class="lv3c">L3</i>边界与反驳</span>
+    <span><i style="background:#eaf4fb;color:#2b7fa8;border:1px solid #cfe4f0;">◎</i>生活类比</span>
   </div>
+</div>
 
-  <!-- 问题1 -->
-  <div class="question-card">
-    <div class="question-num">1</div>
-    <div class="question-title">一张照片到底是什么？</div>
-    <div class="scenario">
-      <div class="label">场景假设</div>
-      <p>你手机里有一张照片，很美好，有山有水有夕阳。但从计算机的角度看，这张照片到底是什么？</p>
-    </div>
-    <div class="book-view">
-      <div class="label">书里的答案</div>
-      <p>一幅图像就是一个二维函数f(x, y)。每个像素就是一个数字——0到255之间的灰度值。所谓"照片"，就是一个巨大的数字矩阵。</p>
-    </div>
-    <div class="reflection">
-      <div class="label">你的反思</div>
-      <p>当你知道一张照片本质上是一串数字的时候，你对"修图"这件事的理解，有没有变？</p>
-    </div>
-  </div>
+<!-- ==================== 模块 A ==================== -->
+<h2>模块 A · 地基：图像是什么，这本书管什么</h2>
+<div class="s">第 1–2 章。定义与边界 —— 后面所有方法都建立在这几个概念上</div>
 
-  <!-- 问题2 -->
-  <div class="question-card">
-    <div class="question-num">2</div>
-    <div class="question-title">"对比度"到底在对比什么？</div>
-    <div class="scenario">
-      <div class="label">场景假设</div>
-      <p>你修图的时候，拉了一下"对比度"，图像突然变得清晰了。对比度到底在对比什么？</p>
-    </div>
-    <div class="book-view">
-      <div class="label">书里的答案</div>
-      <p>对比度拉伸就是把暗的地方压得更暗，亮的地方拉得更亮——把灰度范围拉大。本质上是一个数学变换：s = T(r)。</p>
-    </div>
-    <div class="reflection">
-      <div class="label">你的反思</div>
-      <p>生活中有没有什么东西，也是"对比度"太低了——你看不清，但稍微拉一下，就突然清楚了？</p>
-    </div>
-  </div>
+<div class="q">
+  <div class="q-head"><span class="q-id">A1</span><span class="q-lv lv1">L1</span><span class="q-tag">定义</span></div>
+  <div class="q-text">用书里的定义说清「数字图像」是什么，并说明为什么
+      <strong>「有限」</strong>与<strong>「离散」</strong>这两个词缺一不可。</div>
+  <details><summary>展开参考答案</summary>
+    <div class="a">
+      <p>原文的定义分两层：</p>
+      <blockquote>一幅图像<strong>可以</strong>定义为一个二维函数 f(x,y)，其中 x 和 y 是空间（平面）坐标，
+      任意一对空间坐标 (x,y) 处的幅值 <strong>f</strong> 称为图像在该点的强度或灰度。
+      当 x, y 和灰度值 <strong>f</strong> 都是有限的离散<strong>量</strong>时，
+      我们称该图像为<strong>数字图像</strong>。<span class="who">第 1 章「绪论」</span></blockquote>
+      <blockquote>数字图像由<strong>有限数量</strong>的元素组成，每个元素都有一个特定的位置和数值。
+      这些元素称为图画元素、图像元素或<strong>像素</strong>。<span class="who">第 1 章</span></blockquote>
 
-  <!-- 问题3 -->
-  <div class="question-card">
-    <div class="question-num">3</div>
-    <div class="question-title">"模糊"到底是怎么来的？</div>
-    <div class="scenario">
-      <div class="label">场景假设</div>
-      <p>为什么高斯模糊能让图片变模糊？模糊到底是什么物理过程？</p>
+      <div class="pit">
+        <span class="lbl">底本说明（这一处的 OCR 情况）</span>
+        语料里这段的 <code>f</code> 被认成了 <code>J</code>（<em>「幅值J」「灰度值J」</em>），
+        本页按数学含义还原为 <code>f</code>。<strong>这类单字母 OCR 错认在本语料里很常见</strong>
+        （<em>另有 <code>l</code>↔<code>1</code>、<code>O</code>↔<code>0</code></em>），
+        详见 <code>数字图像处理_底本说明.txt</code>。<strong>引用时请以原文的数学含义为准。</strong>
+      </div>
+      <span class="key">为什么两个词缺一不可</span>
+      <p><strong>「离散」</strong>说的是取值只能落在网格点上——这让我们可以用下标
+      f(x, y) 而不是连续函数来写它，也才谈得上「像素」这个单位。</p>
+      <p><strong>「有限」</strong>说的是网格必须有边界、灰度级数必须有上限——
+      这<em>才是计算机能存下它的前提</em>。</p>
+      <p>如果只有离散而没有有限，那 x、y 可以取到任意大的整数，图像就是无限大的矩阵——
+      <strong>不是计算机能处理的对象。</strong></p>
+      <div class="pit">
+        <span class="lbl">常见误解</span>
+        把「数字图像」理解成「用电脑看的图」。<strong>不是的。</strong>
+        一个 3×3 的整数矩阵就是一幅数字图像，跟显不显示无关。
+        <em>本书从头到尾都在处理矩阵，屏幕只是它的输出设备之一。</em>
+      </div>
+      <span class="ref">对应第 1 章；与第 2 章「数字图像表示」合读</span>
     </div>
-    <div class="book-view">
-      <div class="label">书里的答案</div>
-      <p>模糊就是"平均"——每个像素的值，变成了它周围几个像素的平均值。3x3的邻域，9个像素加起来除以9。这就是"低通滤波"——把高频细节滤掉了。</p>
-    </div>
-    <div class="reflection">
-      <div class="label">你的反思</div>
-      <p>你看一件事的时候，有没有"模糊"的时候——就是把周围的信息都平均了，反而看不清细节了？</p>
-    </div>
-  </div>
+  </details>
+</div>
 
-  <!-- 问题4 -->
-  <div class="question-card">
-    <div class="question-num">4</div>
-    <div class="question-title">"锐化"到底在锐化什么？</div>
-    <div class="scenario">
-      <div class="label">场景假设</div>
-      <p>和模糊相反，"锐化"让图片边缘更清楚。锐化到底在做什么？</p>
+<div class="q">
+  <div class="q-head"><span class="q-id">A2</span><span class="q-lv lv1">L1</span><span class="q-tag">采样与量化</span></div>
+  <div class="q-text">采样与量化分别离散化的是什么？请说明
+      <strong>哪一个是空间分辨率、哪一个是灰度分辨率</strong>，并解释
+      「总比特数固定时两者互相挤压」是什么意思。</div>
+  <details><summary>展开参考答案</summary>
+    <div class="a">
+      <blockquote>一幅图像的 x 坐标和 y 坐标是连续的，其<strong>幅</strong>度也是连续的。
+      要将函数数字化，就要<strong>对该函数的坐标和幅度进行取样</strong>。
+      对坐标值进行数字化称为<strong>取样（或采样）</strong>，
+      对幅度值进行数字化称为<strong>量化</strong>。
+      <span class="who">第 2 章「图像取样和量化」</span></blockquote>
+      <span class="key">两者的分工</span>
+      <p><strong>采样</strong>（对坐标）决定<strong>空间分辨率</strong>——图像被切成多少个格子。<br>
+      <strong>量化</strong>（对幅度）决定<strong>灰度分辨率</strong>——每个格子能取多少个不同的值。</p>
+      <blockquote>空间分辨率是图像中<strong>最小可辨别细节</strong>的测度。
+      <span class="who">第 2 章「空间分辨率和灰度分辨率」</span></blockquote>
+      <span class="key">「互相挤压」的机制</span>
+      <p>存储一幅 M×N 大小、L 级灰度的图像需要 M×N×k 比特（其中 L=2<sup>k</sup>）。
+      <strong>乘法的两边都可以让步，但乘积不变——所以一边增加，另一边就得减少。</strong></p>
+      <p>这就是为什么早期传真机「灰度级很少但分辨率尚可」：
+      <em>带宽固定，它在两个方向上选了不同的分配。</em></p>
+      <p>书里有一处专门的实验说明这件事：把灰度级数从 256 减少到 2，
+      以及固定灰度级而改变空间分辨率——两类失真的形态完全不同。</p>
+      <div class="pit">
+        <span class="lbl">常见误解</span>
+        以为「分辨率」只有一个。<strong>这本书里「分辨率」至少有两个独立含义</strong>，
+        而且两者的失真形态不同。混着说会导致调参时改错方向。
+      </div>
+      <span class="ref">对应第 2 章「空间分辨率和灰度分辨率」</span>
     </div>
-    <div class="book-view">
-      <div class="label">书里的答案</div>
-      <p>锐化就是"高通滤波"——把高频细节加强。边缘就是灰度变化剧烈的地方，锐化就是把这种变化放大。</p>
-    </div>
-    <div class="reflection">
-      <div class="label">你的反思</div>
-      <p>你对一件事的"锐度"够吗？你是看到了细节，还是只看到了大概？</p>
-    </div>
-  </div>
+  </details>
+</div>
 
-  <!-- 问题5 -->
-  <div class="question-card">
-    <div class="question-num">5</div>
-    <div class="question-title">为什么噪点让人不舒服？</div>
-    <div class="scenario">
-      <div class="label">场景假设</div>
-      <p>晚上拍照，照片上有很多颗粒——就是"噪点"。为什么噪点让人不舒服？它到底是什么？</p>
+<div class="q">
+  <div class="q-head"><span class="q-id">A3</span><span class="q-lv lv1">L1</span><span class="q-tag">总框架</span></div>
+  <div class="q-text">书里把图像处理分成「低级／中级／高级」。
+      <strong>划分的判据是什么</strong>？为什么书中说
+      「在从图像处理到计算机视觉的连续体内，并不存在清晰的边界」，却又画了这条线？</div>
+  <details><summary>展开参考答案</summary>
+    <div class="a">
+      <span class="key">判据是「输入输出是什么」，不是「用了什么算法」</span>
+      <blockquote>低级处理涉及初级操作，如降低噪声的图像预处理、对比度增强和图像锐化。
+      低级处理由其<strong>输入和输出都是图像</strong>的事实来表征。<br>
+      中级处理涉及诸多任务，如分割（将一幅图像分为不同的区域或目标）、
+      将这些目标简化为适合计算机进行处理的形式的描述，以及各个目标的分类（识别）。
+      中级处理由其<strong>输入是图像但输出是从这些图像中提取的特征</strong>
+      （如边缘、轮廓和各个目标的标识等）来表征。<br>
+      最后，像在图像分析中那样，高级处理涉及「理解」在连续体远端位置识别的一组目标，
+      以及执行通常与人类视觉相关的认知功能。<span class="who">第 1 章「绪论」</span></blockquote>
+      <span class="key">为什么既说「没有清晰边界」又要划线</span>
+      <p>「没有清晰边界」说的是<strong>现实</strong>：</p>
+      <blockquote>图像分析（也称图像理解）领域则处在图像处理和计算机视觉之间。
+      在从图像处理到计算机视觉的连续体内，并不存在清晰的边界。<span class="who">第 1 章</span></blockquote>
+      <p>划线说的是<strong>这本书的责任范围</strong>：</p>
+      <blockquote>本书将数字图像处理界定为其<strong>输入和输出都是图像</strong>的处理，
+      它包含从图像中提取特征的处理，直至包含各个目标的识别。<span class="who">第 1 章</span></blockquote>
+      <p><em>两句话不矛盾：一句描述领域的实际形态（连续体），
+      一句划定一本书管到哪为止（识别）。</em></p>
+      <span class="key">这条界线的实际后果</span>
+      <p>它让全书有了一个终点：<strong>第 12 章「图像模式分类」就是这条线的末端。</strong>
+      再往后（<em>理解场景、据视觉输入采取行动</em>）书里交给了计算机视觉。</p>
+      <div class="pit">
+        <span class="lbl">常见误解</span>
+        把「三级处理」当成按<strong>难度</strong>分的（低级简单、高级难）。
+        <strong>不是。</strong>它是按<strong>输入输出的类型</strong>分的。
+        <em>一个很难的低通滤波器仍然是低级处理，因为它吃图像、吐图像。</em>
+      </div>
+      <span class="ref">对应第 1 章；这条框架贯穿全书 12 章</span>
     </div>
-    <div class="book-view">
-      <div class="label">书里的答案</div>
-      <p>噪点就是图像里的随机噪声——每个像素的值都被随机扰动了一下。真实的图像应该是"平滑"的，相邻像素的值应该差不多。噪点打破了这种平滑。</p>
-    </div>
-    <div class="reflection">
-      <div class="label">你的反思</div>
-      <p>你对一件事的判断里，有没有"噪点"——那些随机的、没道理的干扰？</p>
-    </div>
-  </div>
+  </details>
+</div>
 
-  <!-- 问题6 -->
-  <div class="question-card">
-    <div class="question-num">6</div>
-    <div class="question-title">"频率域"到底是什么？为什么要换一个角度看？</div>
-    <div class="scenario">
-      <div class="label">场景假设</div>
-      <p>书里说，图像可以在"空间域"处理，也可以在"频率域"处理。频率域到底是什么？为什么要换一个角度？</p>
+<div class="q">
+  <div class="q-head"><span class="q-id">A4</span><span class="q-lv lv3">L3</span><span class="q-tag">划界的代价</span></div>
+  <div class="q-text">「本书只处理输入输出都是图像的问题，直到识别为止」——
+      这条界限<strong>把什么排除在外了</strong>？排除了它们，
+      对第 10、11、12 章有什么影响？</div>
+  <details><summary>展开参考答案</summary>
+    <div class="a">
+      <span class="key">被排除的是什么</span>
+      <p>原文说得很明确：</p>
+      <blockquote>有些领域（如计算机视觉）的终极目标是用计算机来模拟人的视觉，
+      <strong>包括学习并根据视觉输入进行推断和采取行动</strong>。
+      计算机视觉本身是人工智能(AI)的一个分支，其目的是模仿人类智能。
+      <span class="who">第 1 章</span></blockquote>
+      <p>排除的是三件事：<strong>推断（推理）、学习、行动。</strong></p>
+      <span class="key">对第 10–12 章的影响</span>
+      <p><strong>第 10 章「图像分割」</strong>——它要回答「哪些像素属于同一个物体」，
+      而<em>「同一个物体」这个概念来自理解，这本书没有定义它</em>。
+      所以分割在书里只能靠<strong>形式化的替代判据</strong>（灰度相似、不连续、区域一致性）来定义，
+      而这些判据都<em>不等于</em>「同一个物体」。</p>
+      <p><strong>第 11 章「特征提取」</strong>——它提取的是<em>可量化的属性</em>（SIFT、边界描述子）。
+      而「什么算一个有意义的特征」在书里是靠<strong>不变性</strong>（对缩放、旋转、光照不敏感）判定的，
+      <em>不是靠「这个特征对人有无意义」</em>。</p>
+      <p><strong>第 12 章「图像模式分类」</strong>——它做的是<em>给目标赋标记</em>。
+      书里给的是一批分类器（最小距离、相关、贝叶斯，到深度神经网络），
+      而<strong>「标记集合该由谁定、定得对不对」不在书里</strong>。</p>
+      <div class="pit">
+        <span class="lbl">这一处的分量</span>
+        这不是书的缺陷，是<strong>它的自觉划界</strong>。
+        但要意识到：<em>全书最后三章都在处理「需要理解才能做好的事」，
+        而书明确声明自己不做理解</em>——
+        所以那三章给的是<strong>理解的形式化替代品</strong>，不是理解本身。
+        <strong>把它们当成理解本身来用，是这本书最常见的越界用法。</strong>
+      </div>
+      <span class="ref">对应第 1 章；与第 10、11、12 章合读；与 C1 直接相连</span>
     </div>
-    <div class="book-view">
-      <div class="label">书里的答案</div>
-      <p>傅里叶变换告诉我们：任何图像都可以分解成不同频率的正弦波的叠加。空间域里做卷积，在频率域里就是简单的乘法。有时候换个角度，问题就变简单了。</p>
-    </div>
-    <div class="reflection">
-      <div class="label">你的反思</div>
-      <p>你遇到难题的时候，有没有试过"换个角度"？就像从空间域换到频率域一样——同一个问题，换个坐标系，突然就简单了？</p>
-    </div>
-  </div>
+  </details>
+</div>
 
-  <!-- 问题7 -->
-  <div class="question-card">
-    <div class="question-num">7</div>
-    <div class="question-title">"边缘检测"到底在检测什么？</div>
-    <div class="scenario">
-      <div class="label">场景假设</div>
-      <p>边缘检测——找出图片里物体的边缘。边缘到底是什么？为什么它这么重要？</p>
-    </div>
-    <div class="book-view">
-      <div class="label">书里的答案</div>
-      <p>边缘就是灰度变化剧烈的地方。Sobel算子、Canny算子，本质上都是在找"梯度大"的地方。边缘是物体的轮廓——找到了边缘，就找到了物体。</p>
-    </div>
-    <div class="reflection">
-      <div class="label">你的反思</div>
-      <p>你对一个人的"边缘"清楚吗？你知道他的边界在哪里吗？</p>
-    </div>
-  </div>
+<!-- ==================== 模块 B ==================== -->
+<h2>模块 B · 核心机制：每个方法在解决什么问题</h2>
+<div class="s">第 3–8 章。这一档最多，也最实用 —— 生活类比并入本模块</div>
 
-  <!-- 问题8 -->
-  <div class="question-card">
-    <div class="question-num">8</div>
-    <div class="question-title">"分割"到底在分什么？</div>
-    <div class="scenario">
-      <div class="label">场景假设</div>
-      <p>图像分割——把图片分成不同的区域。分割到底在分什么？为什么它这么难？</p>
+<div class="q">
+  <div class="q-head"><span class="q-id">B1</span><span class="q-lv lv1">L1</span><span class="q-tag">相关与卷积</span></div>
+  <div class="q-text">相关与卷积的定义只差一处。请指出这处差别，并说明
+      <strong>什么情况下两者结果相同</strong>。</div>
+  <details><summary>展开参考答案</summary>
+    <div class="a">
+      <blockquote>相关的运算过程如下：在图像上移动核的中心，并且在每个位置计算乘积之和。
+      <strong>空间卷积的原理相同，只是把相关运算的核旋转了 180°</strong>。
+      因此，<strong>当核的值关于其中心对称时，相关和卷积得到的结果相同</strong>。
+      <span class="who">第 3 章「空间相关与卷积」</span></blockquote>
+      <p>用公式看差别最清楚：<br>
+      <strong>相关</strong>：g(x,y) = ΣΣ w(s,t) f(x+s, y+t)<br>
+      <strong>卷积</strong>：g(x,y) = ΣΣ w(s,t) f(x−s, y−t)</p>
+      <p><em>区别只在 f 的坐标是加还是减——这正是「核翻转了」的代数表现。</em></p>
+      <span class="life">生活类比</span>
+      <div class="life-b">想象你在盖章。<strong>相关</strong>是直接盖下去；
+      <strong>卷积</strong>是把印章<em>翻转过来</em>（镜像）再盖。
+      如果你的印章是圆的、或者图案左右对称（<em>高斯核、均值核</em>），翻不翻都一样；
+      但如果图案不对称（<em>Sobel 的 x 方向核</em>），盖出来的结果就不同。</div>
+      <div class="pit">
+        <span class="lbl">常见误解</span>
+        以为「图像处理里卷积和相关反正一样」。
+        <strong>只在核对称时一样。</strong>而边缘检测用的 Sobel、Prewitt 核恰恰是不对称的——
+        <em>那里选错一个，边缘方向就反了。</em>
+      </div>
+      <span class="ref">对应第 3 章；与第 10 章边缘检测合读</span>
     </div>
-    <div class="book-view">
-      <div class="label">书里的答案</div>
-      <p>分割就是"把属于同一个物体的像素归到一起"。听起来简单，但做起来很难——因为"什么是同一个物体"这件事，本身就是个理解问题。</p>
-    </div>
-    <div class="reflection">
-      <div class="label">你的反思</div>
-      <p>你对一件事的"分割"清楚吗？你能把不同的事情分开，还是搅在一起？</p>
-    </div>
-  </div>
+  </details>
+</div>
 
-  <!-- 问题9 -->
-  <div class="question-card">
-    <div class="question-num">9</div>
-    <div class="question-title">"压缩"到底在压缩什么？为什么能压那么小？</div>
-    <div class="scenario">
-      <div class="label">场景假设</div>
-      <p>一张原图10MB，压成JPEG后只有500KB——为什么能压这么多？压掉的是什么？</p>
+<div class="q">
+  <div class="q-head"><span class="q-id">B2</span><span class="q-lv lv2">L2</span><span class="q-tag">选滤波器</span></div>
+  <div class="q-text">同一幅被椒盐噪声污染的图，用<strong>高斯滤波</strong>和用<strong>中值滤波</strong>结果差别很大。
+      请说明差别的来源，以及为什么书里说中值滤波「对图像的模糊程度要小得多」。</div>
+  <details><summary>展开参考答案</summary>
+    <div class="a">
+      <blockquote>中值滤波器用中心像素的邻域内的灰度值的中值替代中心像素的值。
+      中值滤波器对某些类型的随机噪声提供了优秀的降噪能力，与类似大小的线性平滑滤波器相比，
+      中值滤波器<strong>对图像的模糊程度要小得多</strong>。
+      存在冲激噪声（有时我们把以白点和黑点形式叠加到图像上的冲激噪声称为<strong>椒盐噪声</strong>）时，
+      中值滤波器尤其有效。<span class="who">第 3 章「统计排序滤波器」</span></blockquote>
+      <span class="key">差别的来源：线性 vs 非线性</span>
+      <p><strong>高斯滤波是线性的</strong>——它对邻域做加权平均。
+      椒盐噪声是<em>极端值</em>（黑或白），而<strong>平均值会被极端值拉走</strong>：
+      <em>一个 255 的白点混进 9 个 100 里，平均值被抬到 117。</em>
+      所以线性滤波器把噪声「摊开」到周围——<strong>噪声没去掉，变成了模糊的斑。</strong></p>
+      <p><strong>中值滤波是非线性的</strong>——它取排序后的中间值。
+      <em>9 个数里最多只有几个能被极端值污染，中值一定落在没被污染的那一半里。</em>
+      所以极端的白点或黑点<strong>直接被丢掉</strong>，而平坦区域的值不受影响——
+      <em>这就是「不模糊边缘」的原因：边缘两侧的中值仍分别落在各自一侧。</em></p>
+      <span class="life">生活类比</span>
+      <div class="life-b">十个人报身高，其中一个人开玩笑说「我三米」。
+      <strong>算平均</strong>会把结果抬高（<em>线性滤波被极端值带走</em>）；
+      <strong>取中位数</strong>则完全不受影响（<em>中值滤波丢掉极端值</em>）。
+      而如果这十个人排成一排、左右两边身高差别明显（<em>边缘</em>），
+      取中位数也不会把这个差别抹掉——<em>平均则会糊掉边界。</em></div>
+      <span class="key">什么时候该用哪个</span>
+      <p>· <strong>椒盐／冲激噪声</strong> → 中值滤波（<em>书里说「尤其有效」</em>）<br>
+      · <strong>高斯型随机噪声</strong> → 高斯滤波或维纳滤波<br>
+      · <strong>要保边缘</strong> → 避免线性平滑</p>
+      <div class="pit">
+        <span class="lbl">常见误解</span>
+        以为「滤波就是去噪，选哪个都行」。
+        <strong>线性滤波器处理冲激噪声会把它摊成一片模糊。</strong>
+        <em>选错滤波器的第一反应往往是「加大核」——那只会更糊。</em>
+      </div>
+      <span class="ref">对应第 3 章；与第 5 章噪声模型合读</span>
     </div>
-    <div class="book-view">
-      <div class="label">书里的答案</div>
-      <p>压掉的是"冗余信息"——人眼其实分辨不出来的细节。JPEG就是利用了人眼的视觉特性，把不重要的信息去掉。</p>
-    </div>
-    <div class="reflection">
-      <div class="label">你的反思</div>
-      <p>你脑子里有没有"冗余信息"——那些你记着但其实不重要的东西？能不能"压缩"一下？</p>
-    </div>
-  </div>
+  </details>
+</div>
 
-  <!-- 问题10 -->
-  <div class="question-card">
-    <div class="question-num">10</div>
-    <div class="question-title">"形态学"到底在做什么？为什么叫这个名字？</div>
-    <div class="scenario">
-      <div class="label">场景假设</div>
-      <p>形态学图像处理——腐蚀、膨胀、开运算、闭运算。为什么叫"形态学"？它到底在做什么？</p>
+<div class="q">
+  <div class="q-head"><span class="q-id">B3</span><span class="q-lv lv2">L2</span><span class="q-tag">锐化</span></div>
+  <div class="q-text">锐化滤波器的核为什么<strong>系数之和为零</strong>？
+      书里说 Sobel 在中心系数上用<strong>权值 2</strong>，理由是什么？</div>
+  <details><summary>展开参考答案</summary>
+    <div class="a">
+      <blockquote>图 3.50(d) 和（e）中的核称为 <strong>Sobel 算子</strong>。
+      在中心系数中使用<strong>权值 2</strong> 的原因是，<strong>强调中心的重要程度来实现某种平滑</strong>。
+      图 3.50 中所有核的系数之和都为零，因此它们<strong>对恒定灰度区域给出零响应</strong>，
+      就像期望的导数算子那样。<span class="who">第 3 章</span></blockquote>
+      <span class="key">系数和为零 = 对平坦区域无响应</span>
+      <p>导数算子的定义就是「变化率」。<strong>在灰度恒定的区域里，变化率为零。</strong></p>
+      <p>而卷积的输出是<em>核与邻域的加权和</em>。如果核的系数之和不为零，
+      那么平坦区域（<em>所有像素值都是 c</em>）的输出会是 c × Σw ≠ 0——
+      <strong>滤波器会给平坦区域一个非零响应，那就不是导数了，那成了平滑。</strong></p>
+      <p><em>所以「系数和为零」不是技巧，是这类滤波器被称为「微分算子」的必要条件。</em></p>
+      <span class="key">权值 2 的作用：一边微分，一边平滑</span>
+      <p>Sobel 与 Prewitt 的差别就在这里。<br>
+      · <strong>Prewitt</strong>：三行系数是 −1, 0, +1，均匀。<br>
+      · <strong>Sobel</strong>：中间行是 −2, 0, +2，<em>中心权重加倍</em>。</p>
+      <p>加倍的作用是<strong>让靠近中心的像素在求差分时更有分量</strong>——
+      原文说这是「<em>强调中心的重要程度来实现某种平滑</em>」。</p>
+      <p><em>换句话说：Sobel 在算导数的同时，顺带做了一次轻微的加权平均来抗噪。
+      这是「微分算子天然放大噪声」这个困难的一个廉价补偿。</em></p>
+      <span class="life">生活类比</span>
+      <div class="life-b">你要判断一个坡陡不陡。<strong>Prewitt</strong> 是取左右各一米处的高度差；
+      <strong>Sobel</strong> 是取左右各一米，但<em>更相信脚边那两点</em>，远处的点权重减半——
+      因为远处的地面起伏（<em>噪声</em>）更容易骗人。</div>
+      <div class="pit">
+        <span class="lbl">常见误解</span>
+        把「系数和为零」当成一条需要记住的规则。
+        <strong>它可以从「这是导数算子」直接推出来</strong>——
+        <em>先问「这个滤波器声称在算什么」，规则就不用背了。</em>
+      </div>
+      <span class="ref">对应第 3 章「使用一阶导数锐化图像」；与第 10 章边缘检测合读</span>
     </div>
-    <div class="book-view">
-      <div class="label">书里的答案</div>
-      <p>形态学就是"形状操作"——腐蚀就是把物体"变瘦"一圈，膨胀就是"变胖"一圈。用来清理二值图像——去掉小噪点、连接断开的地方、提取骨架。</p>
-    </div>
-    <div class="reflection">
-      <div class="label">你的反思</div>
-      <p>你对一件事的"形状"清楚吗？是清晰锐利的，还是模糊不清的？</p>
-    </div>
-  </div>
+  </details>
+</div>
 
-  <!-- 问题11 -->
-  <div class="question-card">
-    <div class="question-num">11</div>
-    <div class="question-title">"特征"到底是什么？为什么它这么重要？</div>
-    <div class="scenario">
-      <div class="label">场景假设</div>
-      <p>特征提取——从图片里提取"特征"。特征到底是什么？为什么机器要靠"特征"来识别物体？</p>
+<div class="q">
+  <div class="q-head"><span class="q-id">B4</span><span class="q-lv lv1">L1</span><span class="q-tag">空间 vs 频率</span></div>
+  <div class="q-text">「空间域」和「频率域」处理同一个问题，靠什么对应起来？
+      请写出这个对应关系，并说明它带来的<strong>实际好处与取舍</strong>。</div>
+  <details><summary>展开参考答案</summary>
+    <div class="a">
+      <p>靠<strong>卷积定理</strong>：</p>
+      <blockquote>这一结果是卷积定理的一半，它写为 (f*h)(t) ⇔ (H·F)(μ)
+      ……卷积定理是频率域滤波的基础。<span class="who">第 4 章</span></blockquote>
+      <p>即：<strong>空间域的卷积 ⇔ 频率域的乘积。</strong></p>
+      <span class="key">实际好处</span>
+      <p>空间域做一次 m×n 的卷积，每个像素要算 m×n 次乘加，全图是 <em>MNmn</em> 次。
+      频率域是：变换 + 逐元素乘 + 反变换，其中 FFT 是 <em>O(MN log MN)</em>。</p>
+      <p><strong>所以核很大时频率域更快；核很小时空间域直接卷积更快。</strong></p>
+      <p><em>这是「同一个运算，换个坐标系就变简单」的典型例子，
+      也是全书唯一一处能精确比较计算量的地方。</em></p>
+      <span class="life">生活类比</span>
+      <div class="life-b">傅里叶变换像<strong>把一首歌拆成一个个音符</strong>——
+      告诉你每个频率有多响、在什么时候响。
+      拆开之后，「把某种频率的杂音去掉」就变成了「把某个音符的音量拧小」，
+      比在原始波形上一点点修简单得多。
+      <em>而拆开、修改、再合起来，就是频率域滤波的三步。</em></div>
+      <div class="pit">
+        <span class="lbl">常见误解</span>
+        以为「频率域更高级、总是更好」。
+        <strong>书里给了明确的取舍</strong>：小核用空间域，大核才用频率域。
+        <em>无脑上 FFT 在小核上反而更慢。而这个「大／小」的分界线本身会随硬件变化
+        ——见 D4。</em>
+      </div>
+      <span class="ref">对应第 4 章；与第 3 章对照读</span>
     </div>
-    <div class="book-view">
-      <div class="label">书里的答案</div>
-      <p>特征就是"能代表这个物体的关键信息"。SIFT特征——尺度不变特征——不管图片放大缩小、旋转角度，都能提取出同样的特征。这样机器才能认出"这是同一个物体"。</p>
-    </div>
-    <div class="reflection">
-      <div class="label">你的反思</div>
-      <p>你对一个人的"特征"清楚吗？不管他穿什么衣服、在什么场景下，你都能认出他吗？你靠的是什么"特征"？</p>
-    </div>
-  </div>
+  </details>
+</div>
 
-  <!-- 问题12 -->
-  <div class="question-card">
-    <div class="question-num">12</div>
-    <div class="question-title">"分类"到底在分什么？为什么它是最终目标？</div>
-    <div class="scenario">
-      <div class="label">场景假设</div>
-      <p>全书最后一章是"图像模式分类"——神经网络、深度学习、CNN。为什么分类是最终目标？</p>
+<div class="q">
+  <div class="q-head"><span class="q-id">B5</span><span class="q-lv lv2">L2</span><span class="q-tag">直方图</span></div>
+  <div class="q-text">直方图均衡化「不需要参数」，看起来是免费的午餐。
+      请说明它<strong>实际做了什么</strong>，以及为什么它只能产生「近似」均匀的直方图。</div>
+  <details><summary>展开参考答案</summary>
+    <div class="a">
+      <span class="key">它做了什么</span>
+      <p>书里给的变换函数（连续形式）：</p>
+      <p>s = T(r) = (L−1) ∫₀<sup>r</sup> p(w) dw</p>
+      <p>也就是：<strong>把累积分布函数（CDF）当作灰度映射函数。</strong></p>
+      <p>因为 CDF 的性质恰好对上了需要：<em>单调递增、值域落在 [0,1]</em>——
+      这满足了变换函数必须满足的两个条件。而它把<strong>集中分布的直方图「摊平」</strong>：
+      <em>原来密集的灰度级被拉开，原来稀疏的被压缩。</em></p>
+      <span class="key">为什么只能「近似」均匀</span>
+      <p>关键的一步在离散化：</p>
+      <blockquote>（离散情况下）<strong>不允许产生新的灰度级</strong>。<span class="who">第 3 章</span></blockquote>
+      <p>连续情况下 CDF 是一一对应的，可以把分布压成完全均匀。
+      但离散情况下，<strong>多个输入灰度级可能被映射到同一个输出灰度级</strong>——
+      <em>合并之后就不可能均匀了，只能是「大致铺开」。</em></p>
+      <p><em>所以「不用参数」不是没有代价：它把控制权交出去了，
+      结果好坏取决于原图的直方图长什么样。</em></p>
+      <span class="life">生活类比</span>
+      <div class="life-b">像<strong>给一群人身高重新排队</strong>：把挤在一起的人拉开、把稀疏的地方压缩，
+      让队伍看起来「均匀」。
+      但如果所有人本来就只有<em>固定的几个身高档</em>（<em>离散灰度级</em>），
+      你没法造出新的身高档——只能把同一档的人挪到一起，
+      <em>所以队列只能是「大致均匀」。</em></div>
+      <div class="pit">
+        <span class="lbl">常见误解</span>
+        「直方图均衡化能自动增强任何图像」。
+        <strong>它只保证直方图更平坦，不保证更好看。</strong>
+        <em>对于本来就偏暗或偏亮的图，它可能把噪声也一起放大。</em>
+      </div>
+      <span class="ref">对应第 3 章；与「直方图匹配（规定化）」对照 —— 后者用均衡化做中间步骤</span>
     </div>
-    <div class="book-view">
-      <div class="label">书里的答案</div>
-      <p>前面所有的处理——滤波、增强、分割、特征提取——都是为了最后一步："这是什么？"识别出来，分类出来，图像处理才算完成了它的使命。</p>
-    </div>
-    <div class="reflection">
-      <div class="label">你的反思</div>
-      <p>你做了那么多"处理"——学了那么多东西、看了那么多书——最后要"分类"出什么？你到底想搞清楚什么？</p>
-    </div>
-  </div>
+  </details>
+</div>
 
-  <!-- 问题13 -->
-  <div class="question-card">
-    <div class="question-num">13</div>
-    <div class="question-title">"复原"到底在复原什么？为什么它是个"逆问题"？</div>
-    <div class="scenario">
-      <div class="label">场景假设</div>
-      <p>图像复原——把模糊的图片变清楚。为什么它是个"逆问题"？为什么很难？</p>
+<div class="q">
+  <div class="q-head"><span class="q-id">B6</span><span class="q-lv lv2">L2</span><span class="q-tag">频率域滤波</span></div>
+  <div class="q-text">频率域滤波的标准步骤里，为什么要用 <code>(−1)^(x+y)</code> 乘图像？
+      不做这一步会怎样？</div>
+  <details><summary>展开参考答案</summary>
+    <div class="a">
+      <span class="key">它在做一件很具体的事</span>
+      <p>DFT 的输出 F(u,v) 中，<strong>低频在四个角上</strong>，不是中心。
+      而 (−1)^(x+y) 这个乘子<em>在频率域等价于把频谱平移 M/2、N/2</em>——
+      于是低频被搬到频谱的正中心。</p>
+      <p><strong>不做这一步的后果不是「算错」，是「看不出来」：</strong>
+      <em>频谱的四个角上堆着大部分能量，而中心是高频。
+      你在显示器上看，会以为频谱中心亮就是低频强，实际正好反了。</em></p>
+      <p><em>更实际的问题在于：设计滤波器时用的是「距中心的距离」这个坐标
+      （低通、高通、带通都是这么定义的）。
+      如果不中心化，那个距离的参照点就错了——滤波器会滤错。</em></p>
+      <span class="key">这是一对必须成对出现的操作</span>
+      <p>书里的步骤是：</p>
+      <blockquote>用 (−1)^(x+y) 乘以输入图像进行<strong>中心化</strong>；
+      ……（最后）用 (−1)^(x+y) 乘以结果。<span class="who">第 4 章</span></blockquote>
+      <p><em>注意步骤的最后一步：算完之后要乘回去。因为 (−1)^(x+y) 是它自己的逆
+      （平方为 1），所以「乘回去」和「乘过来」是同一个操作。</em></p>
+      <div class="pit">
+        <span class="lbl">常见误解</span>
+        把这一步当成「为了显示好看」的可选步骤。
+        <strong>它是坐标约定的一部分</strong>——所有按半径定义的滤波器都依赖它。
+      </div>
+      <span class="ref">对应第 4 章「频率域滤波基础」</span>
     </div>
-    <div class="book-view">
-      <div class="label">书里的答案</div>
-      <p>因为从"清楚"到"模糊"是正向的——你知道退化过程。但从"模糊"反推回"清楚"，是逆问题——解不唯一。就像把一杯墨水滴进清水里，你能看到水变浑了，但你没法反推回"原来的墨水是什么形状"。</p>
-    </div>
-    <div class="reflection">
-      <div class="label">你的反思</div>
-      <p>生活中有没有"逆问题"——事情已经发生了，你想"复原"回去，但解不唯一？</p>
-    </div>
-  </div>
+  </details>
+</div>
 
-  <!-- 问题14 -->
-  <div class="question-card">
-    <div class="question-num">14</div>
-    <div class="question-title">"彩色"到底是什么？为什么需要单独一章？</div>
-    <div class="scenario">
-      <div class="label">场景假设</div>
-      <p>这本书前6章都是讲灰度图像，第7章突然开始讲彩色图像处理。为什么彩色需要单独一章？它和灰度有什么本质区别？</p>
+<div class="q">
+  <div class="q-head"><span class="q-id">B7</span><span class="q-lv lv1">L1</span><span class="q-tag">复原</span></div>
+  <div class="q-text">图像<strong>增强</strong>与图像<strong>复原</strong>的目标不同。
+      请说清这个差别，并写出退化模型。</div>
+  <details><summary>展开参考答案</summary>
+    <div class="a">
+      <span class="key">目标不同</span>
+      <p><strong>增强</strong>是<em>主观</em>的——目标是让图像「看起来更好」，
+      判据是人的观感，<strong>没有客观标准</strong>。</p>
+      <p><strong>复原</strong>是<em>客观</em>的——目标是恢复图像的原始版本，
+      它<strong>假设图像是被一个已知的退化过程损坏的</strong>，所以可以写成一个<em>求逆</em>问题。</p>
+      <p><em>这个区分很实用：如果你说不清「原图应该是什么样」，
+      那你做的是增强，不是复原——也就不能期待有一个「正确结果」。</em></p>
+      <span class="key">退化模型</span>
+      <p>g(x, y) = h(x, y) ★ f(x, y) + η(x, y)</p>
+      <p>其中 <strong>h</strong> 是退化函数（<em>点扩散函数 PSF</em>），
+      <strong>η</strong> 是加性噪声。频率域形式：</p>
+      <p>G(u, v) = H(u, v)F(u, v) + N(u, v)</p>
+      <p>——<strong>这就是为什么复原是「逆问题」：要从 G 求 F，需要除以 H。</strong></p>
+      <div class="pit">
+        <span class="lbl">常见误解</span>
+        把「锐化」当成「复原」。
+        <strong>锐化是增强</strong>——它不假设任何退化模型，也不声称恢复原图。
+        <em>而复原必须有 h 的估计；没有 h 就没有复原问题可言。</em>
+      </div>
+      <span class="ref">对应第 5 章；与第 3 章「锐化」对照；与 D1「逆问题」相连</span>
     </div>
-    <div class="book-view">
-      <div class="label">书里的答案</div>
-      <p>灰度图像是二维的——x, y坐标加一个灰度值。彩色图像是三维的——RGB三个通道。处理方式不一样：彩色不仅有空间信息，还有颜色信息。</p>
-    </div>
-    <div class="reflection">
-      <div class="label">你的反思</div>
-      <p>你看事情的时候，是只看"灰度"（黑白、好坏、对错），还是能看到"彩色"（不同的维度、不同的层次）？</p>
-    </div>
-  </div>
+  </details>
+</div>
 
-  <!-- 问题15 -->
-  <div class="question-card">
-    <div class="question-num">15</div>
-    <div class="question-title">最后一个问题：你今天"算"了多少张图？</div>
-    <div class="scenario">
-      <div class="label">场景假设</div>
-      <p>现在，停下来想想：你今天看了多少张图？手机屏幕、电脑屏幕、照片、视频……每一张图，你的大脑都在做大量的"图像处理"——滤波、增强、分割、识别。你意识到了吗？</p>
+<div class="q">
+  <div class="q-head"><span class="q-id">B8</span><span class="q-lv lv1">L1</span><span class="q-tag">逆滤波</span></div>
+  <div class="q-text">纯逆滤波的公式只有一行，但书里说它「在实际中几乎不可用」。
+      请说明原因，并解释维纳滤波<strong>加了什么</strong>来解决它。</div>
+  <details><summary>展开参考答案</summary>
+    <div class="a">
+      <blockquote>最简单的复原方法是直接逆滤波，即用退化函数的傅里叶变换 G(u,v)
+      除以退化传递函数 H(u,v)，来计算原图像的变换的一个估计 F̂(u,v)：
+      F̂(u,v) = G(u,v) / H(u,v) ……（5.78）<span class="who">第 5 章「逆滤波」</span></blockquote>
+      <span class="key">问题出在哪</span>
+      <p>把 G = HF + N 代进去：</p>
+      <blockquote>F̂(u,v) = F(u,v) + N(u,v) / H(u,v) ……（5.79）
+      ……若退化函数是<strong>零或是很小的值</strong>，则比率 N(u,v)/H(u,v)
+      <strong>很容易支配 F(u,v) 项</strong>。<span class="who">第 5 章</span></blockquote>
+      <p><em>也就是说：在 H 接近零的频率上，噪声被除以一个趋近零的数——放大到无穷。
+      而 H 接近零的地方恰恰是退化最严重、最需要复原的地方。</em></p>
+      <p><strong>所以纯逆滤波做不了：它在最需要它的地方最不可靠。</strong></p>
+      <span class="key">维纳滤波加了什么</span>
+      <p>它在分母上加了<strong>噪声功率谱与图像功率谱之比</strong>：</p>
+      <p>F̂ = [ H* / (|H|² + S_η/S_f) ] · G</p>
+      <blockquote>S_η(u,v) = |N(u,v)|² = 噪声的功率谱；
+      S_f(u,v) = |F(u,v)|² = 未退化图像的功率谱。<span class="who">第 5 章</span></blockquote>
+      <p><strong>作用机制</strong>：当 H → 0 时，分母不再是零，而是被 S_η/S_f 撑住——
+      <em>于是这一项的贡献被压下去，噪声不会被无限放大。</em></p>
+      <p>书里还给了一句漂亮的对照：</p>
+      <blockquote>若噪声为零，则噪声功率谱消失，并且<strong>维纳滤波器简化为逆滤波器</strong>。
+      <span class="who">第 5 章</span></blockquote>
+      <p><em>即：维纳滤波 = 逆滤波 + 一个噪声兜底项。没有噪声时它俩是同一个东西。</em></p>
+      <div class="pit">
+        <span class="lbl">这一处最值得学的地方</span>
+        <strong>维纳滤波的代价是它需要知道 S_η/S_f</strong>——
+        也就是<em>噪声的统计特性和原图的统计特性</em>。
+        而这些东西在真实问题里通常是<strong>估计出来的</strong>。
+        <em>所以「维纳滤波比逆滤波好」这句话隐含了一个前提：你得有那两个功率谱。
+        ——这个前提在 C5 里会被单独拿出来问。</em>
+      </div>
+      <span class="ref">对应第 5 章「逆滤波」「最小均方误差（维纳）滤波」</span>
     </div>
-    <div class="book-view">
-      <div class="label">书里的答案</div>
-      <p>视觉是人类最高级的感知。你看到的不是"现实"，而是你的大脑经过大量计算后"构建"出来的版本。你以为你在"看"，其实你在"算"。</p>
-    </div>
-    <div class="reflection">
-      <div class="label">你的反思</div>
-      <p>看完这本书之后，你有没有开始"看见"一些以前没注意到的东西？那些东西一直都在那里——只是你以前没意识到，你的大脑一直在"算"。</p>
-    </div>
-  </div>
+  </details>
+</div>
 
-  <div class="footer">
-    《数字图像处理》· 15个直击心灵的问题 · Gonzalez & Woods<br>
-    你以为你在"看图"，其实你在"算图"
-  </div>
+<div class="q">
+  <div class="q-head"><span class="q-id">B9</span><span class="q-lv lv1">L1</span><span class="q-tag">形态学</span></div>
+  <div class="q-text">写出腐蚀与膨胀的集合定义，并说明<strong>开运算</strong>与<strong>闭运算</strong>
+      分别由哪两步组成、各自去掉／补上什么。</div>
+  <details><summary>展开参考答案</summary>
+    <div class="a">
+      <span class="key">两个基本操作</span>
+      <p><strong>腐蚀</strong>：A ⊖ B = { z | (B)<sub>z</sub> ⊆ A }<br>
+      ——把结构元 B 在 A 上移动，<strong>只有当 B 完全包含在 A 中时，原点才保留</strong>。</p>
+      <p><strong>膨胀</strong>：A ⊕ B = { z | (B̂)<sub>z</sub> ∩ A ≠ ∅ }<br>
+      ——把 B 的反射在 A 上移动，<strong>只要 B 与 A 有交集就保留</strong>。</p>
+      <span class="key">开与闭</span>
+      <p><strong>开运算</strong>：A ∘ B = (A ⊖ B) ⊕ B —— <em>先腐蚀后膨胀</em>，
+      效果是<strong>去除小物体、平滑轮廓</strong>（<em>断开细连接</em>）。</p>
+      <p><strong>闭运算</strong>：A · B = (A ⊕ B) ⊖ B —— <em>先膨胀后腐蚀</em>，
+      效果是<strong>填充小孔、连接邻近物体</strong>（<em>补上小缺口</em>）。</p>
+      <span class="key">书里特别指出的一件事</span>
+      <blockquote>开运算和闭运算具有<strong>对偶性</strong>：
+      (A ∘ B)<sup>c</sup> = A<sup>c</sup> · B̂，(A · B)<sup>c</sup> = A<sup>c</sup> ∘ B̂。
+      <span class="who">第 9 章</span></blockquote>
+      <p>意思是：<strong>对前景做开运算 = 对背景做闭运算。</strong></p>
+      <p><em>这一条的实际用途：你可以只实现一个操作，另一个用「取反→操作→取反」得到。</em></p>
+      <span class="life">生活类比</span>
+      <div class="life-b"><strong>腐蚀</strong>像用砂纸把物体打磨一圈——变瘦，小突起没了，细连接断了。<br>
+      <strong>膨胀</strong>像给物体裹一层外衣——变胖，小孔被填了，断开的地方连上了。<br>
+      <strong>开运算</strong>（先瘦后胖）＝「先把零碎渣子磨掉，再长回来」——
+      <em>渣子已经没了，所以长不回来；主体的形状大体保留。</em><br>
+      <strong>闭运算</strong>（先胖后瘦）＝「先把缝糊上，再缩回去」——
+      <em>缝被填住了，所以缩回去也还在。</em></div>
+      <div class="pit">
+        <span class="lbl">常见误解</span>
+        以为「开运算会缩小物体」。
+        <strong>书里说的是「不明显改变面积」</strong>——
+        先腐蚀减掉的部分，膨胀会补回来<em>（除了那些被整个去掉的碎块）</em>。
+        <em>闭运算同理。这正是开闭与单纯腐蚀／膨胀的区别。</em>
+      </div>
+      <span class="ref">对应第 9 章；与第 10 章分割（形态学后处理）合读；与 C2 相连</span>
+    </div>
+  </details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">B10</span><span class="q-lv lv1">L1</span><span class="q-tag">压缩</span></div>
+  <div class="q-text">图像压缩在去除哪几类冗余？请写出<strong>熵</strong>的定义式，
+      并说明它与「实际能压到多小」是什么关系。</div>
+  <details><summary>展开参考答案</summary>
+    <div class="a">
+      <span class="key">三类冗余</span>
+      <p>书里把冗余分成三类：<br>
+      · <strong>编码冗余</strong>——码字长度没有按出现概率分配；<br>
+      · <strong>像素间冗余</strong>——相邻像素相关（<em>本书第 8 章的用词是「数据冗余」</em>）；<br>
+      · <strong>心理视觉冗余</strong>——人眼不敏感的信息。</p>
+      <p><em>第三类是<strong>有损</strong>压缩的合法性来源：</em></p>
+      <blockquote>在 JPEG 标准化工作中，广泛使用了这个矩阵，它根据启发式确定的知觉或
+      <strong>心理视觉重要性</strong>，对变换后的子图像的每个系数进行加权。
+      <span class="who">第 8 章</span></blockquote>
+      <span class="key">熵的定义</span>
+      <blockquote>每个信源输出的平均信息（称为信源的<strong>熵</strong>）为
+      H = −Σ P(a<sub>i</sub>) log P(a<sub>i</sub>) ……（8.6）
+      式中，a<sub>i</sub> 称为信源符号。<span class="who">第 8 章</span></blockquote>
+      <p>对图像，用直方图估计符号概率，就得到灰度信源的熵。</p>
+      <span class="key">它与「能压多小」的关系</span>
+      <p><strong>熵给出的是压缩的下界</strong>——</p>
+      <blockquote>以少于熵比特／像素的熵来对虚构信源（和取样图像）的灰度值编码
+      是<strong>不可能的</strong>。<span class="who">第 8 章</span></blockquote>
+      <p><em>即：无论用什么编码方法，平均码长都不能低于熵。</em>
+      这是信息论给出的<strong>硬约束</strong>，不是经验规律。</p>
+      <p>而霍夫曼编码的作用是<strong>逼近</strong>这个下界：</p>
+      <blockquote>霍夫曼提出了消除<strong>编码冗余</strong>的一种常用技术。<span class="who">第 8 章</span></blockquote>
+      <div class="pit">
+        <span class="lbl">这一处的分量</span>
+        <strong>「熵是下界」≠「实际能做到熵」。</strong>
+        下界是理论极限；霍夫曼能逼近它但并不总是达到它
+        （<em>而且霍夫曼要求知道符号概率，那本身也是估计——见 C5</em>）。
+        <em>把「熵」当成「能压到的尺寸」是一个常见混淆。</em>
+      </div>
+      <span class="ref">对应第 8 章「基础」「霍夫曼编码」；与 C5（隐藏的前提）相连</span>
+    </div>
+  </details>
+</div>
+
+<!-- ==================== 模块 C ==================== -->
+<h2>模块 C · 边界与反驳：这一档最重要</h2>
+<div class="s">技术书的价值不在「这个方法怎么做」，在「它在什么时候不成立」</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">C1</span><span class="q-lv lv3">L3</span><span class="q-tag">判据的选择</span></div>
+  <div class="q-text">分割「难」的理由与「算法不够好」无关。请说明困难的
+      <strong>根本性质</strong>，并解释为什么「换一个更好的算法」解决不了它。</div>
+  <details><summary>展开参考答案</summary>
+    <div class="a">
+      <span class="key">困难的来源：判据不唯一</span>
+      <p>分割要回答「哪些像素属于同一个物体」。
+      而<strong>「同一个物体」这个概念本身来自理解</strong>——这本书第 1 章已经声明不做理解（见 A4）。</p>
+      <p>所以同样的像素集合，按不同判据可以分成完全不同的区域：</p>
+      <p>· 按<strong>灰度相似</strong>分 → 得到颜色区域<br>
+      · 按<strong>不连续</strong>分 → 得到边缘和轮廓<br>
+      · 按<strong>纹理一致性</strong>分 → 得到材质区域<br>
+      · 按<strong>语义</strong>分 → 得到「人」「树」「天空」</p>
+      <p><em>而这几种分法都可以是「对」的——取决于你要拿结果做什么。</em></p>
+      <span class="key">为什么换算法解决不了</span>
+      <p>因为<strong>这不是算法问题，是问题定义问题</strong>。</p>
+      <p>书里处理分割的办法是<strong>给每种判据配一套形式化方法</strong>：
+      边缘检测（<em>用梯度</em>）、阈值（<em>用直方图</em>）、区域生长、
+      聚类与超像素、图割（<em>书里第 10 章用 Ncut 这类归一化判据</em>）。</p>
+      <p><em>每一个方法都在回答一个被明确定义过的子问题——
+      而「该选哪个子问题」不在算法能回答的范围内。</em></p>
+      <div class="pit">
+        <span class="lbl">常见误解</span>
+        「分割效果不好是算法不够先进」。
+        <strong>更常见的情况是判据选错了</strong>——
+        <em>你要的是「把肿瘤和周围组织分开」，却用了一个按灰度阈值的方法，
+        而它们的灰度恰好重叠。这时候换十个算法都没用，要换的是判据。</em>
+      </div>
+      <span class="ref">对应第 10 章；与 A4「划界的代价」直接相连</span>
+    </div>
+  </details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">C2</span><span class="q-lv lv3">L3</span><span class="q-tag">形态学的反例</span></div>
+  <div class="q-text">开运算用来「去掉小噪点」。请说明
+      <strong>它什么时候会把不该去掉的东西去掉</strong>，
+      以及为什么「结构元选大一点」不是解决办法。</div>
+  <details><summary>展开参考答案</summary>
+    <div class="a">
+      <span class="key">开运算去噪的机制</span>
+      <p>开运算 = 先腐蚀后膨胀。<strong>腐蚀阶段，凡是「装不下结构元 B」的部分都会消失。</strong></p>
+      <p>所以它去掉的不是「小的东西」，而是<strong>「容不下 B 的东西」</strong>。这两者不一样：</p>
+      <p>· 一个<em>细长</em>的噪点（<em>1 像素宽的线</em>）→ 装不下 B → 被去掉 ✓<br>
+      · 一个<em>紧凑但很小</em>的噪点（<em>2×2 的方块</em>）→ 若 B 是 3×3，也装不下 → 被去掉 ✓<br>
+      · 一个<strong>细长的真实结构</strong>（<em>血管、文字笔画、天线</em>）→ <strong>也装不下 → 被去掉 ✗</strong></p>
+      <p><em>第三种就是反例：开运算分不清「细小的噪声」和「细长的信号」。</em></p>
+      <span class="key">为什么「结构元选大一点」不是办法</span>
+      <p>· <strong>B 变大</strong> → 去掉的东西更多，<em>细长真实结构丢得更快</em>；<br>
+      · <strong>B 变小</strong> → 噪点去不掉。</p>
+      <p><strong>这是一个真实的取舍，不是调参问题</strong>——
+      因为「噪点」和「细结构」在<em>尺寸</em>这个维度上是重叠的。</p>
+      <span class="key">出路：换一个能区分的维度</span>
+      <p>如果噪声和信号在<em>尺寸</em>上无法区分，就得换维度：</p>
+      <p>· <strong>灰度形态学</strong>——利用灰度差异而不只是形状；<br>
+      · <strong>用不同方向的多个结构元</strong>（<em>细长结构是有方向的，噪点通常没有</em>）；<br>
+      · <strong>先做标记再重建</strong>（<em>书里第 9 章的「重建开运算」正是为此</em>）。</p>
+      <div class="pit">
+        <span class="lbl">常见误解</span>
+        「形态学是清理二值图的万能工具」。
+        <strong>它只能去掉「与结构元形状不相容」的东西。</strong>
+        <em>如果你的目标结构和噪声在形状上相似，形态学会把两者一起去掉——
+        这时候要换的是判据，不是结构元尺寸。</em>
+      </div>
+      <span class="ref">对应第 9 章；与 B9 合读（开闭的定义与对偶性）</span>
+    </div>
+  </details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">C3</span><span class="q-lv lv3">L3</span><span class="q-tag">振铃</span></div>
+  <div class="q-text">「理想低通滤波器」这个名字听起来是最好的，但书里说它会<strong>产生振铃</strong>。
+      请说明振铃的来历，以及为什么「更接近理想的滤波器」不一定更好。</div>
+  <details><summary>展开参考答案</summary>
+    <div class="a">
+      <blockquote>这样的滤波器函数无法用物理元器件实现，且在采用数字方式实现时会出现
+      <strong>「振铃」效应</strong>。然而，理想滤波器对于说明许多滤波现象是非常有用的。
+      <span class="who">第 4 章</span></blockquote>
+      <span class="key">振铃从哪来</span>
+      <p>理想低通的频率响应是一个<strong>矩形</strong>——通带内是 1，通带外是 0，
+      边界处<em>瞬间跳变</em>。</p>
+      <p>而在空间域，这个矩形的傅里叶反变换是 <strong>sinc 函数</strong>
+      （<em>有无限延伸的振荡旁瓣</em>）。</p>
+      <p><strong>所以「频率域里越陡的截止」对应「空间域里越多的振荡」。</strong>
+      那些旁瓣就是你看到的振铃——<em>在边缘附近出现的波纹。</em></p>
+      <p><em>这是傅里叶变换的一对基本性质：一个域里的突变 ⇔ 另一个域里的振荡。
+      它不是实现缺陷，是数学必然。</em></p>
+      <span class="key">为什么「更接近理想」不一定更好</span>
+      <p>书里给了三种滤波器的对比：</p>
+      <p>· <strong>理想低通（ILPF）</strong>：过渡瞬时 → <em>振铃最明显</em><br>
+      · <strong>巴特沃斯（BLPF）</strong>：过渡平滑（<em>阶数可调</em>）→ <em>振铃较轻</em><br>
+      · <strong>高斯（GLPF）</strong>：空间域和频率域都是高斯，<em>没有旁瓣</em> → <strong>无振铃</strong></p>
+      <p><strong>所以「理想的频率响应」与「理想的处理结果」是两回事。</strong>
+      <em>你想要的不是频域里的陡壁，是空域里干净的图像。</em></p>
+      <span class="life">生活类比</span>
+      <div class="life-b">像<strong>用刀切东西</strong>：刀刃越锋利（<em>截止越陡</em>），
+      切口越干净，但<em>越容易在切口边缘留下毛刺</em>（<em>振铃</em>）。
+      想要没有毛刺，得用带一点圆角的刀（<em>平滑过渡</em>）——
+      <strong>但那样切口就不那么「精确」了。</strong></div>
+      <div class="pit">
+        <span class="lbl">常见误解</span>
+        「滤波器应该尽量接近理想响应」。
+        <strong>书里的三种滤波器排序恰好相反</strong>：越接近理想的振铃越严重。
+        <em>选择滤波器的依据是「结果图像的质量」，不是「频率响应的纯度」。</em>
+      </div>
+      <span class="ref">对应第 4 章「平滑的频率域滤波器」；与 B4（空间/频率对偶）呼应</span>
+    </div>
+  </details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">C4</span><span class="q-lv lv3">L3</span><span class="q-tag">度量的边界</span></div>
+  <div class="q-text">维纳滤波的目标是最小化<strong>均方误差（MSE）</strong>。
+      请说明为什么「MSE 更小」不等于「看起来更好」，
+      以及这对「用指标评价图像质量」意味着什么。</div>
+  <details><summary>展开参考答案</summary>
+    <div class="a">
+      <span class="key">MSE 隐含的假设</span>
+      <p>MSE 是<strong>逐像素差值平方的平均</strong>。它隐含了一个假设：
+      <em>每个像素的误差同等重要，而且误差是「可加的」。</em></p>
+      <span class="key">为什么这个假设不成立</span>
+      <p><strong>人的视觉不是逐像素比较的。</strong>书里第 2 章专门讲了这个：</p>
+      <blockquote>两种现象表明<strong>感知亮度不是实际灰度的简单函数</strong>。
+      <span class="who">第 2 章「视觉感知要素」</span></blockquote>
+      <p>一是<strong>马赫带</strong>（<em>边界处出现下冲／上冲</em>），
+      二是<strong>同时对比</strong>（<em>同一灰度在不同背景下看起来不同</em>）。
+      书里还提到第三类：<strong>光学错视</strong>。</p>
+      <p>所以：<br>
+      · MSE 对<strong>均匀区域的一点点整体偏移</strong>很敏感，而人眼几乎看不出来；<br>
+      · MSE 对<strong>边缘附近的轻微错位</strong>不太敏感，而人眼非常容易看出来。</p>
+      <p><em>两者关注的东西不一样，所以排序可以完全相反。</em></p>
+      <span class="key">书里自己给了另一个方向的例子</span>
+      <p>第 8 章的心理视觉冗余：</p>
+      <blockquote>它根据启发式确定的知觉或<strong>心理视觉重要性</strong>，
+      对变换后的子图像的每个系数进行加权。<span class="who">第 8 章</span></blockquote>
+      <p><em>JPEG 的量化表不是按「误差平方和最小」设计的，
+      是按「人眼不容易察觉」设计的。</em>
+      <strong>这两条路会给出不同的压缩方案，而后者在实际中更受欢迎。</strong></p>
+      <div class="pit">
+        <span class="lbl">这一处的分量</span>
+        既然 MSE 与人眼不一致，那么<strong>用 MSE 调出来的最优解，
+        未必是看起来最好的解</strong>。
+        <em>而维纳滤波的最优性正是相对于 MSE 定义的。</em>
+        这不是维纳滤波的缺陷——<strong>是「最优」这个词必须带着指标一起说。</strong>
+      </div>
+      <span class="ref">对应第 5 章与第 2 章；与第 8 章「心理视觉冗余」合读；与 D2 相连</span>
+    </div>
+  </details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">C5</span><span class="q-lv lv3">L3</span><span class="q-tag">隐藏的前提</span></div>
+  <div class="q-text">这本书里有大量「最优」的说法。请举出三处，
+      并说明每个「最优」<strong>隐含了什么前提</strong>。</div>
+  <details><summary>展开参考答案</summary>
+    <div class="a">
+      <p>「最优」在书里从不单独出现，总是相对于某个东西。
+      找那个东西，就能找出前提。</p>
+      <span class="key">例一：维纳滤波「最优」</span>
+      <p><strong>相对于什么</strong>：均方误差（见 C4）。</p>
+      <p><strong>隐含前提</strong>：① 图像和噪声是<strong>平稳随机过程</strong>
+      （<em>统计特性不随位置变化</em>）；② 需要知道 S_η 与 S_f 两个功率谱
+      （<em>实际中靠估计</em>）。</p>
+      <p><em>所以「维纳滤波是最优的」这句话的完整版是：
+      在图像平稳、且功率谱已知的前提下，它相对 MSE 最优。</em></p>
+      <span class="key">例二：霍夫曼编码「最优」</span>
+      <p><strong>相对于什么</strong>：在<strong>前缀码</strong>这个约束下，平均码长最短。</p>
+      <p><strong>隐含前提</strong>：① 符号概率<strong>已知</strong>（<em>还是估计的</em>）；
+      ② 每个符号必须用<strong>整数个比特</strong>编码。</p>
+      <p><em>第二条尤其重要：正因为码长必须是整数，霍夫曼只能「逼近」熵而无法达到它
+      （见 B10）。算术编码的作用正是取消这个约束——它允许非整数长度的码，
+      所以能更接近熵，代价是实现更复杂。</em></p>
+      <span class="key">例三：直方图均衡化「自动」</span>
+      <blockquote>（离散情况下）不允许产生新的灰度级。<span class="who">第 3 章</span></blockquote>
+      <p><strong>隐含前提</strong>：灰度级数是固定的。<em>去掉这个前提（允许插值），
+      就能得到真正均匀的直方图——那正是直方图规定化在做的事。</em></p>
+      <span class="key">这一档的通用问法</span>
+      <p>看到「最优」，问三句：</p>
+      <p><strong>① 相对于什么指标最优？</strong><br>
+      <strong>② 这个指标符合我的目标吗？</strong>（<em>见 C4</em>）<br>
+      <strong>③ 它要求我知道什么？那些东西我真的知道吗？</strong></p>
+      <div class="pit">
+        <span class="lbl">这一处的分量</span>
+        这本书的每一章都有一组「最优」方法，
+        而<strong>书里对每个方法的前提都有交代，只是散在各处</strong>。
+        <em>把它们集中起来问一遍，是读技术书最省力也最有效的一种读法。</em>
+      </div>
+      <span class="ref">对应第 3、5、8 章；这一问的方法是跨章的</span>
+    </div>
+  </details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">C6</span><span class="q-lv lv3">L3</span><span class="q-tag">第 12 章的位置</span></div>
+  <div class="q-text">第四版把第 12 章扩写为深度学习和卷积神经网络。
+      请说明<strong>深度卷积神经网络与本书前十章是什么关系</strong>
+      ——是替代、是延续，还是别的？</div>
+  <details><summary>展开参考答案</summary>
+    <div class="a">
+      <span class="key">书里给的位置</span>
+      <p>第 12 章是「图像模式分类」，即 A3 说的那条连续体的末端。书里给的分类方法范围很宽：</p>
+      <blockquote>本书的最后一章将讨论图像模式分类的方法，
+      范围从「古典」方法如最小距离、相关和贝叶斯分类器，
+      到使用<strong>深度神经网络</strong>实现的现代方法。<span class="who">第 12 章</span></blockquote>
+      <p>注意这个表述方式：<strong>它把深度网络与前两者并列，而不是用它取代它们。</strong></p>
+      <span class="key">真实的关系：不是替代，是「吃掉了中间一段」</span>
+      <p>前十章做的是<strong>把图像变成特征</strong>（<em>滤波 → 分割 → 特征描述子</em>）。
+      第 12 章做的是<strong>从特征到标记</strong>。</p>
+      <p><strong>深度网络改变的是哪一段？</strong>
+      ——<em>它把「特征提取」这一段也吃进去了。</em>
+      以前你要手工设计 SIFT、设计边缘算子、设计纹理描述子；
+      深度网络直接从像素学出中间表征。</p>
+      <p><strong>所以它不是替代前十章，是把第 11 章（手工特征）那一段内化了。</strong>
+      <em>而前面的东西（采样、滤波、复原、压缩、形态学）并没有因此失效——
+      它们在预处理、数据增强、结果后处理里照旧使用。</em></p>
+      <span class="key">但有一处真的冲突</span>
+      <p><strong>第 11 章讲的是「手工设计的、对变换不变的特征」</strong>
+      （<em>SIFT 是尺度不变的</em>），而<strong>深度网络学到的特征是数据驱动的</strong>。</p>
+      <p>书里第 11 章说：</p>
+      <blockquote>特征描述子应尽可能对参数（如缩放、平移、旋转、光照和视点）的变化
+      <strong>不敏感</strong>。<span class="who">第 11 章</span></blockquote>
+      <p><em>而深度网络的应对方式是「用大量带这些变化的数据训练」，
+      而不是「在结构里写进不变性」。</em></p>
+      <p><strong>这是两种不同的思路：一个把先验写进设计，一个把先验交给数据。
+      这本书同时呈现了两者，但没有评判它们。</strong></p>
+      <div class="pit">
+        <span class="lbl">这一处的分量</span>
+        这本书 2018 年出版，它把深度学习作为<strong>已成熟的分类器</strong>纳入教材，
+        但<strong>没有把「表示学习」作为一条独立的理论线展开</strong>。
+        <em>所以读第 12 章时要清楚：它给的是「这个工具在这条链条上的位置」，
+        不是「这个工具为什么有效」——后者超出本书范围。</em>
+      </div>
+      <span class="ref">对应第 12 章；与第 11 章对照；与 A3/A4 呼应；与 D4 相连</span>
+    </div>
+  </details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">C7</span><span class="q-lv lv2">L2</span><span class="q-tag">任务的定性</span></div>
+  <div class="q-text">拿到一个图像处理需求，怎么判断它<strong>属于增强还是复原</strong>？
+      这个判断会怎样改变你的工作方式？</div>
+  <details><summary>展开参考答案</summary>
+    <div class="a">
+      <span class="key">一个可操作的判据</span>
+      <p>问一句：<strong>「我能说出『正确结果』应该是什么样吗？」</strong></p>
+      <p>· <strong>能说出</strong>（<em>而且能给出退化过程的模型 h</em>）→ 这是<strong>复原</strong>。<br>
+      · <strong>说不清</strong>（<em>只能判断「这样更好看」</em>）→ 这是<strong>增强</strong>。</p>
+      <p>书里的区分正是这两条：增强是<em>主观</em>的，判据是人的观感；
+      复原是<em>客观</em>的，它<strong>假设图像是被一个已知的退化过程损坏的</strong>（见 B7）。</p>
+      <span class="key">这个判断怎么改变工作方式</span>
+      <p><strong>如果是复原</strong>：<br>
+      ① 第一步是<strong>估计 h</strong>（<em>而不是选滤波器</em>）；<br>
+      ② 可以定义评价指标（<em>MSE、SNR</em>），因为「正确结果」存在；<br>
+      ③ 要检查 h 是否可靠——<em>h 错了，后面全错</em>。</p>
+      <p><strong>如果是增强</strong>：<br>
+      ① <strong>不要去找「最优」</strong>——没有客观判据，最优无从定义；<br>
+      ② 评价只能靠人（<em>或靠一个有依据的替代指标，见 C4</em>）；<br>
+      ③ 要接受「换一个人可能给出不同结果」这件事。</p>
+      <span class="key">最实用的一点：防止两种错</span>
+      <p><strong>错一：把增强当复原做。</strong>
+      <em>表现为反复调参追求一个「正确结果」，而那个结果根本不存在。</em></p>
+      <p><strong>错二：把复原当增强做。</strong>
+      <em>表现为不做 h 的估计就开始滤波——那你在做的事情与复原无关。</em></p>
+      <div class="pit">
+        <span class="lbl">为什么这个判断值得单独一问</span>
+        <strong>因为它决定了「有没有正确答案」</strong>。
+        <em>而很多实际的图像处理工作卡住，不是算法不行，
+        是做的人以为自己在做复原，其实在做增强——于是永远验收不了。</em>
+      </div>
+      <span class="ref">对应第 5 章与第 3 章；与 B7、C4、D3 相连</span>
+    </div>
+  </details>
+</div>
+
+<!-- ==================== 模块 D ==================== -->
+<h2>模块 D · 综合：把它变成工具</h2>
+<div class="s">跨章的问题 —— 怎么用、什么时候不该用</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">D1</span><span class="q-lv lv2">L2</span><span class="q-tag">逆问题</span></div>
+  <div class="q-text">书里有一批问题结构相同：<strong>「已知 A 算 B 容易，已知 B 反推 A 很难」</strong>。
+      请举出四处，并说明它们的共同点。</div>
+  <details><summary>展开参考答案</summary>
+    <div class="a">
+      <table>
+        <tr><th style="width:22%">领域</th><th>正向（容易）</th><th>逆向（难）</th></tr>
+        <tr><td><strong>图像复原</strong>（第 5 章）</td>
+          <td>已知原图 f 与退化函数 h → 算出退化图 g</td>
+          <td>已知 g 与 h → 反推 f（<em>H→0 时噪声被放大</em>）</td></tr>
+        <tr><td><strong>图像分割</strong>（第 10 章）</td>
+          <td>已知区域 → 算出边缘</td>
+          <td>已知边缘 → 反推区域（<em>边缘不闭合、有断裂</em>）</td></tr>
+        <tr><td><strong>图像压缩</strong>（第 8 章）</td>
+          <td>已知原图 → 编码（无损可逆）</td>
+          <td>有损压缩后 → 无法恢复原图（<em>信息真的丢了</em>）</td></tr>
+        <tr><td><strong>模式分类</strong>（第 12 章）</td>
+          <td>已知类别 → 生成样本</td>
+          <td>已知样本 → 反推类别（<em>类内差异可能大于类间</em>）</td></tr>
+      </table>
+      <span class="key">共同点</span>
+      <p><strong>① 正向映射是「多对一」的</strong>——
+      多个原图可以退化成同一幅模糊图，多个区域划分可以给出同一组边缘。
+      <em>多对一意味着逆映射不是函数（一个输入对应多个输出）。</em></p>
+      <p><strong>② 所以必须补入额外信息才能求解</strong>——
+      这正是 B7 说的「复原必须有 h 的估计」，
+      也是 C1 说的「分割必须先选定判据」。</p>
+      <p><strong>③ 补入的信息决定了答案</strong>，
+      所以不同的补法给出不同的「正确结果」。<em>这就是「逆问题没有唯一解」的实际含义。</em></p>
+      <span class="life">生活类比</span>
+      <div class="life-b">一杯清水里滴进一滴墨水，水变浑了——<strong>这个过程（正向）你完全清楚</strong>。
+      但让你看这杯浑水，反推「原来那滴墨水是什么形状」——<strong>做不到</strong>，
+      因为无数种滴法都能浑成这个样子。
+      <em>你能做的只是加一个假设（比如「墨水滴是球形的」），然后按这个假设去推——
+      而答案的好坏完全取决于那个假设对不对。</em></div>
+      <div class="pit">
+        <span class="lbl">这一处的通用价值</span>
+        遇到任何「反推」任务，先问：<strong>正向是不是多对一？</strong>
+        如果是，那么<em>「我补入了什么假设」就是整个任务里最要紧的一句话</em>——
+        比用什么算法要紧得多。
+      </div>
+      <span class="ref">跨第 5、8、10、12 章；这是全书最有用的一处结构性观察</span>
+    </div>
+  </details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">D2</span><span class="q-lv lv3">L3</span><span class="q-tag">反身</span></div>
+  <div class="q-text">第 2 章讲视觉感知，给出了马赫带、同时对比、视错觉三个例子。
+      请问：这三个例子对<strong>这本书自己的方法</strong>构成了什么挑战？</div>
+  <details><summary>展开参考答案</summary>
+    <div class="a">
+      <span class="key">书里的原文说法</span>
+      <blockquote>两种现象表明<strong>感知亮度不是实际灰度的简单函数</strong>。
+      ……人类感知现象的另一些例子是光学错视，即人眼中充斥着不存在的信息
+      或错误地感知了物体的几何特点。<span class="who">第 2 章「视觉感知要素」</span></blockquote>
+      <span class="key">挑战在哪</span>
+      <p>这本书的很大一部分工作，判据是<strong>「人眼看着好不好」</strong>：</p>
+      <p>· 图像<strong>增强</strong>——第 5 章说它是<em>主观</em>的，目标是「看起来更好」（见 B7）；<br>
+      · 第 8 章<strong>心理视觉冗余</strong>——直接利用人眼不敏感的特性；<br>
+      · 第 2 章整节讲感知，理由原文写在开头：</p>
+      <blockquote>人的直觉和分析在选择一种技术而不选择另一种技术时常常起重要作用，
+      这种选择通常基于<strong>主观的视觉判断</strong>做出。<span class="who">第 2 章</span></blockquote>
+      <p><strong>而同一章又告诉你：这个「主观视觉判断」本身是不可靠的。</strong></p>
+      <p><em>换句话说：这套方法一半以上的评价标准，建立在它自己刚刚证明不可靠的东西上。</em></p>
+      <span class="key">书里怎么处理这个张力</span>
+      <p><strong>它没有正面处理。</strong>
+      第 2 章给出这些现象时的定位是<em>「了解人类视觉的物理限制」</em>，
+      是为了让读者知道<em>显示设备的分辨率和灰度级该取多少</em>——
+      这是一个工程性的用途，不是一个反思性的用途。</p>
+      <p><em>至于「既然人眼不可靠，那以人眼为准的增强还有没有客观标准」这个问题，书里没有问。</em></p>
+      <div class="pit">
+        <span class="lbl">我的判断（不是原文）</span>
+        这个缺口不是这本书的疏漏，而是<strong>它划界的结果</strong>（A4）：
+        <em>它声明不做「理解」，而「什么算好看」正是一个理解问题。</em>
+        <strong>但它仍然要用这个标准来评价自己的工作</strong>——
+        于是这个张力留在了书里，成了「增强是主观的」这一句话的全部内容。
+        <em>把这句轻描淡写的话展开，就是这一问。</em>
+      </div>
+      <span class="ref">对应第 2 章与第 5 章；这一问的答案是推论，不是原文直述</span>
+    </div>
+  </details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">D3</span><span class="q-lv lv2">L2</span><span class="q-tag">选路</span></div>
+  <div class="q-text">给你一个具体的图像处理任务，<strong>按什么顺序决定用哪些方法</strong>？
+      请给出一套可操作的判断顺序。</div>
+  <details><summary>展开参考答案</summary>
+    <div class="a">
+      <p><em>这一问的答案是综合，不是原文直述。它把全书的方法压成一条决策链。</em></p>
+      <span class="key">第一步：先确定你在哪一级处理</span>
+      <p>按 A3 的判据问：<strong>我要的输出是图像，还是特征，还是标记？</strong></p>
+      <p>· 输出是图像 → 第 3–9 章（<em>增强、复原、压缩、形态学</em>）<br>
+      · 输出是特征 → 第 10–11 章（<em>分割、特征提取</em>）<br>
+      · 输出是标记 → 第 12 章（<em>分类</em>）</p>
+      <p><strong>这一步决定了后面所有选择的候选集。</strong></p>
+      <span class="key">第二步：问这是不是一个「逆问题」</span>
+      <p>按 D1：<strong>正向是不是多对一？如果是，我补入了什么假设？</strong></p>
+      <p><em>如果答不出这句，先别选算法——你没有问题定义。</em></p>
+      <span class="key">第三步：找出「不能违反的约束」</span>
+      <p>· <strong>噪声类型</strong> → 决定滤波（<em>椒盐用中值，高斯用高斯/维纳，见 B2</em>）<br>
+      · <strong>要不要保边缘</strong> → 决定能不能用线性平滑<br>
+      · <strong>核有多大</strong> → 决定空间域还是频率域（<em>见 B4</em>）<br>
+      · <strong>结果给谁看</strong> → 决定用哪个指标（<em>MSE 还是视觉，见 C4</em>）</p>
+      <span class="key">第四步：检查你的「最优」是否成立</span>
+      <p>按 C5 三问：<strong>相对于什么最优？指标符合目标吗？它要求知道的东西我真的知道吗？</strong></p>
+      <p><em>这一步最容易被跳过，也最容易出问题——因为「最优」看起来像结论，其实是条件句。</em></p>
+      <span class="key">第五步：留一条后路</span>
+      <p>按 C1 与 C2：<strong>如果结果不对，是算法不够好，还是判据选错了？</strong></p>
+      <p><em>先怀疑判据，再怀疑算法。这本书里的失败案例，多数是判据问题。</em></p>
+      <div class="pit">
+        <span class="lbl">一个反过来的用法</span>
+        这五步也可以用来<strong>审查别人给的方案</strong>：
+        <em>把每一步当成一个必答题，看对方的方案在哪一步是空的。</em>
+        通常空在第二、四步。
+      </div>
+      <span class="ref">跨全书；这一问是待议读法，不是原文内容</span>
+    </div>
+  </details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">D4</span><span class="q-lv lv3">L3</span><span class="q-tag">总检</span></div>
+  <div class="q-text">最后一问：这本书的哪一类结论<strong>最容易被现实推翻</strong>？
+      请把全书结论分成三栏，并说明怎么验证中间那一栏。</div>
+  <details><summary>展开参考答案</summary>
+    <div class="a">
+      <span class="key">第一栏：数学性质 —— 不会被推翻</span>
+      <p>卷积定理、熵是编码下界、傅里叶变换对的对应关系、开闭运算的对偶性。
+      <em>这些不是经验结论，是定理，不存在「被实验推翻」这回事。</em></p>
+      <span class="key">第二栏：工程判断 —— 会过期</span>
+      <p>书里有一批结论依赖<strong>计算成本的经验对比</strong>，例如「核大时频率域更快」。
+      <strong>那个「大／小」的分界线依赖</strong>：① FFT 的实现效率；
+      ② 通用 CPU 与内存的访问成本。</p>
+      <p><strong>验证方式</strong>：在今天的硬件上重测同一组任务，看分界线是否还在原处。
+      <em>这个数字会随硬件与实现变化，而数学定理不会。</em></p>
+      <p>同类的还有<strong>第 11 章（手工特征）与第 12 章（深度学习）的关系</strong>。
+      书里把 SIFT 这类「对变换不变的手工描述子」作为特征提取的主体，
+      把深度网络作为分类器。<em>而后来的发展是：网络把特征提取也吃掉了
+      （见 C6）。书里没有预测这一点——它 2018 年成书。</em></p>
+      <p><strong>验证方式</strong>：拿第 11 章的手工特征与现代网络在同一个数据集上比较
+      「特征质量」——这已经是标准做法。</p>
+      <span class="key">第三栏：主观约定 —— 一开始就不声称客观</span>
+      <p><strong>「增强是主观的」</strong>——书里自己承认它没有客观标准（见 B7）。
+      <em>这类结论不需要被推翻，它们本来就不声称客观。</em></p>
+      <p>同类的还有：损失压缩里「哪些信息可以丢」（<em>取决于心理视觉判据</em>）、
+      分割里「该按哪个判据分」（<em>见 C1</em>）。</p>
+      <div class="pit">
+        <span class="lbl">这一问的用法</span>
+        <strong>只有中间那一栏会过期。</strong>
+        <em>而读一本会过期的技术书，最容易踩的坑正是中间那一栏——
+        因为数学定理看不出年代，而工程判断一读就知道是不是今天的。</em>
+        <strong>把「这段话属于哪一栏」变成一个条件反射，这本书的使用寿命会延长很多。</strong>
+      </div>
+      <span class="ref">跨全书；这一问的答案是推论</span>
+    </div>
+  </details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">D5</span><span class="q-lv lv2">L2</span><span class="q-tag">验收</span></div>
+  <div class="q-text">你要验收别人交来的图像处理结果。
+      <strong>按什么顺序检查</strong>才能最快发现「方向性错误」而不是「参数没调好」？</div>
+  <details><summary>展开参考答案</summary>
+    <div class="a">
+      <p><em>这一问的答案是综合，不是原文直述。</em></p>
+      <span class="key">第一步：先问「这是增强还是复原」（C7）</span>
+      <p><strong>如果是复原，先看 h 从哪来。</strong>
+      <em>如果对方说不出退化模型的来源，那后面的一切都不用看了——</em>
+      因为复原的整个前提是「h 已知」（B7）。</p>
+      <p><strong>如果是增强，不要问「对不对」，问「依据什么判据」。</strong>
+      <em>没有客观判据的任务，验收标准必须是双方事先约定的。</em></p>
+      <span class="key">第二步：问「输出属于哪一级处理」（A3）</span>
+      <p>输出是图像／特征／标记？<strong>如果对方答不出，说明没有定义清楚任务。</strong></p>
+      <span class="key">第三步：问「这是不是逆问题，补入了什么假设」（D1）</span>
+      <p><em>这一步能查出最致命的错误：方向对但假设不成立。</em>
+      例如<strong>分割</strong>——对方用灰度阈值分出了区域，
+      但你的目标其实是按材质分。这时算法再好也没用（C1）。</p>
+      <span class="key">第四步：问「你说的最优是相对于什么」（C5）</span>
+      <p>· 指标是什么？<br>
+      · 这个指标符合目标吗？（<em>MSE 小 ≠ 看起来好，见 C4</em>）<br>
+      · 它要求知道的东西从哪来？（<em>功率谱？符号概率？</em>）</p>
+      <span class="key">第五步：最后才看参数与结果</span>
+      <p><em>如果前四步都没问题，再看具体调参——因为这时候出问题才是「参数问题」。</em>
+      <strong>前四步是「方向」，第五步是「精度」。先查方向，因为方向错了改参数没用。</strong></p>
+      <div class="pit">
+        <span class="lbl">为什么按这个顺序</span>
+        因为这五步是<strong>从「问题定义」到「实现细节」</strong>排列的，
+        而<em>后面每一步都以它前面那一步成立为前提</em>。
+        <strong>越靠前的错误越致命，也越容易被「结果看上去还行」掩盖。</strong>
+        <em>而多数验收是从第五步开始的——那正好是最不该先看的地方。</em>
+      </div>
+      <span class="ref">跨全书；这一问是待议读法，不是原文内容</span>
+    </div>
+  </details>
+</div>
+
+<!-- ==================== 自测 ==================== -->
+<h2>附 · 自测清单</h2>
+<div class="s">不看上面，只回答。答不出就回到对应编号。</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">S</span><span class="q-lv lv1">L1</span><span class="q-tag">概念</span></div>
+  <div class="q-text">以下 14 个概念，你能各用一句话说清吗？</div>
+  <details><summary>展开对照</summary>
+    <div class="a">
+      <ul>
+        <li><strong>数字图像</strong> —— 坐标与幅值都是有限离散值的二维函数（A1）</li>
+        <li><strong>采样 / 量化</strong> —— 离散化坐标（空间分辨率）／离散化幅值（灰度分辨率）（A2）</li>
+        <li><strong>三级处理</strong> —— 按输入输出类型分：图像→图像／图像→特征／特征→理解（A3）</li>
+        <li><strong>相关 / 卷积</strong> —— 差一个核旋转 180°；核对称时相同（B1）</li>
+        <li><strong>中值滤波</strong> —— 非线性，取邻域中值；对椒盐噪声有效且不模糊边缘（B2）</li>
+        <li><strong>系数和为零</strong> —— 微分算子的必要条件（对平坦区域零响应）（B3）</li>
+        <li><strong>卷积定理</strong> —— 空间卷积 ⇔ 频率乘积（B4）</li>
+        <li><strong>直方图均衡化</strong> —— 用 CDF 作映射；离散下不能产生新灰度级，故只近似均匀（B5）</li>
+        <li><strong>中心化</strong> —— 用 (−1)^(x+y) 把 DFT 低频搬到中心（B6）</li>
+        <li><strong>退化模型</strong> —— g = h ★ f + η（B7）</li>
+        <li><strong>逆滤波 / 维纳滤波</strong> —— 直接除 H／加噪声与图像功率谱之比兜底（B8）</li>
+        <li><strong>开运算 / 闭运算</strong> —— 先腐蚀后膨胀／先膨胀后腐蚀；二者对偶（B9）</li>
+        <li><strong>熵</strong> —— H = −Σ P log P，编码的平均码长下界（B10）</li>
+        <li><strong>逆问题</strong> —— 正向多对一，故反推需补入额外假设（D1）</li>
+      </ul>
+      <span class="key">如果你能答出 12 个以上</span>
+      <p>概念层通了。<em>但按这本手册的设计，概念只是入场券——
+      真正的问题是 C 模块那六个「什么情况下不成立」。</em></p>
+    </div>
+  </details>
+</div>
+
+<footer>
+ 《数字图像处理》问题手册 · 「底层」项目 07_技术<br>
+ Gonzalez &amp; Woods 第四版（2018）· 12 章 · 底本 47.6 万汉字<br>
+ <em>引文取自 数字图像处理_全文_修正版.txt（两轮 OCR 修正后），已逐句核对；<br>
+ 标「◎ 生活类比」处不是本书内容；标「我的判断」「推论」处为待议读法；<br>
+ 图注与图形区域的文字不可引用（扫描乱码，不可修复）</em>
+</footer>
 
 </div>
 </body>
