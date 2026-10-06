@@ -6,11 +6,11 @@
 <title>Dive into Systems 问题手册 —— 16 题，练到能解释"为什么慢"</title>
 <style>
   :root{
-    --paper:#131318; --card:#1b1b23; --edge:#2e2e3a;
-    --ink:#e8e8f0; --ink-mid:#b0b0c0; --ink-soft:#787888;
-    --core:#9b59b6; --core-soft:#221828;
-    --hw:#c0392b; --sys:#2980b9; --perf:#e67e22; --par:#16a085;
-    --warn:#e74c3c; --key:#d4b83c;
+    --paper: #f2f8fc; --card: #ffffff; --edge: #cfe0ec;
+    --ink: #12232e; --ink-mid: #3f5b6b; --ink-soft: #5c7a8c;
+    --core:#9b59b6; --core-soft: #f5eef8;
+    --hw:#c0392b; --sys: #2778ae; --perf: #af601a; --par: #12836d;
+    --warn: #cb4335; --key: #887626;
   }
   *{margin:0;padding:0;box-sizing:border-box;}
   body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
@@ -28,7 +28,7 @@
     border-radius:3px;padding:20px 24px;margin-bottom:26px;font-size:14.5px;color:var(--ink-mid);}
   .guide .t{color:var(--core);font-weight:700;margin-bottom:10px;font-size:13.5px;letter-spacing:.5px;}
   .guide ol{margin-left:20px;} .guide li{margin-bottom:6px;} .guide strong{color:var(--ink);}
-  .guide code{font-family:Consolas,monospace;color:var(--core);background:#180f1e;padding:1px 5px;border-radius:2px;font-size:12.5px;}
+  .guide code{font-family:Consolas,monospace;color:var(--core);background:#e8e7e8;padding:1px 5px;border-radius:2px;font-size:12.5px;}
 
   .level-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:30px;}
   .level-bar .lv{flex:1;min-width:170px;background:var(--card);border:1px solid var(--edge);border-top:4px solid;border-radius:3px;padding:14px 16px;}
@@ -48,13 +48,13 @@
   .q-head .num{font-size:13px;font-weight:700;color:#131318;background:var(--core);padding:3px 10px;border-radius:2px;flex-shrink:0;margin-top:2px;font-family:Consolas,monospace;}
   .q-head .txt{font-size:15.5px;color:var(--ink);font-weight:600;line-height:1.7;}
   .q-head .lvtag{font-size:10.5px;padding:2px 8px;border-radius:20px;font-weight:700;white-space:nowrap;margin-left:auto;flex-shrink:0;margin-top:3px;}
-  .lvtag.l1{background:#1e2a19;color:#8fbf6a;} .lvtag.l2{background:#2a2517;color:#e0b93f;}
-  .lvtag.l3{background:#2a1f14;color:#d98a3f;} .lvtag.l4{background:#221828;color:var(--core);}
+  .lvtag.l1{background:#e8eae8;color:#8fbf6a;} .lvtag.l2{background:#eae9e8;color:#e0b93f;}
+  .lvtag.l3{background:#eae9e8;color:#d98a3f;} .lvtag.l4{background:#e9e8ea;color:var(--core);}
   .q-body{padding:18px 22px;font-size:14px;color:var(--ink-mid);}
   .q-body p+p{margin-top:8px;} .q-body strong{color:var(--ink);}
-  .q-body code{font-family:Consolas,monospace;color:var(--core);background:#180f1e;padding:1px 5px;border-radius:2px;font-size:12.5px;}
+  .q-body code{font-family:Consolas,monospace;color:var(--core);background:#e8e7e8;padding:1px 5px;border-radius:2px;font-size:12.5px;}
 
-  details{margin-top:12px;border:1px solid var(--edge);border-radius:3px;background:#16161d;}
+  details{margin-top:12px;border:1px solid var(--edge);border-radius:3px;background:#eaf4fb;}
   summary{cursor:pointer;padding:11px 16px;font-size:13.5px;font-weight:700;color:var(--core);
     background:var(--core-soft);border-radius:3px 3px 0 0;list-style:none;}
   summary::-webkit-details-marker{display:none;}
@@ -68,16 +68,16 @@
 
   table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13px;}
   th,td{padding:8px 10px;border:1px solid var(--edge);text-align:left;vertical-align:top;}
-  th{background:#22222c;color:var(--core);font-weight:700;font-size:12.5px;}
+  th{background:#eaf4fb;color:var(--core);font-weight:700;font-size:12.5px;}
   td{color:var(--ink-mid);} td strong{color:var(--ink);}
   th code,td code{font-family:Consolas,monospace;color:var(--core);font-size:12px;}
 
-  .pit{background:#2a1615;border-left:4px solid var(--warn);border-radius:0 3px 3px 0;
+  .pit{background:#eae8e8;border-left:4px solid var(--warn);border-radius:0 3px 3px 0;
     padding:13px 17px;margin-top:12px;font-size:13.5px;color:#f0b0aa;}
   .pit .lbl{color:var(--warn);font-weight:700;display:block;margin-bottom:5px;font-size:12px;letter-spacing:.4px;}
   .pit strong{color:#ffd5d0;}
 
-  .lab{background:#2a1e12;border:1px solid #3d2e1c;border-left:4px solid var(--perf);border-radius:3px;
+  .lab{background:#eae8e7;border:1px solid #3d2e1c;border-left:4px solid var(--perf);border-radius:3px;
     padding:12px 16px;margin-top:12px;font-size:13px;color:#e8d0b0;}
   .lab .t{color:var(--perf);font-weight:700;margin-bottom:6px;font-size:12px;letter-spacing:.4px;}
   .lab strong{color:#f8e8d0;} .lab code{font-family:Consolas,monospace;color:var(--perf);}
@@ -166,7 +166,7 @@
           </tr>
         </table>
         <p><strong>而这一层设计只有一个依据</strong>，书里的原话是：</p>
-        <p style="padding:11px 15px;background:#2a2517;border-left:3px solid var(--key);color:#e8dca0;font-style:italic;border-radius:0 3px 3px 0;">
+        <p style="padding:11px 15px;background:#eae9e8;border-left:3px solid var(--key);color:#e8dca0;font-style:italic;border-radius:0 3px 3px 0;">
           "systems look to the <strong>past</strong> as a predictor of what will likely happen in the <strong>future</strong>."
         </p>
         <p><strong>为什么只能靠过去</strong>：书里说得直接——<em>"hardware designers haven't discovered how to build circuits that can predict the future."</em> 而让程序员提前声明访问模式，对通用系统来说负担太大。</p>
@@ -181,7 +181,7 @@
       <p>用那个 <code>sum_array</code> 的例子说明哪些变量利用时间局部性、哪些利用空间局部性。</p>
       <details><summary>展开答案</summary><div class="ans">
         <p>看这段代码：</p>
-        <pre style="background:#16161d;border:1px solid var(--edge);border-radius:3px;padding:12px;font-family:Consolas,monospace;font-size:12.5px;color:var(--ink);overflow-x:auto;">int sum_array(int *array, int len) {
+        <pre style="background:#eaf4fb;border:1px solid var(--edge);border-radius:3px;padding:12px;font-family:Consolas,monospace;font-size:12.5px;color:var(--ink);overflow-x:auto;">int sum_array(int *array, int len) {
     int i, sum = 0;
     for (i = 0; i &lt; len; i++) {
         sum += array[i];
@@ -329,7 +329,7 @@
           <tr><td><code>massif</code></td><td>峰值内存占用 + 时间曲线</td></tr>
         </table>
         <p><strong>为什么"可测量"很重要</strong>——这是本题的核心。回想 algs4 第 1.4 节那句：</p>
-        <p style="padding:11px 15px;background:#2a2517;border-left:3px solid var(--key);color:#e8dca0;font-style:italic;border-radius:0 3px 3px 0;">
+        <p style="padding:11px 15px;background:#eae9e8;border-left:3px solid var(--key);color:#e8dca0;font-style:italic;border-radius:0 3px 3px 0;">
           "The experiments we design must be <strong>reproducible</strong> and the hypotheses that we formulate must be <strong>falsifiable</strong>."
         </p>
         <p><strong>这一层同样遵守这条纪律。</strong>你不需要"相信"局部性理论——<em>你可以测。你可以造两个版本的代码，让 cachegrind 告诉你缺失次数差多少。</em></p>
@@ -515,7 +515,7 @@
           </tr>
         </table>
         <p><strong>而这三层的诊断顺序很重要</strong>：</p>
-        <p style="padding:12px 18px;background:#22222c;border-left:3px solid var(--core);color:var(--ink-mid);font-size:13.5px;border-radius:0 3px 3px 0;">
+        <p style="padding:12px 18px;background:#eaf4fb;border-left:3px solid var(--core);color:var(--ink-mid);font-size:13.5px;border-radius:0 3px 3px 0;">
           ① 先看<strong>规模 N</strong>（太小则一切无意义）→ ② 再看<strong>增长级</strong>（错了则优化常数无用）→ ③ 再看<strong>数据结构</strong>（换一个可能省掉一个 log）→ ④ 然后才是<strong>访问模式</strong>（这一层）→ ⑤ 最后是<strong>常数与微优化</strong>
         </p>
         <p><strong>仍然缺的部分</strong>（诚实列出）：</p>

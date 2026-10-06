@@ -6,15 +6,15 @@
 <title>《Algorithms》第4版 整体架构 —— 一本把"分析算法"做成科学方法的书</title>
 <style>
   :root{
-    --paper:#0f1418; --card:#161d23; --edge:#26313a;
-    --ink:#e4edf2; --ink-mid:#a8bcc8; --ink-soft:#6d8494;
-    --core:#4ec9b0; --core-soft:#122a27;      /* 主色：青 */
-    --api:#5aa9e6; --api-soft:#12202c;         /* API/抽象 */
-    --mech:#e6a54e; --mech-soft:#2a2114;      /* 机制 */
-    --perf:#c76ee0; --perf-soft:#241a2b;       /* 性能 */
-    --strat:#7ec96e; --strat-soft:#1a2417;     /* 策略 */
-    --warn:#ee6c5a; --warn-soft:#2b1a18;
-    --key:#d9c26a; --key-soft:#2a2517;
+    --paper: #f2f8fc; --card: #ffffff; --edge: #cfe0ec;
+    --ink: #12232e; --ink-mid: #3f5b6b; --ink-soft: #5c7a8c;
+    --core: #328171; --core-soft: #edfaf7;      /* 主色：青 */
+    --api: #3f76a1; --api-soft: #eef6fc;         /* API/抽象 */
+    --mech: #936a32; --mech-soft: #fcf6ed;      /* 机制 */
+    --perf: #9754aa; --perf-soft: #f9f0fc;       /* 性能 */
+    --strat: #518146; --strat-soft: #f2faf0;     /* 策略 */
+    --warn: #b55244; --warn-soft: #fdf0ee;
+    --key: #7e713d; --key-soft: #fbf9f0;
   }
   *{margin:0;padding:0;box-sizing:border-box;}
   body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
@@ -32,7 +32,7 @@
     border-radius:3px;padding:20px 24px;margin-bottom:28px;font-size:14.5px;color:var(--ink-mid);}
   .guide .t{color:var(--core);font-weight:700;margin-bottom:10px;font-size:13.5px;letter-spacing:.5px;}
   .guide p+p{margin-top:8px;} .guide strong{color:var(--ink);}
-  .guide code{font-family:Consolas,monospace;color:var(--core);background:#0d1f1c;padding:1px 5px;border-radius:2px;font-size:12.5px;}
+  .guide code{font-family:Consolas,monospace;color:var(--core);background:#e7e9e8;padding:1px 5px;border-radius:2px;font-size:12.5px;}
 
   .section-title{font-size:20px;font-weight:700;color:var(--ink);margin:46px 0 8px;padding-left:13px;
     border-left:4px solid var(--core);letter-spacing:.3px;}
@@ -42,7 +42,7 @@
   .card h3{color:var(--core);margin-bottom:10px;font-size:16.5px;}
   .card p{color:var(--ink-mid);font-size:14.5px;} .card p+p{margin-top:9px;}
   .card strong{color:var(--ink);}
-  .card code{font-family:Consolas,monospace;color:var(--core);background:#0d1f1c;padding:1px 5px;border-radius:2px;font-size:12.5px;}
+  .card code{font-family:Consolas,monospace;color:var(--core);background:#e7e9e8;padding:1px 5px;border-radius:2px;font-size:12.5px;}
 
   /* 四层解剖 */
   .anat{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:12px;margin:18px 0;}
@@ -57,7 +57,7 @@
 
   table{width:100%;border-collapse:collapse;margin:13px 0;font-size:13px;}
   th,td{padding:9px 11px;border:1px solid var(--edge);text-align:left;vertical-align:top;}
-  th{background:#1b242b;color:var(--core);font-weight:700;font-size:12.5px;}
+  th{background:#e8e9ea;color:var(--core);font-weight:700;font-size:12.5px;}
   td{color:var(--ink-mid);} td strong{color:var(--ink);}
   td code,th code{font-family:Consolas,monospace;color:var(--core);font-size:12px;}
   td em{color:var(--warn);font-style:normal;font-weight:600;}
@@ -84,7 +84,7 @@
     border-radius:3px;padding:18px 22px;margin-bottom:14px;font-size:14px;color:var(--ink-mid);}
   .lab .t{color:var(--perf);font-weight:700;margin-bottom:8px;font-size:13.5px;letter-spacing:.4px;}
   .lab strong{color:var(--ink);}
-  .lab code{font-family:Consolas,monospace;color:var(--perf);background:#1a1220;padding:1px 5px;border-radius:2px;font-size:12.5px;}
+  .lab code{font-family:Consolas,monospace;color:var(--perf);background:#e8e7e9;padding:1px 5px;border-radius:2px;font-size:12.5px;}
   .lab ol,.lab ul{margin:8px 0 0 20px;} .lab li{margin-bottom:5px;}
 
   .footer{text-align:center;margin-top:44px;padding:22px;color:var(--ink-soft);font-size:12.5px;line-height:1.9;}
@@ -164,7 +164,7 @@
 
   <div class="card">
     <p>这一节从一个很朴素的问题开始：</p>
-    <p style="padding:12px 18px;background:#1b242b;border-left:3px solid var(--core);border-radius:0 3px 3px 0;color:var(--ink);font-family:Consolas,monospace;font-size:14px;">
+    <p style="padding:12px 18px;background:#e8e9ea;border-left:3px solid var(--core);border-radius:0 3px 3px 0;color:var(--ink);font-family:Consolas,monospace;font-size:14px;">
        How long will my program take?<br>
        Why does my program run out of memory?
     </p>
@@ -265,7 +265,7 @@
       <tr><td><strong>字符串</strong>（长度 N）</td><td><strong>32 + (24 + 2N) = 56 + 2N 字节</strong></td><td>String 对象 + 字符数组</td></tr>
     </table>
     <p><strong>这里有一个很实用的记账约定</strong>，值得单独记：</p>
-    <p style="padding:12px 18px;background:#1b242b;border-left:3px solid var(--perf);border-radius:0 3px 3px 0;color:var(--ink-mid);font-size:13.5px;">
+    <p style="padding:12px 18px;background:#e8e9ea;border-left:3px solid var(--perf);border-radius:0 3px 3px 0;color:var(--ink-mid);font-size:13.5px;">
       我们<b>算</b> String 对象里的 char[] 数组（因为它是创建字符串时分配的），但<b>不算</b> StackOfStrings 里那些 String 对象（因为它们是客户端创建的）。
     </p>
     <p>——<strong>算谁分配的内存，不算谁引用的内存。</strong>这条约定让内存核算变得可判定。</p>

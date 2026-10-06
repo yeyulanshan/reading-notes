@@ -6,11 +6,11 @@
 <title>《动手学深度学习》问题手册 —— 20 题，练到能判断「这个结论在这能用吗」</title>
 <style>
   :root{
-    --paper:#0f1117; --card:#171a22; --edge:#282d39;
-    --ink:#e6e9f0; --ink-mid:#a8b0c0; --ink-soft:#6c7486;
-    --core:#4ea1d3; --core-soft:#12222d;
-    --fit:#e0a13c; --reg:#c76ee0; --data:#5cc98f;
-    --warn:#ee6c5a; --warn-soft:#2b1a18; --key:#d9c26a; --key-soft:#2a2517;
+    --paper: #f2f8fc; --card: #ffffff; --edge: #cfe0ec;
+    --ink: #12232e; --ink-mid: #3f5b6b; --ink-soft: #5c7a8c;
+    --core: #3b7aa0; --core-soft: #edf6fb;
+    --fit: #8f6726; --reg: #9754aa; --data: #3b815c;
+    --warn: #b55244; --warn-soft: #fdf0ee; --key: #7e713d; --key-soft: #fbf9f0;
   }
   *{margin:0;padding:0;box-sizing:border-box;}
   body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
@@ -26,7 +26,7 @@
     border-radius:3px;padding:20px 24px;margin-bottom:26px;font-size:14.5px;color:var(--ink-mid);}
   .guide .t{color:var(--core);font-weight:700;margin-bottom:10px;font-size:13.5px;letter-spacing:.5px;}
   .guide ol{margin-left:20px;} .guide li{margin-bottom:6px;} .guide strong{color:var(--ink);}
-  .guide code{font-family:Consolas,monospace;color:var(--core);background:#0d1a22;padding:1px 5px;border-radius:2px;font-size:12.5px;}
+  .guide code{font-family:Consolas,monospace;color:var(--core);background:#e7e8e9;padding:1px 5px;border-radius:2px;font-size:12.5px;}
   .level-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:30px;}
   .level-bar .lv{flex:1;min-width:170px;background:var(--card);border:1px solid var(--edge);border-top:4px solid;border-radius:3px;padding:14px 16px;}
   .level-bar .lv.l1{border-top-color:#7aa05c;} .level-bar .lv.l2{border-top-color:#c9a227;}
@@ -43,12 +43,12 @@
   .q-head .num{font-size:13px;font-weight:700;color:#0f1117;background:var(--core);padding:3px 10px;border-radius:2px;flex-shrink:0;margin-top:2px;font-family:Consolas,monospace;}
   .q-head .txt{font-size:15.5px;color:var(--ink);font-weight:600;line-height:1.7;}
   .q-head .lvtag{font-size:10.5px;padding:2px 8px;border-radius:20px;font-weight:700;white-space:nowrap;margin-left:auto;flex-shrink:0;margin-top:3px;}
-  .lvtag.l1{background:#1e2a19;color:#8fbf6a;} .lvtag.l2{background:#2a2517;color:#e0b93f;}
-  .lvtag.l3{background:#2a1f14;color:#d98a3f;} .lvtag.l4{background:#241a2b;color:var(--reg);}
+  .lvtag.l1{background:#e8eae8;color:#8fbf6a;} .lvtag.l2{background:#eae9e8;color:#e0b93f;}
+  .lvtag.l3{background:#eae9e8;color:#d98a3f;} .lvtag.l4{background:#e9e8ea;color:var(--reg);}
   .q-body{padding:18px 22px;font-size:14px;color:var(--ink-mid);}
   .q-body p+p{margin-top:8px;} .q-body strong{color:var(--ink);}
-  .q-body code{font-family:Consolas,monospace;color:var(--core);background:#0d1a22;padding:1px 5px;border-radius:2px;font-size:12.5px;}
-  details{margin-top:12px;border:1px solid var(--edge);border-radius:3px;background:#13161d;}
+  .q-body code{font-family:Consolas,monospace;color:var(--core);background:#e7e8e9;padding:1px 5px;border-radius:2px;font-size:12.5px;}
+  details{margin-top:12px;border:1px solid var(--edge);border-radius:3px;background:#e7e8e8;}
   summary{cursor:pointer;padding:11px 16px;font-size:13.5px;font-weight:700;color:var(--core);
     background:var(--core-soft);border-radius:3px 3px 0 0;list-style:none;}
   summary::-webkit-details-marker{display:none;}
@@ -61,7 +61,7 @@
   .ans code{font-family:Consolas,monospace;color:var(--core);font-size:12.5px;}
   table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13px;}
   th,td{padding:8px 10px;border:1px solid var(--edge);text-align:left;vertical-align:top;}
-  th{background:#1c212b;color:var(--core);font-weight:700;font-size:12.5px;}
+  th{background:#e8e9ea;color:var(--core);font-weight:700;font-size:12.5px;}
   td{color:var(--ink-mid);} td strong{color:var(--ink);}
   th code,td code{font-family:Consolas,monospace;color:var(--core);font-size:12px;}
   .pit{background:var(--warn-soft);border-left:4px solid var(--warn);border-radius:0 3px 3px 0;
@@ -128,7 +128,7 @@
           <tr><td><strong>泛化误差</strong></td><td>"模型应用在<strong>同样从原始样本的分布中抽取的无限多数据样本</strong>时，模型误差的期望"</td></tr>
         </table>
         <p><strong>为什么"永远不能准确计算"</strong>——书里的原话（第 6984 行）：</p>
-        <p style="padding:11px 15px;background:#1c212b;border-left:3px solid var(--core);border-radius:0 3px 3px 0;color:var(--ink);">
+        <p style="padding:11px 15px;background:#e8e9ea;border-left:3px solid var(--core);border-radius:0 3px 3px 0;color:var(--ink);">
           "问题是，<strong>我们永远不能准确地计算出泛化误差。</strong>这是因为无限多的数据样本是一个虚构的对象。在实际中，我们只能通过将模型应用于一个<strong>独立的测试集</strong>来估计泛化误差。"
         </p>
         <p><strong>所以泛化误差是一个"期望"，而期望需要无限样本才能精确求出。</strong>你手上永远只有一个有限样本的估计。</p>
@@ -153,7 +153,7 @@
           <tr><td><strong>过拟合</strong></td><td>低</td><td>高</td><td>训练误差<strong>明显低于</strong>验证误差</td></tr>
         </table>
         <p><strong>书里对"过拟合"的态度很值得注意</strong>（第 7093 行）：</p>
-        <p style="padding:11px 15px;background:#1c212b;border-left:3px solid var(--reg);border-radius:0 3px 3px 0;color:var(--ink-mid);">
+        <p style="padding:11px 15px;background:#e8e9ea;border-left:3px solid var(--reg);border-radius:0 3px 3px 0;color:var(--ink-mid);">
           "注意，<strong>过拟合并不总是一件坏事。</strong>特别是在深度学习领域，众所周知，最好的预测模型在训练数据上的表现往往比在保留（验证）数据上好得多。<strong>最终，我们通常更关心验证误差，而不是训练误差和验证误差之间的差距。</strong>"
         </p>
         <div class="pit"><span class="lbl">⚠️ 适用边界</span>
@@ -182,7 +182,7 @@
         </table>
         <p><strong>而我的实验 8 发现了一个更准确的说法</strong>：过拟合不是由"模型容量"单独决定的，是<strong>「容量 ÷ 样本量」这个比值</strong>决定的。同一组阶数，样本 100 时不出现过拟合，样本 20 时就出现了。</p>
         <p><strong>书里那句关于深度的现实判断</strong>（第 7140 行）：</p>
-        <p style="padding:11px 15px;background:#1c212b;border-left:3px solid var(--data);border-radius:0 3px 3px 0;color:var(--ink-mid);">
+        <p style="padding:11px 15px;background:#e8e9ea;border-left:3px solid var(--data);border-radius:0 3px 3px 0;color:var(--ink-mid);">
           "对于许多任务，<strong>深度学习只有在有数千个训练样本时才优于线性模型。</strong>从一定程度上来说，深度学习目前的生机要归功于廉价存储、互联设备以及数字化经济带来的海量数据集。"
         </p>
         <div class="pit"><span class="lbl">⚠️ 适用边界</span>
@@ -199,15 +199,15 @@
       <p>写出损失函数的形式，并说出它把最优解从什么变成了什么。</p>
       <details><summary>展开答案</summary><div class="ans">
         <p><strong>做法：在损失函数上加一个 L2 惩罚项。</strong></p>
-        <p style="padding:11px 15px;background:#1c212b;border-left:3px solid var(--reg);border-radius:0 3px 3px 0;color:var(--ink);font-family:Consolas,monospace;">
+        <p style="padding:11px 15px;background:#e8e9ea;border-left:3px solid var(--reg);border-radius:0 3px 3px 0;color:var(--ink);font-family:Consolas,monospace;">
           L(w, b) = 原损失 + (λ/2)·‖w‖²
         </p>
         <p><strong>数学上的效果</strong>——它把最优解从：</p>
-        <p style="padding:9px 15px;background:#1c212b;border-left:3px solid var(--reg);color:var(--ink);font-family:Consolas,monospace;font-size:13px;">
+        <p style="padding:9px 15px;background:#e8e9ea;border-left:3px solid var(--reg);color:var(--ink);font-family:Consolas,monospace;font-size:13px;">
           ŵ = (XᵀX)⁻¹Xᵀy
         </p>
         <p>变成了：</p>
-        <p style="padding:9px 15px;background:#1c212b;border-left:3px solid var(--reg);color:var(--ink);font-family:Consolas,monospace;font-size:13px;">
+        <p style="padding:9px 15px;background:#e8e9ea;border-left:3px solid var(--reg);color:var(--ink);font-family:Consolas,monospace;font-size:13px;">
           ŵ = (XᵀX + λI)⁻¹Xᵀy
         </p>
         <p>——<strong>就是在矩阵对角线上加了一个 λ</strong>，使求逆更稳定，同时把权重的幅度往 0 拉。这就是"衰减"这个词的来处。</p>
@@ -229,7 +229,7 @@
       <p>用书里那个"基因数据预测痴呆"的例子解释。</p>
       <details><summary>展开答案</summary><div class="ans">
         <p><strong>书里那个例子极好</strong>（第 6959 行）：</p>
-        <p style="padding:11px 15px;background:#1c212b;border-left:3px solid var(--fit);border-radius:0 3px 3px 0;color:var(--ink-mid);">
+        <p style="padding:11px 15px;background:#e8e9ea;border-left:3px solid var(--fit);border-radius:0 3px 3px 0;color:var(--ink-mid);">
           "因为基因可以唯一确定每个个体（不考虑双胞胎），所以在这个任务中是<strong>有可能记住整个数据集的</strong>。我们不想让模型只会做这样的事情：<strong>'那是鲍勃！我记得他！他有痴呆症！'</strong>"
         </p>
         <p><strong>为什么泛化一定差</strong>：因为"记住"这个操作<strong>没有提取任何可迁移的规律</strong>。它把"输入 → 标签"的映射硬背下来，而这个映射里绝大部分是<strong>噪声</strong>（每个个体的偶然特征）。</p>
@@ -279,7 +279,7 @@
       <p>说出 i.i.d. 假设的内容，以及书里给的两类失效情形。</p>
       <details><summary>展开答案</summary><div class="ans">
         <p><strong>假设的内容</strong>（第 7015 行）：</p>
-        <p style="padding:11px 15px;background:#1c212b;border-left:3px solid var(--core);border-radius:0 3px 3px 0;color:var(--ink);">
+        <p style="padding:11px 15px;background:#e8e9ea;border-left:3px solid var(--core);border-radius:0 3px 3px 0;color:var(--ink);">
           "我们假设训练数据和测试数据都是<strong>从相同的分布中独立提取的</strong>。这通常被称为<strong>独立同分布假设（i.i.d. assumption）</strong>，这意味着对数据进行采样的过程没有进行'记忆'。"
         </p>
         <p><strong>书里给的两类失效</strong>：</p>
@@ -295,7 +295,7 @@
           </tr>
         </table>
         <p><strong>而书里对"假设失效了怎么办"的回答是务实而非教条的</strong>（第 7024 行）：</p>
-        <p style="padding:11px 15px;background:#1c212b;border-left:3px solid var(--data);border-radius:0 3px 3px 0;color:var(--ink-mid);">
+        <p style="padding:11px 15px;background:#e8e9ea;border-left:3px solid var(--data);border-radius:0 3px 3px 0;color:var(--ink-mid);">
           "有时候我们即使<strong>轻微违背</strong>独立同分布假设，模型仍将继续运行得非常好。……毕竟，几乎所有现实的应用都至少涉及到一些违背独立同分布假设的情况。"
         </p>
         <div class="pit"><span class="lbl">⚠️ 适用边界</span>
@@ -312,7 +312,7 @@
       <p>说出它解决的两个问题——一个是书里写的，一个是我实测发现的。</p>
       <details><summary>展开答案</summary><div class="ans">
         <p><strong>书里写的那个理由</strong>（第 7146 行）：</p>
-        <p style="padding:11px 15px;background:#1c212b;border-left:3px solid var(--fit);border-radius:0 3px 3px 0;color:var(--ink-mid);">
+        <p style="padding:11px 15px;background:#e8e9ea;border-left:3px solid var(--fit);border-radius:0 3px 3px 0;color:var(--ink-mid);">
           "在优化的过程中，我们通常希望避免非常大的梯度值或损失值。这就是我们将特征从 <code>x^i</code> 调整为 <code>x^i/i!</code> 的原因，这样可以<strong>避免很大的 i 带来的特别大的指数值</strong>。"
         </p>
         <p><strong>我实测确认了这一点</strong>：如果不缩放，直接用 <code>x</code> 的幂，训练结果直接是 <strong>NaN</strong>。因为 <code>x~N(0,1)</code> 时 <code>x^19</code> 的量级能到 1e4 以上，平方损失爆炸。</p>
@@ -393,7 +393,7 @@
       <details><summary>展开答案</summary><div class="ans">
         <p><strong>这说明有数据泄漏，而不是模型特别好。</strong></p>
         <p><strong>理由</strong>：泛化误差的<strong>下限就是噪声方差</strong>。因为 <code>y = f(x) + ε</code>，而 <code>ε</code> 是不可预测的——<em>你的预测再准，也无法预测噪声本身。</em></p>
-        <p style="padding:11px 15px;background:#1c212b;border-left:3px solid var(--warn);border-radius:0 3px 3px 0;color:#f0b3a9;">
+        <p style="padding:11px 15px;background:#e8e9ea;border-left:3px solid var(--warn);border-radius:0 3px 3px 0;color:#f0b3a9;">
           如果验证误差 <strong>低于</strong>噪声方差，那么你的"验证"一定有问题。
         </p>
         <p><strong>常见的泄漏来源</strong>：</p>
@@ -443,7 +443,7 @@
           </tr>
         </table>
         <p><strong>排查顺序（本项目的实验 11 给了最关键的证据）</strong>：</p>
-        <p style="padding:11px 15px;background:#1c212b;border-left:3px solid var(--core);border-radius:0 3px 3px 0;color:var(--ink-mid);">
+        <p style="padding:11px 15px;background:#e8e9ea;border-left:3px solid var(--core);border-radius:0 3px 3px 0;color:var(--ink-mid);">
           实验 11 的实测：同一个模型，同分布验证误差 <strong>0.0750</strong>，跨分布（输入均值平移 1.0）跳到 <strong>0.1813</strong>，平移 3.0 跳到 <strong>65.23（870 倍）</strong>。<br>
           <strong>而训练误差是 0.0101 —— 从头到尾都"看起来很健康"。</strong>
         </p>
@@ -559,7 +559,7 @@
       <p>找出这句话里三个不够严谨的地方。</p>
       <details><summary>展开答案</summary><div class="ans">
         <p>原话（第 7140 行）：</p>
-        <p style="padding:11px 15px;background:#1c212b;border-left:3px solid var(--data);border-radius:0 3px 3px 0;color:var(--ink-mid);">
+        <p style="padding:11px 15px;background:#e8e9ea;border-left:3px solid var(--data);border-radius:0 3px 3px 0;color:var(--ink-mid);">
           "对于<strong>许多任务</strong>，深度学习只有在有<strong>数千个</strong>训练样本时才优于线性模型。从一定程度上来说，深度学习目前的生机要归功于廉价存储、互联设备以及数字化经济带来的海量数据集。"
         </p>
         <p><strong>三个不够严谨的地方</strong>：</p>
@@ -686,7 +686,7 @@
       <p>这道题考的是"当一个理论陈述和实测冲突时该怎么想"。</p>
       <details><summary>展开答案</summary><div class="ans">
         <p><strong>书里的原话</strong>（第 7104 行）：</p>
-        <p style="padding:11px 15px;background:#1c212b;border-left:3px solid var(--fit);border-radius:0 3px 3px 0;color:var(--ink-mid);">
+        <p style="padding:11px 15px;background:#e8e9ea;border-left:3px solid var(--fit);border-radius:0 3px 3px 0;color:var(--ink-mid);">
           "因此在固定训练数据集的情况下，高阶多项式函数相对于低阶多项式的训练误差<strong>应该始终更低（最坏也是相等）</strong>。"
         </p>
         <p><strong>我的实测</strong>（实验 8，n=100）：5 阶的训练误差 0.078797 <strong>高于</strong> 4 阶的 0.078498 —— 不单调。</p>
@@ -702,7 +702,7 @@
         </ul>
         <p><strong>书里其实自己也知道这件事</strong>——它用第 11 章「优化算法」一整章来讲优化为什么难。<em>只是在第 4.4 节讲模型选择时，它把优化当成了已解决的问题。</em></p>
         <p><strong>而这给了一条很实用的实践判断</strong>：</p>
-        <p style="padding:12px 18px;background:#1c212b;border-left:3px solid var(--core);border-radius:0 3px 3px 0;color:var(--ink-mid);">
+        <p style="padding:12px 18px;background:#e8e9ea;border-left:3px solid var(--core);border-radius:0 3px 3px 0;color:var(--ink-mid);">
           如果你观察到"容量更大但训练误差更高"，<strong>先怀疑优化，而不是怀疑理论</strong>。<br>
           具体做法：把迭代次数加大 10 倍再测一次。如果训练误差降下去了，那就是优化问题。
         </p>

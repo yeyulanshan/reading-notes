@@ -6,14 +6,14 @@
 <title>algs4 助人手册 —— 12 个"帮他看性能问题"的场景</title>
 <style>
   :root{
-    --paper:#0f1418; --card:#161d23; --edge:#26313a;
-    --ink:#e4edf2; --ink-mid:#a8bcc8; --ink-soft:#6d8494;
-    --core:#4ec9b0; --core-soft:#122a27;
-    --scen:#5aa9e6; --scen-soft:#12202c;
-    --ask:#e6a54e; --ask-soft:#2a2114;
-    --warn:#ee6c5a; --warn-soft:#2b1a18;
-    --perf:#c76ee0; --perf-soft:#241a2b;
-    --key:#d9c26a;
+    --paper: #f2f8fc; --card: #ffffff; --edge: #cfe0ec;
+    --ink: #12232e; --ink-mid: #3f5b6b; --ink-soft: #5c7a8c;
+    --core: #328171; --core-soft: #edfaf7;
+    --scen: #3f76a1; --scen-soft: #eef6fc;
+    --ask: #936a32; --ask-soft: #fcf6ed;
+    --warn: #b55244; --warn-soft: #fdf0ee;
+    --perf: #9754aa; --perf-soft: #f9f0fc;
+    --key: #7e713d;
   }
   *{margin:0;padding:0;box-sizing:border-box;}
   body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
@@ -32,7 +32,7 @@
   .guide .t{color:var(--scen);font-weight:700;margin-bottom:10px;font-size:13.5px;letter-spacing:.5px;}
   .guide p+p{margin-top:8px;} .guide strong{color:var(--ink);}
   .guide ol{margin:8px 0 0 20px;} .guide li{margin-bottom:5px;}
-  .guide code{font-family:Consolas,monospace;color:var(--scen);background:#0d1820;padding:1px 5px;border-radius:2px;font-size:12.5px;}
+  .guide code{font-family:Consolas,monospace;color:var(--scen);background:#e7e8e9;padding:1px 5px;border-radius:2px;font-size:12.5px;}
 
   .section-title{font-size:20px;font-weight:700;color:var(--ink);margin:44px 0 8px;padding-left:13px;
     border-left:4px solid var(--scen);letter-spacing:.3px;}
@@ -48,10 +48,10 @@
   .row .lb{font-weight:700;font-size:11.5px;letter-spacing:.3px;display:block;margin-bottom:3px;}
   .row.say .lb{color:var(--ask);} .row.why .lb{color:var(--core);} .row.stop .lb{color:var(--warn);}
   .row strong{color:var(--ink);}
-  .row code{font-family:Consolas,monospace;color:var(--core);background:#0d1f1c;padding:1px 5px;border-radius:2px;font-size:12.5px;}
+  .row code{font-family:Consolas,monospace;color:var(--core);background:#e7e9e8;padding:1px 5px;border-radius:2px;font-size:12.5px;}
   .row em{color:var(--perf);font-style:normal;font-weight:600;}
 
-  .quote{background:#2a2517;border:1px solid #3d3520;border-left:4px solid var(--key);
+  .quote{background:#eae9e8;border:1px solid #3d3520;border-left:4px solid var(--key);
     border-radius:3px;padding:18px 22px;margin:22px 0;}
   .quote p{font-size:15px;color:#e8dca0;font-style:italic;line-height:1.8;}
   .quote .src{margin-top:10px;font-size:12.5px;color:var(--ink-soft);text-align:right;font-style:normal;}
@@ -99,9 +99,9 @@
 
   <table style="width:100%;border-collapse:collapse;font-size:13.5px;margin:13px 0;">
     <tr>
-      <th style="padding:9px 11px;border:1px solid var(--edge);background:#1b242b;color:var(--core);text-align:left;">步</th>
-      <th style="padding:9px 11px;border:1px solid var(--edge);background:#1b242b;color:var(--core);text-align:left;">先看什么</th>
-      <th style="padding:9px 11px;border:1px solid var(--edge);background:#1b242b;color:var(--core);text-align:left;">为什么必须先看</th>
+      <th style="padding:9px 11px;border:1px solid var(--edge);background:#e8e9ea;color:var(--core);text-align:left;">步</th>
+      <th style="padding:9px 11px;border:1px solid var(--edge);background:#e8e9ea;color:var(--core);text-align:left;">先看什么</th>
+      <th style="padding:9px 11px;border:1px solid var(--edge);background:#e8e9ea;color:var(--core);text-align:left;">为什么必须先看</th>
     </tr>
     <tr>
       <td style="padding:9px 11px;border:1px solid var(--edge);color:var(--ink);"><strong>1</strong></td>

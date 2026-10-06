@@ -6,23 +6,23 @@
 <title>《视觉》整体架构 —— 从像素到物体的重建之路</title>
 <style>
   :root{
-    --bg:#0f172a;
+    --bg: #f2f8fc;
     --panel:#1a2337;
     --panel2:#141d2f;
-    --edge:#334155;
-    --ink:#e8eef7;
-    --ink-mid:#b8c4d6;
-    --ink-soft:#8296b0;
-    --calc:#e0913a;        /* 计算理论：输入端，暖琥珀 */
-    --calc-soft:#3a2a12;
-    --prim:#4fb3a6;        /* 基元草图：冷青 */
-    --prim-soft:#12302e;
-    --two5:#7c8ce0;        /* 2.5维草图：靛蓝 */
-    --two5-soft:#1e2447;
-    --three:#b06fd0;       /* 三维模型：紫 */
-    --three-soft:#2e1c3d;
-    --warn:#d9534f;        /* 反例与误区：暗红 */
-    --warn-soft:#3a1a19;
+    --edge: #cfe0ec;
+    --ink: #12232e;
+    --ink-mid: #3f5b6b;
+    --ink-soft: #5c7a8c;
+    --calc: #9d6629;        /* 计算理论：输入端，暖琥珀 */
+    --calc-soft: #fcf4eb;
+    --prim: #377d74;        /* 基元草图：冷青 */
+    --prim-soft: #edf7f6;
+    --two5: #5e6aaa;        /* 2.5维草图：靛蓝 */
+    --two5-soft: #f2f4fc;
+    --three: #905bab;       /* 三维模型：紫 */
+    --three-soft: #f7f1fa;
+    --warn: #bf4946;        /* 反例与误区：暗红 */
+    --warn-soft: #fbeeed;
   }
   *{margin:0;padding:0;box-sizing:border-box;}
   body{
@@ -34,7 +34,7 @@
 
   .header{
     text-align:center;margin-bottom:32px;padding:46px 24px 42px;
-    background:linear-gradient(135deg,#1e3a5f 0%,#0f172a 100%);
+    background:linear-gradient(135deg,#e8ebef 0%,#e7e8ea 100%);
     border:1px solid var(--edge);border-radius:16px;
   }
   .header h1{font-size:27px;color:#f8fafc;margin-bottom:14px;letter-spacing:.5px;}
@@ -144,7 +144,7 @@
   }
   .must .route-badge{background:var(--calc-soft);color:var(--calc);}
   .skim .route-badge{background:var(--prim-soft);color:var(--prim);}
-  .skip .route-badge{background:#243044;color:var(--ink-soft);}
+  .skip .route-badge{background:#e9eaec;color:var(--ink-soft);}
   .route-body strong{color:var(--ink);display:block;margin-bottom:3px;font-size:14.5px;}
   .route-body span{color:var(--ink-mid);font-size:13px;}
 

@@ -6,11 +6,11 @@
 <title>《动手学深度学习》助人手册 —— 12 个"模型不工作时该问什么"的场景</title>
 <style>
   :root{
-    --paper:#0f1117; --card:#171a22; --edge:#282d39;
-    --ink:#e6e9f0; --ink-mid:#a8b0c0; --ink-soft:#6c7486;
-    --core:#4ea1d3; --core-soft:#12222d;
-    --ask:#e0a13c; --fit:#e0a13c; --reg:#c76ee0; --data:#5cc98f;
-    --warn:#ee6c5a; --warn-soft:#2b1a18; --key:#d9c26a; --key-soft:#2a2517;
+    --paper: #f2f8fc; --card: #ffffff; --edge: #cfe0ec;
+    --ink: #12232e; --ink-mid: #3f5b6b; --ink-soft: #5c7a8c;
+    --core: #3b7aa0; --core-soft: #edf6fb;
+    --ask: #8f6726; --fit: #8f6726; --reg: #9754aa; --data: #3b815c;
+    --warn: #b55244; --warn-soft: #fdf0ee; --key: #7e713d; --key-soft: #fbf9f0;
   }
   *{margin:0;padding:0;box-sizing:border-box;}
   body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
@@ -26,14 +26,14 @@
     border-radius:3px;padding:20px 24px;margin-bottom:28px;font-size:14.5px;color:var(--ink-mid);}
   .guide .t{color:var(--core);font-weight:700;margin-bottom:10px;font-size:13.5px;letter-spacing:.5px;}
   .guide p+p{margin-top:8px;} .guide strong{color:var(--ink);}
-  .guide code{font-family:Consolas,monospace;color:var(--core);background:#0d1a22;padding:1px 5px;border-radius:2px;font-size:12.5px;}
+  .guide code{font-family:Consolas,monospace;color:var(--core);background:#e7e8e9;padding:1px 5px;border-radius:2px;font-size:12.5px;}
   .guide ol{margin:8px 0 0 20px;} .guide li{margin-bottom:5px;}
   .section-title{font-size:20px;font-weight:700;color:var(--ink);margin:44px 0 8px;padding-left:13px;
     border-left:4px solid var(--core);letter-spacing:.3px;}
   .section-sub{color:var(--ink-soft);font-size:13.5px;margin:0 0 18px 17px;}
   table{width:100%;border-collapse:collapse;margin:13px 0;font-size:13.5px;}
   th,td{padding:9px 11px;border:1px solid var(--edge);text-align:left;vertical-align:top;}
-  th{background:#1c212b;color:var(--core);font-weight:700;font-size:12.5px;}
+  th{background:#e8e9ea;color:var(--core);font-weight:700;font-size:12.5px;}
   td{color:var(--ink-mid);} td strong{color:var(--ink);}
   th code,td code{font-family:Consolas,monospace;color:var(--core);font-size:12px;}
   td em{color:var(--fit);font-style:normal;font-weight:600;}
@@ -48,7 +48,7 @@
   .row.say .lb{color:var(--ask);} .row.why .lb{color:var(--core);} .row.stop .lb{color:var(--warn);}
   .row.ok .lb{color:var(--data);}
   .row strong{color:var(--ink);}
-  .row code{font-family:Consolas,monospace;color:var(--core);background:#0d1a22;padding:1px 5px;border-radius:2px;font-size:12.5px;}
+  .row code{font-family:Consolas,monospace;color:var(--core);background:#e7e8e9;padding:1px 5px;border-radius:2px;font-size:12.5px;}
   .row em{color:var(--reg);font-style:normal;font-weight:600;}
   .quote{background:var(--key-soft);border:1px solid #3d3520;border-left:4px solid var(--key);
     border-radius:3px;padding:18px 22px;margin:22px 0;}

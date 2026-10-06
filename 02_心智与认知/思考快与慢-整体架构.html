@@ -8,8 +8,8 @@
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
-    background: #0f172a;
-    color: #e2e8f0;
+    background: #f2f8fc;
+    color: #1b2a33;
     padding: 24px;
     min-height: 100vh;
   }
@@ -19,21 +19,21 @@
     font-size: 28px;
     font-weight: 700;
     margin-bottom: 8px;
-    background: linear-gradient(135deg, #38bdf8, #818cf8);
+    background: linear-gradient(135deg, #24799f, #626abc);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
   .subtitle {
     text-align: center;
-    color: #94a3b8;
+    color: #3f5b6b;
     font-size: 14px;
     margin-bottom: 32px;
   }
   .diagram-wrap {
-    background: #1e293b;
+    background: #ffffff;
     border-radius: 16px;
     padding: 32px;
-    border: 1px solid #334155;
+    border: 1px solid #cfe0ec;
     overflow-x: auto;
   }
   svg { display: block; margin: 0 auto; }
@@ -41,29 +41,29 @@
   .node { cursor: pointer; transition: all 0.2s; }
   .node:hover { filter: brightness(1.15); }
 
-  .node-system1 { fill: #0ea5e9; fill-opacity: 0.2; stroke: #38bdf8; stroke-width: 2; }
-  .node-system2 { fill: #8b5cf6; fill-opacity: 0.2; stroke: #a78bfa; stroke-width: 2; }
-  .node-external { fill: #64748b; fill-opacity: 0.2; stroke: #94a3b8; stroke-width: 2; }
-  .node-sub-s1 { fill: #0ea5e9; fill-opacity: 0.1; stroke: #38bdf8; stroke-width: 1.5; }
-  .node-sub-s2 { fill: #8b5cf6; fill-opacity: 0.1; stroke: #a78bfa; stroke-width: 1.5; }
+  .node-system1 { fill: #0b7db1; fill-opacity: 0.2; stroke: #24799f; stroke-width: 2; }
+  .node-system2 { fill: #e8defd; fill-opacity: 0.2; stroke: #7561af; stroke-width: 2; }
+  .node-external { fill: #5c7a8c; fill-opacity: 0.2; stroke: #3f5b6b; stroke-width: 2; }
+  .node-sub-s1 { fill: #0b7db1; fill-opacity: 0.1; stroke: #24799f; stroke-width: 1.5; }
+  .node-sub-s2 { fill: #e8defd; fill-opacity: 0.1; stroke: #7561af; stroke-width: 1.5; }
 
-  .node-title { font-size: 16px; font-weight: 700; fill: #e2e8f0; text-anchor: middle; }
-  .node-subtitle { font-size: 12px; fill: #94a3b8; text-anchor: middle; }
-  .node-tag { font-size: 11px; fill: #64748b; text-anchor: middle; }
-  .sub-title { font-size: 13px; font-weight: 600; fill: #e2e8f0; text-anchor: middle; }
-  .sub-desc { font-size: 10px; fill: #94a3b8; text-anchor: middle; }
+  .node-title { font-size: 16px; font-weight: 700; fill: #1b2a33; text-anchor: middle; }
+  .node-subtitle { font-size: 12px; fill: #3f5b6b; text-anchor: middle; }
+  .node-tag { font-size: 11px; fill: #5c7a8c; text-anchor: middle; }
+  .sub-title { font-size: 13px; font-weight: 600; fill: #1b2a33; text-anchor: middle; }
+  .sub-desc { font-size: 10px; fill: #3f5b6b; text-anchor: middle; }
 
-  .boundary-s1 { fill: none; stroke: #38bdf8; stroke-width: 1.5; stroke-dasharray: 8,4; opacity: 0.4; rx: 12; }
-  .boundary-s2 { fill: none; stroke: #a78bfa; stroke-width: 1.5; stroke-dasharray: 8,4; opacity: 0.4; rx: 12; }
+  .boundary-s1 { fill: none; stroke: #24799f; stroke-width: 1.5; stroke-dasharray: 8,4; opacity: 0.4; rx: 12; }
+  .boundary-s2 { fill: none; stroke: #7561af; stroke-width: 1.5; stroke-dasharray: 8,4; opacity: 0.4; rx: 12; }
   .boundary-label { font-size: 12px; font-weight: 600; opacity: 0.7; }
 
   .conn { fill: none; stroke-width: 2; }
-  .conn-emphasis { stroke: #38bdf8; }
-  .conn-dashed { stroke: #64748b; stroke-dasharray: 6,4; }
-  .conn-security { stroke: #f59e0b; }
-  .conn-normal { stroke: #94a3b8; }
+  .conn-emphasis { stroke: #24799f; }
+  .conn-dashed { stroke: #5c7a8c; stroke-dasharray: 6,4; }
+  .conn-security { stroke: #9d6507; }
+  .conn-normal { stroke: #3f5b6b; }
 
-  .conn-label { font-size: 11px; fill: #94a3b8; text-anchor: middle; }
+  .conn-label { font-size: 11px; fill: #3f5b6b; text-anchor: middle; }
 
   .cards {
     display: grid;
@@ -72,10 +72,10 @@
     margin-top: 24px;
   }
   .card {
-    background: #1e293b;
+    background: #ffffff;
     border-radius: 12px;
     padding: 20px;
-    border: 1px solid #334155;
+    border: 1px solid #cfe0ec;
   }
   .card-dot {
     display: inline-block;
@@ -93,7 +93,7 @@
   .card ul { list-style: none; }
   .card li {
     font-size: 13px;
-    color: #cbd5e1;
+    color: #2c3f4c;
     padding: 4px 0;
     padding-left: 16px;
     position: relative;
@@ -102,13 +102,13 @@
     content: "•";
     position: absolute;
     left: 0;
-    color: #64748b;
+    color: #5c7a8c;
   }
 
   .tooltip {
     position: fixed;
-    background: #0f172a;
-    border: 1px solid #334155;
+    background: #f2f8fc;
+    border: 1px solid #cfe0ec;
     border-radius: 8px;
     padding: 12px 16px;
     font-size: 13px;
@@ -120,8 +120,8 @@
     box-shadow: 0 8px 24px rgba(0,0,0,0.4);
   }
   .tooltip.visible { opacity: 1; }
-  .tooltip h4 { font-size: 14px; margin-bottom: 6px; color: #e2e8f0; }
-  .tooltip p { font-size: 12px; color: #94a3b8; line-height: 1.5; }
+  .tooltip h4 { font-size: 14px; margin-bottom: 6px; color: #1b2a33; }
+  .tooltip p { font-size: 12px; color: #3f5b6b; line-height: 1.5; }
 </style>
 </head>
 <body>
@@ -133,10 +133,10 @@
     <svg width="1000" height="520" viewBox="0 0 1000 520">
       <!-- 边界 -->
       <rect class="boundary-s1" x="200" y="60" width="280" height="380" rx="12"/>
-      <text class="boundary-label" x="340" y="80" fill="#38bdf8" text-anchor="middle">系统 1 · 快思考（自动模式）</text>
+      <text class="boundary-label" x="340" y="80" fill="#24799f" text-anchor="middle">系统 1 · 快思考（自动模式）</text>
 
       <rect class="boundary-s2" x="520" y="60" width="280" height="380" rx="12"/>
-      <text class="boundary-label" x="660" y="80" fill="#a78bfa" text-anchor="middle">系统 2 · 慢思考（控制模式）</text>
+      <text class="boundary-label" x="660" y="80" fill="#7561af" text-anchor="middle">系统 2 · 慢思考（控制模式）</text>
 
       <!-- 连接线路 -->
       <!-- 刺激 → 系统1 -->
@@ -162,13 +162,13 @@
       <!-- 箭头定义 -->
       <defs>
         <marker id="arrow-blue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-          <polygon points="0 0, 10 3.5, 0 7" fill="#38bdf8"/>
+          <polygon points="0 0, 10 3.5, 0 7" fill="#24799f"/>
         </marker>
         <marker id="arrow-gray" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-          <polygon points="0 0, 10 3.5, 0 7" fill="#94a3b8"/>
+          <polygon points="0 0, 10 3.5, 0 7" fill="#3f5b6b"/>
         </marker>
         <marker id="arrow-amber" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-          <polygon points="0 0, 10 3.5, 0 7" fill="#f59e0b"/>
+          <polygon points="0 0, 10 3.5, 0 7" fill="#9d6507"/>
         </marker>
       </defs>
 
@@ -244,7 +244,7 @@
 
   <div class="cards">
     <div class="card">
-      <div class="card-title"><span class="card-dot" style="background:#38bdf8;"></span>系统 1 · 快思考</div>
+      <div class="card-title"><span class="card-dot" style="background:#24799f;"></span>系统 1 · 快思考</div>
       <ul>
         <li>运行无意识、快速、不费力</li>
         <li>联想记忆持续自动运行</li>
@@ -253,7 +253,7 @@
       </ul>
     </div>
     <div class="card">
-      <div class="card-title"><span class="card-dot" style="background:#a78bfa;"></span>系统 2 · 慢思考</div>
+      <div class="card-title"><span class="card-dot" style="background:#7561af;"></span>系统 2 · 慢思考</div>
       <ul>
         <li>需要集中注意力，费力且受控</li>
         <li>具备逻辑推理与统计思维能力</li>
@@ -262,7 +262,7 @@
       </ul>
     </div>
     <div class="card">
-      <div class="card-title"><span class="card-dot" style="background:#f59e0b;"></span>核心偏见来源</div>
+      <div class="card-title"><span class="card-dot" style="background:#9d6507;"></span>核心偏见来源</div>
       <ul>
         <li>锚定效应 · 可得性启发 · 代表性启发</li>
         <li>损失厌恶 · 禀赋效应 · 框架效应</li>

@@ -6,15 +6,15 @@
 <title>《动手学深度学习》经验结论的适用边界手册 —— 每条「X 更好」都必须带条件</title>
 <style>
   :root{
-    --paper:#101014; --card:#191920; --edge:#2a2a35;
-    --ink:#e8e8f0; --ink-mid:#ababbc; --ink-soft:#70707f;
-    --core:#d4693c; --core-soft:#2b1a12;      /* 主色：砖红，区别于整体架构的蓝 */
-    --q1:#4ea1d3; --q1-soft:#12222d;           /* 数据分布 */
-    --q2:#e0a13c; --q2-soft:#2a2114;           /* 样本量 */
-    --q3:#8e6ee0; --q3-soft:#1f1a2b;           /* 超参 */
-    --warn:#ee6c5a; --warn-soft:#2b1a18;
-    --key:#d9c26a; --key-soft:#2a2517;
-    --ok:#5cc98f; --ok-soft:#122620;
+    --paper: #f2f8fc; --card: #ffffff; --edge: #cfe0ec;
+    --ink: #12232e; --ink-mid: #3f5b6b; --ink-soft: #5c7a8c;
+    --core: #ae5631; --core-soft: #fbf0ec;      /* 主色：砖红，区别于整体架构的蓝 */
+    --q1: #3b7aa0; --q1-soft: #edf6fb;           /* 数据分布 */
+    --q2: #8f6726; --q2-soft: #fcf6ec;           /* 样本量 */
+    --q3: #7d61c5; --q3-soft: #f4f0fc;           /* 超参 */
+    --warn: #b55244; --warn-soft: #fdf0ee;
+    --key: #7e713d; --key-soft: #fbf9f0;
+    --ok: #3b815c; --ok-soft: #effaf4;
   }
   *{margin:0;padding:0;box-sizing:border-box;}
   body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
@@ -32,7 +32,7 @@
     border-radius:3px;padding:22px 26px;margin-bottom:28px;font-size:14.5px;color:var(--ink-mid);}
   .guide .t{color:var(--core);font-weight:700;margin-bottom:12px;font-size:14px;letter-spacing:.5px;}
   .guide p+p{margin-top:9px;} .guide strong{color:var(--ink);}
-  .guide code{font-family:Consolas,monospace;color:var(--core);background:#1e120c;padding:1px 5px;border-radius:2px;font-size:12.5px;}
+  .guide code{font-family:Consolas,monospace;color:var(--core);background:#e8e7e7;padding:1px 5px;border-radius:2px;font-size:12.5px;}
 
   /* 三个追问 */
   .three{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px;margin:20px 0;}
@@ -54,7 +54,7 @@
   .b-head .num{font-size:11.5px;font-weight:700;color:#101014;background:var(--core);padding:2px 9px;border-radius:2px;font-family:Consolas,monospace;flex-shrink:0;}
   .b-head .tt{font-size:15.5px;font-weight:700;color:var(--ink);line-height:1.6;}
   .b-body{padding:20px 24px;}
-  .claim{background:#13131a;border-left:3px solid var(--key);border-radius:0 3px 3px 0;
+  .claim{background:#e7e7e8;border-left:3px solid var(--key);border-radius:0 3px 3px 0;
     padding:13px 17px;margin-bottom:14px;font-size:13.5px;color:#e8dca0;}
   .claim .lb{color:var(--key);font-weight:700;font-size:11.5px;display:block;margin-bottom:4px;letter-spacing:.4px;}
   .row{padding:10px 0;border-bottom:1px dashed var(--edge);font-size:13.5px;color:var(--ink-mid);}
@@ -63,12 +63,12 @@
   .row.a .lb{color:var(--q1);} .row.b .lb{color:var(--q2);} .row.c .lb{color:var(--q3);}
   .row.d .lb{color:var(--ok);} .row.e .lb{color:var(--warn);}
   .row strong{color:var(--ink);}
-  .row code{font-family:Consolas,monospace;color:var(--core);background:#1e120c;padding:1px 5px;border-radius:2px;font-size:12.5px;}
+  .row code{font-family:Consolas,monospace;color:var(--core);background:#e8e7e7;padding:1px 5px;border-radius:2px;font-size:12.5px;}
   .row em{color:var(--ink-soft);font-style:normal;}
 
   table{width:100%;border-collapse:collapse;margin:13px 0;font-size:13px;}
   th,td{padding:8px 10px;border:1px solid var(--edge);text-align:left;vertical-align:top;}
-  th{background:#20202a;color:var(--core);font-weight:700;font-size:12.5px;}
+  th{background:#eaf4fb;color:var(--core);font-weight:700;font-size:12.5px;}
   td{color:var(--ink-mid);} td strong{color:var(--ink);}
   th code,td code{font-family:Consolas,monospace;color:var(--core);font-size:12px;}
 
