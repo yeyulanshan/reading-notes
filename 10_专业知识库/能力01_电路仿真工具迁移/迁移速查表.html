@@ -167,7 +167,7 @@
 <tr><td><code>f</code></td><td>飞（1e-15）</td><td></td></tr>
 </table>
 <p><strong>★ 这是从 Multisim 迁移时最危险的一个坑</strong>： 很多人以为 <code>1m</code> 是"1 兆"，实际是"1 毫"。想写 1MΩ 必须写 <strong><code>1meg</code></strong>。 写错了不报错，<strong>只是结果差 1000 倍</strong> —— 而你可能很久才发现。</p>
-<p>&gt; 保险做法：<strong>一律用科学计数法</strong>，比如 <code>1e6</code>、<code>1e-3</code>。 &gt; 完全避免后缀歧义。</p>
+<blockquote><p>保险做法：<strong>一律用科学计数法</strong>，比如 <code>1e6</code>、<code>1e-3</code>。 完全避免后缀歧义。</p></blockquote>
 <p><strong>★ 坑 4</strong>：<code>1k</code> 与 <code>1K</code> 一样（SPICE 不分大小写）。 但 <code>1M</code> 和 <code>1m</code> <strong>完全一样</strong> —— 都是毫！所以大写也救不了你，只能用 <code>meg</code>。</p>
 <hr>
 <h2>三、分析类型对照</h2>
@@ -242,7 +242,7 @@
 <tr><td>带宽（−3dB 频率）</td><td><code>.meas AC fc WHEN mag(V(out))=0.7071</code></td></tr>
 </table>
 <p><strong>为什么这值得迁移</strong>：</p>
-<p>&gt; 改一个元件值，重跑，<strong>数值直接对比</strong> —— 而不是"眼睛看一下，感觉差不多"。 &gt; <strong>这和你项目里 <code>动手实验/</code> 的传统是同一件事：把观察变成可复现的测量。</strong></p>
+<blockquote><p>改一个元件值，重跑，<strong>数值直接对比</strong> —— 而不是"眼睛看一下，感觉差不多"。 <strong>这和你项目里 <code>动手实验/</code> 的传统是同一件事：把观察变成可复现的测量。</strong></p></blockquote>
 <hr>
 <h2>七、绘图习惯的差别</h2>
 <table>

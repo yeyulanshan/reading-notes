@@ -136,7 +136,7 @@
 <hr>
 <h2>一、这个能力的定义</h2>
 <p><strong>能做这件事，就算掌握：</strong></p>
-<p>&gt; 拿到一个电路，能在 LTspice 里从零建好、跑出正确的分析结果、并<strong>判断结果对不对</strong>。</p>
+<blockquote><p>拿到一个电路，能在 LTspice 里从零建好、跑出正确的分析结果、并<strong>判断结果对不对</strong>。</p></blockquote>
 <p><strong>注意最后那个"判断对不对"是核心。</strong> 仿真最危险的地方不是"不会用"，而是<strong>算错了却以为对</strong>。</p>
 <p><strong>为什么这个能力值得作为第一个</strong>：</p>
 <table>
@@ -187,7 +187,7 @@
 <h2>五、怎么用（学习路径）</h2>
 <h3>第 0 步 · 装 LTspice</h3>
 <p>从 ADI 官网下载（免费，无需注册）：<code>analog.com</code> 搜 "LTspice"。 <strong>本机实测该页面可达。</strong></p>
-<p>&gt; <strong>注</strong>：本机没有装 LTspice（也没装 ngspice），所以<strong>下面的数值不是我"跑出来的"</strong>， &gt; 而是<strong>用 sympy 和 numpy 独立算出来的</strong>。 &gt; 这两件事是等价的 —— <strong>因为仿真器算的就是这套方程</strong>（MNA 解 KCL）。 &gt; 而且独立算有个额外好处：它不受仿真器设置影响，是"真相"那一侧。</p>
+<blockquote><p><strong>注</strong>：本机没有装 LTspice（也没装 ngspice），所以<strong>下面的数值不是我"跑出来的"</strong>， 而是<strong>用 sympy 和 numpy 独立算出来的</strong>。 这两件事是等价的 —— <strong>因为仿真器算的就是这套方程</strong>（MNA 解 KCL）。 而且独立算有个额外好处：它不受仿真器设置影响，是"真相"那一侧。</p></blockquote>
 <h3>第 1 步 · 先看答案卡</h3>
 <pre class="lang-bash"><code>cd 10_专业知识库/能力01_电路仿真工具迁移
 python 能力01_电路仿真工具迁移_验证.py</code></pre>
@@ -222,7 +222,7 @@ python 能力01_电路仿真工具迁移_验证.py</code></pre>
 <p><strong>四个自检（不用看答案能答出来）：</strong></p>
 <ul><li>[ ] 我能说出 <code>.op</code> / <code>.ac</code> / <code>.tran</code> / <code>.dc</code> 各自回答什么问题</li><li>[ ] 我知道为什么 <code>.ac</code> 之前必须先有正确的直流工作点</li><li>[ ] 我能解释 <code>I(V1) = -5mA</code> 里的负号是什么意思（而不是把它当错误）</li><li>[ ] 我能在不看答案的情况下，说出改某个元件值会让 fc（或 f0）变成多少</li></ul>
 <p><strong>一个综合检验</strong>：</p>
-<p>&gt; 拿一个你没见过的电路（比如你们课设里的）， &gt; 在 LTspice 里建好、跑出频响和阶跃响应、 &gt; <strong>并且能预测改一个元件值之后结果会怎么变。</strong></p>
+<blockquote><p>拿一个你没见过的电路（比如你们课设里的）， 在 LTspice 里建好、跑出频响和阶跃响应、 <strong>并且能预测改一个元件值之后结果会怎么变。</strong></p></blockquote>
 <hr>
 <h2>八、这个能力留下的可复用经验</h2>
 <p><strong>做完之后，值得沉淀成"下一个能力"能用的东西：</strong></p>

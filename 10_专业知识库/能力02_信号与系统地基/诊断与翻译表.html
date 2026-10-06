@@ -208,44 +208,49 @@
 <hr>
 <h1>第三部分 · 12 个常见误区（按"错在哪一层"分类）</h1>
 <h2>A 组 · 时域</h2>
-<h3>M1 · "卷积就是那个积分公式" <strong>错在</strong>：把卷积当运算，没当<strong>物理意义</strong>。 <strong>正确</strong>：卷积 = "把输入拆成一串冲激，每个冲激产生一个衰减的响应，全部叠加"。 <strong>检验</strong>：你能不能<strong>不用公式</strong>、用"叠加"的直觉说出方波通过 RC 后为什么变成那样？</h3>
-<h3>M2 · "线性"和"时不变"混在一起 <strong>错在</strong>：以为是同一件事。 <strong>正确</strong>：<strong>线性</strong>（叠加原理）和<strong>时不变</strong>（延迟输入则延迟输出）是<strong>两个独立条件</strong>。 <strong>反例</strong>：<code>y(t) = t·u(t)</code> 是线性的但<strong>时变</strong>；<code>y(t) = u(t)²</code> 是时不变的但<strong>非线性</strong>。 <strong>为什么重要</strong>：传递函数、频率响应、卷积——<strong>全都要求 LTI</strong>。</h3>
-<h3>M3 · 忽略"零输入响应"和"零状态响应"的区别 <strong>错在</strong>：解微分方程时只算了一部分。 <strong>正确</strong>：完整解 = 零输入响应（初始条件引起的）+ 零状态响应（输入引起的）。 传递函数只描述<strong>零状态</strong>响应。</h3>
+<h3>M1 · "卷积就是那个积分公式"</h3>
+<p><strong>错在</strong>：把卷积当运算，没当<strong>物理意义</strong>。 <strong>正确</strong>：卷积 = "把输入拆成一串冲激，每个冲激产生一个衰减的响应，全部叠加"。 <strong>检验</strong>：你能不能<strong>不用公式</strong>、用"叠加"的直觉说出方波通过 RC 后为什么变成那样？</p>
+<h3>M2 · "线性"和"时不变"混在一起</h3>
+<p><strong>错在</strong>：以为是同一件事。 <strong>正确</strong>：<strong>线性</strong>（叠加原理）和<strong>时不变</strong>（延迟输入则延迟输出）是<strong>两个独立条件</strong>。 <strong>反例</strong>：<code>y(t) = t·u(t)</code> 是线性的但<strong>时变</strong>；<code>y(t) = u(t)²</code> 是时不变的但<strong>非线性</strong>。 <strong>为什么重要</strong>：传递函数、频率响应、卷积——<strong>全都要求 LTI</strong>。</p>
+<h3>M3 · 忽略"零输入响应"和"零状态响应"的区别</h3>
+<p><strong>错在</strong>：解微分方程时只算了一部分。 <strong>正确</strong>：完整解 = 零输入响应（初始条件引起的）+ 零状态响应（输入引起的）。 传递函数只描述<strong>零状态</strong>响应。</p>
 <h2>B 组 · 复频域</h2>
-<h3>M4 · 忽略收敛域（ROC） <strong>错在</strong>：只算 H(s) 的表达式，不看它在哪收敛。 <strong>正确</strong>：<strong>同一个 H(s) 表达式配不同的 ROC，是不同的系统。</strong> <strong>后果</strong>：会得出"稳定系统不稳定"或反之的错误结论。</h3>
-<h3>M5 · 以为极点在左半平面"就是"稳定 <strong>错在</strong>：把它当定义背下来。 <strong>正确</strong>：那是因为极点在左半平面 → 对应的时域项是 e^(−σt) → 衰减到 0。 <strong>检验</strong>：如果极点在<strong>虚轴上</strong>呢？（临界稳定：不衰减也不发散，如纯积分器。）</h3>
-<h3>M6 · 把 z = e^(sT) 当"另一个公式" <strong>错在</strong>：没看出它是<strong>坐标变换</strong>。 <strong>正确</strong>：</h3>
+<h3>M4 · 忽略收敛域（ROC）</h3>
+<p><strong>错在</strong>：只算 H(s) 的表达式，不看它在哪收敛。 <strong>正确</strong>：<strong>同一个 H(s) 表达式配不同的 ROC，是不同的系统。</strong> <strong>后果</strong>：会得出"稳定系统不稳定"或反之的错误结论。</p>
+<h3>M5 · 以为极点在左半平面"就是"稳定</h3>
+<p><strong>错在</strong>：把它当定义背下来。 <strong>正确</strong>：那是因为极点在左半平面 → 对应的时域项是 e^(−σt) → 衰减到 0。 <strong>检验</strong>：如果极点在<strong>虚轴上</strong>呢？（临界稳定：不衰减也不发散，如纯积分器。）</p>
+<h3>M6 · 把 z = e^(sT) 当"另一个公式"</h3>
+<p><strong>错在</strong>：没看出它是<strong>坐标变换</strong>。 <strong>正确</strong>：</p>
 <pre><code>s 平面               z 平面
 虚轴（jω）      →    单位圆
 左半平面        →    单位圆内
-右半平面        →    单位圆外
-``` <strong>所以</strong>"s 左半平面稳定"和"z 单位圆内稳定"是<strong>同一句话的两个坐标写法</strong>。
-
-## C 组 · 频域
-
-### M7 · 混淆四种"傅里叶" <strong>错在</strong>：把它们当同一件事。
-
-| 名称 | 适用信号 |
-|---|---|
-| <strong>傅里叶级数</strong> | 连续、<strong>周期</strong> |
-| <strong>傅里叶变换</strong> | 连续、<strong>非周期</strong> |
-| <strong>DTFT</strong> | 离散、非周期（频域连续且周期） |
-| <strong>DFT</strong> | 离散、<strong>有限长</strong>（频域也离散） |
-
-<strong>口诀</strong>：<strong>时域周期 ↔ 频域离散；时域离散 ↔ 频域周期。</strong>
-
-### M8 · 以为"频率响应"是新东西 <strong>正确</strong>：`H(jω)` 就是把 `H(s)` 里的 `s` 换成 `jω`。 而 `H(s)` 就是把微分方程里的 `d/dt` 换成 `s`。 <strong>所以频率响应 = 微分方程在正弦输入下的稳态解</strong>，不是新概念。
-
-### M9 · 相位只是"一个角度" <strong>错在</strong>：没理解相位的物理意义是<strong>时延</strong>。 <strong>正确</strong>：相位 −φ 在频率 ω 处等价于延迟 φ/ω。 <strong>所以</strong>相位非线性 → 不同频率延迟不同 → 波形失真（即使幅度没变）。
-
-### M10 · 采样定理只记"两倍" <strong>错在</strong>：只记 `fs &gt; 2fmax`。 <strong>完整条件</strong>：① 信号<strong>带限</strong>（这本身就是个前提）；② `fs &gt; 2fmax`； ③ <strong>抗混叠滤波器</strong>必须在采样前（而不是采样后想办法）。 <strong>★ 第三条最常被忽略</strong>，而现实中它才是关键。
-
-## D 组 · 与控制连接
-
-### M11 · 认为反馈只是"减小误差" <strong>正确</strong>：反馈真正改变的是<strong>极点位置</strong>。 误差减小是极点移动的<strong>结果</strong>，不是原因。 <strong>这也解释了为什么反馈可能让系统不稳定</strong>——它把极点推到了右半平面。
-
-### M12 · 把"超调"当纯粹的时域现象 <strong>正确</strong>：超调由<strong>阻尼比 ζ</strong> 决定，而 ζ 由<strong>极点的辐角</strong>决定。 所以：</code></pre>
-<p>超调量  ←→  极点的辐角（与负实轴的夹角） 衰减快慢 ←→  极点到虚轴的距离（实部绝对值） ``` <strong>一张极点图就同时告诉了你超调和快慢。</strong> 这是控制里"看极点"的全部理由。</p>
+右半平面        →    单位圆外</code></pre>
+<p><strong>所以</strong>"s 左半平面稳定"和"z 单位圆内稳定"是<strong>同一句话的两个坐标写法</strong>。</p>
+<h2>C 组 · 频域</h2>
+<h3>M7 · 混淆四种"傅里叶"</h3>
+<p><strong>错在</strong>：把它们当同一件事。</p>
+<table>
+<tr><th>名称</th><th>适用信号</th></tr>
+<tr><td><strong>傅里叶级数</strong></td><td>连续、<strong>周期</strong></td></tr>
+<tr><td><strong>傅里叶变换</strong></td><td>连续、<strong>非周期</strong></td></tr>
+<tr><td><strong>DTFT</strong></td><td>离散、非周期（频域连续且周期）</td></tr>
+<tr><td><strong>DFT</strong></td><td>离散、<strong>有限长</strong>（频域也离散）</td></tr>
+</table>
+<p><strong>口诀</strong>：<strong>时域周期 ↔ 频域离散；时域离散 ↔ 频域周期。</strong></p>
+<h3>M8 · 以为"频率响应"是新东西</h3>
+<p><strong>正确</strong>：<code>H(jω)</code> 就是把 <code>H(s)</code> 里的 <code>s</code> 换成 <code>jω</code>。 而 <code>H(s)</code> 就是把微分方程里的 <code>d/dt</code> 换成 <code>s</code>。 <strong>所以频率响应 = 微分方程在正弦输入下的稳态解</strong>，不是新概念。</p>
+<h3>M9 · 相位只是"一个角度"</h3>
+<p><strong>错在</strong>：没理解相位的物理意义是<strong>时延</strong>。 <strong>正确</strong>：相位 −φ 在频率 ω 处等价于延迟 φ/ω。 <strong>所以</strong>相位非线性 → 不同频率延迟不同 → 波形失真（即使幅度没变）。</p>
+<h3>M10 · 采样定理只记"两倍"</h3>
+<p><strong>错在</strong>：只记 <code>fs &gt; 2fmax</code>。 <strong>完整条件</strong>：① 信号<strong>带限</strong>（这本身就是个前提）；② <code>fs &gt; 2fmax</code>； ③ <strong>抗混叠滤波器</strong>必须在采样前（而不是采样后想办法）。 <strong>★ 第三条最常被忽略</strong>，而现实中它才是关键。</p>
+<h2>D 组 · 与控制连接</h2>
+<h3>M11 · 认为反馈只是"减小误差"</h3>
+<p><strong>正确</strong>：反馈真正改变的是<strong>极点位置</strong>。 误差减小是极点移动的<strong>结果</strong>，不是原因。 <strong>这也解释了为什么反馈可能让系统不稳定</strong>——它把极点推到了右半平面。</p>
+<h3>M12 · 把"超调"当纯粹的时域现象</h3>
+<p><strong>正确</strong>：超调由<strong>阻尼比 ζ</strong> 决定，而 ζ 由<strong>极点的辐角</strong>决定。 所以：</p>
+<pre><code>超调量  ←→  极点的辐角（与负实轴的夹角）
+衰减快慢 ←→  极点到虚轴的距离（实部绝对值）</code></pre>
+<p><strong>一张极点图就同时告诉了你超调和快慢。</strong> 这是控制里"看极点"的全部理由。</p>
 <hr>
 <h1>第四部分 · 极限检验（最实用的自学工具）</h1>
 <p><strong>当你不确定自己算得对不对，做极限检验。</strong> 它比"重算一遍"有效得多。</p>
@@ -269,7 +274,7 @@ R → 0   →   τ → 0   →   fc → ∞   →   |H| ≡ 1（全通）</code>
 <h2>如果 A 组弱（时域没底）</h2>
 <pre><code>1. 跑 能力02_四张脸.py 的"脸 1"，改 R、C 看 τ 怎么变
 2. MIT 6.003 教材 chap1–3（差分方程 → 模块化 → 框图与算子）
-   ↑ 注意：它从<strong>离散</strong>讲起，比从连续讲起容易上手
+   ↑ 注意：它从**离散**讲起，比从连续讲起容易上手
 3. MIT 6.003 lec02, 04, 08（离散系统 / 连续系统 / 卷积）
 4. 自己推一遍 RC 的微分方程（不看答案）</code></pre>
 <h2>如果 B 组弱（复频域是空的）</h2>
@@ -290,12 +295,12 @@ R → 0   →   τ → 0   →   fc → ∞   →   |H| ≡ 1（全通）</code>
 3. 然后读 能力01 的 例3（RLC 谐振）—— 那里有二阶系统的超调
 4. 重点：把"极点位置"和"超调/快慢"建立定量直觉</code></pre>
 <h2>如果 E 组弱（没直觉）</h2>
-<pre><code>1. 只做一件事：跑 能力02_四张脸.py，然后<strong>改一个参数</strong>，预测结果，再看
+<pre><code>1. 只做一件事：跑 能力02_四张脸.py，然后**改一个参数**，预测结果，再看
 2. 具体训练法（这是最有效的）：
    - 把 R 从 1k 改成 2k，先算 fc 会变成多少
    - 再跑，看是不是
    - 预测对了 = 有直觉；预测错了 = 找到薄弱点
-3. 这个训练比读书有效，因为它<strong>强制你做出可被推翻的预测</strong>
+3. 这个训练比读书有效，因为它**强制你做出可被推翻的预测**
    —— 这正是 07_技术/动手实验 那条纪律</code></pre>
 <hr>
 <h1>附 · 本项目已下载的对应资源</h1>

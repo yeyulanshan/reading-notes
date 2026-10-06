@@ -177,7 +177,7 @@
 <tr><td><strong>OpenLane</strong></td><td>✅ 可达</td><td>上面那个的易用封装</td></tr>
 <tr><td><strong>Magic VLSI</strong></td><td>✅ 可达</td><td>版图查看/编辑</td></tr>
 </table>
-<p>&gt; <strong>这是我认为整个知识库最有价值的一块。</strong> &gt; 因为"半导体"在多数人那里只能停留在<strong>读</strong>的层面（器件物理的书难、工艺看不到）。 &gt; 而这条开源链路让"<strong>设计 → 验证 → 流片</strong>"变成可做的。 &gt; <strong>它和你项目里 <code>动手实验/</code> 的传统完全一致，而且比任何仿真都更"实在"。</strong></p>
+<blockquote><p><strong>这是我认为整个知识库最有价值的一块。</strong> 因为"半导体"在多数人那里只能停留在<strong>读</strong>的层面（器件物理的书难、工艺看不到）。 而这条开源链路让"<strong>设计 → 验证 → 流片</strong>"变成可做的。 <strong>它和你项目里 <code>动手实验/</code> 的传统完全一致，而且比任何仿真都更"实在"。</strong></p></blockquote>
 <h3>种类 3 · 深化（你以为懂、其实没到底的）</h3>
 <p><strong>特征</strong>：你知道<strong>怎么用</strong>，但不知道<strong>为什么成立</strong>、<strong>边界在哪</strong>。</p>
 <p><strong>这一类的特征</strong>：它<strong>不会给你新东西</strong>，但它会让你<strong>已有的东西变得可靠</strong>。而它往往是前两类的加速器。</p>
@@ -245,7 +245,7 @@
 <tr><td>版图查看</td><td><strong>Magic VLSI</strong></td><td>✅</td></tr>
 <tr><td><strong>实际流片</strong></td><td><strong>Tiny Tapeout</strong></td><td>✅</td></tr>
 </table>
-<p>&gt; <strong>形态 C 是这个知识库能提供、而普通自学提供不了的东西。</strong> &gt; 因为"设计一个芯片并让它真的被制造出来"，在几年前还需要几十万美元。</p>
+<blockquote><p><strong>形态 C 是这个知识库能提供、而普通自学提供不了的东西。</strong> 因为"设计一个芯片并让它真的被制造出来"，在几年前还需要几十万美元。</p></blockquote>
 <hr>
 <h2>四、优先级：一个按你的背景排的顺序</h2>
 <p><strong>排这个顺序的依据是"你的起点在哪"</strong>，不是"哪个领域更重要"。</p>
@@ -301,11 +301,11 @@
 <h3>决策 3 · 知识库的产出密度</h3>
 <p><code>底层</code> 每本书 4-5 份 HTML 产出。<strong>知识库如果照这个密度，工作量与"底层"同级</strong>——那是个长期项目。</p>
 <p><strong>建议</strong>：知识库<strong>不按"每本书一套产出"</strong>，而按 <strong>"每个能力一个产出"</strong>。 比如"能用 LTspice 做交流扫描并读懂波特图"是一个产出，而不是"读完某本书"。</p>
-<p>&gt; <strong>这是两个项目最根本的差别</strong>：<code>底层</code> 的组织单位是<strong>书</strong>，知识库的组织单位应该是<strong>能力</strong>。</p>
+<blockquote><p><strong>这是两个项目最根本的差别</strong>：<code>底层</code> 的组织单位是<strong>书</strong>，知识库的组织单位应该是<strong>能力</strong>。</p></blockquote>
 <hr>
 <h2>七、下一步（P0 的具体动作）</h2>
 <p><strong>建议从这一件事开始，因为它最小、最快、且立刻有用：</strong></p>
-<p>&gt; <strong>做一份「电路仿真工具迁移」产出</strong>——把 Multisim/PSpice 的常见操作，对照到 LTspice 上，配一个能跑的实例（比如分压电路的直流扫描 + RC 电路的交流扫描 + 波特图）。</p>
+<blockquote><p><strong>做一份「电路仿真工具迁移」产出</strong>——把 Multisim/PSpice 的常见操作，对照到 LTspice 上，配一个能跑的实例（比如分压电路的直流扫描 + RC 电路的交流扫描 + 波特图）。</p></blockquote>
 <p><strong>为什么从它开始</strong>：</p>
 <ul><li>你<strong>已经有全部原理知识</strong>，所以内容不会重复你学过的</li><li>它<strong>立刻能跑</strong>（LTspice 免费、平台已验证可达）</li><li>它是<strong>知识库第一个产出</strong>，用来试出"能力为单位"的形态是否合适</li><li>成本最低——如果这个形态不对，改起来容易</li></ul>
 <p><strong>而它需要的技术前置</strong>：只有几个公式（分压、RC 传递函数），<strong>方案 ① 的纯 HTML 排版就够了</strong>——所以<strong>不用等公式方案定下来</strong>。</p>
