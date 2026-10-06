@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>底层 · 问题索引</title>
+<style>
+  :root{
+    --paper:#f2f8fc; --card:#ffffff; --edge:#cfe0ec; --edge-lit:#a8c8de;
+    --ink:#12232e; --ink-mid:#3f5b6b; --ink-soft:#5c7a8c;
+    --qi:#2b7fa8; --qi-soft:#eaf4fb;
+    --key:#7e713d; --key-soft:#fbf8ef;
+    --my:#2f7a5c; --my-soft:#eef8f3;
+    --warn:#a85035; --warn-soft:#fcf1ec;
+    --lv1:#2c6f9e; --lv2:#8a6a24; --lv3:#7a4f96; --lv4:#2f6b5a;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--paper);color:var(--ink);line-height:1.9;padding:32px 16px 56px;
+    -webkit-font-smoothing:antialiased;}
+  .wrap{max-width:1000px;margin:0 auto;}
+  header{text-align:center;padding:38px 20px 32px;background:var(--card);
+    border:1px solid var(--edge);border-top:4px solid var(--qi);border-radius:8px;margin-bottom:22px;}
+  header .kicker{font-size:11px;letter-spacing:.26em;color:var(--ink-soft);
+    font-family:ui-monospace,Consolas,monospace;margin-bottom:13px;}
+  header h1{font-size:24px;font-weight:800;letter-spacing:.01em;line-height:1.4;margin-bottom:10px;}
+  header .sub{font-size:13.8px;color:var(--ink-mid);line-height:1.9;}
+  header .src{margin-top:12px;font-size:12px;color:var(--ink-soft);line-height:1.9;}
+  .lead{background:var(--card);border:1px solid var(--edge);border-radius:8px;
+    padding:19px 22px;margin-bottom:22px;font-size:13.9px;color:var(--ink-mid);}
+  .lead .t{color:var(--key);font-weight:700;margin-bottom:9px;font-size:13.4px;}
+  .lead p+p{margin-top:8px;} .lead strong{color:var(--ink);}
+  .lead .warn{margin-top:12px;padding:11px 15px;background:var(--warn-soft);
+    border:1px solid #e8cfc4;border-left:3px solid var(--warn);border-radius:4px;
+    font-size:13.2px;color:#8a4630;line-height:1.9;}
+  h2{font-size:18px;font-weight:700;margin:38px 0 6px;padding-left:12px;
+    border-left:4px solid var(--key);line-height:1.55;}
+  .s{color:var(--ink-soft);font-size:12.9px;margin:0 0 16px 16px;line-height:1.85;}
+  h3{font-size:15.4px;font-weight:700;margin:24px 0 8px;color:var(--ink);}
+  p{font-size:14.1px;color:var(--ink-mid);margin-bottom:10px;}
+  p strong{color:var(--ink);} p em{font-style:normal;color:var(--ink-mid);}
+  code{font-family:ui-monospace,Consolas,monospace;font-size:12.4px;
+    background:#eef6fb;border:1px solid var(--edge);border-radius:4px;
+    padding:1px 6px;color:#1d5c86;word-break:break-all;}
+  a{color:var(--qi);text-decoration:none;border-bottom:1px solid #cfe4f0;}
+  a:hover{border-bottom-color:var(--qi);}
+  /* 问题卡 */
+  .qi{background:var(--card);border:1px solid var(--edge);border-radius:10px;
+    padding:20px 22px;margin-bottom:16px;transition:border-color .2s,box-shadow .2s;}
+  .qi:hover{border-color:var(--edge-lit);box-shadow:0 4px 16px -8px rgba(28,74,110,.20);}
+  .qi-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px;}
+  .qi-num{font-family:ui-monospace,Consolas,monospace;font-size:11.6px;font-weight:700;
+    color:#fff;background:var(--qi);border-radius:4px;padding:2px 8px;letter-spacing:.06em;}
+  .qi-title{font-size:16px;font-weight:700;color:var(--ink);line-height:1.6;}
+  .qi-count{font-size:11.8px;color:var(--ink-soft);border:1px solid var(--edge);
+    border-radius:999px;padding:1px 9px;background:#f7fbfe;}
+  .qi-why{font-size:13.5px;color:var(--ink-mid);margin:8px 0 14px;
+    padding:9px 13px;background:#f7fbfe;border-left:3px solid var(--qi);border-radius:3px;}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13px;}
+  th,td{padding:8px 11px;border:1px solid var(--edge);text-align:left;vertical-align:top;line-height:1.8;}
+  th{background:var(--qi-soft);color:#1d5c86;font-weight:700;font-size:12.2px;}
+  td{color:var(--ink-mid);} td strong{color:var(--ink);}
+  blockquote{margin:10px 0;padding:10px 15px;background:var(--key-soft);
+    border-left:3px solid var(--key);border-radius:4px;
+    font-size:13.3px;color:#5f5527;line-height:1.9;}
+  blockquote .who{display:block;margin-top:6px;font-size:11.5px;color:var(--ink-soft);text-align:right;}
+  .box{background:var(--card);border:1px solid var(--edge);border-radius:8px;
+    padding:18px 21px;margin:16px 0;font-size:13.7px;color:var(--ink-mid);}
+  .box .h{font-weight:700;color:var(--key);margin-bottom:9px;font-size:13.4px;}
+  .box p+p{margin-top:8px;} .box strong{color:var(--ink);}
+  .box.my{background:var(--my-soft);border-color:#cfe6dc;}
+  .box.my .h{color:var(--my);}
+  .box.warn{background:var(--warn-soft);border-color:#e8cfc4;}
+  .box.warn .h{color:var(--warn);}
+  .lvt{display:inline-block;font-family:ui-monospace,Consolas,monospace;font-size:10.4px;
+    font-weight:700;padding:1px 6px;border-radius:3px;margin-right:5px;}
+  .l1{background:#e3eff8;color:var(--lv1);border:1px solid #bcd8ec;}
+  .l2{background:#f7f0dd;color:var(--lv2);border:1px solid #e3d3a8;}
+  .l3{background:#f2eaf7;color:var(--lv3);border:1px solid #d9c4e6;}
+  .l4{background:#eaf4f0;color:var(--lv4);border:1px solid #c6e0d8;}
+  ul,ol{margin:9px 0 0 21px;} li{font-size:13.5px;color:var(--ink-mid);
+    margin-bottom:7px;line-height:1.9;}
+  li strong{color:var(--ink);}
+  footer{margin-top:44px;padding-top:20px;border-top:1px solid var(--edge);
+    text-align:center;font-size:12px;color:var(--ink-soft);line-height:2;}
+  @media(max-width:760px){
+    header h1{font-size:20px;} h2{font-size:16.5px;}
+    body{padding:18px 11px 40px;} .qi{padding:16px 15px;} table{font-size:11.8px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="kicker">QUESTION INDEX · 底层</div>
+  <h1>底层 · 问题索引</h1>
+  <div class="sub">12 个跨书问题 · 366 道题按「问题」重新归类 · 不是按学科</div>
+  <div class="src">覆盖 17 份问题手册 / 366 题（L1 65 · L2 70 · L3 95 · L4 67）<br>
+    <strong>凡本页给出的「各书怎么答」，都在冲突地图或问题手册里核对过原文</strong><br>
+    <em>这是「连接层」第 3 件：地图连书与书，我的问题连你与书，本页连问题与问题</em></div>
+</header>
+
+<div class="lead">
+  <div class="t">这份索引与现有产出的分工</div>
+  <p><strong>17 份问题手册</strong>已经把 366 题按<strong>书</strong>组织好了，每题带答案。
+  所以本页<strong>不重复列题</strong>——它做的是另一件事。</p>
+  <p><strong>它回答：同一个问题，哪些书碰过？</strong></p>
+  <p>而这件事此前<strong>没有任何一份文件做过</strong>：
+  <em>你翻《数字图像处理》的 C 模块（边界与反驳）时，不会知道《思考，快与慢》也在问同一件事。</em></p>
+  <div class="warn">
+    <strong>⚠️ 先说这份索引做不到什么（重要）</strong><br>
+    我最初想用关键词把 366 题自动归类，<strong>失败了两次</strong>：<br>
+    ① 第一版按「问题类型」（是什么/为什么/边界…）分 → <em>90/366 未归类</em>，因为中文问句的类型靠语境不靠词形；<br>
+    ② 第二版按「主题词」分 → <strong>出现词形相同、语义不同的错配</strong>：
+    《数字图像处理》被算进「意义与价值」，只因为它有「<em>意义</em>」这个词
+    （<em>那是"这句话什么意思"，不是"生命的意义"</em>）。<br>
+    <strong>这与我此前否决《置身事内》那四条 OCR 规则是同一种错。</strong><br>
+    所以最终版<strong>放弃了自动归类</strong>——下面 12 个问题是我从<strong>已核对过原文的 78 条材料</strong>里
+    人工挑出来的，<em>每条都能指回具体题目（编号 + 难度）。</em>
+    <strong>覆盖面因此不全：这是索引的主干，不是全部 366 题。</strong>
+  </div>
+</div>
+
+<!-- ============ 主干 ============ -->
+<h2>一 · 主干：12 个跨书问题</h2>
+<div class="s">判断标准：至少 2 本书在问同一结构的问题，且我能指出各自的具体题目</div>
+
+<!-- Q1 -->
+<div class="qi">
+  <div class="qi-head"><span class="qi-num">Q1</span>
+    <span class="qi-title">怎么判断一个说法是真还是假</span>
+    <span class="qi-count">7 本书 · 本图最中心的一个问题</span></div>
+  <div class="qi-why"><strong>这是我统计出的第 1 号跨界问题</strong>——
+  因为<em>这个项目里绝大多数书都在某个时刻必须回答它</em>，而且答案互相冲突。</div>
+  <table>
+    <tr><th style="width:20%">书</th><th style="width:14%">在哪</th><th>它给的答案</th></tr>
+    <tr><td><strong>无穷的开始</strong></td><td>A2 <span class="lvt l1">L1</span>D3 <span class="lvt l3">L3</span></td>
+      <td>看它<strong>难以改变</strong>（改了细节就垮）。<em>而实验检验不是决定性因素。</em></td></tr>
+    <tr><td><strong>毛选·实践论</strong></td><td>（对照文）</td>
+      <td><strong>真理的标准只能是社会的实践</strong>——看能不能达到预想的结果。</td></tr>
+    <tr><td><strong>非对称风险</strong></td><td>D2 <span class="lvt l3">L3</span></td>
+      <td>看<strong>说这话的人有没有承担后果</strong>。<em>没有风险共担就没有真知识。</em></td></tr>
+    <tr><td><strong>思考，快与慢</strong></td><td>C2 <span class="lvt l2">L2</span></td>
+      <td>先怀疑<strong>你自己的判断</strong>——「知道」不等于能消除偏差。</td></tr>
+    <tr><td><strong>MacKay 信息论</strong></td><td>B1 <span class="lvt l4">L4</span></td>
+      <td>用<strong>概率与证据的强度</strong>衡量，而不是真假二分。</td></tr>
+    <tr><td><strong>数字图像处理</strong></td><td>A3 <span class="lvt l1">L1</span>D4 <span class="lvt l3">L3</span></td>
+      <td>先分<strong>是「增强」还是「复原」</strong>——<em>说不清「正确结果」时，这件事没有真假可言。</em></td></tr>
+    <tr><td><strong>动手学深度学习</strong></td><td>11 <span class="lvt l3">L3</span></td>
+      <td>看<strong>泛化误差</strong>——而书里说它<em>永远不能准确计算</em>，只能用独立测试集估计。</td></tr>
+  </table>
+  <blockquote>判定认识或理论之是否真理，不是依主观上觉得如何而定，而是依客观上社会实践的结果如何而定。
+  <strong>真理的标准只能是社会的实践。</strong><span class="who">《实践论》</span></blockquote>
+  <blockquote>好解释是<strong>难以改变</strong>的，改变细节会毁掉整个解释。这才是科学革命的决定性因素……<strong>而实验检验不是</strong>。
+  <span class="who">《无穷的开始》第 1 章</span></blockquote>
+  <div class="box my"><div class="h">◆ 这一栏的意义</div>
+    <p><strong>7 本书给了 6 个不同的判据，而它们不全是兼容的。</strong>
+    <em>「难以改变」（多伊奇）与「实践达标」（实践论）是本图 CF2 的真对立；
+    「承担后果」（塔勒布）与「泛化误差」（D2L）又是另两个独立维度。</em></p>
+    <p><strong>所以对同一个问题，这个知识库里没有统一答案——这恰恰是它最值钱的地方。</strong>
+    <em>完整裁决见 <a href="冲突与呼应地图.html">冲突与呼应地图</a> CF2 与 CF8。</em></p>
+  </div>
+</div>
+
+<!-- Q2 -->
+<div class="qi">
+  <div class="qi-head"><span class="qi-num">Q2</span>
+    <span class="qi-title">一个方法在什么时候会失效</span>
+    <span class="qi-count">10 本书 · 23 题 · 数量最多</span></div>
+  <div class="qi-why"><strong>这是题量最大的一个跨界问题</strong>（23 题）。
+  理由很实际：<em>技术书必须写清适用范围，而思想书必须写清边界</em>。
+  <strong>两类书在这里汇合了。</strong></div>
+  <table>
+    <tr><th style="width:20%">书</th><th style="width:20%">最硬的一处</th><th>失效的条件</th></tr>
+    <tr><td><strong>数字图像处理</strong></td><td>C1–C7 <span class="lvt l3">L3</span>×6 + <span class="lvt l2">L2</span>×1</td>
+      <td>整整 7 题。<em>分割失效是<strong>判据</strong>错不是算法错；开运算会把细长真实结构一起去掉；
+      维纳滤波要求<strong>功率谱已知</strong>；「越接近理想越振铃」。</em>
+      <em>（C7 是 L2：判断一件事属于增强还是复原。）</em></td></tr>
+    <tr><td><strong>无穷的开始</strong></td><td>D3 <span class="lvt l3">L3</span> F3 <span class="lvt l3">L3</span></td>
+      <td>「所有的恶是知识不足造成的」——<em>改细节仍成立，按他自己的判据这偏「容易改变」那一侧。</em></td></tr>
+    <tr><td><strong>非对称风险</strong></td><td>D5 <span class="lvt l4">L4</span> E1 <span class="lvt l4">L4</span></td>
+      <td>林迪效应与遍历性各自的边界；<em>E1 要求你<strong>自己造一套审查清单</strong>，即把边界工具化。</em></td></tr>
+    <tr><td><strong>思考，快与慢</strong></td><td>C1–C3 <span class="lvt l1">L1</span>–<span class="lvt l2">L2</span></td>
+      <td>前景理论的参照点替换；<em>敏感度递减与损失厌恶<strong>不是同一件事</strong>（常见混读）。</em></td></tr>
+    <tr><td><strong>MacKay 信息论</strong></td><td>B1 <span class="lvt l4">L4</span></td>
+      <td>推断方法的适用前提。</td></tr>
+    <tr><td><strong>Fromm 爱的艺术</strong></td><td><span class="lvt l3">L3</span>×4 · <span class="lvt l4">L4</span>×7</td>
+      <td><em>这本 18 题里 11 题在 L3/L4</em>——因为它是<strong>规范性</strong>主张，边界问题最多。
+      <em>而 L4 那 7 题里有 3 题在直接质疑他本人（同性恋论断、妇女平等那句、第三章的时代局限）。</em></td></tr>
+    <tr><td><strong>Sedgewick / 操作系统导论</strong></td><td>L3+ 合计 22 题</td>
+      <td>数据结构与调度策略的<strong>代价</strong>。</td></tr>
+  </table>
+  <div class="box"><div class="h">◆ 一个可操作的用法</div>
+    <p><strong>按难度筛：全项目 L3 有 95 题、L4 有 67 题，合计 162 题——这是「边界与动手」那一档。</strong></p>
+    <p><em>163 页的问题手册里，几乎一半的题在问「什么时候不成立」和「怎么设计」。
+    这比「是什么」多得多</em>（<em>L1 只有 65 题</em>）。
+    <strong>这个分布本身说明：这批手册的重心不在记忆。</strong></p>
+  </div>
+</div>
+
+<!-- Q3 -->
+<div class="qi">
+  <div class="qi-head"><span class="qi-num">Q3</span>
+    <span class="qi-title">错误是怎么产生的（而不是「错误是什么」）</span>
+    <span class="qi-count">7 本书</span></div>
+  <div class="qi-why">注意这个问法与 Q1 的差别：<strong>Q1 问怎么判真，Q3 问为什么人会判错。</strong>
+  <em>前者是标准问题，后者是机制问题。</em></div>
+  <table>
+    <tr><th style="width:22%">书</th><th style="width:16%">在哪</th><th>它给的错误来源</th></tr>
+    <tr><td><strong>思考，快与慢</strong></td><td>C1 <span class="lvt l1">L1</span> C2 <span class="lvt l2">L2</span> E3 <span class="lvt l3">L3</span></td>
+      <td><strong>系统1的自动运行</strong>——<em>即使知道也无法关闭</em>。</td></tr>
+    <tr><td><strong>非对称风险</strong></td><td>A1 <span class="lvt l1">L1</span> C1 <span class="lvt l2">L2</span></td>
+      <td><strong>后果不必由自己承担</strong>——<em>这被作者称为认知问题而非道德问题。</em></td></tr>
+    <tr><td><strong>盲眼钟表匠</strong></td><td>E5 <span class="lvt l4">L4</span></td>
+      <td><strong>误读「随机」</strong>——<em>把累积选择当成单步骤碰运气。</em></td></tr>
+    <tr><td><strong>视觉（Marr）</strong></td><td>8</td>
+      <td><strong>欠定</strong>——<em>信息本来就不够，必须补入假设；补错了就错。</em></td></tr>
+    <tr><td><strong>数字图像处理</strong></td><td>D2 <span class="lvt l3">L3</span></td>
+      <td><strong>以人眼为判据</strong>——<em>而马赫带、同时对比证明人眼本身不可靠。</em></td></tr>
+    <tr><td><strong>Miller 亲密关系</strong></td><td>7 <span class="lvt l2">L2</span></td>
+      <td><strong>积极错觉</strong>——<em>而对伴侣的理想化在小剂量下是有益的。</em></td></tr>
+    <tr><td><strong>无穷的开始</strong></td><td>D3 <span class="lvt l3">L3</span></td>
+      <td><strong>证明主义</strong>——<em>把对真理的追寻偷换成对确定性（一种感觉）的追寻。</em></td></tr>
+  </table>
+  <div class="box my"><div class="h">◆ 这一栏最值得注意的一处冲突</div>
+    <p><strong>卡尼曼说偏差关不掉；多伊奇说没有什么特定的问题是不可避免的。</strong>
+    <em>同一页上的两个答案，一个说「关不掉」，一个说「一定能解决」。</em></p>
+    <p><strong>而这一处是<em>这份索引里唯一一处「两本书直接对同一句话给出相反回答」</em>。</strong>
+    <em>裁决见冲突地图 CF12。</em></p>
+  </div>
+</div>
+
+<!-- Q4 -->
+<div class="qi">
+  <div class="qi-head"><span class="qi-num">Q4</span>
+    <span class="qi-title">人在多大程度上被环境（和自身）决定</span>
+    <span class="qi-count">6 本书 · 本图最古老的一个问题</span></div>
+  <div class="qi-why">这个问题在项目里以<strong>四种完全不同的形态</strong>出现——
+  <em>而它们其实是同一个结构。</em></div>
+  <table>
+    <tr><th style="width:22%">书</th><th style="width:14%">在哪</th><th>「决定」指的是什么</th></tr>
+    <tr><td><strong>枪炮病菌与钢铁</strong></td><td>D1 <span class="lvt l4">L4</span></td>
+      <td><strong>地理与生物条件</strong>决定历史轨迹。<em>戴蒙德：这些都是终极因。</em></td></tr>
+    <tr><td><strong>无穷的开始</strong></td><td>A2 <span class="lvt l1">L1</span></td>
+      <td>反过来说：<strong>思想有独立的因果力</strong>，只有自然法则是真限制。</td></tr>
+    <tr><td><strong>思考，快与慢</strong></td><td>A2 <span class="lvt l1">L1</span></td>
+      <td><strong>系统1／系统2</strong>——<em>而系统1无法关闭，这就是一种决定。</em></td></tr>
+    <tr><td><strong>Miller 亲密关系</strong></td><td>5 <span class="lvt l2">L2</span></td>
+      <td><strong>依恋类型</strong>——早年关系决定成年关系模式。<em>而它可以改变。</em></td></tr>
+    <tr><td><strong>Dive Into Systems</strong></td><td>2 <span class="lvt l1">L1</span> 5 <span class="lvt l2">L2</span></td>
+      <td><strong>硬件与编译器</strong>决定程序的性能上限。<em>而你仍可以优化。</em></td></tr>
+    <tr><td><strong>毛选·阶级地位</strong></td><td>（对照文）</td>
+      <td><strong>阶级地位</strong>决定你能看到什么。</td></tr>
+  </table>
+  <div class="box"><div class="h">◆ 四种形态的同一个结构</div>
+    <p><em>「<strong>X 决定了你，但你能改变 X 对你的作用</strong>」</em>——
+    这是这个项目里<strong>出现频率最高的一个句式</strong>，而它出现在六个相隔极远的领域。</p>
+    <p><strong>所以这一栏的价值是：它把六个领域的同一结构摆在一起，
+    让你能比较「可改变的程度」而不是「有没有决定」。</strong>
+    <em>六个领域里的可改变程度差别很大：硬件上限最难改，依恋类型相对可改。</em></p>
+  </div>
+</div>
+
+<!-- Q5 -->
+<div class="qi">
+  <div class="qi-head"><span class="qi-num">Q5</span>
+    <span class="qi-title">怎么在信息不足时做决定</span>
+    <span class="qi-count">4 本书</span></div>
+  <div class="qi-why">这个问题在项目里以<strong>「逆问题」</strong>这个统一形态出现——
+  <em>而且《数字图像处理》给出了全项目最清晰的一次定义。</em></div>
+  <table>
+    <tr><th style="width:22%">书</th><th style="width:14%">在哪</th><th>它的做法</th></tr>
+    <tr><td><strong>数字图像处理</strong></td><td>D1 <span class="lvt l2">L2</span> B4 <span class="lvt l1">L1</span></td>
+      <td><strong>逆问题：正向多对一，所以必须补入假设</strong>。
+      <em>举了四处：复原、分割、压缩、分类。</em></td></tr>
+    <tr><td><strong>非对称风险</strong></td><td>D3 <span class="lvt l3">L3</span> D4 <span class="lvt l3">L3</span></td>
+      <td><strong>遍历性</strong>——<em>集合概率与时间概率不同，前者不能用于后者。</em></td></tr>
+    <tr><td><strong>操作系统导论</strong></td><td>B10 <span class="lvt l4">L4</span></td>
+      <td><strong>完全无法预知任务运行时间</strong>时的调度设计。</td></tr>
+    <tr><td><strong>Dive Into Systems</strong></td><td>6 <span class="lvt l2">L2</span> 7 <span class="lvt l2">L2</span></td>
+      <td>性能不可完全预测时，靠<strong>测量与局部性假设</strong>。</td></tr>
+  </table>
+  <blockquote>举一个常被误解的情形：如果你选择相信心理学家和行为科学家的话，就可能只有不到 10% 是对的……
+  <strong>大多数情况下，我们之所以称之为"不理性"，恰恰是因为我们自己误解了概率</strong>。
+  <span class="who">《非对称风险》第 8 章</span></blockquote>
+  <div class="box my"><div class="h">◆ 这一栏最有用的一句</div>
+    <p><strong>《数字图像处理》D1 把那套思路说成了可操作的一句话：</strong></p>
+    <p style="text-align:center;font-size:14.6px;color:var(--ink);margin:8px 0;">
+    「<strong>正向是不是多对一？如果是，我补入了什么假设？</strong>」</p>
+    <p><em>这一句可以直接搬到任何「反推」任务上——包括人生决定。</em>
+    <strong>而它在这个项目里的来源是一本图像处理教科书。</strong>
+    <em>这是索引这类文件最该产出的东西：把工具从它出生的领域里拿出来。</em></p>
+  </div>
+</div>
+
+<!-- Q6 -->
+<div class="qi">
+  <div class="qi-head"><span class="qi-num">Q6</span>
+    <span class="qi-title">什么是「理解」，而不是「记住」</span>
+    <span class="qi-count">7 本书</span></div>
+  <div class="qi-why">这个问题<strong>不在任何一份问题手册里被单独问过</strong>——
+  但它散落在各书的「读法建议」里。<em>把它提出来，是这份索引的独立贡献。</em></div>
+  <table>
+    <tr><th style="width:22%">书</th><th style="width:18%">在哪</th><th>它对「理解」的判据</th></tr>
+    <tr><td><strong>无穷的开始</strong></td><td>S <span class="lvt l1">L1</span></td>
+      <td><strong>能说出每个概念「改变了哪个细节就会垮掉」</strong>——
+      <em>能说出概念不等于理解。</em></td></tr>
+    <tr><td><strong>视觉（Marr）</strong></td><td>D3 / 全书</td>
+      <td><strong>能说清「中间那一步算出来的到底是什么」</strong>——
+      <em>马尔要求显式表征，而联结主义说「能认出来就行」：两种对「理解」的定义。</em></td></tr>
+    <tr><td><strong>数字图像处理</strong></td><td>S <span class="lvt l1">L1</span></td>
+      <td><strong>能说出你用的是哪个层次的事</strong>（<em>A3 三级处理</em>）——
+      <em>「大脑就是神经元放电」没错，但没回答问题。</em></td></tr>
+    <tr><td><strong>操作系统导论</strong></td><td>（读法建议）</td>
+      <td><strong>能说出关键问题 + 核心机制 + 代价</strong>——<em>三者缺一不算懂。</em></td></tr>
+    <tr><td><strong>Sedgewick 算法</strong></td><td>（读法建议）</td>
+      <td><strong>四层解剖：接口 / 实现 / 代价 / 策略</strong>——
+      <em>书里特意问「为什么『代价』要单独成一层」。</em></td></tr>
+    <tr><td><strong>Miller 亲密关系</strong></td><td><em>（我的归纳）</em></td>
+      <td><strong>三问：相关还是因果？效应多大？样本是谁？</strong>
+      <em>—— 这三问出自该书的「精华笔记与专业问题」，不是题目编号；<br>
+      手册本身是 1–24 编号、没有自测节，所以这里不能指编号。</em></td></tr>
+    <tr><td><strong>Fromm 爱的艺术</strong></td><td>（全书）</td>
+      <td><strong>爱是一门需要理论与实践的艺术</strong>——<em>理解与能力是同一件事。</em></td></tr>
+  </table>
+  <div class="box my"><div class="h">◆ 这一栏是这份索引里最实用的</div>
+    <p><strong>7 本书给了 7 套「理解的判据」，而它们可以叠加使用。</strong></p>
+    <p><em>本项目的产出本身就在用其中几条：问题手册的三档难度（读懂主张 → 推到应用 → 边界与反驳）
+    就是多伊奇那条判据的操作化。</em></p>
+    <p><strong>而你自己在 思/新建 文本文档 (4).txt 里写到「保持输出的习惯，以理清自己的心中所思」——
+    这正好对上 Fromm 那句「一是掌握理论，二是掌握实践」。</strong>
+    <em>你的直觉与这 7 条里的至少 3 条一致。</em></p>
+  </div>
+</div>
+
+<!-- Q7 -->
+<div class="qi">
+  <div class="qi-head"><span class="qi-num">Q7</span>
+    <span class="qi-title">抽象是什么、为什么必要</span>
+    <span class="qi-count">6 本书</span></div>
+  <div class="qi-why">这个问题<strong>直接连到你笔记里的「为学日益，为道日损」</strong>——
+  <em>因为你说的「将信息格式转换成我所需要的内容」就是一种抽象。</em></div>
+  <table>
+    <tr><th style="width:22%">书</th><th style="width:16%">在哪</th><th>它给的答案</th></tr>
+    <tr><td><strong>无穷的开始</strong></td><td>（第 5 章）</td>
+      <td><strong>抽象实体是真实的</strong>——<em>素数理论不是物理学的一部分，但针对真实对象；
+      还原论与整体论都错。</em></td></tr>
+    <tr><td><strong>视觉（Marr）</strong></td><td>全书</td>
+      <td><strong>表征就是抽象</strong>——<em>基元草图 / 2½ 维 / 三维模型，
+      三阶段的差别是<strong>坐标系换了</strong>，不是"处理得更深"。</em></td></tr>
+    <tr><td><strong>数字图像处理</strong></td><td>A3 <span class="lvt l1">L1</span></td>
+      <td><strong>三级处理按输入输出分</strong>——<em>抽象程度由「吃什么、吐什么」决定。</em></td></tr>
+    <tr><td><strong>Sedgewick 算法</strong></td><td>（四层解剖）</td>
+      <td><strong>接口与实现分离</strong>——<em>抽象就是「能换实现而不换接口」。</em></td></tr>
+    <tr><td><strong>Dive Into Systems</strong></td><td>全书</td>
+      <td><strong>抽象层次</strong>：从晶体管到应用，每层给上层一个契约。</td></tr>
+    <tr><td><strong>操作系统导论</strong></td><td>A1 <span class="lvt l1">L1</span></td>
+      <td><strong>抽象 = 幻觉制造商</strong>——<em>在丑陋的物理事实之上造出干净的假象。</em></td></tr>
+  </table>
+  <div class="box"><div class="h">◆ 这一栏与你的笔记的直接关系</div>
+    <p><strong>你在 思/总体思想.txt 里写：「将那些信息格式转换成我所需要的内容」。</strong>
+    上面六条给的正是「转换」的六种形态。</p>
+    <p><em>其中 <strong>Marr 那一条最值得你用</strong>：抽象不是「丢掉细节」，而是<strong>换坐标系</strong>——
+    从图像坐标换到观察者中心，再换到物体中心。
+    <strong>「为道日损」损掉的可能不是内容，是坐标系。</strong></em></p>
+  </div>
+</div>
+
+<!-- Q8 -->
+<div class="qi">
+  <div class="qi-head"><span class="qi-num">Q8</span>
+    <span class="qi-title">什么让生命值得一活</span>
+    <span class="qi-count">6 本书 · 最难量化的一栏</span></div>
+  <div class="qi-why">这一栏里<strong>有两本书是在极端处境下问这个问题的</strong>——
+  <em>不是思辨，是处境。</em></div>
+  <table>
+    <tr><th style="width:22%">书</th><th style="width:16%">在哪</th><th>它给的答案</th></tr>
+    <tr><td><strong>当呼吸化为空气</strong></td><td>（15 题全部）</td>
+      <td><strong>身份认同</strong>：「我想象的未来和个人的身份认同轰然崩塌」——
+      <em>问题不是「要不要活」，是「我还是不是原来那个人」。</em></td></tr>
+    <tr><td><strong>論語</strong></td><td>Q17 / Q24</td>
+      <td><strong>「不知命、無以為君子也」</strong>——
+      <em>Q24 把它转成给你自己的问题：「那个收获是加上了什么，还是减掉了什么？」</em></td></tr>
+    <tr><td><strong>Fromm 爱的艺术</strong></td><td>（全书）</td>
+      <td><strong>爱是积极追求被爱人的发展和幸福</strong>——<em>意义在给予里，不在获取里。</em></td></tr>
+    <tr><td><strong>非对称风险</strong></td><td>A1 <span class="lvt l1">L1</span> D2 <span class="lvt l3">L3</span></td>
+      <td><strong>承担后果</strong>——<em>「只有现实才能教育他」，而现实要能教育你，前提是你得疼。</em></td></tr>
+    <tr><td><strong>无穷的开始</strong></td><td>D2 <span class="lvt l1">L1</span></td>
+      <td><strong>乐观主义原则</strong>：所有的恶是知识不足造成的——
+      <em>这一条把「意义」变成了「还有多少可做的」。</em></td></tr>
+    <tr><td><strong>思考，快与慢</strong></td><td>（最后一句）</td>
+      <td>全书<strong>没有回答</strong>这个问题——
+      <em>而它的结尾承认了「我们总是高估自己对世界的了解」。这本身是一种回答。</em></td></tr>
+  </table>
+  <div class="box warn"><div class="h">◆ 这一栏我要标注一件事</div>
+    <p><strong>把《当呼吸化为空气》和《非对称风险》放在同一栏里，是一种我不完全确信的做法。</strong></p>
+    <p><em>因为保罗是在<strong>处境</strong>里问这个问题，塔勒布是在<strong>方法论</strong>里问的。
+    前者不能被"回答"，只能被"经历"。</em></p>
+    <p><strong>我保留这一栏，是因为它是唯一一栏能让你看到「这个知识库在死亡这件事上能给什么」。</strong>
+    <em>而答案是：它给不出答案，只能给六个不同的提问方式。</em>
+    <strong>而这可能就是全部。</strong></p>
+  </div>
+</div>
+
+<!-- Q9 -->
+<div class="qi">
+  <div class="qi-head"><span class="qi-num">Q9</span>
+    <span class="qi-title">关系和自我是怎么构成的</span>
+    <span class="qi-count">5 本书</span></div>
+  <div class="qi-why">这一栏<strong>直接连到 00 域存在的理由</strong>——
+  <em>「这一轴补的是所有域都默认掉的前提：自我是独立的个体。」</em></div>
+  <table>
+    <tr><th style="width:22%">书</th><th style="width:18%">在哪</th><th>它怎么构成</th></tr>
+    <tr><td><strong>論語</strong></td><td>Q3 Q7 Q13</td>
+      <td><strong>「孝弟也者、其為仁之本與」</strong>——
+      <em>仁要从关系里长出来。而 Q13 问：城市化、少子化之后它还成立吗？</em></td></tr>
+    <tr><td><strong>中国智慧·关系性自我</strong></td><td>（整体架构）</td>
+      <td>自我由关系构成，不是先有独立自我再加关系。</td></tr>
+    <tr><td><strong>Miller 亲密关系</strong></td><td>5 <span class="lvt l2">L2</span></td>
+      <td><strong>依恋类型</strong>——<em>早年关系构成成年模式。</em>
+      但 Miller 把它当<strong>文化变量</strong>处理，不是本体差异。</td></tr>
+    <tr><td><strong>Fromm 爱的艺术</strong></td><td>（全书）</td>
+      <td><strong>成熟的爱情</strong>：在保留自己完整性的条件下与他人合二为一——
+      <em>「两个生命合为一体，却依然保持两体的怪现象」。</em></td></tr>
+    <tr><td><strong>毛选·阶级地位</strong></td><td>（对照文）</td>
+      <td>立场由关系（<em>阶级地位</em>）决定。</td></tr>
+  </table>
+  <div class="box my"><div class="h">◆ 这一栏暴露出的一个确定缺口</div>
+    <p><strong>《論語》从「关系」出发，《弗洛姆》要求「保持完整性」，《Miller》给的是可测量的依恋类型——
+    三者对「自我是独立还是关系性的」给出的答案不同，而项目里没有一份文件把它们对上。</strong></p>
+    <p><em>冲突地图的存疑区里有一条相关：我找不到 Miller 把「自我由关系构成」当作普遍机制接受或否认的话。
+    所以这一栏目前<strong>无法裁决</strong>。</em></p>
+    <p><strong>要补的话，需要引入一本跨文化心理学（或 Markus &amp; Kitayama 那一路）。</strong></p>
+  </div>
+</div>
+
+<!-- Q10 -->
+<div class="qi">
+  <div class="qi-head"><span class="qi-num">Q10</span>
+    <span class="qi-title">失败意味着什么</span>
+    <span class="qi-count">4 本书</span></div>
+  <div class="qi-why"><strong>这是「问题」这个机制本身的另一面</strong>——
+  <em>你在 思/收获.txt 里写「想的话都是问题，只有去做才有答案」，
+  而下面四本书对「做错了之后」给出了四种不同的处理。</em></div>
+  <table>
+    <tr><th style="width:22%">书</th><th style="width:16%">在哪</th><th>失败意味着</th></tr>
+    <tr><td><strong>无穷的开始</strong></td><td>D2 <span class="lvt l1">L1</span></td>
+      <td><strong>知识不足</strong>——<em>「所有的恶是知识不足造成的」，所以失败总还有下一步。</em></td></tr>
+    <tr><td><strong>操作系统导论</strong></td><td>D6 <span class="lvt l4">L4</span> · B10 <span class="lvt l4">L4</span></td>
+      <td><strong>死锁</strong>——<em>D6 直接给一段有致命错误的代码让你找，失败是可定位的。</em>
+      <em>B10 则在「完全无法预知任务时间」时要求你设计调度。</em></td></tr>
+    <tr><td><strong>数字图像处理</strong></td><td>D5 <span class="lvt l2">L2</span></td>
+      <td><strong>先怀疑判据，再怀疑算法</strong>——<em>多数失败是判据错，不是不够努力。</em></td></tr>
+    <tr><td><strong>非对称风险</strong></td><td>A4 <span class="lvt l3">L3</span></td>
+      <td><strong>进步来自筛选而不是学习</strong>——<em>失败者被淘汰，而不是被说服。</em></td></tr>
+  </table>
+  <blockquote>作者说进步来自筛选而不是学习。请用交通安全的例子说明这句话，
+  并解释它为什么支持"风险共担"。<span class="who">《非对称风险》A4（原文题）</span></blockquote>
+  <div class="box"><div class="h">◆ 与你自己那句话的对照</div>
+    <p>你写：「<strong>想的话都是问题，只有去做才有答案</strong>」。</p>
+    <p><strong>这四本书里，多伊奇与塔勒布对「去做」之后的分歧最大：</strong>
+    <em>多伊奇说做错了就是知识不够（可继续），塔勒布说做错了你会被筛掉（不可继续）。</em></p>
+    <p><strong>而这两条对你的实际含义完全不同</strong>：<em>前者鼓励试，后者要求你在试之前先确保自己承担得起后果。</em>
+    这一栏放在这里，是因为它可能是这 12 个问题里对你最直接的一个。</p>
+  </div>
+</div>
+
+<!-- Q11 -->
+<div class="qi">
+  <div class="qi-head"><span class="qi-num">Q11</span>
+    <span class="qi-title">效率与代价怎么权衡</span>
+    <span class="qi-count">5 本书 · 技术域内部</span></div>
+  <div class="qi-why">这是<strong>唯一一栏完全由技术书构成</strong>的——
+  <em>也正因为如此，它是「呼应」最密的一栏（见冲突地图 RS5）。</em></div>
+  <table>
+    <tr><th style="width:22%">书</th><th style="width:16%">在哪</th><th>权衡的形态</th></tr>
+    <tr><td><strong>操作系统导论</strong></td><td>B10 <span class="lvt l4">L4</span>（7 题）</td>
+      <td><strong>周转时间 vs 响应时间</strong>——<em>书里说「这两者本质矛盾」。</em></td></tr>
+    <tr><td><strong>Sedgewick 算法</strong></td><td>（6 题）</td>
+      <td><strong>四层解剖</strong>——<em>而「代价」单独成层，意味着它不能从实现推出来。</em></td></tr>
+    <tr><td><strong>Dive Into Systems</strong></td><td>2 <span class="lvt l2">L2</span></td>
+      <td><strong>缓存层级</strong>——<em>速度快的小、容量大的慢。</em></td></tr>
+    <tr><td><strong>数字图像处理</strong></td><td>B4 <span class="lvt l1">L1</span></td>
+      <td><strong>空间域 vs 频率域</strong>——<em>大核用频率域；而这个「大小」的分界随硬件变化。</em></td></tr>
+    <tr><td><strong>动手学深度学习</strong></td><td>（L4 ×6）</td>
+      <td><strong>精度 vs 计算量</strong>、<strong>泛化 vs 训练误差</strong>。</td></tr>
+  </table>
+  <div class="box"><div class="h">◆ 这一栏为什么值得与 Q2 合读</div>
+    <p><strong>Q2 问「什么时候失效」，Q11 问「代价是什么」——两者是同一件事的两面。</strong></p>
+    <p><em>而技术书把这两件事写得最清楚，因为它们的代价是可测量的
+    （时间复杂度、缓存命中率、比特数）。</em></p>
+    <p><strong>所以这一栏的用处是「借用」</strong>：<em>把技术书那种量化代价的习惯，
+    搬到人文问题上——例如「这个解释的代价是多少个反例？」</em></p>
+  </div>
+</div>
+
+<!-- Q12 -->
+<div class="qi">
+  <div class="qi-head"><span class="qi-num">Q12</span>
+    <span class="qi-title">信息、惊异与压缩</span>
+    <span class="qi-count">5 本书 · 术语对齐最干净的一栏</span></div>
+  <div class="qi-why">这一栏是<strong>唯一一栏术语完全对齐</strong>的——
+  <em>见冲突地图 RS2：「惊异（surprise）」就是 Shannon information content。</em></div>
+  <table>
+    <tr><th style="width:22%">书</th><th style="width:16%">在哪</th><th>它给的形式</th></tr>
+    <tr><td><strong>MacKay 信息论</strong></td><td>B1 <span class="lvt l4">L4</span>（7 题）</td>
+      <td><strong>Shannon information content</strong>：h(x) = log₂ 1/P(x)，单位比特。</td></tr>
+    <tr><td><strong>动手学深度学习</strong></td><td>§3.4.7</td>
+      <td><strong>交叉熵 = 预期惊异</strong>——「主观概率为 Q 的观察者在看到根据概率 P 生成的数据时的预期惊异」。</td></tr>
+    <tr><td><strong>数字图像处理</strong></td><td>B10 <span class="lvt l1">L1</span></td>
+      <td><strong>熵是编码下界</strong>：H = −Σ P log P；<em>少于熵比特编码是不可能的。</em></td></tr>
+    <tr><td><strong>非对称风险</strong></td><td>D3 <span class="lvt l3">L3</span></td>
+      <td><strong>遍历性</strong>——<em>集合概率不能用于时间概率，这是同一套概率论的边界。</em></td></tr>
+    <tr><td><strong>视觉（Marr）</strong></td><td>全书</td>
+      <td><strong>欠定</strong>——<em>信息不足时必须补入假设，这就是先验。</em></td></tr>
+  </table>
+  <div class="box my"><div class="h">◆ 这一栏可以立刻用上的一个换算</div>
+    <p><strong>「熵是下界」不等于「能压到熵」。</strong>
+    <em>霍夫曼只能逼近它，因为码长必须是整数——取消这个约束才是算术编码。</em></p>
+    <p><strong>而这个结构可以搬走</strong>：<em>「理论下界」与「实际可达」之间的差距，
+    通常来自某个被固定住的约束。找到那个约束，就找到了改进的方向。</em></p>
+    <p><em>这条思路在 Q11（代价权衡）和 Q2（什么时候失效）里都能用。</em></p>
+  </div>
+</div>
+
+<!-- ============ 另一条入口 ============ -->
+<h2>二 · 另一条入口：按难度找题</h2>
+<div class="s">如果你不是带着问题来，而是想「找点有难度的」，用这一栏</div>
+
+<div class="box">
+  <div class="h">★ 全项目 366 题的难度分布（这是一个重要的发现）</div>
+  <table>
+    <tr><th style="width:10%">档</th><th style="width:16%">题数</th><th>它要求什么</th><th style="width:26%">集中在哪</th></tr>
+    <tr><td><span class="lvt l1">L1</span></td><td><strong>65 题</strong></td>
+      <td>读懂概念</td><td>无穷的开始（10）、数字图像处理（10）、操作系统导论（9）</td></tr>
+    <tr><td><span class="lvt l2">L2</span></td><td><strong>70 题</strong></td>
+      <td>应用与辨认</td><td>思考快与慢（11）、Sedgewick（10）</td></tr>
+    <tr><td><span class="lvt l3">L3</span></td><td><strong>95 题</strong></td>
+      <td>边界与反驳</td><td>操作系统导论（16）、非对称风险（11）、MacKay（10）</td></tr>
+    <tr><td><span class="lvt l4">L4</span></td><td><strong>67 题</strong></td>
+      <td>设计 / 找错 / 跨主题综合 / 工具化</td>
+      <td>盲眼钟表匠（12）、MacKay（10）、Miller（7）、Fromm（7）</td></tr>
+  </table>
+  <p><strong>L3 + L4 = 162 题，占 44%。而 L1 只占 18%。</strong></p>
+  <p><em>也就是说：这批问题手册的重心<strong>不在记忆</strong>。近一半的题在问「什么时候不成立」和「怎么设计」。</em>
+  <strong>这个分布本身就是项目的一个主张：读一本书的成果不是知道它说了什么，是知道它在哪里不管用。</strong></p>
+</div>
+
+<div class="box warn">
+  <div class="h">⚠️ 但这里有一个不一致，我要如实说明</div>
+  <p><strong>L4 只在 5 份手册里存在</strong>（非对称风险、盲眼钟表匠、MacKay、枪炮病菌与钢铁、操作系统导论），
+  另外还有 5 份「乙代际」手册也有 L1–L4
+  （DiveIntoSystems、Sedgewick、动手学深度学习、Fromm、Miller）。</p>
+  <p><strong>而 7 份手册没有分级</strong>：論語、当呼吸化为空气、置身事内、视觉，
+  以及按另一套结构写的几份。</p>
+  <p><em>所以「按难度找题」这条入口<strong>只能覆盖一部分手册</strong>。
+    这是项目结构不统一造成的，不是本页的取舍。</em>
+  <strong>要补齐的话，需要给那 7 份手工定级——而其中《当呼吸化为空气》那 15 题（全部是「关于你自己」的问题）根本不适合用 L1–L4 这套尺子。</strong></p>
+</div>
+
+<!-- ============ 结构总表 ============ -->
+<h2>三 · 附带产出：17 份手册的结构代际表</h2>
+<div class="s">做这份索引时查出来的——项目里存在 4 种结构代际</div>
+
+<table>
+  <tr><th style="width:8%">代际</th><th style="width:26%">字段</th><th style="width:10%">份数</th>
+    <th style="width:10%">题数</th><th>手册</th></tr>
+  <tr><td><strong>甲</strong></td><td><code>q-id</code> / <code>q-lv</code> / <code>q-tag</code> / <code>q-text</code></td>
+    <td>8</td><td>191</td>
+    <td>无穷的开始 · 非对称风险 · 思考快与慢 · 盲眼钟表匠 · MacKay · 枪炮病菌与钢铁 · 操作系统导论 · 数字图像处理</td></tr>
+  <tr><td><strong>乙</strong></td><td><code>num</code> / <code>txt</code> / <code>lvtag</code></td>
+    <td>5</td><td>106</td>
+    <td>DiveIntoSystems · Sedgewick · 动手学深度学习 · Fromm · Miller</td></tr>
+  <tr><td><strong>乙b</strong></td><td><code>n</code> / <code>txt</code>（无分级）</td>
+    <td>1</td><td>24</td><td>論語</td></tr>
+  <tr><td><strong>丙</strong></td><td><code>q-number</code> / <code>q-question</code></td>
+    <td>1</td><td>15</td><td>当呼吸化为空气</td></tr>
+  <tr><td><strong>丁</strong></td><td><code>question-num</code> / <code>question-title</code></td>
+    <td>2</td><td>30</td><td>置身事内 · 视觉</td></tr>
+</table>
+
+<div class="box">
+  <div class="h">◆ 这个不一致要不要修</div>
+  <p><strong>我的建议：不修，但标注。</strong></p>
+  <p><em>理由：甲代际（8 份 · 191 题）的标准结构是后来才定的，而乙/丙/丁三代各有其道理——
+  乙代际的 <code>lvtag</code> 一样有 L1–L4；丙代际（当呼吸化为空气）那 15 题<strong>本来就不该分级</strong>，
+  它们是「关于你自己的问题」；
+  丁代际（置身事内、视觉）是<strong>生活类比</strong>体裁，与三档难度的目标不同。</em></p>
+  <p><strong>强行统一会破坏体裁的差异。</strong>
+  <em>但如果要统一，最低成本的做法是给 7 份无分级的手册补一个「体裁」字段（而不是难度字段），
+  说明它问的是哪一种问题。</em></p>
+</div>
+
+<!-- ============ 与另外两份的关系 ============ -->
+<h2>四 · 连接层三件套的关系</h2>
+
+<div class="box my">
+  <div class="h">◆ 三份文件各解决一个方向的连接</div>
+  <table>
+    <tr><th style="width:26%">文件</th><th style="width:20%">连接的是</th><th>回答的问题</th></tr>
+    <tr><td><a href="冲突与呼应地图.html">冲突与呼应地图</a></td>
+      <td><strong>书 ↔ 书</strong></td>
+      <td>哪两本书撞在一起了？谁更站得住？<em>（12 冲突 + 8 呼应）</em></td></tr>
+    <tr><td><a href="思/我的问题.md">思/我的问题</a></td>
+      <td><strong>你 ↔ 书</strong></td>
+      <td>你自己的问题里，哪些项目碰到了、哪些没长齐？<em>（9 组）</em></td></tr>
+    <tr><td><strong>问题索引（本页）</strong></td>
+      <td><strong>问题 ↔ 问题</strong></td>
+      <td>同一个问题，哪些书碰过、各自怎么答？<em>（12 个跨界问题）</em></td></tr>
+  </table>
+  <p><strong>三份合起来，才是一个闭环：</strong>
+  <em>你的问题（思）→ 找出哪些书在问同一件事（本页）→ 看它们之间打不打架（地图）→ 回到你自己的处境。</em></p>
+</div>
+
+<footer>
+  底层 · 问题索引 · 「底层」项目（跨域产出，第 3 份）<br>
+  12 个跨书问题 · 覆盖 17 份手册 / 366 题<br>
+  <em>凡本页给出的「各书怎么答」，都在冲突地图或问题手册里核对过原文；<br>
+  本页放弃了自动归类（试过两版都失败），12 个问题是人工从已核材料里挑出的主干，<br>
+  <strong>覆盖面因此不全</strong>；标「我可能错」「暂定」处为待议读法</em>
+</footer>
+
+</div>
+</body>
+</html>
