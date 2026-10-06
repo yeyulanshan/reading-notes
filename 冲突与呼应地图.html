@@ -52,6 +52,7 @@
   .c2{background:var(--l2-soft);color:var(--l2);border:1px solid #e3d3a8;}
   .c3{background:var(--l3-soft);color:var(--l3);border:1px solid #cfe4dd;}
   .c4{background:var(--l4-soft);color:var(--l4);border:1px solid #d9c4e6;}
+  .c5{background:#eaf4f0;color:#2c6b5a;border:1px solid #c6e0d8;}
   /* 冲突卡 */
   .cf{background:var(--card);border:1px solid var(--edge);border-radius:10px;
     padding:20px 22px;margin-bottom:16px;transition:border-color .2s,box-shadow .2s;}
@@ -116,9 +117,10 @@
 <header>
   <div class="kicker">CONFLICT &amp; RESONANCE MAP · 底层</div>
   <h1>底层 · 冲突与呼应地图</h1>
-  <div class="sub">7 处跨书关系 · 4 种类型 · 含「我的判断 / 可反驳条件 / 我可能错在哪」</div>
-  <div class="src">覆盖 26 本书 · 引文均可在各书 <code>_全文.txt</code> 中核对<br>
-    这是本项目第一份<strong>跨书</strong>产出（此前 79 份产出里只有 2 份链到别的书）</div>
+  <div class="sub">12 处冲突 + 8 处呼应 · 5 种类型 · 含「我的判断 / 可反驳条件 / 我可能错在哪」</div>
+  <div class="src">覆盖 26 本书 · 引文均可在各书语料中核对（已核对 <strong>78 条</strong>）<br>
+    这是本项目第一份<strong>跨书</strong>产出（此前 79 份产出里只有 2 份链到别的书）<br>
+    <em>第二版：新增 CF8–CF12 与 8 处呼应，并<strong>修正了第一版的一处误判</strong>（见 CF11）</em></div>
 </header>
 
 <div class="lead">
@@ -159,6 +161,10 @@
   <p><span class="cat c4">Ⅳ 虚对立（实为同一侧）</span>
   <strong>看起来对立，实际立场一致</strong>，或者争的其实是同一现象的不同机制。
   <em>识别这一类最有价值——它能防止你在一个假问题上选边。</em></p>
+  <p><span class="cat c5">Ⅴ 层级不同</span>
+  <strong>一方说「决定因素是 X」，另一方说「X 只是近因，终极因是 Y」</strong>——
+  两者可以同时为真，<em>但其中一方的主张更强</em>（因为他把自己的 X 放在了「决定」的位置）。
+  <em>这一类的正确处理：指出谁的主张更强，而不是说「两者都对」。</em></p>
 </div>
 
 <!-- ============ 冲突 1 ============ -->
@@ -554,11 +560,457 @@
 </div>
 
 <!-- ============ 一览 ============ -->
-<h2>八 · 一览表</h2>
+<!-- ============ 冲突 8 ============ -->
+<h2>八 · 尾部风险：单次实验 vs 反复暴露</h2>
+
+<div class="cf">
+  <div class="cf-head">
+    <span class="cf-num">CF8</span><span class="cat c1">Ⅰ 真对立</span>
+    <span class="cf-title">塔勒布《非对称风险》 ⚔ 卡尼曼《思考，快与慢》</span>
+  </div>
+  <div class="cf-point"><strong>争的是什么</strong>：对小概率灾难的回避，
+  是实验室证明的<strong>系统性偏误</strong>，还是面对反复暴露时的<strong>理性</strong>？
+  <em>争的其实是实验的生态效度。</em></div>
+
+  <div class="two">
+    <div class="side a">
+      <span class="who">塔勒布 · 第 19 章「承担风险的逻辑」</span>
+      <blockquote>心理学家通过对单一个人的实验就认定人类有"偏执"或"风险厌恶"的倾向，
+      理由是人类有高估小概率事件风险的天然倾向。
+      <strong>这些心理学家想当然地假设他们的实验对象永远不会再遇到尾部风险了。</strong>
+      ……心理学家所做的这种实验与我们的日常生活经验是相悖的。<span class="who2">第 19 章</span></blockquote>
+      <blockquote>大多数情况下，我们之所以称之为"不理性"，
+      <strong>恰恰是因为我们自己误解了概率</strong>。<span class="who2">第 8 章「祖母 vs 研究员」</span></blockquote>
+    </div>
+    <div class="side b">
+      <span class="who">卡尼曼 · 第 30 章「被过分关注的罕见事件」</span>
+      <blockquote>遇袭的风险真的可以被忽略掉，但其对我行为的影响使这个极小的概率
+      有了<strong>极大的决策权重</strong>。<span class="who2">第 30 章</span></blockquote>
+      <blockquote>系统2可能"知道"发生危险的概率很小，
+      <strong>但即使知道也无法消除人们内心的不安和躲避危险的冲动。我们无法停止系统1的运行。</strong>
+      <span class="who2">第 30 章</span></blockquote>
+    </div>
+  </div>
+
+  <div class="tri my"><span class="lbl2">◆ 我的判断</span>
+    <strong>我倾向塔勒布更站得住，但只在他的限定条件下。</strong>
+    <br>他的反驳<strong>不是</strong>说「人没有高估小概率」，而是说
+    <em>「实验设计里默认了一个变量为零——被试不会再遇到这个风险」</em>。
+    在<strong>遍历性</strong>（<em>同一个人反复暴露</em>）的设定下，回避尾部风险的"偏执"是理性的。
+    <br><strong>而卡尼曼的实验无法反驳这一层</strong>，因为他的实验正是单次的。
+    <em>所以两人的分歧不在「人是否高估小概率」，而在「高估是不是错的」——而答案取决于你被暴露几次。</em>
+    <br><em>卡尼曼在单次决策里是对的；塔勒布在重复暴露里是对的。</em>
+  </div>
+  <div class="tri fals"><span class="lbl2">◆ 可反驳条件</span>
+    <strong>塔勒布若错了</strong>，会表现成：让被试在<em>同一风险的反复暴露</em>中做选择，
+    而概率高估<strong>不随暴露次数修正</strong>（即无论如何学不会）。
+    <br><strong>卡尼曼若错了</strong>，需要证明「高估小概率」在重复暴露下
+    <em>仍然系统性地降低长期存活率</em>——那塔勒布的「祖母理性」就是错的。
+  </div>
+  <div class="tri self"><span class="lbl2">◆ 我可能错在哪</span>
+    <strong>塔勒布在第 19 章对心理学家的批评是点名式的、语气很重</strong>
+    （<em>「塞勒和所有伪心理学家一样，没有弄懂其中的规律」</em>），
+    <strong>这可能让他的论证显得比实际更强。</strong>
+    <em>而卡尼曼从未声称自己的实验覆盖重复暴露的场景——所以「他错了」这个说法本身可能是打一个稻草人。</em>
+    <br><strong>另外：我引的塔勒布那两句，一句在第 19 章、一句在第 8 章</strong>，
+    <em>而第 8 章那句（「祖母 vs 研究员」）的语气比第 19 章温和得多——
+    塔勒布自己在不同章里的强度是不一样的，我这里把它们并置了。</em>
+  </div>
+  <div class="done">此前没有单独成文。<strong>与 CF6（米勒×卡尼曼）不同</strong>：CF6 争「错觉有害还是有益」，CF8 争「实验能不能裁决理性」。</div>
+</div>
+
+<!-- ============ 冲突 9 ============ -->
+<h2>九 · 演化有没有内生的方向</h2>
+
+<div class="cf">
+  <div class="cf-head">
+    <span class="cf-num">CF9</span><span class="cat c1">Ⅰ 真对立</span>
+    <span class="cf-title">凯利《科技想要什么》 ⚔ 道金斯《盲眼钟表匠》</span>
+  </div>
+  <div class="cf-point"><strong>争的是什么</strong>：演化（<em>包括技术演化</em>）有没有
+  <strong>内生的方向与必然性</strong>，还是只是一个<strong>不向前看、不规划结果</strong>的盲目过程？</div>
+
+  <div class="two">
+    <div class="side a">
+      <span class="who">凯利 · 第六章「注定的发展方向」</span>
+      <blockquote>目前关于进化的正统科学观点认为……<strong>只有随机进步，不存在定向发展。</strong>
+      过去 30 年对复杂自适应系统的研究得出的主要认知提供了<strong>相反的观点</strong>：
+      自然选择导致的变异并不总是随机的。<span class="who2">第六章</span></blockquote>
+      <blockquote>上百甚至上千独立的有效趋同进化表明还有其他因素在发挥影响。
+      <strong>某种力量推动进化的自组织过程向重现事件运动。</strong>
+      ……两种动力为进化指明新方向。<span class="who2">第六章</span></blockquote>
+    </div>
+    <div class="side b">
+      <span class="who">道金斯 · 第一章「不可能」/ 第二章「良好的设计」</span>
+      <blockquote><strong>天择的心中没有目的。天择无心，也没有心眼。
+      天择不为未来打算。天择没有视野，没有先见，连视觉都没有。</strong>
+      要是天择就是自然界的钟表匠，它一定是个盲目的钟表匠。<span class="who2">第一章</span></blockquote>
+      <blockquote>自然选择是盲目的钟表匠，说它盲目，是因为<strong>它并不向前看，不规划结果，眼中没有目标</strong>。
+      <span class="who2">第二章</span></blockquote>
+    </div>
+  </div>
+
+  <div class="tri my"><span class="lbl2">◆ 我的判断</span>
+    <strong>道金斯在这一层更稳，而且理由是结构性的</strong>：
+    他只需要<strong>一个否定性主张</strong>（「无先见」），
+    而凯利要主张的是<strong>一个肯定性的东西</strong>（「必然的重现结构」「固有方向」）。
+    <br><strong>举证责任不对等</strong>：否定性主张与全部累积选择证据一致；
+    而肯定性主张需要证明趋同<em>不是</em>「共同环境 + 共同物理约束下的自然选择」的副产品。
+    <br><strong>而凯利自己给出了那个正统解释</strong>——他在讲趋同时承认
+    「环境生态位的匹配常被用于解释趋同进化出现的原因」，
+    <em>却在同一页要另立一种动力。</em>
+    <strong>这是这一处最要紧的地方：他手上的证据已经被另一种解释吸收了。</strong>
+  </div>
+  <div class="tri fals"><span class="lbl2">◆ 可反驳条件</span>
+    <strong>凯利若错了</strong>，会表现成：那些「趋同」案例<strong>全都能用共同环境下的自然选择解释完</strong>，
+    自组织约束不承担任何独立解释力（<em>把它去掉，预测不变</em>）。
+    <br><strong>道金斯若错了</strong>，会表现成：存在可测量的「发育/自组织通道」，
+    使同一结果<strong>在不同环境下也重复出现</strong>，且频率显著高于随机变异 + 选择的预期。
+    <em>这个验证方式是可操作的——所以这一条不是纯思辨。</em>
+  </div>
+  <div class="tri self"><span class="lbl2">◆ 我可能错在哪</span>
+    <strong>「举证责任不对等」这个论证方式可能对凯利不公平。</strong>
+    在科学史上，<em>「某个现象需要新机制」这类主张一开始都是肯定性的、举不出直接证据的</em>——
+    如果按我这个标准，很多后来的正确主张当时都会被否掉。
+    <br>更公平的问法应该是：<strong>凯利用「趋同」当证据，是否真的<em>排除了</em>正统解释？</strong>
+    <em>如果没有排除，那么他的结论就只是一个未证成的猜想——但这不等于它错。</em>
+    <br><strong>另外：这一条与 CF4（多伊奇 × 凯利）的对手不同，但攻击点相似</strong>
+    （<em>都在质疑凯利的「方向」是不是一个独立的东西</em>）。
+    我可能高估了它们的独立性——<em>它们也许应该合并成「凯利的『方向』这个主张的三方审议」。</em>
+  </div>
+  <div class="done">此前没有单独成文。<strong>与 CF4 是同一本书的不同对手</strong>（见「我可能错在哪」）。</div>
+</div>
+
+<!-- ============ 冲突 10 ============ -->
+<h2>十 · 历史的决定因素：人 vs 物（三方）</h2>
+
+<div class="cf">
+  <div class="cf-head">
+    <span class="cf-num">CF10</span><span class="cat c5">Ⅴ 层级不同</span>
+    <span class="cf-title">毛泽东《论持久战》 ⚔ 戴蒙德</span>
+  </div>
+  <div class="cf-point"><strong>争的是什么</strong>：决定历史与战争结局的，
+  是<strong>人</strong>（主观努力、人心、组织），还是<strong>物</strong>（地理、食物生产等终极因）？
+  <br><strong>注意</strong>：这一条给 CF1 补上了<strong>第三个立场</strong>，
+  而它比多伊奇那一侧更直接——<em>它直接把「人」放在「决定因素」的位置上。</em></div>
+
+  <div class="two">
+    <div class="side a">
+      <span class="who">毛泽东 · 《论持久战》</span>
+      <blockquote>这就是所谓"唯武器论"，是战争问题中的机械论……我们的意见与此相反，
+      不但看到武器，而且看到人力。
+      <strong>武器是战争的重要的因素，但不是决定的因素，决定的因素是人不是物。</strong>
+      力量对比不但是军力和经济力的对比，而且是<strong>人力和人心的对比</strong>。<span class="who2">「为什么是持久战？」</span></blockquote>
+      <blockquote>战争的胜负，固然决定于双方军事、政治、经济、地理、战争性质、国际援助诸条件，
+      <strong>然而不仅仅决定于这些</strong>；仅有这些，还只是有了胜负的可能性，它本身没有分胜负。
+      要分胜负，<strong>还须加上主观的努力</strong>。<span class="who2">「能动性在战争中」</span></blockquote>
+    </div>
+    <div class="side b">
+      <span class="who">戴蒙德 · 前言</span>
+      <blockquote>通常人们在回答这个问题时，都会谈到一些<strong>近因</strong>，
+      例如资本主义、重商主义、科学研究、技术，以及病菌……
+      <strong>所有这些要素都只是近因，而不是终极原因。</strong><span class="who2">前言</span></blockquote>
+      <p><em>他的结构是：近因（第一层级）→ 终极因（食物生产、地理）。
+      而「人的组织与观念」被他归入近因那一层。</em></p>
+    </div>
+  </div>
+
+  <div class="tri my"><span class="lbl2">◆ 我的判断</span>
+    <strong>这是「层级不同」里最尖锐的一处，因为毛泽东的命题</strong>更强<strong>。</strong>
+    <br>严格说两者不矛盾：<em>毛泽东说「人决定胜负」，戴蒙德说「物决定人的条件」——可以同时为真。</em>
+    <br><strong>但毛泽东没说「人也是一部分原因」</strong>，他说的是
+    <em>「武器不是决定的因素，决定的因素是人不是物」</em>——
+    <strong>他把「人」放进了「决定」这个位置，而戴蒙德明确把「人的因素」降级为近因。</strong>
+    <em>所以这是一个正面冲突，不是错位。</em>
+    <br><strong>而在这一处我倾向毛泽东那一侧</strong>，理由比 CF1 更硬：
+    <em>《论持久战》是在事前给出具体预测的（持久战、最后胜利），而预测事后成立。</em>
+    <strong>戴蒙德的框架给不出这样的具体预测</strong>——它能解释「为什么是这个大陆胜出」，
+    但给不出「这一场战争会怎么走」。
+    <em>能给出可检验的具体预测，是更强的主张。</em>
+  </div>
+  <div class="tri fals"><span class="lbl2">◆ 可反驳条件</span>
+    <strong>毛泽东若错了</strong>，会表现成：<em>无论动员程度如何，结局都随物质条件（军力/地理）而变</em>，
+    主观努力在统计上不带来可辨识的差异。
+    <br><strong>戴蒙德若错了</strong>，会表现成：<em>在地理条件相同的环境中，
+    出现由人的组织或观念造成的、系统性且可复现的历史分岔。</em>
+  </div>
+  <div class="tri self"><span class="lbl2">◆ 我可能错在哪</span>
+    <strong>「事前预测成立」这个论据有一个漏洞：幸存者偏差。</strong>
+    <em>事前给出预测而事后成立的人，是被我们记住的那些；给出预测而失败的，不会被写进书里。</em>
+    <strong>所以我用「他预测对了」来加强他的主张，样本只有 1，而且是我事后挑出来的。</strong>
+    <br><strong>另外：《论持久战》是一篇动员文献，不是一篇学术论证。</strong>
+    <em>它的目标读者是当时的人，不是后世的评判者——
+    所以把它和戴蒙德放在同一个天平上，可能有体裁上的不公平。</em>
+    <em>这一点我在写这一条时要记住。</em>
+  </div>
+  <div class="done">此前没有单独成文。<strong>这一条给 CF1 补上了第三个立场</strong>，建议与 CF1 合读。</div>
+</div>
+
+<!-- ============ 冲突 11 · 修正我自己 ============ -->
+<h2>十一 · 爱是交换还是给予（<span style="color:#a85035;">这一条修正了我原来的判断</span>）</h2>
+
+<div class="cf">
+  <div class="cf-head">
+    <span class="cf-num">CF11</span><span class="cat c1">Ⅰ 真对立</span>
+    <span class="cf-title">弗洛姆《爱的艺术》 ⚔ 米勒《亲密关系》</span>
+  </div>
+  <div class="cf-point"><strong>争的是什么</strong>：把爱情理解为
+  <strong>交换价值 / 奖赏与代价的核算</strong>，
+  到底是资本主义异化的<strong>病症</strong>，还是人际关系科学里使用最多、
+  且"社会生活所必需"的<strong>正常机制</strong>？</div>
+
+  <div class="tri self" style="margin-bottom:14px;">
+    <span class="lbl2">◆ 先说这一条为什么在这里（我在修正自己）</span>
+    <strong>本图第一版把「米勒 ⊥ 弗洛姆」判为 Ⅲ「范畴不同」（实然 vs 应然）。</strong>
+    <em>那个判断是错的——或者至少是太轻了。</em>
+    <br>因为弗洛姆<strong>不只是在说「应当如何」</strong>：
+    他对「交换价值式的爱」有一个<strong>明确的否定性判断</strong>
+    （<em>「自动机器是不会爱的」</em>），
+    而米勒明确说那个核算机制是<strong>「社会生活所必需的」</strong>。
+    <br><strong>这是两个对同一件事的价值判断，不是两个不同的问题。</strong>
+    <em>所以它是真对立。我原来的「范畴不同」用得太方便了——它让我不必选边。</em>
+  </div>
+
+  <div class="two">
+    <div class="side a">
+      <span class="who">弗洛姆 · 第一章 / 第三章</span>
+      <blockquote>我们的全部文化是以购买欲以及互利互换的观念为基础……
+      <strong>归根结底爱情的产生往往是以权衡对方及本人的交换价值为前提。</strong>
+      ……在一个商业化占统治地位以及把物质成功看得高于一切的文化中，
+      事实上是没有理由对下列事实抱有吃惊的态度：
+      人与人之间的爱情关系也<strong>遵循同控制商品和劳动力市场一样的基本原则</strong>。<span class="who2">第一章</span></blockquote>
+      <blockquote><strong>自动机器是不会爱的，它们只能交换"一揽子特性"，想做一笔好买卖。</strong>
+      <span class="who2">第三章「爱情及其在当代西方社会的衰亡」</span></blockquote>
+      <blockquote><strong>给比得更能使自己满足，更能使自己快乐，爱要比被爱更重要。</strong>
+      ……爱不是一种消极的冲动情绪，而是<strong>积极追求被爱人的发展和幸福</strong>。<span class="who2">第二章</span></blockquote>
+    </div>
+    <div class="side b">
+      <span class="who">米勒 · 第 6 章「相互依赖」</span>
+      <blockquote><strong>相互依赖理论认为，人们就像购物那样在人际商厦里浏览。</strong>
+      <span class="who2">第 6 章「社会交换」</span></blockquote>
+      <blockquote>根据这种观点，<strong>与他人相互交换理想的奖赏是社会生活所必需的</strong>，
+      这一过程就是社会交换。……现在称为<strong>相互依赖理论</strong>——
+      是人际关系学家<strong>使用最多的理论</strong>。<span class="who2">第 6 章</span></blockquote>
+      <blockquote>人与人之间产生吸引力最基本的假设是：<strong>他人的出现对于我们有奖赏意义</strong>
+      （Clore&amp;Byrne，1974）。<span class="who2">第 3 章「吸引力」</span></blockquote>
+    </div>
+  </div>
+
+  <div class="tri my"><span class="lbl2">◆ 我的判断</span>
+    <strong>两层要分开，而分开之后两者各赢一层。</strong>
+    <br><strong>描述层：米勒更站得住。</strong>
+    他背后是几十年可复现的数据；而且<em>他把「奖赏」定义得很宽</em>——
+    包含接纳、支持这类非功利内容，<strong>不等于弗洛姆说的「一揽子特性交易」</strong>。
+    <br><strong>规范层：弗洛姆提出了米勒框架无法处理的东西。</strong>
+    <em>一个纯粹的交换模型无法解释「给予」为什么本身令人满足</em>——
+    因为在交换模型里，「给予」只能是<strong>延迟的获取</strong>（<em>利他 = 更高级的利己</em>）。
+    <strong>而弗洛姆的整个论证就建立在「给予不是交换」上。</strong>
+    <br><strong>所以这不是能用相关系数裁决的分歧</strong>——
+    <em>但它也不是「范畴不同」：因为它要求你对「爱是什么」给出一个立场。</em>
+  </div>
+  <div class="tri fals"><span class="lbl2">◆ 可反驳条件</span>
+    <strong>弗洛姆若错了</strong>，会表现成：把「给予」完全还原成一种更高级的自我奖赏，
+    <strong>且这种还原不损失任何解释力</strong>——
+    <em>也就是说，「给予」在预测上等价于「延迟的获取」。</em>
+    <br><strong>米勒若错了</strong>，会表现成：在控制住全部奖赏与代价变量之后，
+    <em>「交换价值核算」仍系统性地预测不了关系满意度与稳定性</em>——
+    即<strong>存在一个独立的、非交换维度的解释变量。</strong>
+  </div>
+  <div class="tri self"><span class="lbl2">◆ 我可能错在哪</span>
+    <strong>我把「范畴不同」改判成「真对立」，可能走向另一个极端。</strong>
+    <em>「实然与应然不能互相推出」这个原则仍然是成立的</em>——
+    米勒的数据确实<strong>不能</strong>反驳弗洛姆的规范主张。
+    <br><strong>我改判的真正理由是：弗洛姆的主张不纯是规范的</strong>
+    （<em>他说交换式的爱是「病症」，这是一个关于<strong>现实</strong>的判断</em>）。
+    <em>但如果把这一句读成纯粹的修辞、而不是一个可检验的社会学断言，
+    那我这一改就过了。</em>
+    <br><strong>而我在 CF5 里标注的「暂定」还没有解决</strong>：<em>我仍未核弗洛姆那些社会学判断。</em>
+  </div>
+  <div class="done">此前判为 Ⅲ「范畴不同」，<strong>本次修正为 Ⅰ「真对立」</strong>。</div>
+</div>
+
+<!-- ============ 冲突 12 ============ -->
+<h2>十二 · 认知错误能不能被无限消除</h2>
+
+<div class="cf">
+  <div class="cf-head">
+    <span class="cf-num">CF12</span><span class="cat c1">Ⅰ 真对立</span>
+    <span class="cf-title">多伊奇《无穷的开始》 ⚔ 卡尼曼《思考，快与慢》</span>
+  </div>
+  <div class="cf-point"><strong>争的是什么</strong>：人的认知错误
+  <strong>在原则上能否被认识、批评从而无限消除</strong>？
+  多伊奇说没有哪个特定问题是不可避免的；卡尼曼说有些偏差即使被认识到也关不掉。</div>
+
+  <div class="two">
+    <div class="side a">
+      <span class="who">多伊奇 · 第 1 章 / 第 3 章</span>
+      <blockquote>易谬主义者认为，就算是他们最好、最重要的解释性理论，
+      在真理之外也包含着谬误，<strong>因此他们随时准备着努力修正理论以做到更好</strong>。<span class="who2">第 1 章</span></blockquote>
+      <blockquote><strong>我们不可避免地要面对问题，但没有什么特定的问题是不可避免的。</strong>
+      我们生存下来并且蓬勃发展，靠的就是在每个问题出现时解决它。
+      而且，由于人类改造自然的能力只受物理规律限制，
+      <strong>层出不穷的问题中没有哪一个会成为无法逾越的障碍。</strong><span class="who2">第 3 章</span></blockquote>
+    </div>
+    <div class="side b">
+      <span class="who">卡尼曼 · 第 30 章</span>
+      <blockquote>系统2可能"知道"发生危险的概率很小，
+      <strong>但即使知道也无法消除人们内心的不安和躲避危险的冲动。我们无法停止系统1的运行。</strong>
+      <span class="who2">第 30 章</span></blockquote>
+    </div>
+  </div>
+
+  <div class="tri my"><span class="lbl2">◆ 我的判断</span>
+    <strong>这一条卡尼曼更站得住，而原因是「多伊奇的措辞比他的立场更强」。</strong>
+    <br><em>如果多伊奇说的是「原则上可纠正」，那它与「实际上关不掉」可以同时为真</em>——
+    卡尼曼给的是<strong>机制</strong>（系统1自动运行，系统2需要付出注意力预算才能压制），
+    多伊奇给的是一个<strong>原则性主张</strong>。
+    <br><strong>但多伊奇的原话是「没有什么特定的问题是不可避免的」</strong>——
+    这就把自己放到了一个<em>可以被单个人类认知偏差直接反驳</em>的位置。
+    <strong>「高估小概率」就是一个特定的、似乎不可避免的问题。</strong>
+    <br><em>所以我认为这一处是多伊奇措辞过强，而不是卡尼曼否定了他。</em>
+  </div>
+  <div class="tri fals"><span class="lbl2">◆ 可反驳条件</span>
+    <strong>卡尼曼若错了</strong>，会表现成：<em>一旦被试真正理解了偏差机制（例如理解了"高估小概率"），
+    该偏差就<strong>消失</strong></em>（而不是无变化或只减弱）。
+    <br><strong>多伊奇若错了</strong>，会表现成：<em>存在某一类认知缺陷，
+    无论投入多少批评与解释资源，都无法被该缺陷自身所识别和修正</em>——
+    即<strong>存在一个「不可避免的问题」。</strong>
+    <em>卡尼曼的第 30 章正是在提出这样一个候选。</em>
+  </div>
+  <div class="tri self"><span class="lbl2">◆ 我可能错在哪</span>
+    <strong>我把「原则上」与「实际上」分开，可能是在替多伊奇打圆场。</strong>
+    <em>他那句「没有什么特定的问题是不可避免的」出现的地方，正是在讲
+    「人类改造自然的能力只受物理规律限制」——也就是在讲<strong>能力</strong>，
+    不是在讲<strong>认知偏差</strong>。</em>
+    <br><strong>如果是这样，我拿卡尼曼的认知偏差去打它，可能是两个不同的靶子</strong>
+    （<em>一个是「能不能做成」，一个是「会不会想错」</em>）。
+    <em>这一条我有真实的犹豫——它可能应该降级为「范畴不同」。</em>
+    <br><strong>我保留为真对立，因为多伊奇的立场是「所有的恶是知识不足造成的」——
+    如果某些偏差关不掉，那这句话就有一个具体的边界。</strong>
+  </div>
+  <div class="done">此前没有单独成文。<strong>与 CF2（多伊奇 × 实践论）呼应</strong>：都是多伊奇的判据在受审。</div>
+</div>
+
+<!-- ============ B 组 · 呼应 ============ -->
+<h2>十三 · 呼应：8 处「一本给理论、另一本给实例」</h2>
+<div class="s">冲突暴露边界，呼应暴露结构 —— 呼应同样是连接，而且更容易被你用上</div>
+
+<div class="box">
+  <div class="h">先说这一类为什么值得单列</div>
+  <p>冲突告诉你「哪里两本书打起来了」；<strong>呼应告诉你「一条链是怎么走下来的」</strong>。</p>
+  <p><em>而呼应比冲突更容易用上——因为它给的是可复用的路径，不是需要你裁决的问题。</em></p>
+</div>
 
 <table>
-  <tr><th style="width:6%">编号</th><th style="width:26%">双方</th>
-    <th style="width:14%">类型</th><th>争的点 / 我的倾向</th></tr>
+  <tr><th style="width:5%">#</th><th style="width:24%">两本书</th>
+    <th>接的是什么</th><th style="width:24%">最硬的一处证据</th></tr>
+  <tr><td><strong>RS1</strong></td><td>卡尼曼 → 米勒</td>
+    <td><strong>损失厌恶</strong>从一般规律落到亲密关系，并算出<strong>5:1</strong> 的奖赏代价比</td>
+    <td>米勒<strong>点名引用</strong> Kahneman &amp; Tversky，并做了<em>领域换算</em>（钞票 → 伴侣的批评）</td></tr>
+  <tr><td><strong>RS2</strong></td><td>MacKay → 动手学深度学习</td>
+    <td><strong>熵 / KL 散度</strong>的定义 → softmax <strong>交叉熵损失</strong>（工程里唯一的用法）</td>
+    <td>术语完全对齐：<em>「惊异/surprise」↔ Shannon information content</em></td></tr>
+  <tr><td><strong>RS3</strong></td><td>道金斯 → 凯利</td>
+    <td><strong>累积选择</strong>机制被整体搬到技术演化上</td>
+    <td>凯利：「<strong>微小的改进得到更多的复制</strong>」</td></tr>
+  <tr><td><strong>RS4</strong></td><td>数字图像处理 → 动手学深度学习</td>
+    <td>手工算子（Canny / SIFT）→ <strong>被学习的卷积核取代</strong></td>
+    <td>D2L <strong>点名</strong> Canny 与 SIFT，并问「我们是否可以学习卷积核」</td></tr>
+  <tr><td><strong>RS5</strong></td><td>Dive Into Systems → 操作系统导论</td>
+    <td><strong>局部性原理</strong>：CPU 缓存 → TLB / 页面替换 / 文件系统</td>
+    <td>两边对「时间/空间局部性」的定义<em>几乎逐字相同</em></td></tr>
+  <tr><td><strong>RS6</strong></td><td>《論語》 → 弗洛姆</td>
+    <td>「仁」与「给」——<strong>同一个伦理核心：主动成全对方</strong></td>
+    <td>「<strong>己欲立而立人，己欲達而達人</strong>」↔「<strong>积极追求被爱人的发展和幸福</strong>」</td></tr>
+  <tr><td><strong>RS7</strong></td><td>塔勒布 → 置身事内</td>
+    <td><strong>代理人问题</strong>：任期错配 = 一次性交易 = 后果不由决策者承担</td>
+    <td>置身事内：「<strong>寅吃卯粮</strong>……利是不是有千秋，就是下任领导的事了」</td></tr>
+  <tr><td><strong>RS8</strong></td><td>Marr《视觉》 → 数字图像处理</td>
+    <td>过零点 + 多尺度理论 → <strong>Marr-Hildreth 算子 / LoG 滤波器</strong></td>
+    <td>冈萨雷斯<strong>点名引用 Marr and Hildreth [1980]</strong>，并逐条复述其两条论证</td></tr>
+</table>
+
+<div class="box" style="background:#f8fbfd;">
+  <div class="h" style="color:var(--a);">◆ 这 8 处的原文（逐条可核）</div>
+  <p><strong>RS1</strong> 卡尼曼：「·對損失的反應比獲得更強烈（<strong>損失厭惡</strong>）。」<br>
+  → 米勒：「<strong>失去通常比同等程度的得到对我们的影响更大</strong>……
+  要保持满意的亲密关系，我们或许需要保持至少 <strong>5:1</strong> 的（奖赏与代价之比）」
+  <em>——注意米勒在这里<strong>点名引用了 Kahneman &amp; Tversky</strong>。</em></p>
+
+  <p><strong>RS2</strong> MacKay（<em>原文为英文</em>）：
+  <em>"The Shannon information content of an outcome x is defined to be …
+  h(x) = log₂ 1/P(x). (2.34) … It is measured in bits."</em>
+  <span style="color:var(--ink-soft);">（一个结果 x 的香农信息量定义为 h(x) = log₂ 1/P(x)，单位为比特）</span><br>
+  → D2L：「<strong>信息论的核心思想是量化数据中的信息内容。在信息论中，该数值被称为分布 P 的熵。</strong>」
+  以及它把熵与交叉熵连起来的那一句：
+  「如果把熵 H(P) 想象为'<strong>知道真实概率的人所经历的惊异程度</strong>'，
+  那么什么是交叉熵？……我们可以把交叉熵想象为'<strong>主观概率为 Q 的观察者在看到根据概率 P
+  生成的数据时的预期惊异</strong>'。当 P = Q 时，交叉熵达到最低。」
+  <em>——两边术语完全对齐：<strong>惊异（surprise）</strong> 就是 Shannon information content。</em></p>
+
+  <p><strong>RS3</strong> 道金斯：「'<strong>累积选择</strong>'（这个过程中，每一次改进，不论多么微小，都是未来的基础）
+  与'单步骤选择'……的差别可大了。」<br>
+  → 凯利：「<strong>微小的改进得到更多的复制</strong>，创新就在人类世界稳定传播。」</p>
+
+  <p><strong>RS4</strong> D2L：「<strong>Canny 边缘检测器和 SIFT 特征提取器</strong>作为将图像映射到特征向量的算法，
+  在过去的十年里占据了至高无上的地位……<strong>当深度学习开始时，这些特征抽取器被自动调整的滤波器所取代</strong>。」
+  <em>——它点名的两个算子，在《数字图像处理》里正是第 10、11 章的重点。</em></p>
+
+  <p><strong>RS5</strong> Dive Into Systems（<em>原文为英文</em>）：
+  <em>"Having characterized storage devices and <strong>recognized the important patterns of
+  temporal and spatial locality</strong>…"</em>
+  <span style="color:var(--ink-soft);">（在刻画了存储设备、并<strong>识别出时间与空间局部性这两种重要模式</strong>之后……）</span><br>
+  → OSTEP：「<strong>缓存是基于局部性的概念，局部性有两种，即时间局部性和空间局部性。</strong>」</p>
+
+  <p><strong>RS6</strong> 《論語·雍也》：「<strong>夫仁者、己欲立而立人、己欲達而達人。</strong>」<br>
+  → 弗洛姆：「爱不是一种消极的冲动情绪，而是<strong>积极追求被爱人的发展和幸福</strong>，
+  这种追求的基础是人的爱的能力。」</p>
+
+  <p><strong>RS7</strong> 塔勒布：「<strong>代理人问题……阐明了在交易过程中因利益不一致而导致的后果。</strong>」<br>
+  → 置身事内：「<strong>但地方官员任期有限，难免会催生短视行为，寅吃卯粮，过度借债去搞大项目</strong>，
+  搞'面子工程'，功是留在当代了，<strong>利是不是有千秋，就是下任领导的事了</strong>。」
+  <em>另：「如果一方想做的事，另一方既有意愿也有能力做好，就叫<strong>激励相容</strong>。」</em></p>
+
+  <p><strong>RS8</strong> 冈萨雷斯：「<strong>在边缘发现过程中，纳入更先进分析的最早尝试之一是 Marr and Hildreth[1980]。</strong>
+  ……Marr 和 Hildreth 认为：（1）灰度变化与图像尺度是相关的……
+  （2）灰度突变在一阶导数中给出一个峰值或谷值，或等效地在二阶导数中给出<strong>过零点</strong>。」
+  <em>——这是全项目引用关系最硬的一条：不是概念相似，是点名引用 + 逐条复述。</em>
+  <br><strong>Marr 本人的原文</strong>（<em>英文原著</em>）：
+  <em>"The three main stages in the processes that derive the primal sketch are
+  (1) the detection of <strong>zero-crossings</strong> (Marr and Poggio, 1979; …; Marr and Hildreth, 1980);
+  (2) the formation of the raw primal sketch; …"</em>
+  <span style="color:var(--ink-soft);">（导出基元草图的三个主要阶段是：（1）<strong>零交叉</strong>检测；
+  （2）原始基元草图的形成……）</span></p>
+
+  <p style="margin-top:10px;color:var(--ink-soft);font-size:12.7px;">
+  ★ <strong>三处说明</strong>：① <strong>MacKay 与 Dive Into Systems 的语料是英文原著</strong>，
+  所以 RS2 与 RS5 给的是<em>英文原文 + 中文翻译（本项目译）</em>；
+  ② Marr《视觉》同为英文原著，RS8 同时给了<strong>冈萨雷斯的中文转述</strong>与
+  <strong>Marr 的英文原文</strong>；
+  ③ <strong>《思考，快与慢》的语料有两个版本</strong>——纯繁体版（355,178 字符）与简体转换版。
+  CF8 与 CF12 引卡尼曼时用的是<strong>繁体版原貌</strong>（<em>例如「但即使知道也無法消除人們內心的不安」</em>），
+  因为<strong>简体版没有这一句所在的段落</strong>。</p>
+</div>
+
+<div class="box">
+  <div class="h">★ 这 8 处里最值钱的两条</div>
+  <p><strong>RS8（Marr → 数字图像处理）是全项目引用关系最硬的一条</strong>：
+  不是概念相似，是冈萨雷斯<em>点名引用了 Marr 的年份</em>，并把他的两条论证逐条复述。
+  <strong>这可以用来验证「一个理论怎么变成工程实现」的路径。</strong></p>
+  <p><strong>RS6（《論語》→ 弗洛姆）是唯一跨了两千年的呼应</strong>，
+  而且两边<strong>用同一个反例来定义自己</strong>：
+  《論語》用「小人」，弗洛姆用「被爱 / 接受爱 / 一揽子特性交易」。
+  <em>但这一条有一个真实的张力点：「克己復禮為仁」更强调<strong>自我约束</strong>，
+  而不是对对方的给予</em>——
+  <strong>所以这个呼应是成立的，但它不是《論語》里「仁」的全部。</strong></p>
+</div>
+
+<!-- ============ 一览表 ============ -->
+<h2>十四 · 一览表</h2>
+
+<table>
+  <tr><th style="width:6%">编号</th><th style="width:24%">双方</th>
+    <th style="width:12%">类型</th><th>争的点 / 我的倾向</th></tr>
   <tr><td><strong>CF1</strong></td><td>多伊奇 ⚔ 戴蒙德</td>
     <td><span class="cat c2">Ⅱ</span></td>
     <td>历史的驱动力。我倾向多伊奇（<em>条件齐备而未发生</em>），但<em>戴蒙德的「终极因」可能已被我读窄</em>。</td></tr>
@@ -570,33 +1022,53 @@
     <td>认识受什么限制。我判断互补（<em>社会学限制 vs 认识论能力</em>），但<em>「利益能否被论证改变」这一处我不够有把握</em>。</td></tr>
   <tr><td><strong>CF4</strong></td><td>多伊奇 ⚔ 凯利</td>
     <td><span class="cat c1">Ⅰ</span></td>
-    <td>技术方向由谁定。我倾向多伊奇（<em>趋同是人做出的</em>），但<em>若凯利的「方向」只是统计规律，则应降级为 Ⅲ</em>。</td></tr>
-  <tr><td><strong>CF5</strong></td><td>米勒 ⊥ 弗洛姆</td>
+    <td>技术方向由谁定。我倾向多伊奇（<em>趋同是人做出的</em>）——<strong>与 CF9 攻击点相似，建议合读</strong>。</td></tr>
+  <tr><td><strong>CF5</strong></td><td>米勒 ⊥ 弗洛姆（<em>范畴那一层</em>）</td>
     <td><span class="cat c3">Ⅲ</span></td>
-    <td>实然 vs 应然。有一处真接缝（<em>弗洛姆的规范主张隐含经验断言</em>）。<strong>暂定——我未核他那些社会学判断</strong>。</td></tr>
-  <tr><td><strong>CF6</strong></td><td>米勒 ⚔ 卡尼曼</td>
+    <td>实然与应然不能互推。<strong>但见 CF11——这一条已被我改判</strong>。</td></tr>
+  <tr><td><strong>CF6</strong></td><td>米勒 ⚔ 卡尼曼（<em>错觉</em>）</td>
     <td><span class="cat c2">Ⅱ</span></td>
     <td>错觉的代价。边界条件写在米勒原文里（<em>取决于偏离程度</em>）；但<em>那个条件本身可能"怎么改都成立"</em>。</td></tr>
   <tr><td><strong>CF7</strong></td><td>米勒 ⊥ 保罗</td>
     <td><span class="cat c3">Ⅲ</span></td>
-    <td>规律 vs 个案。不能互相反驳；<strong>但若保罗揭示的是"规律在极端条件下失效"，则应升级为 Ⅱ</strong>。</td></tr>
+    <td>规律 vs 个案。<strong>但若保罗揭示的是「规律在极端条件下失效」，应升级为 Ⅱ</strong>。</td></tr>
+  <tr><td><strong>CF8</strong></td><td>塔勒布 ⚔ 卡尼曼</td>
+    <td><span class="cat c1">Ⅰ</span></td>
+    <td>尾部风险：单次实验 vs 反复暴露。我倾向塔勒布<em>只在他的限定条件下</em>。</td></tr>
+  <tr><td><strong>CF9</strong></td><td>凯利 ⚔ 道金斯</td>
+    <td><span class="cat c1">Ⅰ</span></td>
+    <td>演化有没有内生方向。我倾向道金斯（<em>举证责任不对等 + 凯利手上的证据已被正统解释吸收</em>）。</td></tr>
+  <tr><td><strong>CF10</strong></td><td>论持久战 ⚔ 戴蒙德</td>
+    <td><span class="cat c5">Ⅴ</span></td>
+    <td>历史的决定因素：人 vs 物。<strong>给 CF1 补上第三个立场</strong>，而且毛泽东的命题更强。</td></tr>
+  <tr><td><strong>CF11</strong></td><td>弗洛姆 ⚔ 米勒（<em>交换 vs 给予</em>）</td>
+    <td><span class="cat c1">Ⅰ</span></td>
+    <td>爱是交换还是给予。描述层米勒赢、规范层弗洛姆提出米勒无法处理的东西。<strong>本图修正了我原来的误判</strong>。</td></tr>
+  <tr><td><strong>CF12</strong></td><td>多伊奇 ⚔ 卡尼曼</td>
+    <td><span class="cat c1">Ⅰ</span></td>
+    <td>认知错误能否被无限消除。我倾向卡尼曼（<em>多伊奇措辞过强</em>），<strong>但有真实犹豫，可能应降为 Ⅲ</strong>。</td></tr>
 </table>
 
 <div class="box">
-  <div class="h">★ 这份地图本身暴露出来的三件事</div>
-  <p><strong>① 真对立只有 2 处（CF2、CF4），其余 5 处都不是硬对立。</strong>
-  这比我此前的印象少——<em>我此前在对话里把它们都说成"冲突"，那是不准确的。</em></p>
-  <p><strong>② 有 3 处我明确写了"暂定"，因为我没有去核关键的一侧</strong>
-  （<em>弗洛姆的社会学判断、米勒第 10 章对极端压力的覆盖、凯利"方向"的准确含义</em>）。
-  <strong>这三处是这份地图下一步该补的。</strong></p>
-  <p><strong>③ 最有价值的不是"谁对"，而是接缝。</strong>
-  凡是两本书之间<strong>有一处可以被对方检验的断言</strong>，那一处就是这座知识库里最值钱的地方——
-  <em>因为它同时约束了两个来源。</em>
-  这份地图里这样的接缝有 3 处：<em>弗洛姆的隐含经验断言、保罗的"价值观会变化"、凯利的趋同证据。</em></p>
+  <div class="h">★ 这份地图（扩充后）暴露出来的五件事</div>
+  <p><strong>① 真对立从 2 处增加到 6 处</strong>（CF2、CF4、CF8、CF9、CF11、CF12），
+  而<strong>其中 3 处（CF8、CF11、CF12）是本次扩充才发现的</strong>。</p>
+  <p><strong>② 我自己的一处误判被推翻了</strong>：米勒 ⊥ 弗洛姆原判 Ⅲ「范畴不同」，
+  实际是 Ⅰ「真对立」——
+  <em>「范畴不同」这个归类用起来太方便，它让我不必选边。这是这份地图最值得记的一条教训。</em></p>
+  <p><strong>③ 卡尼曼出现了 3 次</strong>（CF6、CF8、CF12），
+  <strong>凯利出现 2 次</strong>（CF4、CF9），<strong>米勒出现 4 次</strong>（CF5、CF6、CF7、CF11）。
+  <em>这三个是这张关系网的中心节点——而它们在项目里分属两个域（02 与 08、01）。</em></p>
+  <p><strong>④ 有 4 处「暂定」我仍未解决</strong>
+  （<em>弗洛姆的社会学判断、米勒第 10 章对极端压力的覆盖、凯利「方向」的准确含义、
+  CF12 是否应降级</em>）。<strong>这四处是下一步该核的。</strong></p>
+  <p><strong>⑤ 8 处呼应里有 4 处是技术域内部的</strong>（RS2、RS4、RS5、RS8）。
+  <em>技术域的连接密度明显高于其他域——这可能是因为技术书的依赖关系是显式的
+  （谁引用谁、谁替代谁），而人文书的依赖关系是隐式的。</em>
+  <strong>这解释了为什么此前 79 份产出里只有 2 处跨书链接——最难连接的那一类恰好占多数。</strong></p>
 </div>
 
-<!-- ============ 给你自己的问题 ============ -->
-<h2>九 · 三个给你自己的问题</h2>
+<h2>十五 · 三个给你自己的问题</h2>
 <div class="s">按项目惯例：每条跨书关系最后都留三个问题，指向你自己的处境</div>
 
 <div class="box">
@@ -617,6 +1089,29 @@
   <em>这句话接近实践论那一侧。而你在同一篇里写「面对一个从未接触过的东西我是否如我所想象的那般勇敢」——
   那是一个关于自己的、个案式的问题。</em><br>
   <strong>你更习惯用哪一种方式回答自己的问题：找到规律，还是找到一个能说服自己的例子？</strong></p>
+
+  <p style="margin-top:14px;padding-top:12px;border-top:1px dashed var(--edge);">
+  <strong>Q4 · 关于 CF8（尾部风险：单次实验 vs 反复暴露）——这一条对你最直接</strong><br>
+  你做嵌入式项目，写的是会烧进芯片、会跑在真实设备上的代码。
+  <strong>「单次看起来合理」和「重复一万次还安全」在这个领域是两件不同的事。</strong><br>
+  <em>你有没有过一次「实验里没问题、上设备出问题」的经历？
+  那一次你后来是把它归因为<strong>自己不够小心</strong>，还是<strong>试验条件本来就不覆盖真实条件</strong>？</em>
+  <br><strong>塔勒布那一侧说的正是后者——而那是一个可以改条件、而不是改态度的结论。</strong></p>
+
+  <p><strong>Q5 · 关于 CF11（爱是交换还是给予）——这一条最不好答</strong><br>
+  你笔记里写「以和为贵，争取双赢」。<strong>「双赢」这个词本身就带着核算的味道</strong>——
+  它预设了双方都在算。<br>
+  <em>而在你自己的人际关系里，有没有一个人，你对他的付出<strong>不是</strong>为了换取什么？</em><br>
+  <strong>如果有，那么弗洛姆在说一件真实的事；如果没有，那么米勒的框架就够了。</strong>
+  <em>这个问题没有中间答案，所以我把它放在最后。</em></p>
+
+  <p><strong>Q6 · 关于 CF12（认知错误能否被无限消除）</strong><br>
+  你在 `思/新建 文本文档 (4).txt` 里问：「从上次与人争吵后我就很少写些什么了，
+  是我懒了？懈怠了还是其他的什么，<strong>如同迷雾一般让人琢磨不清</strong>。」<br>
+  <em>这句「琢磨不清」本身就是一个数据点。</em>
+  <strong>如果按多伊奇那一侧：这个问题一定有答案，你只是还没找到。
+  如果按卡尼曼那一侧：可能有一部分原因是关不掉的，认清了也仍在。</strong><br>
+  <strong>你更愿意接受哪一种？——注意：这不是一个理论问题，这决定了你会花多少力气去找答案。</strong></p>
 </div>
 
 <!-- ============ 存疑区 ============ -->
@@ -640,13 +1135,48 @@
 
   <p><strong>④ 马尔（《视觉》）vs 深度学习</strong>——「表征要不要显式」。<br>
   <em>这是我在《视觉》精读笔记里提出的（P8），但《动手学深度学习》那本书里没有回应这个问题的原文。</em>
-  <strong>缺对话的一方。</strong></p>
+  <strong>缺对话的一方。</strong>
+  <em>我原本以为「三层级 vs 端到端」会冲突，但 D2L 全文未出现 Hubel/Wiesel/视觉皮层，
+  Marr 全文也没有针对「学习」的方法论表态——所以无法支撑。</em></p>
+
+  <p style="margin-top:14px;padding-top:12px;border-top:1px dashed var(--edge);">
+  <strong>以下四条来自第二版的系统搜索，我核了关键引文但未成条：</strong></p>
+
+  <p><strong>⑤ 《論語》／「关系性自我」 vs 米勒</strong>——缺「对立面」的原话。<br>
+  米勒确实承认东方文化「更倡导集体主义的自我感」，
+  也承认自我概念「所有组成部分都和我们与他人的人际关系有着密切的联系」。
+  <strong>但他是把「关系性自我」当作一个<em>文化变量</em>纳入了同一个个体主义心理学框架，
+  而不是当作本体差异</strong>——
+  <em>而我找不到米勒任何一句把「自我由关系构成」当作普遍机制接受或明确否认的话。</em>
+  <strong>缺的证据是：他对独立型/互依型自我构念的正面理论表态（全书未出现这两个术语）。</strong></p>
+
+  <p><strong>⑥ 多伊奇 vs 塔勒布</strong>——与 CF2 同源。<br>
+  塔勒布有很好的靶子（<em>「那些聪明人不理解亲身参与风险共担会远比课堂更能够了解世界」</em>），
+  <strong>但逐条比对后我认为它与 CF2（好解释 vs 实践）在争点上基本同构</strong>，单列会重复。
+  <em>若要单列，需要多伊奇专门针对「承担后果」这一条件的段落——我没有找到。</em></p>
+
+  <p><strong>⑦ Sedgewick《算法》 vs MacKay《信息论》</strong>——语料层面无法配对。<br>
+  预期在 <strong>Huffman 编码</strong>上配对，但
+  <em>MacKay 全文只出现 Huffman 一次，且在参考文献里</em>（Huffman 1952 的条目），
+  <strong>正文没有 Huffman 码的对应章节。</strong></p>
+
+  <p><strong>⑧ 《当呼吸化为空气》 vs 卡尼曼</strong>——有极好的个案，但没有对立主张。<br>
+  卡拉尼什有一段几乎是为 CF8 写的：
+  <em>「三十多岁脊柱就生了癌？这种概率简直不会超过万分之一。就算这概率再高一百倍，
+  还是高不过脊椎滑脱。搞不好我真的是在自己吓自己。」</em>
+  ——<strong>他用基率推理说服自己，然后他确实得了癌症。</strong>
+  <em>但卡拉尼什本人没有提出任何与卡尼曼对立的一般性主张，
+  所以只能作为 CF8 的旁证，不能独立成条。</em></p>
+
+  <p style="margin-top:14px;padding-top:12px;border-top:1px dashed var(--edge);color:var(--l1);">
+  <strong>★ 主动没写的：</strong>《枪炮病菌与钢铁》与《置身事内》之间（中国案例的对比）——
+  <em>找不到可对照的原文，我没有凭印象硬凑。</em></p>
 </div>
 
 <footer>
-  底层 · 冲突与呼应地图 · 「底层」项目（跨域产出，第 1 份）<br>
-  7 处关系 · 4 种类型 · 3 处标注为「暂定」<br>
-  <em>引文均可在各书 <code>_全文.txt</code> 中核对；<br>
+  底层 · 冲突与呼应地图 · 「底层」项目（跨域产出，第 1 份 · 第二版）<br>
+  12 处冲突 + 8 处呼应 · 5 种类型 · 4 处标注为「暂定」<br>
+  <em>引文均可在各书语料中核对（本版共核 78 条）；<br>
   标「我的判断」「暂定」「我可能错在哪」处为待议读法；<br>
   本页的立场：只收录找得到双方原文的关系，凭印象的一律进存疑区</em>
 </footer>
