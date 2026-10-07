@@ -234,7 +234,7 @@
 <h3>F12 · <code>.meas</code> 报错或没输出</h3>
 <p><strong>症状</strong>：写了 <code>.meas</code> 但 <code>SPICE Error Log</code> 里没有结果，或报 <code>Measurement failed</code>。</p>
 <p><strong>原因</strong>（按概率）：</p>
-<ol><li><strong><code>TRIG</code>/<code>TARG</code> 的 <code>VAL</code> 在仿真范围内没被达到</strong> —— 比如想让信号达到 5V，但它最高只到 1V</li><li><strong><code>RISE=n</code> 的 n 太大</strong> —— 仿真里信号只上升了 1 次，你写了 <code>RISE=2</code></li><li><strong><code>.meas</code> 引用了不存在的节点名</strong></li><li><strong><code>.meas</code> 的类型不匹配</strong> —— <code>TRAN</code> 测量写在只有 <code>.ac</code> 的仿真里</li></ol>
+<ol><li><strong><code>TRIG</code>/<code>TARG</code> 的 <code>VAL</code> 在仿真范围内没被达到</strong> —— 比如想让信号达到 5V，但它最高只到 1V</li><li><strong><code>RISE=n</code> 的 n 太大</strong> —— 仿真里信号只上升了 1 次，笔记里写了 <code>RISE=2</code></li><li><strong><code>.meas</code> 引用了不存在的节点名</strong></li><li><strong><code>.meas</code> 的类型不匹配</strong> —— <code>TRAN</code> 测量写在只有 <code>.ac</code> 的仿真里</li></ol>
 <p><strong>排查</strong>：</p>
 <ul><li>先把波形画出来，<strong>用眼睛确认那个值确实被达到过</strong></li><li>再用 <code>.meas</code> 测量</li><li><strong><code>RISE=n</code> 从 1 开始数，不是 0</strong></li></ul>
 <hr>

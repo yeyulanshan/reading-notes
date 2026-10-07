@@ -390,7 +390,7 @@ T(2N) / T(N) ≈ a(2N)^b / (aN^b) = 2^b
 </tbody></table>
 <p><strong>特别注意"循环交换"的三条限制</strong>：① 循环体不能有跨迭代依赖；② 别名问题让编译器无法证明安全；③ 数据能装进缓存时收益消失。</p>
 <h3>七、一个漂亮的跨书连接：LRU 在两个层面上</h3>
-<p><strong>我核对了两本书的原文</strong>（这不是联想）：</p>
+<p><strong>已核对两书的原文</strong>（这不是联想）：</p>
 <table><thead><tr><th></th><th>OSTEP（操作系统）</th><th>Dive into Systems</th></tr></thead><tbody>
 <tr><td><strong>问题</strong></td><td>物理内存满了，换出哪一页？</td><td>缓存满了，淘汰哪一块？</td></tr>
 <tr><td><strong>答案</strong></td><td><strong>LRU</strong> 及其近似</td><td><strong>LRU</strong></td></tr>

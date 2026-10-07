@@ -285,7 +285,7 @@
 
   <!-- ============ 与 OSTEP 的接口 ============ -->
   <div class="section-title">一个漂亮的跨书连接：LRU 在两个层面上</div>
-  <div class="section-sub">我核对了原文——这不是我的联想，是两本书真的在讲同一件事</div>
+  <div class="section-sub">已核对原文：这不是联想，是两本书真的在讲同一件事</div>
 
   <div class="card">
     <table>
@@ -311,7 +311,7 @@
         <td><b>机制</b>（mechanism）——硬件固定</td>
       </tr>
     </table>
-    <p><strong>我核对了两本书的原文</strong>：OSTEP 提到 LRU 共 <strong>44 次</strong>，Dive into Systems <strong>19 次</strong>（其中 11 次是完整拼写 "least recently used"）。</p>
+    <p><strong>已核对两书的原文</strong>：OSTEP 提到 LRU 共 <strong>44 次</strong>，Dive into Systems <strong>19 次</strong>（其中 11 次是完整拼写 "least recently used"）。</p>
     <p><strong>这个连接的价值在于它展示了一件事</strong>：<em>同一个策略（用过去预测未来）在从寄存器到磁盘的<strong>每一层</strong>都在被使用</em>。而两本书从两端逼近它——OSTEP 从软件策略那边，Dive into Systems 从硬件机制那边。</p>
     <p><strong>这也正好印证了 OSTEP 那套"抽象 → 机制 → 策略"</strong>：在缓存这一层，机制（几路组相联、块多大）是硬件定死的，而策略（LRU）是硬件实现的固定选择——<em>软件改不了</em>。而在虚拟内存那一层，机制和策略都在操作系统手里。<strong>同一件事在不同层级上的可调整程度不同——这本身就是一个重要的认知。</strong></p>
   </div>
