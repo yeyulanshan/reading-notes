@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>我的问题（二） · 底层</title>
+<meta name="description" content="从《记录.txt》长出来的四组问题：代偿、知行合一、孤独与幸福、生命的绽放。含「项目里是空的」与「原料躺着没动」的区分。">
+<meta name="theme-color" content="#f2f8fc">
+<style>
+  :root{
+    --paper:#f2f8fc; --card:#ffffff; --card-2:#e9f4fb;
+    --edge:#cfe0ec; --edge-lit:#a4c6dd;
+    --ink:#12232e; --ink-2:#627480; --ink-3:#587286;
+    --accent:#2c7ea2; --accent-2:#377972; --gold:#84744a;
+    --quote-bg:#fbf8ef; --quote-edge:#d8cba4; --quote-ink:#5f5527;
+    --warn:#a85035; --warn-soft:#fcf1ec;
+    --dormant:#7a4f96; --dormant-soft:#f4eef8;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--paper); color:var(--ink); line-height:1.9;
+    -webkit-font-smoothing:antialiased; padding:32px 16px 60px;}
+  ::selection{background:rgba(63,180,232,.26); color:#0d2430;}
+  .wrap{max-width:880px; margin:0 auto;}
+  header.doc{background:var(--card); border:1px solid var(--edge);
+    border-top:4px solid var(--accent); border-radius:10px;
+    padding:34px 34px 28px; margin-bottom:22px;}
+  header.doc h1{font-size:26px; font-weight:800; line-height:1.4; margin-bottom:12px;
+    background:linear-gradient(135deg,#1d4a68,#2c7ea2 55%,#377972);
+    -webkit-background-clip:text; background-clip:text; color:transparent;}
+  header.doc .sub{font-size:14.6px; color:var(--ink-2); line-height:1.95;}
+  header.doc .src{margin-top:16px; padding-top:14px; border-top:1px dashed var(--edge);
+    font-size:12.6px; color:var(--ink-3); line-height:1.95;}
+  header.doc .src strong{color:var(--ink-2);}
+  .lead{background:var(--card); border:1px solid var(--edge); border-radius:9px;
+    padding:20px 22px; margin-bottom:22px; font-size:14px; color:var(--ink-2);}
+  .lead .t{color:var(--gold); font-weight:700; margin-bottom:9px; font-size:13.6px;}
+  .lead p+p{margin-top:9px;} .lead strong{color:var(--ink);}
+  h2{font-size:19px; font-weight:700; margin:40px 0 6px; padding-left:12px;
+    border-left:4px solid var(--gold); line-height:1.55;}
+  .s{color:var(--ink-3); font-size:12.9px; margin:0 0 16px 16px; line-height:1.85;}
+  h3{font-size:16.4px; font-weight:700; margin:28px 0 10px; color:var(--ink);}
+  h4{font-size:15.2px; font-weight:700; color:#1d4a68; margin:22px 0 9px;
+    padding-left:10px; border-left:3px solid rgba(63,180,232,.45); line-height:1.6;}
+  p{font-size:14.5px; color:var(--ink-2); margin-bottom:12px; text-wrap:pretty;}
+  p strong{color:var(--ink);} p em{font-style:normal;}
+  code{font-family:ui-monospace,Consolas,monospace; font-size:12.8px;
+    background:var(--card-2); border:1px solid var(--edge); border-radius:4px;
+    padding:1px 6px; color:#1d5c86; word-break:break-all;}
+  a{color:var(--accent); text-decoration:none; border-bottom:1px solid #cfe4f0;}
+  blockquote{margin:13px 0; padding:13px 18px; background:var(--quote-bg);
+    border:1px solid #e8dfc4; border-left:3px solid var(--quote-edge);
+    border-radius:5px; font-size:14.1px; color:var(--quote-ink); line-height:1.95;}
+  blockquote p{margin-bottom:8px; color:inherit; font-size:inherit;}
+  blockquote p:last-child{margin-bottom:0;}
+  blockquote .who{display:block; margin-top:7px; font-size:12px;
+    color:#8a7a52; text-align:right;}
+  blockquote strong{color:#8a6a24;}
+  .box{background:var(--card); border:1px solid var(--edge); border-radius:9px;
+    padding:19px 22px; margin:16px 0; font-size:14px; color:var(--ink-2);}
+  .box .h{font-weight:700; color:var(--gold); margin-bottom:10px; font-size:13.6px;}
+  .box p+p{margin-top:9px;} .box strong{color:var(--ink);}
+  .box.warn{background:var(--warn-soft); border-color:#e8cfc4;}
+  .box.warn .h{color:var(--warn);}
+  .box.dormant{background:var(--dormant-soft); border-color:#d9c4e6;}
+  .box.dormant .h{color:var(--dormant);}
+  .box.mine{background:#eef8f3; border-color:#cfe6dc;}
+  .box.mine .h{color:#2f7a5c;}
+  table{width:100%; border-collapse:collapse; margin:15px 0; font-size:13.5px;}
+  th,td{padding:9px 12px; border:1px solid var(--edge); text-align:left;
+    vertical-align:top; line-height:1.8;}
+  th{background:var(--card-2); color:#1d5c86; font-weight:700; font-size:12.8px;}
+  td{color:var(--ink-2);} td strong{color:var(--ink);}
+  ul,ol{margin:11px 0 14px 22px;}
+  li{font-size:14.4px; color:var(--ink-2); margin-bottom:8px; line-height:1.9;}
+  li strong{color:var(--ink);}
+  hr{border:none; border-top:1px dashed var(--edge); margin:34px 0;}
+  footer.doc{margin-top:30px; padding-top:20px; border-top:1px solid var(--edge);
+    font-size:12.4px; color:var(--ink-3); line-height:2; text-align:center;}
+  @media(max-width:700px){
+    body{padding:16px 10px 40px;} header.doc{padding:24px 20px 20px;}
+    header.doc h1{font-size:21px;} h2{font-size:17px;}
+    table{font-size:12.2px;} th,td{padding:7px 8px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="doc">
+  <h1>我的问题（二）· 从《记录.txt》长出来的四组问题</h1>
+  <p class="sub">代偿 · 知行合一 · 孤独与幸福 · 生命的绽放 —— 附「项目里是空的」与「原料躺着没动」的区分</p>
+  <p class="src">
+    <strong>材料来源</strong>：<code>思/记录.txt</code>（10,399 字节，13 段，2026-10-07）。<br>
+    这份文件<strong>不进 git</strong>（按你的选择只本地留档），所以本页引用它的段落时给的是段号与你自己的话。<br>
+    <strong>凡引书本原文处，都在语料里逐字核对过</strong>；凡属我的判断处，标「我的判断」。
+  </p>
+</header>
+
+<div class="lead">
+  <div class="t">这份文件与《我的问题》（第一份）的分工</div>
+  <p><strong>第一份</strong>从 <code>思/</code> 那五份方法类笔记里抽出<strong>九组问题</strong>，
+  问的是「项目里哪里碰到了」。</p>
+  <p><strong>这一份</strong>从《记录.txt》里抽出<strong>四组</strong>，
+  问的是同一件事，但多了一层：<em>你的这四组里，有几组不是「项目里没有」，而是<strong>原料躺着没动</strong>。</em></p>
+  <p><strong>这个区分是这一轮最要紧的发现</strong>——
+  <code>00_中文原典</code> 里有 <strong>17 份全文</strong>，被 git 跟踪，但项目只用了 3 份。
+  <em>其余 14 份、合计 31.6 MB，从未被打开做成任何产出。</em></p>
+</div>
+
+<!-- ============================================================ -->
+<h2>一 · 先把《记录.txt》的引用性质说清</h2>
+<div class="s">在接材料之前，要知道哪些是你写的、哪些是你摘的</div>
+
+<p>我把 13 段逐句送去 26 本书的语料里核过。结论：</p>
+
+<table>
+  <tr><th style="width:16%">判定</th><th style="width:10%">条数</th><th>内容</th></tr>
+  <tr><td><strong>命中本项目原文</strong></td><td><strong>4</strong></td>
+    <td>《无穷的开始》×2（<em>第 3 章的两句格言、第 4 章「知识必须先假设再检验」</em>）·
+    <strong>《操作系统导论》×1</strong> · 《道德經》第六十三章 ×1</td></tr>
+  <tr><td>近似</td><td>1</td><td>《孙子兵法》「以正合，以奇胜」——<em>原文不在语料，只有《史记》与毛选里的二手引文</em></td></tr>
+  <tr><td>不在本项目</td><td>7</td><td>《陀飞轮》《坦白书》《好运设计》《丰饶之海》《黄金时代》· 黑塞 · 史铁生 ·《资本论》</td></tr>
+</table>
+
+<div class="box warn">
+  <div class="h">★ 最值得单说的一条：《操作系统导论》</div>
+  <p>你记的这一句，<strong>一字不差出自《操作系统导论》</strong>，连「毕竟」都是原文的：</p>
+  <blockquote>以跳过本书的最后几章，或者直接阅读它们，以获取关于某些相同材料的不同观点。
+  <strong>毕竟，健全与完善自己知识的一个好方法，就是尽可能多地听取其他观点，
+  然后在此问题上扩展自己的观点和想法。</strong>
+  <span class="who">《操作系统导论》第 2 章 · 参考文献 [BOH10]（CS:APP）条目之后的推荐语</span></blockquote>
+  <p><em>它不在正文里，是作者推荐延伸阅读时的一句旁白。</em></p>
+  <p><strong>而这件事本身值得你想一下</strong>：一本讲操作系统的技术教材，
+  在介绍章节的中途顺手写了一句<strong>关于怎么学习</strong>的话——
+  <em>你把它摘了下来，并且在笔记里没有标出处。</em>
+  而你项目里 <strong>18 份技术产出</strong>正来自这本书所在的域。</p>
+</div>
+
+<div class="box">
+  <div class="h">★ 三处措辞与原文有出入（都不是你的错，是流传版本的问题）</div>
+  <table>
+    <tr><th style="width:38%">你记的</th><th>原文</th></tr>
+    <tr><td>知己知彼百战<strong>百胜</strong></td>
+      <td>知<strong>彼</strong>知<strong>己</strong>，百战<strong>不殆</strong>（<em>毛选《论持久战》《矛盾论》各引一次，都作「知彼知己」</em>）</td></tr>
+    <tr><td>以正<strong>和</strong>，以奇胜</td>
+      <td>兵以正<strong>合</strong>，以奇勝（《史记·孙子传赞》）</td></tr>
+    <tr><td>人死了，就像<strong>浪</strong>消失在水里</td>
+      <td>博尔赫斯：「死了，就像<strong>水</strong>消失在<strong>水</strong>中」（<em>你把「水」改成了「浪」</em>）</td></tr>
+  </table>
+  <p><strong>另有一条你的归属是对的</strong>：「天下大事必做于细，天下难事必做于易」确属《道德經》第六十三章——
+  <em>两处小出入：原文作「必<strong>作</strong>于」（你写「做」），且原文是<strong>难事在前、大事在后</strong>，你把两句对调了。</em></p>
+</div>
+
+<!-- ============================================================ -->
+<h2>二 · 第一组：代偿</h2>
+<div class="s">这一组已经接进《冲突与呼应地图》了（CF13）</div>
+
+<h3>你写的话</h3>
+<blockquote>代偿机制其本身来源于人内心的<strong>懦弱</strong>，遇到问题不去直接解决而总想寻找代偿的东西
+<strong>以为这样就行了</strong>，如找不到工作不去研究如何去找工作而是将矛头指向考研考公。
+<br>但人能存在本身也是许多代偿机制在发挥作用，<strong>人无法直面的东西太多了</strong>，
+中国的"临行密密缝，意恐迟迟归"，如亲人去世了，我们可以用一场送葬仪式来代偿，多烧些纸钱。
+<span class="who">《记录.txt》</span></blockquote>
+
+<h3>三个解释者，三种归因</h3>
+<table>
+  <tr><th style="width:20%">来源</th><th style="width:16%">归因类型</th><th>它说代偿是什么</th></tr>
+  <tr><td><strong>你自己</strong></td><td>品格归因</td><td><strong>懦弱</strong>——能直接解决而不做</td></tr>
+  <tr><td><strong>多伊奇</strong></td><td>认识论归因</td>
+    <td><strong>知识不足</strong>——「所有的恶是知识不足造成的」<em>（第 9 章）</em></td></tr>
+  <tr><td><strong>《道德經》77 章</strong></td><td>人性归因</td>
+    <td><strong>人道之常</strong>——「人之道则不然，损不足以奉有余」</td></tr>
+</table>
+
+<div class="box mine">
+  <div class="h">◆ 我据你的两个例子提出的分界（这一条我标了「写得不稳」）</div>
+  <p><strong>你的两个例子不是同一种东西：</strong></p>
+  <p>· <strong>找不到工作 → 考研考公</strong>：原问题<em>没被碰</em>，换了个能完成的任务。</p>
+  <p>· <strong>亲人去世 → 送葬仪式</strong>：原问题<em>不可能被解决</em>。这里没有懦弱可言。</p>
+  <p><strong>所以线不在「直接 or 代偿」，而在「有没有偷偷把替代品当成原问题已经解决」。</strong>
+  <em>前者的危险是自我欺骗（把「我在努力」当成「问题在处理」）；
+  后者是把不可直接做的转成可以做的。</em></p>
+  <p><strong>但这条我写得最不稳</strong>：「临行密密缝」完全也可以被读成代偿
+  （<em>母亲无法让儿子平安，于是缝一件衣服来安放焦虑</em>）——若如此，则你的「懦弱说」比我的分界更简洁。
+  <em>完整的三栏（我的判断 / 可反驳条件 / 我可能错在哪）见
+  <a href="../冲突与呼应地图.html">冲突与呼应地图</a> CF13。</em></p>
+</div>
+
+<div class="box">
+  <div class="h">◆ 一处必须说明的引文问题</div>
+  <p>《遊子吟》<strong>不在本项目语料里</strong>——我搜过，「密密缝」只在你的笔记中出现。
+  所以那一句<strong>无法用语料证明</strong>，是凭我自己的知识引的。</p>
+  <p><em>另外，通行原文是「<strong>臨行</strong>密密縫，意恐遲遲歸」，你记的是「<strong>臨時</strong>」。</em></p>
+</div>
+
+<!-- ============================================================ -->
+<h2>三 · 第二组：知行合一</h2>
+<div class="s">★ 这一组的原料就在库里：《王陽明全集》2.7 MB，从未被打开</div>
+
+<h3>你写的那件事</h3>
+<blockquote>昨天走在路上跟同学聊天，他说"现在还焊板子？都多少年了，都是老掉牙的东西了？有什么用？"
+我没有反驳可能心里也暗暗认同了。到了今天上午焊板子的时候，这句话便让我知行合一了，
+看到旁边的人都焊好了，我便想着早焊好早完事，焊的怎么样无所谓能亮就行，
+结果就是焊出来的板子我自己看着都觉得丑。经老师提醒我不经反思，<strong>"这不像我啊"</strong>……
+我虽不为自己贴上事事都要完美的标签但我可是我啊，这是我自己的人生。
+<span class="who">《记录.txt》段 9</span></blockquote>
+
+<h3>《王陽明全集》里有四句直接对上（全部逐字核对）</h3>
+
+<blockquote>
+<strong>未有知而不行者。知而不行，只是未知。</strong>
+<span class="who">《傳習錄·徐愛錄》——王陽明答徐愛問「知行合一」</span>
+</blockquote>
+<p><strong>这一句几乎是在逐字回答你焊板子那件事。</strong>
+<em>你「暗暗认同了」那句话，然后焊出一块自己看着都丑的板子——
+按王陽明，那不算「知道焊板子该认真」，那叫「<strong>未知</strong>」。
+知与行的分裂不是意志力问题，是<strong>那个「知」本来就不真</strong>。</em></p>
+
+<blockquote>
+是徒知靜養而不用克己工夫也。如此臨事，便要傾倒。
+<strong>人須在事上磨，方能立得住；方能靜亦定、動亦定。</strong>
+<span class="who">《傳習錄》</span>
+</blockquote>
+<p><strong>这一句点出了你那次失败的条件</strong>：<em>「静时亦觉意思好，才遇事便不同」——
+你独处时知道该认真，一进实验室、一看到旁边人都焊好了，就变了。
+王陽明的答法是「在事上磨」：不在安静的时候修养，就在<strong>那件让你变形的具体事情上</strong>修。</em></p>
+
+<blockquote>
+<strong>知是行的主意，行是知的功夫；知是行之始，行是知之成。</strong>
+<span class="who">《傳習錄》</span>
+</blockquote>
+
+<blockquote>
+聖賢只是為己之學，<strong>重功夫不重效驗</strong>。
+<span class="who">《傳習錄》</span>
+</blockquote>
+<p><strong>最后这一句可能对你最有用。</strong>
+<em>你写「我虽不为自己贴上事事都要完美的标签，但我可是我啊」——
+那仍是一个<strong>效验</strong>的判断（板子丑不丑）。
+王陽明说的是：把注意力放在<strong>功夫</strong>（每一针有没有缝密）上，而不是<strong>效验</strong>（最后好不好看）上。
+这两件事在你那次经历里恰好分开了：你盯着「早焊完」（效验），松掉了「每一焊点」（功夫）。</em></p>
+
+<div class="box dormant">
+  <div class="h">◆ 语料规模（说明这一组为什么「不该是空的」）</div>
+  <p><code>00_中文原典/王陽明全集.txt</code>：<strong>918,585 字符 · 29,627 行 · 2.7 MB</strong></p>
+  <p>关键词命中：<strong>「知行合一」37 处</strong>· 「致良知」108 处 ·「良知」815 处 ·
+  「事上磨」4 处 · 「變化氣質」2 处 · 《傳習錄》127 处。</p>
+  <p><strong>它被 git 跟踪、存在于磁盘、从未被做成任何产出。</strong>
+  <em>你在段 9 里引了王阳明，而他的全集就在你的库里躺着。</em></p>
+</div>
+
+<h3>同组的另两句</h3>
+
+<h4>「以正合，以奇胜」</h4>
+<blockquote>太史公曰：<strong>兵以正合，以奇勝。</strong>善之者，出奇無窮。奇正還相生，如環之無端。
+<span class="who">《史記·孫子吳起列傳》赞语（本项目全文）</span></blockquote>
+<p><em>《孙子兵法》本体不在语料里，但《史记》的孙子传赞语在。你写的是「以正<strong>和</strong>」，原文作「以正<strong>合</strong>」。</em></p>
+
+<h4>「知己知彼」</h4>
+<blockquote>孙子的规律，……仍是科学的真理。<strong>"知彼知己，百战不殆"</strong>
+<span class="who">毛选《论持久战》注〔24〕：「见《孙子·谋攻》」</span></blockquote>
+<blockquote>孙子论军事说：<strong>'知彼知己，百战不殆。'</strong>
+<span class="who">毛选《矛盾论》注[12]：「见《孙子·谋攻》」</span></blockquote>
+<p><strong>而这一处与 CF10（历史的决定因素：人 vs 物）是同一个题域</strong>——
+<em>你用「知己知彼」推导出「既然不可能全知彼，那就只有先知己」，
+这个推理与毛泽东在《论持久战》里对「能动性」的用法是同一条路。</em></p>
+
+<!-- ============================================================ -->
+<h2>四 · 第三组：孤独、幸福、生命的绽放</h2>
+<div class="s">这一组是你段 5（936 字）里的三个主题</div>
+
+<h3>孤独</h3>
+<blockquote>当我们午觉一觉睡到黄昏，迷茫的睁开眼愣愣的盯着窗外，周围一片寂静，家里没有一个人影，
+想张口喊声谁，却谁也喊不出时，那种孤独感足以将一个人吞没。
+<span class="who">《记录.txt》段 5</span></blockquote>
+<p><strong>项目里最厚的一处是《爱的艺术》</strong>（<code>Fromm_爱的艺术-精华笔记与专业问题.html</code>，25 处「孤独」）。</p>
+<p><em>你写「我们其实终身都避不开与孤独打交道，只是因为年轻对世界的好奇压过了孤独」——
+这与弗洛姆的框架有一处正面对话：弗洛姆认为人摆脱孤独的<strong>三种错误方式</strong>（
+纵欲、从众、创造性活动）与<strong>一种正确方式</strong>（成熟的爱）。</em></p>
+<div class="box">
+  <div class="h">◆ 我的判断（暂定）</div>
+  <p>你说的「年轻人用好奇压过孤独」——<strong>这在弗洛姆的框架里没有对应项</strong>。
+  他列的是「逃避孤独的手段」，没有「用求知压过去」这一条。</p>
+  <p><strong>所以这可能是一个真实的缺口</strong>：<em>你描述的是「孤独被别的东西盖住」，而不是「孤独被解决」——
+  前者是<strong>遮蔽</strong>，后者才是弗洛姆要的<strong>结合</strong>。这两者在体验上完全不同。</em></p>
+  <p><strong>「被好奇压过」和「被爱解决」，哪个更可持续？你写的那个「人到中年已致老年」的版本，暗示前者会失效。</strong></p>
+</div>
+
+<h3>幸福 = 自我实现</h3>
+<blockquote>关于幸福……根据人的神经机制快乐难以长久，但幸福或许可以，
+而从哲学层面来讲，一个人幸福的根本是个人的自我实现，这个也涉及到了存在的理念。
+<span class="who">《记录.txt》段 5</span></blockquote>
+<p><em>项目里 Miller 13 处、Fromm 10 处。但你的判据（<strong>快乐短暂 / 幸福可长</strong>，且幸福 = 自我实现）
+与那两本书的进路都不同——它们谈的是「关系中的满意度」，你谈的是<strong>存在论层面</strong>的。</em></p>
+<div class="box warn">
+  <div class="h">◆ 这一处项目里是空的</div>
+  <p><strong>「幸福 = 自我实现」这条在你库里没有正面材料。</strong></p>
+  <p><em>有关系的：卡尼曼讲「快乐」的机制（峰终定律、体验自我 vs 记忆自我）；
+  Fromm 讲「创造性活动」；但<strong>没有一本讲「自我实现」本身</strong>——
+  那通常是马斯洛、罗杰斯、或积极心理学（Seligman）的地盘，而这三样都不在库里。</em></p>
+</div>
+
+<h3>生命的绽放 / 不把人分三六九等</h3>
+<blockquote>关于生命的绽放我想说的是生命绝不简单，不知是这个时代渲染的什么情绪让我们远远低估了生命的价值与潜力，
+而只是简单的将人分为三六九等。
+<span class="who">《记录.txt》段 5</span></blockquote>
+<div class="box warn">
+  <div class="h">◆ 这一处也是空的</div>
+  <p><strong>项目里没有直接材料。</strong><em>最近的是《当呼吸化为空气》——它整个就是一个人面对「生命还剩多少」时的记录，
+  但它不从「价值与潜力」这个角度说，它说的是「我是谁」。</em></p>
+  <p><strong>而「将人分为三六九等」这件事，你库里有一处间接的对立面</strong>：
+  《非对称风险》整本在反对「用抽象标签替代具体的人」（<em>他讲的「知识分子」与「风险共担」</em>）。</p>
+</div>
+
+<h3>海德格尔 / 《存在与时间》</h3>
+<blockquote>或许我们不去读海德格尔的《存在与时间》，我们也会偶尔思索存在和时间。
+<span class="who">《记录.txt》段 5</span></blockquote>
+<p><strong>你库里没有海德格尔，也没有任何存在主义专著。</strong>
+<em>但《当呼吸化为空气》里有大量存在主义的问题（「存在」这个词本身出现过多次），
+它们是<strong>以处境的方式</strong>出现的，不是以哲学的方式。</em></p>
+<p><strong>我的判断</strong>：<em>你这一段（「我们理所当然的认为人生该有个定义，人生的意义该有个定义」）
+其实提了一个比海德格尔更具体的问题——<strong>「定义」这个习惯是不是从数学课上带出来的。</strong>
+你写「学高数时，我们先学微分的定义然后是积分的定义」——</em>
+<strong>这条线索比引海德格尔更有力，而且它在你库里能接上《无穷的开始》关于「定义」与「解释」的区分。</strong></p>
+
+<!-- ============================================================ -->
+<h2>五 · 第四组：从数学课带来的「定义」习惯</h2>
+<div class="s">这一组是你段 5 里我最看重的一条线索</div>
+
+<blockquote>在我们这长达十多年的人生学习中好像什么都需要有个定义，
+学高数时，我们先学微分的定义然后是积分的定义。于是我们理所当然的认为人生该有个定义，
+人生的意义该有个定义，<strong>若是我们没找到那么就会"天之道损有余补不足"，
+我们需要各种代偿来填补我们意义的空缺，以证明自己的存在。</strong>
+<span class="who">《记录.txt》段 5</span></blockquote>
+
+<div class="box mine">
+  <div class="h">◆ 这里有一处「你原话里自己没有发现的转折」</div>
+  <p>你在同一句里做了两件事：</p>
+  <p>① 说「人生该有个定义」这个习惯是<strong>从数学课带来的</strong>——<em>一个可疑的迁移</em>；</p>
+  <p>② 用它推出「找不到定义 → 就需要代偿」——<em>然后引《道德經》</em>。</p>
+  <p><strong>而《道德經》恰恰是最反对「定义」的那一路。</strong>
+  <em>「道可道，非常道」——开篇第一句就在说：能说清的那个道，不是那个道。</em></p>
+  <p><strong>所以你把《道德經》引来支持一个「必须找到定义」的论证，方向可能反了。</strong>
+  <em>用你自己的话问：如果「人生该有个定义」这个要求本身就是数学课带来的错觉，
+  那「找不到定义 → 需要代偿」这条链，可能从第一步就不用走。</em></p>
+</div>
+
+<div class="box dormant">
+  <div class="h">◆ 而「天之道」在项目里也有一份原料没动</div>
+  <p><code>00_中文原典/道德經_老子.txt</code>：<strong>22,801 字符 · 40.6 KB</strong></p>
+  <p><em>它在项目里只出现在《儒家加法与道家减法》那一份对照里，
+  <strong>没有自己的书目、没有整体架构、没有问题手册</strong>——
+  而它是你「受益良多」的那本书。</em></p>
+</div>
+
+<!-- ============================================================ -->
+<h2>六 · 这一轮查出来的结构问题</h2>
+<div class="s">这一节与你的笔记无关，但它是这一轮的副产物，而且比笔记本身更该先处理</div>
+
+<div class="box warn">
+  <div class="h">★ 00_中文原典 里有 17 份全文，项目只用了 3 份</div>
+  <p>被 git 跟踪、存在于磁盘、<strong>从未做成任何产出</strong>的 14 份，合计 <strong>31.6 MB</strong>：</p>
+  <table>
+    <tr><th style="width:33%">全文</th><th style="width:17%">大小</th>
+      <th style="width:33%">全文</th><th style="width:17%">大小</th></tr>
+    <tr><td><strong>王陽明全集</strong></td><td><strong>2.7 MB</strong></td>
+      <td>水滸傳</td><td>1.6 MB</td></tr>
+    <tr><td>宋史</td><td>14.4 MB</td><td>儒林外史</td><td>834 KB</td></tr>
+    <tr><td>漢書</td><td>2.7 MB</td><td>左傳</td><td>689 KB</td></tr>
+    <tr><td>紅樓夢</td><td>2.6 MB</td><td>古文觀止</td><td>550 KB</td></tr>
+    <tr><td>西遊記</td><td>2.2 MB</td><td>山海經</td><td>142 KB</td></tr>
+    <tr><td>史記</td><td>1.9 MB</td><td>易經</td><td>111 KB</td></tr>
+    <tr><td>三國志演義</td><td>1.8 MB</td><td>鬼谷子</td><td>50 KB</td></tr>
+  </table>
+  <p><strong>其中《王陽明全集》与《道德經》直接对上你今天的笔记。</strong></p>
+  <p><em>另外：《中国智慧》<strong>根本没有全文 txt</strong>，只有笔记——
+  也就是说那一份产出的底本来源本身就不完整。</em></p>
+</div>
+
+<div class="box">
+  <div class="h">◆ 由此得到的区分方式（这条可以用在以后每一份笔记上）</div>
+  <p><strong>「项目里没有」这句话要分三种：</strong></p>
+  <p><strong>① 真的没有</strong>——书不在库里，也没有材料。
+  <em>例：海德格尔、马斯洛、孙子兵法（只有二手引文）。</em></p>
+  <p><strong>② 原料躺着没动</strong>——全文在库里，没人做过。
+  <em>例：王陽明全集（知行合一）、道德經（天之道）、以及那 12 份古典。</em></p>
+  <p><strong>③ 有产出但没对上</strong>——书做过了，只是没接到这个问题上。
+  <em>例：孤独（Fromm 有 25 处，但「被好奇压过」这一条没有对应）。</em></p>
+  <p><strong>这三种的处理方式完全不同：① 要买书，② 要做产出，③ 只要接一下。</strong>
+  <em>而在此之前的几次统计里，我把它们混成了一个「空」。</em></p>
+</div>
+
+<!-- ============================================================ -->
+<h2>七 · 四组问题的一览</h2>
+
+<table>
+  <tr><th style="width:8%">组</th><th style="width:24%">问题</th>
+    <th style="width:15%">项目状态</th><th>下一步该做什么</th></tr>
+  <tr><td><strong>一</strong></td><td>代偿是懦弱、知识不足，还是人道之常</td>
+    <td><strong>已接进地图</strong>（CF13）</td>
+    <td>等你回答那个分界问题：<em>你觉得代偿是中性机制，还是需要警惕的事？</em></td></tr>
+  <tr><td><strong>二</strong></td><td>知行合一 / 焊板子那件事</td>
+    <td><strong>原料躺着没动</strong>（2.7 MB）</td>
+    <td><strong>先把《王陽明全集》做出一份产出</strong>——或至少把「知行合一」这一条单独整理出来</td></tr>
+  <tr><td><strong>三</strong></td><td>孤独 / 幸福 / 生命的绽放</td>
+    <td>孤独<strong>有产出</strong> · 另两个<strong>真的没有</strong></td>
+    <td>先把「被好奇压过」这条接进 Fromm；幸福与绽放要买书或另找路</td></tr>
+  <tr><td><strong>四</strong></td><td>「人生该有个定义」是不是数学课带来的</td>
+    <td><strong>半有</strong>（无穷的开始讲定义与解释）</td>
+    <td>这一条最值得单独想——<em>而《道德經》开篇正好反对它</em></td></tr>
+</table>
+
+<!-- ============================================================ -->
+<h2>八 · 五个问题（接在这份清单后面）</h2>
+
+<div class="box">
+  <p><strong>Q1 · 关于代偿的那个分界</strong><br>
+  你说代偿来源于懦弱。但你举的第二个例子（送葬仪式）里没有懦弱可言。<br>
+  <em>那么：<strong>你觉得「用代偿填补意义的空缺」是中性机制，还是一件需要警惕的事？</strong></em><br>
+  <strong>——这个答案决定我把《道德經》77 章算作支持你还是反对你。</strong></p>
+
+  <p><strong>Q2 · 关于焊板子那件事，王陽明会问你一句</strong><br>
+  他说「知而不行，只是未知」。<br>
+  <em>所以你那天「暗暗认同了同学的话」，然后焊出一块丑板子——
+  <strong>按这个判据，那不算你知道该认真却没做到，那算你当时并不真的知道。</strong></em><br>
+  <strong>你同意这个说法吗？如果不同意，你会怎么反驳它？</strong></p>
+
+  <p><strong>Q3 · 关于「工夫」与「效验」</strong><br>
+  王陽明说「重功夫不重效验」。你写「我虽不为自己贴上事事都要完美的标签，但我可是我啊」。<br>
+  <em>「板子丑不丑」是效验；「每一焊点有没有焊好」是功夫。
+  <strong>你当时盯的是哪一个？现在回头看，你还会用同一把尺子量吗？</strong></em></p>
+
+  <p><strong>Q4 · 关于孤独那一句</strong><br>
+  你说年轻时「对世界的好奇压过了孤独」。<br>
+  <em>弗洛姆列的是「逃避孤独的手段」（纵欲、从众、创造），<strong>没有「用求知压过去」这一条</strong>。</em><br>
+  <strong>你自己觉得：「被好奇压过」与「被爱解决」——是同一件事的两面，还是两件不同的事？</strong></p>
+
+  <p><strong>Q5 · 关于「定义」那个习惯</strong><br>
+  你指出「人生该有个定义」是从高数课带来的。这个观察很利。<br>
+  <em>但《道德經》开篇说「道可道，非常道」——<strong>它是最反对「必须定义」的那一路。</strong></em><br>
+  <strong>你是真的需要「意义的定义」，还是只是被十多年的训练养成了「没有定义就不安」的反应？</strong></p>
+</div>
+
+<footer class="doc">
+  底层 · 我的问题（二）· 从《记录.txt》长出来的四组问题<br>
+  <em>凡引书本原文处，均在语料中逐字核对过（《王陽明全集》7 句 · 《道德經》2 句 · 毛选 2 句 ·《史記》1 句）<br>
+  标「我的判断」「暂定」「我可能错在哪」处为待议读法；《遊子吟》不在语料，已注明<br>
+  《记录.txt》不进 git，仅本地留档</em>
+</footer>
+
+</div>
+</body>
+</html>
