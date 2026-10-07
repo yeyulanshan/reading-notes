@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WEIRD 之外的心智模型 · 底层</title>
+<meta name="description" content="把「独立自我」与「关系性自我」当作两个可检验的心理学假设来对照，而不是当成两种文化风格。含可判定的预测与已有的经验证据。">
+<meta name="theme-color" content="#f2f8fc">
+<style>
+  :root{
+    --paper:#f2f8fc; --card:#ffffff; --card-2:#e9f4fb;
+    --edge:#cfe0ec; --edge-lit:#a4c6dd;
+    --ink:#12232e; --ink-2:#627480; --ink-3:#587286;
+    --accent:#2c7ea2; --accent-2:#377972; --gold:#84744a;
+    --quote-bg:#fbf8ef; --quote-edge:#d8cba4; --quote-ink:#5f5527;
+    --warn:#a85035; --warn-soft:#fcf1ec;
+    --my:#2f7a5c; --my-soft:#eef8f3;
+    --core:#1d5c86; --core-soft:#eef6fb;
+    --h1:#2c6f9e; --h2:#8a6a24;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--paper); color:var(--ink); line-height:1.9;
+    -webkit-font-smoothing:antialiased; padding:32px 16px 60px;}
+  ::selection{background:rgba(63,180,232,.26); color:#0d2430;}
+  .wrap{max-width:920px; margin:0 auto;}
+  header.doc{background:var(--card); border:1px solid var(--edge);
+    border-top:4px solid var(--accent); border-radius:10px;
+    padding:34px 34px 28px; margin-bottom:22px;}
+  header.doc h1{font-size:26px; font-weight:800; line-height:1.4; margin-bottom:12px;
+    background:linear-gradient(135deg,#1d4a68,#2c7ea2 55%,#377972);
+    -webkit-background-clip:text; background-clip:text; color:transparent;}
+  header.doc .sub{font-size:14.6px; color:var(--ink-2); line-height:1.95;}
+  header.doc .src{margin-top:16px; padding-top:14px; border-top:1px dashed var(--edge);
+    font-size:12.6px; color:var(--ink-3); line-height:1.95;}
+  h2{font-size:19px; font-weight:700; margin:40px 0 6px; padding-left:12px;
+    border-left:4px solid var(--gold); line-height:1.55;}
+  .s{color:var(--ink-3); font-size:12.9px; margin:0 0 16px 16px; line-height:1.85;}
+  h3{font-size:16.4px; font-weight:700; margin:28px 0 10px;}
+  h4{font-size:15.2px; font-weight:700; color:var(--core); margin:22px 0 9px;
+    padding-left:10px; border-left:3px solid rgba(63,180,232,.45); line-height:1.6;}
+  p{font-size:14.5px; color:var(--ink-2); margin-bottom:12px; text-wrap:pretty;}
+  p strong{color:var(--ink);}
+  code{font-family:ui-monospace,Consolas,monospace; font-size:12.8px;
+    background:var(--card-2); border:1px solid var(--edge); border-radius:4px;
+    padding:1px 6px; color:var(--core); word-break:break-all;}
+  a{color:var(--accent); text-decoration:none; border-bottom:1px solid #cfe4f0;}
+  blockquote{margin:13px 0; padding:13px 18px; background:var(--quote-bg);
+    border:1px solid #e8dfc4; border-left:3px solid var(--quote-edge);
+    border-radius:5px; font-size:14.1px; color:var(--quote-ink); line-height:1.95;}
+  blockquote p{margin-bottom:8px; color:inherit; font-size:inherit;}
+  blockquote p:last-child{margin-bottom:0;}
+  blockquote .who{display:block; margin-top:7px; font-size:12px;
+    color:#8a7a52; text-align:right;}
+  blockquote strong{color:#8a6a24;}
+  .box{background:var(--card); border:1px solid var(--edge); border-radius:9px;
+    padding:19px 22px; margin:16px 0; font-size:14px; color:var(--ink-2);}
+  .box .h{font-weight:700; color:var(--gold); margin-bottom:10px; font-size:13.6px;}
+  .box p+p{margin-top:9px;} .box strong{color:var(--ink);}
+  .box.warn{background:var(--warn-soft); border-color:#e8cfc4;}
+  .box.warn .h{color:var(--warn);}
+  .box.my{background:var(--my-soft); border-color:#cfe6dc;}
+  .box.my .h{color:var(--my);}
+  .box.core{background:var(--core-soft); border-color:#cfe4f0;}
+  .box.core .h{color:var(--core);}
+  table{width:100%; border-collapse:collapse; margin:15px 0; font-size:13.4px;}
+  th,td{padding:9px 11px; border:1px solid var(--edge); text-align:left;
+    vertical-align:top; line-height:1.8;}
+  th{background:var(--card-2); color:var(--core); font-weight:700; font-size:12.7px;}
+  td{color:var(--ink-2);} td strong{color:var(--ink);}
+  ul,ol{margin:11px 0 14px 22px;}
+  li{font-size:14.4px; color:var(--ink-2); margin-bottom:8px; line-height:1.9;}
+  li strong{color:var(--ink);}
+  hr{border:none; border-top:1px dashed var(--edge); margin:34px 0;}
+  .tag{display:inline-block; font-size:11.6px; font-weight:700; padding:1px 8px;
+    border-radius:999px; margin-right:6px;}
+  .t-h1{background:#e3eff8; color:var(--h1); border:1px solid #bcd8ec;}
+  .t-h2{background:#f7f0dd; color:var(--h2); border:1px solid #e3d3a8;}
+  .t-gap{background:var(--warn-soft); color:var(--warn); border:1px solid #e8cfc4;}
+  .t-ok{background:var(--my-soft); color:var(--my); border:1px solid #cfe6dc;}
+  footer.doc{margin-top:30px; padding-top:20px; border-top:1px solid var(--edge);
+    font-size:12.4px; color:var(--ink-3); line-height:2; text-align:center;}
+  @media(max-width:700px){
+    body{padding:16px 10px 40px;} header.doc{padding:24px 20px 20px;}
+    header.doc h1{font-size:21px;} h2{font-size:17px;} h3{font-size:15.6px;}
+    table{font-size:12.1px;} th,td{padding:7px 8px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="doc">
+  <h1>WEIRD 之外的心智模型</h1>
+  <p class="sub">把「独立自我」与「关系性自我」当作两个可检验的心理学假设来对照，
+  而不是当成两种文化风格</p>
+  <p class="src">
+    <strong>这一份是《定位决策》第四节列出的五条路线之一</strong>，也是它判为<strong>杠杆最大</strong>的一条
+    ——因为它不是「补一块内容」，是「改一个前提」。<br>
+    相关产出：<a href="中国智慧-整体架构.html">中国智慧 · 整体架构</a> ·
+    <a href="定位决策.html">定位决策</a> ·
+    <a href="中国智慧-问题手册.html">问题手册</a> ·
+    <a href="../08_性与亲密关系/Miller_亲密关系-整体架构.html">亲密关系 · 整体架构</a><br>
+    <strong>所有引文均逐句核对过语料</strong>；标「这个说法站不住」处为本篇的否定性结论。
+  </p>
+</header>
+
+<!-- ============================================================ -->
+<div class="box core">
+  <div class="h">◆ 这份文件要回答的问题</div>
+  <p><strong>「自我是独立的个体，还是关系的产物」——这个问题该怎么问，才算一个科学问题？</strong></p>
+  <p><em>问错了就是文化比较（「东方 vs 西方」），问对了就是心理学假设（一个可测量的个体差异变量）。<br>
+  本篇的任务是把它从前者搬成后者，然后看它能不能被检验。</em></p>
+</div>
+
+<!-- ============================================================ -->
+<h2>一 · 问题的起点：WEIRD 偏差被记录了三次，无人处理</h2>
+<div class="s">这一条在项目里出现过三处，三处都只是登记</div>
+
+<table>
+  <tr><th style="width:44%">出现位置</th><th>原文</th><th style="width:12%">状态</th></tr>
+  <tr><td><code>02_心智与认知/README.md</code></td>
+    <td>「<strong>非西方的心智观</strong>：目前全是欧美样本——而这在跨文化心理学里是个真问题（<strong>WEIRD</strong> 样本偏差）」</td>
+    <td><span class="tag t-gap">登记</span></td></tr>
+  <tr><td><code>00_中文原典/中国智慧-精华笔记.md</code></td>
+    <td>「『偏差』相对于什么标准？如果自我是关系性的，<strong>『独立判断』本身可能就是一个特定文化的标准</strong>（正是 02 自己记的 WEIRD 偏差问题）」</td>
+    <td><span class="tag t-gap">提出</span></td></tr>
+  <tr><td><a href="中国智慧-整体架构.html">中国智慧 · 整体架构</a></td>
+    <td>「02 域自己留了接口……中国思路是<strong>第四条路线</strong>」</td>
+    <td><span class="tag t-gap">接口</span></td></tr>
+</table>
+
+<div class="box my">
+  <div class="h">◆ 第二处那句话是这份文件的真正起点</div>
+  <p>它说的是：<strong>「偏差」这个词预设了一个标准，而那个标准本身可能是特定文化的产物。</strong></p>
+  <p><em>如果这句话成立，那么 02 域全部的认知偏误研究都面临同一个问题：
+  它们测的是「人偏离理性多远」，还是「人偏离<strong>某一种</strong>理性多远」？</em></p>
+  <p><strong>而这句话是可以被检验的——这正是本篇要做的事。</strong></p>
+</div>
+
+<!-- ============================================================ -->
+<h2>二 · 先把两个假设说清楚</h2>
+<div class="s">要能检验，先要能陈述。含糊的陈述无法被反驳</div>
+
+<h3>假设 A · 独立自我（independent self-construal）</h3>
+<blockquote>
+有些人认为他们是<strong>独立自主的主体</strong>，其自我概念最主要的特征就是能把他们与其他人
+<strong>区分开来</strong>的特质。
+<span class="who">Miller《亲密关系》第 11 章</span>
+</blockquote>
+<p><strong>它的形式化表述</strong>：<em>自我是一个有边界的实体，关系是这个实体之间的连接。
+所以「自我」在逻辑上先于「关系」。</em></p>
+
+<h3>假设 B · 关系性自我（interdependent self-construal）</h3>
+<blockquote>
+相反，另外一些人则很大程度上<strong>依据与他人的人际关系来界定自我</strong>；
+他们的自我概念强调自己所担当的<strong>社会角色</strong>，以及在亲密的伙伴关系中表现出的特征。
+<span class="who">Miller《亲密关系》第 11 章</span>
+</blockquote>
+<blockquote>
+对于相互依赖的自我构念较强的人而言，<strong>人际关系是他们自我概念的核心特征</strong>，
+他们“思考和行动往往都是为了建立、提升和维持与重要人物的和谐、亲密的人际关系”。
+<span class="who">Miller 引 Cross &amp; Morris (2003), p.513</span>
+</blockquote>
+<p><strong>它的形式化表述</strong>：<em>自我由关系构成，而不是先有自我再建立关系。
+「我」在逻辑上后于「关系」。</em></p>
+
+<div class="box warn">
+  <div class="h">⚠️ 关键：这不是「两种文化」，是「两个变量」</div>
+  <p>Miller 自己明确否掉了「文明差异」的读法：</p>
+  <blockquote>
+  由于动机的作用，<strong>独立和依赖往往在每个人身上都会有所表现</strong>，
+  但诸如美国的西方文化往往赞美和推崇独立自主。所以，相互依赖的自我构念
+  <strong>在美国之外的世界更为普遍</strong>。
+  <span class="who">Miller《亲密关系》第 11 章</span>
+  </blockquote>
+  <p><strong>这句话做了三件事</strong>：<em>① 两个构念在每个人身上共存；
+  ② 文化影响的是它们的<strong>相对强度</strong>；
+  ③ 文化影响的方式是「赞美和推崇」，即<strong>价值导向</strong>，不是「有没有」。</em></p>
+  <p><strong>所以正确的问法不是「东方人是不是关系性自我」，而是
+  「关系性自我构念的强度，能预测什么」。</strong></p>
+</div>
+
+<!-- ============================================================ -->
+<h2>三 · 把「文化风格」改成「可测量的变量」</h2>
+<div class="s">这一步是整个路线能不能成立的关键</div>
+
+<table>
+  <tr><th style="width:30%"></th><th style="width:35%">文化风格的问法（不可检验）</th>
+    <th>心理学变量的问法（可检验）</th></tr>
+  <tr><td><strong>对象</strong></td>
+    <td>「东方人」vs「西方人」</td>
+    <td><strong>同一个体</strong>在一个量表上的得分</td></tr>
+  <tr><td><strong>断言形式</strong></td>
+    <td>「东方文化是集体主义的」</td>
+    <td>「<em>相互依赖的自我构念</em>可测，且有<strong>个体内</strong>与<strong>个体间</strong>变异」</td></tr>
+  <tr><td><strong>能否被反驳</strong></td>
+    <td><em>几乎不能——总能找到符合的例子</em></td>
+    <td><strong>能</strong>：得分与预测的行为不相关，假设就倒</td></tr>
+  <tr><td><strong>失败模式</strong></td>
+    <td>变成刻板印象</td>
+    <td>效应量太小或不可复现</td></tr>
+  <tr><td><strong>项目里已有的依据</strong></td>
+    <td>—</td>
+    <td>Miller 第 11 章：<strong>self-construal 是一个个体差异变量</strong>，
+    且「独立和依赖往往在每个人身上都会有所表现」</td></tr>
+</table>
+
+<div class="box core">
+  <div class="h">◆ 改法的一句话总结</div>
+  <p><strong>不要问「哪种自我观是对的」，要问「持有哪一种，会改变什么可观察的东西」。</strong></p>
+  <p><em>只要能列出这个「什么」，假设就活了；列不出来，它就还是一个文化标签。</em></p>
+</div>
+
+<!-- ============================================================ -->
+<h2>四 · 可判定的预测：四个具体差异</h2>
+<div class="s">每条给：预测什么 · 项目里有没有证据 · 证据的强度</div>
+
+<h3>预测 ① 归因的落点不同</h3>
+<p><strong>预测</strong>：<em>关系性自我强的人，在解释行为时更多地归因于<strong>关系与处境</strong>，
+而不是<strong>个人特质</strong>。</em></p>
+<p><strong>项目里的证据</strong>：Miller 记录了一个方向相同但更窄的发现：</p>
+<blockquote>
+与韩国的集体主义文化一致（强调团体和谐），韩国人认为貌美之人<strong>也非常关心其他人是否幸福</strong>，
+这一结果在西方社会并不存在。
+<span class="who">Miller《亲密关系》第 3 章（引 Wheeler &amp; Kim, 1997）</span>
+</blockquote>
+<p><span class="tag t-ok">有证据</span> <em>但它测的是「对美貌者的期待」，不是一般的归因模式。所以是间接支持。</em></p>
+
+<h3>预测 ② 「相似」在择偶中的权重不同</h3>
+<p><strong>预测</strong>：<em>关系性自我强的人，更看重与伴侣的<strong>实际相似</strong>（因为关系要能持续），
+而不是「被吸引的强度」。</em></p>
+<p><strong>项目里的证据（这条最硬）</strong>：</p>
+<blockquote>
+这种情况更符合美国夫妻（<strong>美国比中国更注重个人主义</strong>）。
+与美国不同，<strong>中国的夫妻往往有着非常相似的性格</strong>。
+<span class="who">Miller《亲密关系》第 3 章（引 Chen et al., 2009）</span>
+</blockquote>
+<p><span class="tag t-ok">有证据</span> <em>这是一个<strong>直接可测的差异</strong>，而且带数据来源。
+注意 Miller 在此处还问读者：「你认为哪一种模式更有益于亲密关系？」——他把判断留给了读者。</em></p>
+
+<h3>预测 ③ 描述「爱」时提到的内容不同</h3>
+<p><strong>预测</strong>：<em>关系性自我强的人，描述爱情时更多提到<strong>他人看法</strong>与<strong>关系属性</strong>，
+更少提到<strong>对象的外貌</strong>。</em></p>
+<p><strong>项目里的证据</strong>：</p>
+<blockquote>
+<strong>美国人在描述坠入爱河的体验时，比中国人更强调恋人的俊美容貌和共同点</strong>，
+而<strong>中国人比美国人更多提及温和的性格、别人的看法和自己的生理唤醒</strong>。
+<span class="who">Miller《亲密关系》第 8 章（引 Riela et al., 2010）</span>
+</blockquote>
+<p><span class="tag t-ok">有证据</span> <em>「别人的看法」这一项直接对应「关系性」；
+但「生理唤醒」那一项与两个假设都无必然关系，属于未解释的部分。</em></p>
+
+<h3>预测 ④ 关系的稳定性机制不同</h3>
+<p><strong>预测</strong>：<em>当关系更多由外部（家庭、社群）支撑时，解体率应更低——
+但「满意度」与「稳定性」会<strong>脱钩</strong>。</em></p>
+<p><strong>项目里的证据</strong>：</p>
+<blockquote>
+相形之下，<strong>东方文化更倡导集体主义的自我感</strong>，
+<strong>人们与家庭和社会团体的联系更为紧密</strong>。
+<strong>集体文化国家（如日本）的离婚率比美国低得多</strong>。
+<span class="who">Miller《亲密关系》第 1 章（引 Cherlin, 2009）</span>
+</blockquote>
+<p><span class="tag t-ok">有证据</span> <strong>但这一条有一个必须说的危险</strong>：
+<em>离婚率低<strong>不等于</strong>关系质量高。它同样可以由「离婚的成本更高」解释——
+而后者与自我构念无关。</em></p>
+
+<div class="box warn">
+  <div class="h">⚠️ 预测 ④ 是四条里最弱的一条，理由如下</div>
+  <p>它是<strong>生态学相关</strong>（国家层面的离婚率 vs 国家层面的文化标签），
+  而不是<strong>个体层面的测量</strong>。</p>
+  <p><em>生态学谬误在这里是现成的：不能从「日本的离婚率低于美国」推出
+  「日本人更倾向关系性自我」，因为中间至少有三种竞争解释（法律成本、社会污名、住房结构）。</em></p>
+  <p><strong>所以这一条只能作为「方向提示」，不能作为证据。</strong></p>
+</div>
+
+<!-- ============================================================ -->
+<h2>五 · 反方向的经验证据：哪些差异其实不存在</h2>
+<div class="s">一节必须有的内容——否则这份文件就成了「证明中国思路对」的宣传品</div>
+
+<p><strong>Miller 在同一章里给了大量「差异存在但比想象的小」的证据</strong>：</p>
+
+<h4>① 浪漫爱情的神经基础没有文化差异</h4>
+<blockquote>
+如果你使用 fMRI，就会发现<strong>中国与美国的浪漫爱情看起来完全一样</strong>：
+两种文化的人看到自己浪漫伴侣的照片时激活的脑区一样。
+<span class="who">Miller《亲密关系》第 8 章（引 Xu et al., 2011）</span>
+</blockquote>
+<blockquote>
+这并不奇怪，因为<strong>浪漫的爱情看来是普遍的人类经验</strong>，在世界各地的人身上都会出现。
+<span class="who">同上（引 Hatfield et al., 2007）</span>
+</blockquote>
+<p><strong>这一条对「关系性自我」假设是一个压力测试</strong>：
+<em>如果底层机制完全一致，那差异只在「表达与权重」层面，不在「有没有」层面。
+而按 Miller 自己的说法（独立与依赖在每个人身上共存），这正是他预期的。</em></p>
+
+<h4>② 爱情风格的基本类型跨文化一致</h4>
+<blockquote>
+基本上各种爱情在不同文化中的表现似乎相同。不过，在这些大的方面类似之外，
+仍有些文化的<strong>细微差异</strong>使得爱情具有一定的地方特色。
+<span class="who">同上</span>
+</blockquote>
+
+<h4>③ 美的判断标准跨文化趋同</h4>
+<blockquote>
+文化差异表现在方方面面，但<strong>世界各地的人对于美丑的评判仍趋向一致</strong>。
+<span class="who">Miller《亲密关系》第 3 章（引 Cunningham et al., 1995）</span>
+</blockquote>
+
+<div class="box my">
+  <div class="h">◆ 这三条合起来给出一个更准确的图景</div>
+  <p><strong>差异不在「底层机制」，在「哪些机制被推到前台」。</strong></p>
+  <p><em>浪漫爱情的脑区激活一样，但描述它时提到的内容不同；
+  美的判断趋同，但「美貌者还有什么优点」的期待不同。</em></p>
+  <p><strong>所以这个假设的正确强度是「中等」</strong>：
+  它预测的不是「不同的心智」，而是<strong>同一套机制的不同配重</strong>。
+  <em>而这恰好使它成为一个可检验的心理学假设，而不是一个文化本质论。</em></p>
+</div>
+
+<!-- ============================================================ -->
+<h2>六 · 中国这一侧：它给的不是「更好的答案」，是不同的提问</h2>
+<div class="s">用《論語》与《王陽明》对 02 域的每一条前提重新提问</div>
+
+<h3>对「偏差」这个概念的挑战</h3>
+<blockquote>
+顏淵問仁。子曰、<strong>克己復禮為仁</strong>。<span class="who">《論語》底本 · 顏淵篇</span>
+</blockquote>
+<p><strong>这一句里的「己」是需要被「克」的。</strong>
+<em>而 02 域的整个框架是：<strong>个体的判断可以被测量、可以被校准</strong>——
+它把「己」当作测量的主体。</em></p>
+<p><strong>如果《論語》对，那「校准个体判断」这个目标本身就需要先被审视</strong>：
+<em>校准到哪个标准上？如果标准是「礼」（一套关系性的规范），
+那「偏差」就不再是「偏离理性」，而是「偏离关系中的恰当位置」。</em></p>
+
+<h3>对「知行分离」这个前提的挑战</h3>
+<blockquote>
+知是心之本體，心自然會知：<strong>見父自然知孝</strong>，見兄自然知弟，
+見孺子入井自然知惻隱，此便是良知不假外求。
+<span class="who">《王陽明全集》· 傳習錄</span>
+</blockquote>
+<p><strong>02 域里「认知偏误」这一整块，预设了「知道」与「做对」可以分开</strong>：
+<em>你知道概率应该是多少，但你的直觉仍然给错答案（卡尼曼第 30 章）。</em></p>
+<p><strong>王陽明否认这个分离</strong>：<em>「知而不行，只是未知」——
+他的判据是：做不到，就说明不知道。</em></p>
+<p><span class="tag t-gap">这一条是真的撞上了</span>
+<em>因为卡尼曼那个发现的关键恰恰是「即使知道也无法消除」（第 30 章）。
+按王陽明，那说明那个「知」不成其为知。</em></p>
+
+<h3>但中国这一侧也有一个反例，而且它来自《道德經》</h3>
+<blockquote>
+大道廢，有仁義﹔智慧出，有大偽﹔<strong>六親不和，有孝慈</strong>﹔國家昏亂，有忠臣。
+<span class="who">《道德經》底本 · 第十八章</span>
+</blockquote>
+<p><strong>老子把「孝慈」当作关系坏了的<strong>症状</strong>，而不是关系的成就。</strong>
+<em>这与《論語》「孝弟也者、其為仁之本與」直接相反。</em></p>
+<div class="box warn">
+  <div class="h">⚠️ 这对「关系性自我」假设是一个内部压力</div>
+  <p>如果中国这一侧自己就分成两派——一派把关系当作自我的<strong>根源</strong>（《論語》），
+  一派把对关系的强调当作<strong>关系已坏的标志</strong>（《道德經》）——
+  那么「关系性自我」就不是一个统一的「中国模型」。</p>
+  <p><strong>这个内部不一致对假设是好消息还是坏消息？</strong>
+  <em>是好消息：它说明这是一个可以争论的假设，而不是一个文化共识。
+  文化共识无法被检验，争论可以。</em></p>
+</div>
+
+<!-- ============================================================ -->
+<h2>七 · 这个假设在哪里会失效</h2>
+<div class="s">三条边界，每条都可观察</div>
+
+<h3>边界 ① 坏关系的情形</h3>
+<p><strong>如果自我由关系构成，那被虐待的孩子怎么办？</strong></p>
+<p><em>这个假设倾向于说：坏关系确实构成了人——那不是「独立的自我受损」，是自我被那种关系构成。
+但这样它就难以回答「走出来之后剩下的那个『谁』是什么」。</em></p>
+<p><strong>这是一个真缺口</strong>：<em>《論語》讲的是从好关系里长出来，没有讲从坏关系里修出来。
+而 08 域研究的恰恰大量是坏关系。</em></p>
+
+<h3>边界 ② 个体内变异</h3>
+<p><strong>Miller 明确说了「独立和依赖往往在每个人身上都会有所表现」。</strong></p>
+<p><em>那么同一个人的自我构念是否随情境变化？
+如果变化很大，那把它当作「个体差异变量」就站不住——
+它就不是一个特质，是一个状态。</em></p>
+<p><strong>这一条是可检验的</strong>：<em>同一被试在不同情境下测同一个量表，看稳定性。
+项目里没有这个证据。</em></p>
+
+<h3>边界 ③ 「文化」是个太粗的单位</h3>
+<p><strong>Miller 用的对照是「美国 vs 中国」「美国 vs 韩国」「美国 vs 日本」——
+它把国家当作文化的代理。</strong></p>
+<p><em>而这是 WEIRD 批评的另一个版本：不是「样本太西方」，
+而是「用国籍当文化变量」这件事本身太粗。</em></p>
+<p><strong>如果这一条成立，那它同时打两边</strong>：
+<em>原本的欧美样本有问题，「东方样本」同样有问题。
+出路不是换样本，是换测量层次——从国家层面下到个体层面。</em></p>
+
+<div class="box core">
+  <div class="h">◆ 三条边界合起来，给出这个假设的正确使用方式</div>
+  <p><strong>它可以用来：</strong><em>预测个体在具体任务上的差异方向；解释文化间的平均差异；提示哪些「普遍结论」可能是有条件的。</em></p>
+  <p><strong>它不可以用来：</strong><em>断言某个民族的心智结构不同；把一个测试分数当成人格本质；
+  用国家层面的统计（离婚率之类）当个体层面的证据。</em></p>
+</div>
+
+<!-- ============================================================ -->
+<h2>八 · 回到 02 域：这个假设要求它改什么</h2>
+
+<table>
+  <tr><th style="width:26%">02 域现有的做法</th><th style="width:32%">这个假设要求的问题</th><th>如果答案是「是」</th></tr>
+  <tr><td><strong>把认知偏误当作普遍机制</strong></td>
+    <td>偏误测量里的「正确」标准，是不是也是一种文化的标准？</td>
+    <td><em>「偏差」这个词要改：从「偏离理性」改为「偏离某个默认框架」</em></td></tr>
+  <tr><td><strong>「知道但做不到」当作意志问题</strong></td>
+    <td>知行能不能分离？（王陽明：不能）</td>
+    <td><em>「认知偏误」与「行为失败」的界限要重画</em></td></tr>
+  <tr><td><strong>测量单位是个体</strong></td>
+    <td>若自我是关系性的，「个体」是不是正确的测量单位？</td>
+    <td><em>测量单位可能要改为「二人组」或「家庭」</em></td></tr>
+  <tr><td><strong>样本以欧美大学生为主</strong></td>
+    <td>样本问题我知道，但换样本够不够？</td>
+    <td><em>不够——按边界 ③，要换的是<strong>测量层次</strong>，不只是样本来源</em></td></tr>
+</table>
+
+<div class="box my">
+  <div class="h">◆ 一处必须标出的先后关系</div>
+  <p><strong>这一份不是「中国思路赢了」的论证。</strong></p>
+  <p><em>它做的是：把「中国思路」从文化主张改写成心理学假设，然后检查这个假设能不能站住。
+  检查结果：<strong>能站住一部分</strong>——四条预测里两条有直接证据（②③），
+  一条只有间接证据（①），一条只有生态学相关（④，最弱）。</em></p>
+  <p><strong>而这个结果本身是有用的</strong>：它说明「关系性自我」不是一句文化感慨，
+  它<strong>已经有一部分经验支持，也有一部分尚未检验</strong>——
+  而后者是可以去做的。</p>
+</div>
+
+<!-- ============================================================ -->
+<h2>九 · 下一步可以做的（三件，按可操作性排序）</h2>
+
+<table>
+  <tr><th style="width:8%">顺序</th><th style="width:32%">做什么</th><th>为什么排这个位置</th></tr>
+  <tr><td><strong>1</strong></td>
+    <td><strong>把 Miller 第 11 章的 self-construal 量表找出来，看它的题项</strong></td>
+    <td><em>这是唯一能立刻做的。量表题项会直接显示「关系性自我」在操作上被定义成什么——
+    而那可能与《論語》说的「仁」不是一回事。这个差别本身值得知道。</em></td></tr>
+  <tr><td><strong>2</strong></td>
+    <td><strong>核边界 ②：自我构念是个体差异还是情境状态</strong></td>
+    <td><em>Miller 说「独立和依赖在每个人身上都会有所表现」——
+    这句话如果按字面读，就是在说它是状态而非特质。但他在同一段里又叫它「个体差异」。
+    <strong>这处前后不一致需要查原文献（Cross et al., 2009）。</strong></em></td></tr>
+  <tr><td><strong>3</strong></td>
+    <td><strong>把《論語》的「仁」与 self-construal 量表对一次</strong></td>
+    <td><em>做这一条需要先做 1。如果量表测的是「我在多大程度上依赖关系」，
+    而「仁」是「我怎么在关系里成人」——<strong>那不是同一个东西，前者是描述，后者是规范。</strong>
+    这个区分会决定这一整条路线该怎么接。</em></td></tr>
+</table>
+
+<hr>
+
+<div class="box warn">
+  <div class="h">★ 本篇最要紧的一句话</div>
+  <p><strong>「独立自我 vs 关系性自我」能成为一个科学问题，条件是：它能说出「持有哪一种，会改变什么可观察的东西」。</strong></p>
+  <p><em>本篇列出了四件这样的东西，其中两件已有直接证据。
+  但这四件都是<strong>行为与描述层面</strong>的差异——没有任何一件支持「两种不同的心智结构」。</em></p>
+  <p><strong>所以这一轴的合理主张是：同一套心智机制，不同的配重与表达。
+  而不是两套心智。</strong></p>
+</div>
+
+<footer class="doc">
+  底层 · 中国智慧 · WEIRD 之外的心智模型<br>
+  <em>这一份是《定位决策》第四节五条路线中的第 2 条（它判为杠杆最大的一条）；<br>
+  引文均逐句核对语料；标「这个说法站不住」处为否定性结论；<br>
+  本篇不做「中国思路更优」的论证——它只把文化主张改写成可检验的假设，然后检查它能站住多少</em>
+</footer>
+
+</div>
+</body>
+</html>
