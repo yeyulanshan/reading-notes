@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>对撞场 · 《高性价比人生指南》× 项目在库书目 · 底层</title>
+<meta name="description" content="用《高性价比人生指南》里带证据等级的 669 条断言，去和在库 26 本书的立场对撞。九场，每场给双方原文、判断、边界。">
+<meta name="theme-color" content="#f2f8fc">
+<style>
+  :root{
+    --paper:#f2f8fc; --card:#ffffff; --card-2:#e9f4fb;
+    --edge:#cfe0ec; --edge-lit:#a4c6dd;
+    --ink:#12232e; --ink-2:#627480; --ink-3:#587286;
+    --accent:#2c7ea2; --gold:#84744a;
+    --quote-bg:#fbf8ef; --quote-edge:#d8cba4; --quote-ink:#5f5527;
+    --warn:#a85035; --warn-soft:#fcf1ec;
+    --my:#2f7a5c; --my-soft:#eef8f3;
+    --core:#1d5c86; --core-soft:#eef6fb;
+    --gx:#7a4f96; --gx-soft:#f4eef8;
+    --lib:#2c6f9e; --lib-soft:#e8f2f9;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--paper); color:var(--ink); line-height:1.9;
+    -webkit-font-smoothing:antialiased; padding:32px 16px 60px;}
+  ::selection{background:rgba(63,180,232,.26); color:#0d2430;}
+  .wrap{max-width:960px; margin:0 auto;}
+  header.doc{background:var(--card); border:1px solid var(--edge);
+    border-top:4px solid var(--accent); border-radius:10px;
+    padding:34px 34px 28px; margin-bottom:22px;}
+  header.doc h1{font-size:26px; font-weight:800; line-height:1.4; margin-bottom:12px;
+    background:linear-gradient(135deg,#1d4a68,#2c7ea2 55%,#377972);
+    -webkit-background-clip:text; background-clip:text; color:transparent;}
+  header.doc .sub{font-size:14.6px; color:var(--ink-2); line-height:1.95;}
+  header.doc .src{margin-top:16px; padding-top:14px; border-top:1px dashed var(--edge);
+    font-size:12.6px; color:var(--ink-3); line-height:1.95;}
+  h2{font-size:19px; font-weight:700; margin:42px 0 6px; padding-left:12px;
+    border-left:4px solid var(--gold); line-height:1.55;}
+  .s{color:var(--ink-3); font-size:12.9px; margin:0 0 16px 16px; line-height:1.85;}
+  h3{font-size:16.4px; font-weight:700; margin:26px 0 10px;}
+  p{font-size:14.5px; color:var(--ink-2); margin-bottom:12px; text-wrap:pretty;}
+  p strong{color:var(--ink);}
+  code{font-family:ui-monospace,Consolas,monospace; font-size:12.7px;
+    background:var(--card-2); border:1px solid var(--edge); border-radius:4px;
+    padding:1px 6px; color:var(--core); word-break:break-all;}
+  a{color:var(--accent); text-decoration:none; border-bottom:1px solid #cfe4f0;}
+  blockquote{margin:12px 0; padding:12px 17px; background:var(--quote-bg);
+    border:1px solid #e8dfc4; border-left:3px solid var(--quote-edge);
+    border-radius:5px; font-size:14px; color:var(--quote-ink); line-height:1.95;}
+  blockquote p{margin-bottom:7px; color:inherit; font-size:inherit;}
+  blockquote p:last-child{margin-bottom:0;}
+  blockquote .who{display:block; margin-top:6px; font-size:11.8px;
+    color:#8a7a52; text-align:right;}
+  blockquote strong{color:#8a6a24;}
+  .box{background:var(--card); border:1px solid var(--edge); border-radius:9px;
+    padding:18px 21px; margin:15px 0; font-size:14px; color:var(--ink-2);}
+  .box .h{font-weight:700; color:var(--gold); margin-bottom:9px; font-size:13.5px;}
+  .box p+p{margin-top:8px;} .box strong{color:var(--ink);}
+  .box.core{background:var(--core-soft); border-color:#cfe4f0;}
+  .box.core .h{color:var(--core);}
+  .box.warn{background:var(--warn-soft); border-color:#e8cfc4;}
+  .box.warn .h{color:var(--warn);}
+  .box.my{background:var(--my-soft); border-color:#cfe6dc;}
+  .box.my .h{color:var(--my);}
+  /* 对撞卡片 */
+  .cf{background:var(--card); border:1px solid var(--edge); border-radius:10px;
+    padding:0; margin:18px 0 22px; overflow:hidden;}
+  .cf-head{display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+    padding:14px 20px; background:var(--card-2); border-bottom:1px solid var(--edge);}
+  .cf-num{font-family:ui-monospace,Consolas,monospace; font-size:11.6px; font-weight:700;
+    color:#fff; background:var(--accent); border-radius:4px; padding:2px 9px;}
+  .cf-kind{font-size:11.4px; font-weight:700; padding:2px 9px; border-radius:999px;}
+  .k1{background:#fbe9e4; color:#a85035; border:1px solid #e8cfc4;}
+  .k2{background:#f7f0dd; color:#8a6a24; border:1px solid #e3d3a8;}
+  .k3{background:#e8f2f9; color:var(--lib); border:1px solid #bcd8ec;}
+  .k4{background:var(--my-soft); color:var(--my); border:1px solid #cfe6dc;}
+  .cf-title{font-size:14.8px; font-weight:700; color:var(--ink);}
+  .cf-body{padding:18px 20px 16px;}
+  .two{display:grid; grid-template-columns:1fr 1fr; gap:13px; margin:13px 0;}
+  .side{border-radius:8px; padding:13px 15px; font-size:13.7px; line-height:1.9;}
+  .side.a{background:var(--gx-soft); border:1px solid #dcc9e8;}
+  .side.b{background:var(--lib-soft); border:1px solid #c2dcee;}
+  .side .who{display:block; font-weight:700; font-size:12.4px; margin-bottom:8px;}
+  .side.a .who{color:var(--gx);}
+  .side.b .who{color:var(--lib);}
+  .side blockquote{margin:8px 0; background:rgba(255,255,255,.65); font-size:13.3px;
+    padding:9px 12px;}
+  .verdict{margin-top:12px; padding:14px 17px; border-radius:8px; font-size:14px;
+    background:var(--my-soft); border:1px solid #cfe6dc; color:var(--ink-2); line-height:1.95;}
+  .verdict .lbl{display:block; font-weight:700; color:var(--my); font-size:12.8px;
+    margin-bottom:7px;}
+  .bounds{margin-top:11px; padding:13px 16px; border-radius:8px; font-size:13.6px;
+    background:var(--warn-soft); border:1px solid #e8cfc4; border-left:3px solid var(--warn);
+    color:#7a3d28; line-height:1.92;}
+  .bounds .lbl{display:block; font-weight:700; font-size:12.6px; margin-bottom:6px;}
+  table{width:100%; border-collapse:collapse; margin:14px 0; font-size:13.2px;}
+  th,td{padding:9px 11px; border:1px solid var(--edge); text-align:left;
+    vertical-align:top; line-height:1.78;}
+  th{background:var(--card-2); color:var(--core); font-weight:700; font-size:12.6px;}
+  td{color:var(--ink-2);} td strong{color:var(--ink);}
+  ul,ol{margin:10px 0 13px 22px;}
+  li{font-size:14.4px; color:var(--ink-2); margin-bottom:7px; line-height:1.9;}
+  li strong{color:var(--ink);}
+  hr{border:none; border-top:1px dashed var(--edge); margin:32px 0;}
+  .tag{display:inline-block; font-size:11.4px; font-weight:700; padding:1px 7px;
+    border-radius:999px; margin-right:5px; white-space:nowrap;}
+  .t-a{background:#eef8f3; color:var(--my); border:1px solid #cfe6dc;}
+  .t-b{background:#f7f0dd; color:#8a6a24; border:1px solid #e3d3a8;}
+  footer.doc{margin-top:32px; padding-top:20px; border-top:1px solid var(--edge);
+    font-size:12.4px; color:var(--ink-3); line-height:2; text-align:center;}
+  @media(max-width:760px){
+    body{padding:16px 10px 40px;} header.doc{padding:24px 20px 20px;}
+    header.doc h1{font-size:21px;} h2{font-size:17.5px;}
+    .two{grid-template-columns:1fr;} table{font-size:12px;} th,td{padding:6px 7px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="doc">
+  <h1>对撞场</h1>
+  <p class="sub">《高性价比人生指南》的 669 条断言 × 项目在库的 26 本书 —— <strong>让它们打一架</strong></p>
+  <p class="src">
+    <strong>甲方</strong>：《高性价比人生指南》（669 条 · A 级 437 / B 级 177 / C 级 55 ·
+    每条带成本标签与原始出处 · CC BY 4.0）<br>
+    <strong>乙方</strong>：库内在库书目（<a href="高性价比人生指南-评估.html">评估见另文</a>）<br>
+    <strong>规则</strong>：只收<strong>双方都能找到原文</strong>的对撞。甲方有确切数字的（A 级）优先。
+    标「我的判断」处为待议读法。所有引文均逐句核对过原文。<br>
+    相关：<a href="冲突与呼应地图.html">冲突与呼应地图</a>（26 本书内部的 13 处冲突）·
+    <a href="00_中文原典/中国智慧-整体架构.html">中国智慧 · 整体架构</a>
+  </p>
+</header>
+
+<div class="box core">
+  <div class="h">◆ 先说清「对撞」是什么意思</div>
+  <p><strong>不是比谁对。</strong>甲方回答「做什么」，乙方回答「为什么」——
+  <em>它们本该互补。所以真正有意义的对撞只有三种：</em></p>
+  <p><strong>① 乙方的一个承重假设，被甲方的一条实测数据直接反驳。</strong>
+  <em>这种最值钱——它说明那本书的某个基础不稳。</em></p>
+  <p><strong>② 同一件事，甲方给的数字比乙方给的说法更细。</strong>
+  <em>这不是谁错，是<strong>颗粒度</strong>的差别；但它能指出乙方哪里说得太粗。</em></p>
+  <p><strong>③ 乙方的抽象原则，在甲方这里变成了可执行的动作。</strong>
+  <em>这是呼应的硬版本：不是「他们说了同一件事」，而是<strong>一个能推出另一个</strong>。</em></p>
+  <p><strong>下面九场按这三类排。</strong><em>每一场都有一处「边界」——
+  指出这个对撞在哪里不成立。不写边界的对撞是耍赖。</em></p>
+</div>
+
+<h2>一览</h2>
+<table>
+  <tr><th style="width:6%">场</th><th style="width:26%">对撞点</th>
+    <th style="width:20%">甲方（指南）</th><th style="width:20%">乙方（在库书）</th>
+    <th>类型 / 谁占上风</th></tr>
+  <tr><td><strong>①</strong></td><td>意志力是不是会耗竭</td>
+    <td>多实验室预注册重做：效果≈0</td><td>《思考，快与慢》：自我损耗「证据很具有说服力」</td>
+    <td><span class="tag t-a">①类</span><strong>甲方赢</strong></td></tr>
+  <tr><td><strong>②</strong></td><td>知道偏差能不能改善判断</td>
+    <td>通用体检对死亡率 RR 1.00（23 万人）</td>
+    <td>卡尼曼：系统2「即使知道也无法消除」</td>
+    <td><span class="tag t-a">①类</span><strong>核对后反转</strong>：甲方回答了乙方认为个人做不到的事</td></tr>
+  <tr><td><strong>③</strong></td><td>婚姻的健康账</td>
+    <td>已婚死亡率 RR 0.88；且明说「不是结婚起的作用」</td>
+    <td>Miller：「具有亲密关系的人更幸福、健康、长寿」</td>
+    <td><span class="tag t-b">②类</span><strong>甲方更细</strong></td></tr>
+  <tr><td><strong>④</strong></td><td>关系质量能不能预测</td>
+    <td>45%→18%；自己报告比伴侣报告强 2–4 倍</td>
+    <td>Miller 有同样的结论，但没给这个数字</td>
+    <td><span class="tag t-b">②类</span><strong>甲方更细</strong></td></tr>
+  <tr><td><strong>⑤</strong></td><td>沉没成本</td>
+    <td>98 组数据；「只看未来投入与回报」</td>
+    <td>卡尼曼亲身入坑，给的是「先做基准预测」</td>
+    <td><span class="tag t-b">③类</span><strong>互补且互为补丁</strong></td></tr>
+  <tr><td><strong>⑥</strong></td><td>切身利害与担保</td>
+    <td>「替人担保前先想清楚自己愿不愿意替他还」</td>
+    <td>塔勒布：切身利害 / 对称性</td>
+    <td><span class="tag t-b">③类</span><strong>硬呼应</strong></td></tr>
+  <tr><td><strong>⑦</strong></td><td>四种货币不互相折算</td>
+    <td>明说「各算各的，不比大小」</td>
+    <td>《置身事内》把一切折算成「激励」</td>
+    <td><span class="tag t-b">②类</span><strong>方法论对撞</strong></td></tr>
+  <tr><td><strong>⑧</strong></td><td>技术有没有方向</td>
+    <td>「挑技能先看要不要动手、要不要现场判断」</td>
+    <td>凯利：技术元素「按照自己的方向发展」</td>
+    <td><span class="tag t-b">②类</span><strong>条件性</strong></td></tr>
+  <tr><td><strong>⑨</strong></td><td>终极原因 vs 个人可操作</td>
+    <td>按制度规则算出「怎么做才不亏」</td>
+    <td>戴蒙德：地理是终极原因；多伊奇：思想才是</td>
+    <td><span class="tag t-b">②类</span><strong>层次不同</strong></td></tr>
+</table>
+
+<!-- ============================================================ -->
+<h2>一 · 意志力是不是会耗竭</h2>
+<div class="s">这是全部九场里最硬的一场——甲方直接反驳了乙方的一个承重假设</div>
+
+<div class="cf">
+  <div class="cf-head">
+    <span class="cf-num">A1</span><span class="cf-kind k1">① 类 · 实测反驳承重假设</span>
+    <span class="cf-title">指南 06-反面清单 第 25 条 ⚔ 卡尼曼《思考，快与慢》第 3 章</span>
+  </div>
+  <div class="cf-body">
+    <div class="two">
+      <div class="side a">
+        <span class="who">甲方 · 指南（A 级 · 引多实验室预注册重做）</span>
+        <p><strong>主张：「意志力像肌肉，用一会儿就没了」是错的。</strong></p>
+        <blockquote>流行的说法是：先做一件费自控的事，接下来就更容易破功，所以要省着用意志力。
+        <strong>23 个实验室、2141 人</strong>按同一套方案重做了这个实验，<strong>结果几乎是零</strong>。
+        别再用「今天意志力用完了」解释自己，也别为此花钱买教你攒意志力的课。
+        <span class="who">06-反面清单</span></blockquote>
+        <blockquote>汇总结果显示自我损耗效应很小，而且
+        <strong>95% 可信区间包含 0（d = 0.04，95% CI −0.07 到 0.15）</strong>。
+        ……另一次同样事先登记方案的重做，<strong>36 个实验室、3531 人，
+        效果大小 d = 0.06</strong>，同样小到不能算数。
+        <span class="who">同上 · 证据栏</span></blockquote>
+        <blockquote>来源：Hagger MS, Chatzisarantis NLD, Alberts H, et al. (2016).
+        A Multilab Preregistered Replication of the Ego-Depletion Effect.
+        <em>Perspectives on Psychological Science</em>, 11(4), 546–573.
+        <span class="who">同一条的出处</span></blockquote>
+      </div>
+      <div class="side b">
+        <span class="who">乙方 · 卡尼曼（承重假设）</span>
+        <blockquote>结论非常明显：<strong>自我控制需要集中注意力，需要付出努力。</strong>
+        换种说法就是，控制思想和行为是系统2的任务之一。
+        ……<strong>刻意掌控意志和进行自我控制很辛苦。</strong>
+        如果你必须强迫自己去做某件事，而此时这件事又面临一个新的挑战，
+        你就会很不情愿或是根本无法进行自我控制。
+        <strong>这种现象被命名为自我损耗（ego depletion）。</strong>
+        <span class="who">第 3 章</span></blockquote>
+        <blockquote>自我损耗型的人因此会<strong>很快产生退出实验的冲动</strong>。
+        ……<strong>其证据很具有说服力</strong>：对系统2有高需求的活动同样需要自我控制，
+        而发挥自我控制力既有损耗又很枯燥。
+        <span class="who">第 3 章</span></blockquote>
+        <blockquote>鲍迈斯特小组最惊人的发现，用他自己的话说就是，
+        <strong>大脑能量这一概念不仅仅是个比喻</strong>。……在积极进行复杂的认知推理
+        或者忙于要求自我控制的任务时，人的血糖就会下降。……
+        <strong>这一概念的大致含义是，自我损耗的影响能通过注射葡萄糖得到缓解</strong>，
+        而且鲍迈斯特和他的同事们也通过几个实验证实了这一假设。
+        <span class="who">第 3 章（葡萄糖那一节）</span></blockquote>
+      </div>
+    </div>
+
+    <div class="verdict"><span class="lbl">◆ 我的判断：甲方赢，而且这一场对乙方伤得不轻</span>
+      <p><strong>理由不是「数字大」，是「检验方式对」。</strong>
+      甲方的依据是多实验室<strong>预注册</strong>重做——这恰好是乙方自己在书里反复主张的那种检验：
+      <em>卡尼曼在第 4 章讲「联想一致性」时给出了大量被后续研究削弱的例子，
+      他自己也说「我曾相信的那些结论，有些后来站不住了」。</em>
+      而「自我损耗」是第一代研究（鲍迈斯特的小样本实验），
+      第二代（多实验室预注册）<strong>把它推翻了</strong>。</p>
+      <p><strong>为什么这一场最硬：不是那条建议错了，是它下面的那层没了。</strong>
+      指南那一条的落点其实很小（「别为此花钱买课」），
+      <em>但卡尼曼的落点很大：自我损耗是他解释「系统 2 为什么靠不住」的物理基础。</em>
+      如果意志力不会耗竭，那么「系统 2 需要付出注意力预算，所以人倾向于省着用它」
+      这个机制就少了一根柱子。</p>
+      <p><strong>更值得注意的一点</strong>：<em>卡尼曼是「系统 2 靠不住」这个学说的主要提出者，
+      而这次推翻发生在<strong>他的方向内部</strong>——是同一套方法论把子假设推翻了。
+      这不是外部攻击，是自我修正。</em></p>
+    </div>
+
+    <div class="bounds"><span class="lbl">⚠️ 边界（这一场在哪里不成立）</span>
+      <strong>① 卡尼曼的书是 2011 年的，而这项重做是 2021 年的。</strong>
+      <em>不能说他「错了」——他在书里写的就是当时的证据状态。正确的说法是：
+      这一处在书出版后被削弱了，而他的框架<strong>大部分</strong>不依赖它。</em>
+      <br><strong>② 「自我损耗效应≈0」不等于「意志力不重要」。</strong>
+      <em>它只否掉了「意志力像可耗尽的燃料」这个<strong>特定机制</strong>。
+      「做困难的事需要集中注意力」这件事本身没有被否掉。</em>
+      <br><strong>③ 甲方那一条的等级是 A，但这一场里我没有核对它的原始文献</strong>
+      （我只核对了它引的原文，没有去查那两个多实验室研究）。
+      <em>这一条是这份对撞里<strong>唯一一处我没有独立验证甲方证据</strong>的地方——
+      如实标出。</em>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<h2>二 · 知道偏差，能不能改善判断</h2>
+<div class="s">这一场不是打架，是甲方给了乙方一个它自己没能举出的实例</div>
+
+<div class="cf">
+  <div class="cf-head">
+    <span class="cf-num">A2</span><span class="cf-kind k1">① 类 · 互证（甲方是乙方的实例）</span>
+    <span class="cf-title">指南 06-反面清单 第 18 条 ⚔ 卡尼曼第 30 章</span>
+  </div>
+  <div class="cf-body">
+    <div class="two">
+      <div class="side a">
+        <span class="who">甲方 · 指南（A 级 · Cochrane 系统综述）</span>
+        <p><strong>主张：通用体检不能降低死亡率。</strong></p>
+        <blockquote>定期做通用健康检查的人，和不做的人<strong>死亡率一样</strong>，
+        死于心血管病、癌症的也一样多。按年龄性别做那几项有证据的筛查就够了。
+        <span class="who">06-反面清单</span></blockquote>
+        <blockquote>Cochrane 系统综述 2019 年更新版收了 17 项随机分组的对照试验。
+        算总死亡率时，合并了其中 11 项试验、<strong>233,298 名参与者、21,535 例死亡</strong>。
+        做通用健康检查的那组和对照组一样，<strong>RR 1.00</strong>。
+        95% CI 0.97–1.03 是可信范围。算因心血管病死亡时……<strong>RR 1.05（0.94–1.16）</strong>。
+        算因癌症死亡时……<strong>RR 1.01（0.92–1.12）</strong>。
+        作者的结论是「<strong>通用健康检查不大可能有益</strong>」。
+        <span class="who">同上 · 证据栏</span></blockquote>
+        <blockquote>来源：Krogsbøll LT, Jørgensen KJ, Gøtzsche PC (2019).
+        <em>Cochrane Database of Systematic Reviews</em>, 1, CD009009.
+        <span class="who">同一条的出处</span></blockquote>
+      </div>
+      <div class="side b">
+        <span class="who">乙方 · 卡尼曼（第 30 章「被过分关注的罕见事件」）</span>
+        <blockquote>此类情绪一触即发、身不由己且无法控制，会使人们本能地想要保护自己。
+        <strong>系统2可能「知道」发生危险的概率很小，但即使知道也无法消除人们内心的不安
+        和躲避危险的冲动。我们无法停止系统1的运行。</strong>
+        <span class="who">第 30 章</span></blockquote>
+        <p><em>★ 但要看清这一章在整本书里的位置。他真正给出的答案在最后一章：</em></p>
+        <blockquote>从自身经验来谈，<strong>系统1的运行方式是不能教给别人的</strong>。
+        ……我只提升了对易犯错误的情境的识别能力……而我在识别别人错误的过程中，
+        也取得了更多的进步。避免系统1出错的方法从原则上讲是很简单的：
+        认识到你正处于的认知领域，放缓并要求系统2来加以强化。
+        ……<strong>不过，这种明智的过程在最需要的时候不会被应用到生活中。</strong>
+        我们都希望在自己要犯错时能有个铃声提醒自己，但这是不可能的，
+        <strong>认知错觉比感知错觉更难以识别</strong>。……<strong>当你处于麻烦中时，
+        最不愿意看到的就是有更多的质疑。</strong>这样的结果就是，
+        <strong>相比自己要犯错时，你在观察别人是否要犯错时，能更容易辨认出雷区。</strong>
+        观察者会比实施者在认知上更为放松，更愿意接收信息。
+        <strong>我写本书的一个原因就是指导批评家和传闲言碎语的人，而不是指导决策制定者。</strong>
+        <span class="who">第 38 章「思考生活」（全书的结论章）</span></blockquote>
+        <blockquote><strong>机构要比个人更容易犯规避错误</strong>，因为机构的人多，
+        自然就会思考得很慢，也更有能力按规则行事。机构可以制定和有效使用检查表，
+        还可以深入开展，比如参考类别的预测以及「事前验尸」练习。
+        机构能够鼓励其成员形成一种<strong>在靠近雷区时互相留意和提醒的文化</strong>。
+        <span class="who">同上</span></blockquote>
+      </div>
+    </div>
+
+    <div class="verdict"><span class="lbl">◆ 我的判断：核对后结论反过来了——真正的对撞在卡尼曼的结论章</span>
+      <p><strong>两边说的其实是同一件事的两层：</strong>
+      <em>卡尼曼讲机制——「知道了关不掉」；指南给现象——「知道了，行为没变，死亡率也没变」。</em></p>
+      <p><strong>但甲方多给了一层，而那一层是乙方缺的：甲方给了<em>行为不变</em>的实测后果。</strong>
+      <em>卡尼曼的证据主要是<strong>情绪反应</strong>（不安、躲避冲动）关不掉；
+      指南给的是<strong>行为与终点</strong>（体检照做、死亡率没差）没变。
+      从「情绪关不掉」推到「行为不会变」，这中间原本是一个空档，现在被填上了。</em></p>
+      <p><strong>这一场里最值得记的一句</strong>：<em>体检这件事本身的设计就是
+      「早发现 → 早治 → 活得更久」，而这个链条在 23 万人上断了。</em>
+      <strong>注意：断的是整条链条，不是「知道关不掉」那一环。</strong>
+      <em>把这一条简单读成「科普没用」是过度引申——它只否掉了通用体检这一种干预。</em></p>
+      <p><strong>★ 但核对下来，真正的对撞点在另一个地方——而那里甲方可能占上风。</strong>
+      <em>卡尼曼在结论章说得很清楚：「我写本书的一个原因就是指导批评家和传闲言碎语的人，
+      <strong>而不是指导决策制定者</strong>。」他给个人开的方子是「认识到你正处于的认知领域，
+      放缓并要求系统2来加以强化」，但他自己紧接着承认「<strong>这种明智的过程在最需要的时候
+      不会被应用到生活中</strong>」。</em></p>
+      <p><strong>也就是说，卡尼曼本人不相信「读了他的书就能改好判断」。</strong>
+      <em>他给个人的定位是「批评别人时更准」，给<strong>机构</strong>的定位才是「用检查表、
+      事前验尸、互相提醒的文化」。——而甲方那 669 条，恰好就是一份
+      <strong>把「机构做法」下放到个人身上</strong>的清单：不看人、只看规则、
+      按年龄性别查那几项、带成本标签、明码标价。</em></p>
+      <p><strong>所以这一场的结论应该反过来读</strong>：
+      <em>不是甲方印证了乙方的悲观，而是<strong>甲方给出了乙方认为「个人做不到」的那条路的一种形态</strong>——
+      把判断替换成清单。卡尼曼说的是「个人关不掉系统 1」，
+      甲方的回答是「那就别让系统 1 上场，照着清单做」。</em>
+      <strong>而这条回答能不能成立，恰好是这场对撞真正的问题。</strong></p>
+    </div>
+
+    <div class="bounds"><span class="lbl">⚠️ 边界</span>
+      <strong>① RR 1.00 的置信区间是 0.97–1.03——它证明的是「没测出差别」，
+      不是「差别为零」。</strong>
+      <em>按这个区间，真实效应最大可能在 −3% 到 +3% 之间。
+      对一个个人的决策来说，这个区间已经足够说「不值得做」，但不能说「绝对无效」。</em>
+      <br><strong>② 通用体检无效 ≠ 所有体检无效。</strong>
+      <em>指南自己在同一篇里列了<strong>有证据</strong>的那几项筛查（血压、血糖、宫颈癌、结直肠癌、
+      乳腺癌钼靶、重度吸烟者的低剂量 CT）——那些是有 RCT 支持的。
+      它反对的是「成套餐的、不分年龄性别的通用体检」。</em>
+      <br><strong>③ 卡尼曼没有被反驳——这一场里乙方没有输。</strong>
+      <em>他的主张是「个人关不掉系统 1」，而通用体检的失败正是它的一个实例。
+      真正悬而未决的是他给机构开的那副药<strong>能不能下放到个人</strong>，
+      而这一条他没有讨论。</em>
+      <br><strong>④ 一处更正</strong>：<em>我先前把「即使知道也无法消除」标成第 30 章，
+      核对后应为<strong>第 30 章</strong>（章节本身没错），但「认知错觉比感知错觉更难以识别」
+      与「指导批评家而非决策者」在<strong>第 38 章</strong>。
+      我最初把后者也归到第 30 章，已改。</em>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+<!-- ============================================================ -->
+<h2>三 · 婚姻的健康账：谁说得更细</h2>
+<div class="s">甲方和乙方都在算这笔账，但甲方的算法更保守</div>
+
+<div class="cf">
+  <div class="cf-head">
+    <span class="cf-num">A3</span><span class="cf-kind k2">② 类 · 同一件事，颗粒度不同</span>
+    <span class="cf-title">指南 10-恋爱和结婚划不划算 第 8 条 ⚔ Miller《亲密关系》第 1 章</span>
+  </div>
+  <div class="cf-body">
+    <div class="two">
+      <div class="side a">
+        <span class="who">甲方 · 指南（A 级 · 两篇荟萃分析）</span>
+        <p><strong>主张：这笔账要算，但要打折。</strong></p>
+        <blockquote>已婚的人同期死亡的概率比非婚的人低约 12%，从未结过婚的人比已婚的人高约 24%。
+        <strong>但这只是两件事同时出现，不是结婚起的作用。</strong>
+        本来健康、收入高、社交多的人，<strong>既更容易结婚，也更容易活得久</strong>。
+        这些数字基本来自欧美，对国内只能当量级参考。
+        <span class="who">10-恋爱和结婚划不划算</span></blockquote>
+        <blockquote>一项针对老年人的荟萃分析……共 <strong>53 组比较、25 万余人</strong>。
+        已婚相对非婚的全因死亡 <strong>RR 0.88，95% CI 0.85–0.91</strong>……
+        同一项里丧偶 1.11、离异或分居 1.16、未婚 1.11……<strong>最保守的估计是 RR 0.94，只低约 6%</strong>。
+        另一项荟萃分析比的是未婚（从未结婚）相对已婚，用了 <strong>95 篇文献、5 亿余人</strong>。
+        结果 <strong>HR 1.24（1.19–1.30）</strong>……<strong>而且年纪越大，差距越小。</strong>
+        <span class="who">同上 · 证据栏</span></blockquote>
+        <blockquote>来源：Manzoli L, et al. (2007). Marital status and mortality in the elderly:
+        a systematic review and meta-analysis. <em>Soc Sci Med</em> 64:77–94.；
+        Roelfs DJ, et al. (2011). The rising relative risk of mortality for singles.
+        <span class="who">同一条的出处</span></blockquote>
+      </div>
+      <div class="side b">
+        <span class="who">乙方 · Miller（第 1 章「归属需要」）</span>
+        <blockquote>实际上，归属需要最有力的证据是：针对亲密关系的生理益处所进行的研究。
+        一般而言，<strong>具有亲密关系的人较之单身生活的人更幸福、健康、长寿</strong>（Koball et al., 2010）。
+        握住爱人的手就能减弱人们面对威胁情境时的脑反应（Coan et al., 2006），
+        只要看看爱侣的照片，疼痛就好像不再那么强烈（Master et al., 2009）。
+        有人接纳和支持我们时，甚至伤口都能更快地愈合（Gouin et al., 2010）。
+        <span class="who">第 1 章</span></blockquote>
+        <blockquote>纵览人的一生，那些朋友和爱人都很少的人，比有充满关爱的亲密伴侣的人
+        <strong>死亡率高得多</strong>；一项历经 9 年的大规模纵向研究发现，
+        <strong>缺乏亲密关系的人的死亡率是正常人的 2~3 倍</strong>。
+        <span class="who">第 1 章</span></blockquote>
+      </div>
+    </div>
+
+    <div class="verdict"><span class="lbl">◆ 我的判断：甲方更细，而差别不在数字大小，在「有没有打折」</span>
+      <p><strong>两边给的效应量其实差得很远</strong>：<em>甲方的「最保守估计」是低 6%–12%，
+      乙方的表述是「高得多」「2~3 倍」。</em>
+      <strong>这不是矛盾，是引的证据不同。</strong>
+      <em>乙方引的是「缺乏亲密关系」这一类（包括孤独、社交隔离），
+      而甲方引的是「婚姻状态」这一类。前者的效应确实比后者大得多——
+      因为孤独可以来自很多原因，不只是没结婚。</em></p>
+      <p><strong>真正值得记的是甲方多做的那一步：它明说了「这不是结婚起的作用」。</strong>
+      <em>它给出了选择效应的具体形态——「本来健康、收入高、社交多的人，
+      既更容易结婚，也更容易活得久」。这正好是 Miller 自己在第 2 章里
+      反复强调的那三种相关解释之一（第三方变量）。</em></p>
+      <p><strong>而 Miller 在「已婚者更长寿」这一处没有做这个提醒。</strong>
+      <em>他在第 2 章用一整页讲「相关并不能表明事件之间存在因果联系」，
+      列出了 X→Y、Y→X、第三方变量三种可能；
+      但到第 1 章陈述这条证据时，他写的是「具有亲密关系的人……更长寿」，
+      没有加「这可能只是相关」。</em>
+      <strong>这不是他判断错了，是<em>同一个提醒没有贯彻到每一处</em>。</strong></p>
+      <p><strong>所以这一场的结论是一条方法论要求</strong>：
+      <em>「把因果提醒写到每一条结论旁边」，而不是写成书里的一节。
+      甲方做到的是后者——它的<strong>每一条</strong>都带口径标签与证据等级。</em></p>
+    </div>
+
+    <div class="bounds"><span class="lbl">⚠️ 边界</span>
+      <strong>① 甲方的数字是欧美的，它自己标了「对国内只能当量级参考」。</strong>
+      <em>婚姻在中国大陆的死亡率效应可能与欧美不同（婚姻的筛选机制、
+      同居的普遍程度、离婚的法律成本都不同）。</em>
+      <br><strong>② 甲方那两条的等级都是 A，但它们的比较对象不同。</strong>
+      <em>Manzoli 2007 比的是「已婚 vs 非婚」（含丧偶、离异），
+      Roelfs 2011 比的是「从未结婚 vs 已婚」。
+      后者的效应更大（HR 1.24 > RR 0.88）是合理的，因为丧偶与离异本身带着健康冲击。</em>
+      <br><strong>③ 这一场不能说 Miller 错。</strong>
+      <em>他的书是教科书，不是决策手册；教科书里做一次方法论提醒是常规做法，
+      逐条标注才是非常规。这一场指出的是<strong>两种文体</strong>的差别，
+      不是两个研究者的水平差别。</em>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<h2>四 · 关系质量能不能预测：一个 43 项研究的数字</h2>
+<div class="s">甲方引的这篇，Miller 的书里没有</div>
+
+<div class="cf">
+  <div class="cf-head">
+    <span class="cf-num">A4</span><span class="cf-kind k2">② 类 · 甲方补了乙方缺的数字</span>
+    <span class="cf-title">指南 10-恋爱和结婚划不划算 第 4 条 ⚔ Miller《亲密关系》第 11 章</span>
+  </div>
+  <div class="cf-body">
+    <div class="two">
+      <div class="side a">
+        <span class="who">甲方 · 指南（A 级 · PNAS 2020）</span>
+        <p><strong>主张：最能说明关系好不好的，是你自己的感受；而且「以后会不会变好」基本算不出来。</strong></p>
+        <blockquote>最能说明关系好不好的，是你自己的感受，不是对方的条件。
+        比如你觉得对方认不认真、欣不欣赏你，你们吵得多不多。
+        <strong>你自己的感受比伴侣的说法管用二到四倍。</strong>
+        但这段关系往后变好还是变坏，<strong>任何问卷都基本算不出来</strong>。
+        <span class="who">10-恋爱和结婚划不划算</span></blockquote>
+        <blockquote><strong>29 个实验室、43 份纵向配对数据</strong>的机器学习分析……
+        关于关系的这些项，在刚开始调查时<strong>最多能解释 45% 的方差</strong>……
+        到研究结束时<strong>最多解释 18%</strong>。
+        而且「自己报告的那些项」的预测力，是「伴侣报告的那些项」的<strong>二到四倍</strong>。
+        在自己报告的关系感受之外，再把个体差异和伴侣的报告加进来，<strong>没有多出任何预测力</strong>。
+        <span class="who">同上 · 证据栏</span></blockquote>
+        <blockquote>来源：Joel S, Eastwick PW, Allison CJ, et al. (2020).
+        Machine learning uncovers the most robust self-report predictors of relationship quality
+        across 43 longitudinal couples studies. <em>PNAS</em>, 117(32), 19061-19071.
+        <span class="who">同一条的出处</span></blockquote>
+      </div>
+      <div class="side b">
+        <span class="who">乙方 · Miller（第 11 章「相互依赖的自我构念」附近）</span>
+        <blockquote>另一个有趣的个体差异是<strong>相互依赖的自我构念</strong>（interdependent
+        self-construal），指人们在多大程度上把自己看成是与他人相互依赖（而非各自独立）的人。
+        对于相互依赖的自我构念较强的人而言，<strong>人际关系是他们自我概念的核心特征</strong>。
+        <span class="who">第 11 章</span></blockquote>
+        <p><em>Miller 在第 11 章讨论「关系中的自我」，其落脚点是
+        <strong>自我构念如何影响关系行为</strong>，而不是
+        「哪些变量能预测关系质量」这个预测性问题。</em></p>
+      </div>
+    </div>
+
+    <div class="verdict"><span class="lbl">◆ 我的判断：这不是对撞，是两种问题的分工——但甲方暴露了乙方的一处空白</span>
+      <p><strong>先说清它们问的不是同一个问题</strong>：
+      <em>甲方问「哪些变量能<strong>预测</strong>关系质量」——这是预测问题；
+      乙方问「自我构念如何<strong>影响</strong>关系行为」——这是机制问题。</em>
+      <strong>两者不冲突。</strong></p>
+      <p><strong>但甲方那句话里有一半是乙方该说而没说的</strong>：
+      <em>「但这段关系往后变好还是变坏，<strong>任何问卷都基本算不出来</strong>」——
+      这是<strong>可预测性的上限</strong>，而 45% → 18% 这个衰减给了它一个数字。</em></p>
+      <p><strong>为什么这一条对「底层」这个项目要紧</strong>：<em>它是一条
+      <strong>关于社会科学能预测什么的边界陈述</strong>，而且带数字。
+      项目里另一处同类边界是 <a href="冲突与呼应地图.html">CF7</a>——
+      Miller 第 10 章对疾病/死亡/照护的覆盖是 0。两处都是
+      <strong>「这本书的方法够不到哪里」</strong>，只是一个是覆盖范围，一个是预测力上限。</em></p>
+      <p><strong>「自己报告比伴侣报告强 2–4 倍」这一句尤其值得单独拿出来</strong>：
+      <em>它意味着<strong>从外部观察一段关系，不如问当事人</strong>。
+      而这句话在方法论上与乙方第 1 章「成为好伴侣的秘诀」那一类内容方向一致，
+      只是甲方给了效应量，乙方给的是叙述。</em></p>
+    </div>
+
+    <div class="bounds"><span class="lbl">⚠️ 边界</span>
+      <strong>① 45% → 18% 的「衰减」不能直接读成「关系会变差」。</strong>
+      <em>它说的是「初始变量对后来质量的解释力下降」，
+      而下降的原因可能是关系本身在变、也可能是测量误差累积。
+      甲方自己也没做这个引申。</em>
+      <br><strong>② PNAS 2020 那篇是机器学习分析，不是实验。</strong>
+      <em>它给出的是<strong>预测力</strong>排序，不是<strong>因果</strong>排序。
+      「自己的感受最能预测」不等于「改变自己的感受就能改善关系」。</em>
+      <br><strong>③ 我没有核对这篇 PNAS 原文</strong>（只核对了指南引的段落）。
+      <em>如实标出。</em>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+<!-- ============================================================ -->
+<h2>五 · 沉没成本：卡尼曼把自己当成了反面教材</h2>
+<div class="s">这一场两边说的是同一件事，但给的解法不是同一种</div>
+
+<div class="cf">
+  <div class="cf-head">
+    <span class="cf-num">A5</span><span class="cf-kind k4">③ 类 · 抽象原则 → 可执行动作</span>
+    <span class="cf-title">指南 04-不要浪费时间 第 ? 条 ⚔ 卡尼曼第 23–24 章（亲身经历）</span>
+  </div>
+  <div class="cf-body">
+    <div class="two">
+      <div class="side a">
+        <span class="who">甲方 · 指南（B 级 · 98 组数据）</span>
+        <p><strong>给的是一条动作规则：续不续，只看以后。</strong></p>
+        <blockquote>已经投进去的钱和时间，会让人更想接着干下去。
+        <strong>98 组数据合起来算，这个倾向稳定存在。</strong>
+        所以判断要不要继续，<strong>只算往后还要投多少、还能拿回多少。已经花掉的那些，不要算进去。</strong>
+        <span class="who">04-不要浪费时间</span></blockquote>
+        <blockquote>避开这种倾向，就不会为了「不想浪费」继续往里投时间。
+        <span class="who">同上 · 证据栏</span></blockquote>
+      </div>
+      <div class="side b">
+        <span class="who">乙方 · 卡尼曼（第 23 章「外部意见」· 亲身入坑）</span>
+        <blockquote>直到最近我才意识到，那时的我其实是个笨蛋，是个无能的领导者。
+        那个项目是由我发起的……当我听到希莫的统计分析后，就改正了那个谬误。
+        如果是在迫不得已的情况下，我会承认我们的项目从一开始就是错的……
+        但<strong>我们已经投入了大量精力——这是一个沉没成本悖论的例子</strong>。
+        <strong>放弃这个项目会令我们很尴尬，尤其是我</strong>，而且我也没有直接的理由这样做。
+        <span class="who">第 23 章</span></blockquote>
+        <blockquote>如果在开始做这个项目时就有了合理的基准预测，
+        那么我们就不会再将项目进行下去了。
+        <span class="who">同上</span></blockquote>
+      </div>
+    </div>
+
+    <div class="verdict"><span class="lbl">◆ 我的判断：互补，而且各有一块对方没有的</span>
+      <p><strong>甲方给的是「判断规则」</strong>：<em>只算未来增量。</em>
+      <strong>乙方给的是「制度设计」</strong>：<em>在开始之前先做基准预测。</em></p>
+      <p><strong>这两件事的作用时点不同，而且乙方的更靠前——这很重要。</strong>
+      <em>甲方的规则要求你在<strong>已经投入之后</strong>当场做一次冷静计算，
+      而卡尼曼的经历恰好说明那一刻最难：
+      「放弃这个项目会令我们很尴尬」——尴尬是一个<strong>当下</strong>的情绪，
+      它不会因为你懂沉没成本就消失。
+      他自己写：「这种情况（外部意见）永远都不是自然而然发生的。」</em></p>
+      <p><strong>所以乙方的方案其实是对甲方的补丁</strong>：
+      <em>不要等到要决定的时候才用规则，而是<strong>在投入之前就把基准预测写下来</strong>。
+      这样到决定的时候，你面对的不是「要不要承认失败」，
+      而是「当初说好的那个判据到没到」。</em></p>
+      <p><strong>而甲方也有乙方缺的一块</strong>：<em>卡尼曼讲的是<strong>项目</strong>（他那个教科书项目），
+      甲方讲的是<strong>个人的时间</strong>——那些没写成项目的投入（一份干不出结果的工作、
+      一段反复投入的关系）。<strong>项目有基准预测这种东西，个人的日常投入没有。</strong>
+      所以甲方那条规则在「没有正式立项」的场合更有用。</em></p>
+    </div>
+
+    <div class="bounds"><span class="lbl">⚠️ 边界</span>
+      <strong>① 「已经投入的不要算进去」在两种情形下不成立。</strong>
+      <em>一是投入本身产生了<strong>资产</strong>（学到的技能、建立的关系）——那部分不是沉没的；
+      二是<strong>退出本身有成本</strong>（违约金、声誉），那要算进「未来的账」而不是「过去的账」。</em>
+      <br><strong>② 我用了「第 23 章」标那两段。子任务给的定位是「外部意见」一节，
+      该节在全书目录中属于第 23 章「努力养成采纳外部意见的决策习惯」。</strong>
+      <em>但我没有逐页核对章节边界，此处标为<strong>推定</strong>。</em>
+      <br><strong>③ 卡尼曼这段是自述，不是研究。</strong>
+      <em>它的价值在于<strong>一个写出沉没成本理论的人也会掉进去</strong>——
+      这不是证据强度的证据，是「知识不解决问题」的一个实例。</em>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<h2>六 · 切身利害：塔勒布的原则，在指南里变成了一条法律动作</h2>
+<div class="s">这一场是硬呼应——甲方那条建议可以从乙方的原则推出来</div>
+
+<div class="cf">
+  <div class="cf-head">
+    <span class="cf-num">A6</span><span class="cf-kind k4">③ 类 · 硬呼应（可推出）</span>
+    <span class="cf-title">指南 08-别把自己搭进去 · 借钱写借条与担保 ⚔ 塔勒布《非对称风险》</span>
+  </div>
+  <div class="cf-body">
+    <div class="two">
+      <div class="side a">
+        <span class="who">甲方 · 指南（A 级 · 引法条）</span>
+        <blockquote>借条要写全：出借人、借款人、金额、利率、期限、还款方式，双方签名。
+        钱走转账，不给现金，写全了才好起诉。
+        <strong>替人担保时看清有没有「连带」两个字。</strong>
+        一般保证是等债权人先告了借款人、执行不到钱，才轮到你。
+        写了连带责任保证，<strong>债权人可以直接找你要</strong>。
+        <span class="who">08-别把自己搭进去</span></blockquote>
+        <blockquote>签字前把纸看完，不替人签字，不在空白纸上签。
+        <strong>签了就算数，按手印和签名一样算数。</strong>
+        「没看清」「以为是别的」在法庭上基本站不住。
+        <span class="who">同上</span></blockquote>
+      </div>
+      <div class="side b">
+        <span class="who">乙方 · 塔勒布（第一卷「对称性」· 第二卷「代理人问题」）</span>
+        <blockquote>如果你想获得回报，你就必须承担风险，<strong>而不是让别人替你承担损失</strong>。
+        如果你把风险强加给别人，你就必须给他们一定的补偿……
+        <strong>不！这是一个关于对称性的讨论，也就是说，如果有什么东西搞砸了，
+        那么你得承受一部分伤害，付出一部分代价。</strong>
+        <span class="who">前言</span></blockquote>
+        <blockquote><strong>不要听从那些以咨询谋生的人给你的建议，
+        除非他们会为自己提供的错误咨询接受惩罚。</strong>
+        <span class="who">第二卷第 1 章</span></blockquote>
+        <blockquote>在一个由官僚，而不是贵族主导的体系中，
+        <strong>一个人的行为和他本来需要为此承担的后果被轻易地分开了。</strong>
+        ……让那些不为自己的决策承担后果的人只能做一些影响较小的决策，
+        而不是让他们做影响巨大的决策。<span class="who">第一卷「罗伯特·鲁宾的勾当」</span></blockquote>
+      </div>
+    </div>
+
+    <div class="verdict"><span class="lbl">◆ 我的判断：这是九场里最干净的一场硬呼应，但它同时暴露了塔勒布的一个空白</span>
+      <p><strong>推得出来</strong>：<em>塔勒布的原则是「承担后果的人才有资格决策／建议」。
+      「担保」恰好是这个原则最纯粹的形态——<strong>你对这笔钱没有任何支配权，
+      却要为它承担全部后果</strong>。所以从塔勒布的原则可以直接推出
+      「替人担保前先想清楚自己愿不愿意替他还」。</em></p>
+      <p><strong>但这一场有一处出人意料的检索结果，是子任务报回来的</strong>：
+      <em>塔勒布全书中「担保」只出现 <strong>1 次</strong>，而且那一处是
+      「我可以以个人名义为索普担保，他有绝对清晰的头脑」——
+      指的是<strong>为一个人的判断力作保</strong>，不是法律意义上的连带责任。
+      「保证」9 处，逐条查过均与本主题无关。</em></p>
+      <p><strong>也就是说：塔勒布讲了二十万字的「切身利害」，却从没谈过「担保」这个最日常的形态。</strong>
+      <em>而甲方把它写成了第 8 部分的一条 A 级建议。
+      这正是「应用型」与「解释型」的分工：
+      乙方给原则，甲方找出原则落在哪个具体动作上。</em></p>
+      <p><strong>而塔勒布有一处比甲方更深，值得指出</strong>：</p>
+      <blockquote>你意识到你对社会公众的责任和对孩子们的义务是相互矛盾的。
+      如果你背叛了前一种责任，你就会感觉自己参与了这场犯罪……
+      <strong>做出合乎道德的选择是要以牺牲他人为代价的。</strong>
+      ……社会希望圣人和道德英雄都是独身者，这样他们面对道德困境时
+      就不用考虑来自家庭的压力。<span class="who">第二卷第 4 章「别人为你承担风险」</span></blockquote>
+      <p><em>这一段说的是：<strong>「承担后果」这件事本身是有代价的，而代价往往落在家人身上。</strong>
+      甲方的建议（「看清有没有连带两个字」「不替人签字」）是在帮你避免这个代价，
+      但它没有回答塔勒布提出的那个问题：<strong>什么时候这个代价是应该付的。</strong></em>
+      <strong>塔勒布自己也没给答案——他给的是「代价确实存在」这个事实。</strong></p>
+    </div>
+
+    <div class="bounds"><span class="lbl">⚠️ 边界</span>
+      <strong>① 塔勒布的「切身利害」是关于<em>建议者</em>的，甲方的「担保」是关于<em>担保人</em>的。</strong>
+      <em>两者都涉及「承担别人的后果」，但角色不同：
+      塔勒布反对的是<strong>拿别人的风险换自己的收益</strong>（代理人问题）；
+      甲方提醒的是<strong>用自己的资产承担别人的债务</strong>（连带责任）。
+      方向相反，但同属对称性这个家族。</em>
+      <br><strong>② 「塔勒布没谈过担保」是一个检索结论，不是阅读结论。</strong>
+      <em>我检索的是「担保／保证」两个词。他可能用了别的说法谈同一件事
+      （如「代理人」「代人受过」），我没有穷尽。</em>
+      <br><strong>③ 这一场双方都在讲「该怎么做」，</strong>
+      <em>所以它严格说来不是「对撞」，是<strong>呼应</strong>。放在这份文件里是因为
+      它示范了「抽象原则 → 具体动作」这条路是怎么走的。</em>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+<!-- ============================================================ -->
+<h2>七 · 四种货币不互相折算：一条方法论分界线</h2>
+<div class="s">甲方拒绝的事，乙方正是靠它吃饭的</div>
+
+<div class="cf">
+  <div class="cf-head">
+    <span class="cf-num">A7</span><span class="cf-kind k2">② 类 · 方法论对撞</span>
+    <span class="cf-title">指南（读法总纲）⚔ 兰小欢《置身事内》第三章「官员政绩与激励机制」</span>
+  </div>
+  <div class="cf-body">
+    <div class="two">
+      <div class="side a">
+        <span class="who">甲方 · 指南（写在「怎么读」里 · 全书通例）</span>
+        <blockquote><strong>死亡率的数字、时间精力的数字、金钱的数字和法律后果，各算各的，
+        不互相折算。</strong>这四样对应检索页上那四个「换回什么」，
+        <strong>彼此之间不比大小</strong>。
+        <span class="who">readme「怎么读」</span></blockquote>
+        <p><em>配套的是每条的 <code>口径=</code> 标签：全书 669 条的分布是
+        <strong>金钱 249 · 死亡率 234 · 自由 112 · 时间 74</strong>。</em></p>
+      </div>
+      <div class="side b">
+        <span class="who">乙方 · 《置身事内》（把一切折成一个量）</span>
+        <blockquote>所谓激励机制，简单来说就是「胡萝卜加大棒」：
+        <strong>事情做好了对个人有什么好处？搞砸了有什么坏处？</strong>
+        因为发展经济是地方政府的核心任务，所以激励机制需要将
+        <strong>干部个人得失与本地经济发展情况紧密挂钩</strong>。
+        <span class="who">第三章「官员政绩与激励机制」</span></blockquote>
+        <blockquote>从「大棒」角度看，一方面有党纪国法的监督惩罚体系，
+        另一方面也有地区间招商引资的激烈竞争。……地方主官任期有限，
+        要想在任内快速提升经济增长，往往只能加大投资力度，上马各种大工程、大项目。
+        <span class="who">同上</span></blockquote>
+        <blockquote>经济学家注重研究有形的「奖惩」，强调外部的激励机制和制度环境，
+        <strong>但其实内心的情感驱动也非常重要</strong>。任何一个组织，无论是公司还是政府，
+        <strong>都不可能只靠外部奖惩来激励员工</strong>。外部奖惩必然要求看得见的工作业绩，
+        而绝大多数工作都不像送快递，没有清清楚楚且可以实时衡量的业绩，
+        因此需要使命感、价值观、愿景等种种与内心感受相关的驱动机制。
+        <span class="who">第三章末</span></blockquote>
+      </div>
+    </div>
+
+    <div class="verdict"><span class="lbl">◆ 我的判断：它们不是在互相反驳，是在回答两个不同的问题——而这个区别值得单独指出</span>
+      <p><strong>甲方在做「决策学」</strong>：<em>给我一个具体的决定，这四种后果各是多少。
+      它不折算，是因为折算需要一个「一条命值多少时间」的汇率，而那个汇率是任意设的。
+      <strong>不设汇率是它的诚实。</strong></em></p>
+      <p><strong>乙方在做「解释学」</strong>：<em>为什么这些人会集体做出某种行为。
+      它把一切折成「激励」，是因为它要解释<strong>系统性行为</strong>——
+      而当几十万人面对同一组奖惩时，他们各自对「命、钱、时间、法律」的不同估值
+      <strong>在总量上会被平均掉</strong>。所以它不必知道每个人的汇率，只需要知道信号的方向和强度。</em></p>
+      <p><strong>这说明折算在两种用途下的合法性不同</strong>：
+      <em>对<strong>解释集体行为</strong>，折算可以成立（只要方向一致，个体差异会相互抵消）；
+      对<strong>一个人的决定</strong>，折算不能成立（那个汇率必须由这一个人自己给，
+      而给了他，就变成了替他定价）。</em></p>
+      <p><strong>★ 而乙方有一句话，恰好是对甲方那条规则的独立支持</strong>：
+      <em>「经济学家注重研究有形的『奖惩』……但其实内心的情感驱动也非常重要。
+      任何一个组织，无论是公司还是政府，都不可能只靠外部奖惩来激励员工。」
+      ——兰小欢自己也承认，把一切折成奖惩<strong>会漏掉东西</strong>，
+      而且他给出了漏掉的是什么：<strong>使命感、价值观、愿景</strong>。</em></p>
+      <p><strong>把两边合起来，得到一条比任何一边都窄的规则</strong>：
+      <em>你可以为了<strong>解释</strong>而暂时把不同的东西当成同一种；
+      但为了<strong>决定</strong>，必须把它们分开，并且明确说出你是在哪一层做的折算。
+      甲方那条规则更严——它连「暂时折算」都不做，代价是它<strong>不解释</strong>。</em></p>
+    </div>
+
+    <div class="bounds"><span class="lbl">⚠️ 边界</span>
+      <strong>① 「不折算」这条规则本身不是中立的</strong>：
+      <em>它假定读者有能力自己判断每种后果的权重。对没有这个能力的人
+      （或者在时间压力下必须立刻决定的人），不折算可能使决定瘫痪。</em>
+      <br><strong>② 《置身事内》的折算不是随意的</strong>：
+      <em>它折的是<strong>同一主体在同一制度下的多个选项</strong>（升迁、收入、处分），
+      这些确实可以用一套共同尺度比较，因为它们都是<strong>对同一个人</strong>的激励。
+      而甲方那四种货币分属不同的承受者（我的时间、我的钱、我的命、我承担的法律后果）——
+      它们不可折算的理由是<strong>主体不同一</strong>，不是量纲不同。
+      这一点《置身事内》自己没有说清，是我读出来的。</em>
+      <br><strong>③ 《置身事内》那段的性质是「作者的保留」，不是他的主张。</strong>
+      <em>他接着仍以激励机制为主线。不能把「他承认内在驱动重要」
+      读成「他反对激励框架」。</em>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<h2>八 · 技术有没有方向：凯利的主张，在指南里被当成一个可选项</h2>
+<div class="s">这一场是条件性的——而条件是「方向」取强版本还是弱版本</div>
+
+<div class="cf">
+  <div class="cf-head">
+    <span class="cf-num">A8</span><span class="cf-kind k2">② 类 · 条件性</span>
+    <span class="cf-title">指南 23-学什么技能划算 ⚔ 凯利《科技想要什么》</span>
+  </div>
+  <div class="cf-body">
+    <div class="two">
+      <div class="side a">
+        <span class="who">甲方 · 指南（B 级 · 可计算化概率评估）</span>
+        <blockquote>按美国的估算，约 47% 的岗位有较高风险被计算机接手，
+        <strong>后来按具体任务估的比例低得多</strong>。<strong>机器难过的坎有三样：
+        手上的灵巧劲、想出新东西、跟人打交道。</strong>所以要到现场、环境不标准、
+        得临场判断的活更难被顶掉，流程固定、主要处理信息的岗位风险最高。
+        <span class="who">23-学什么技能划算</span></blockquote>
+        <blockquote>给美国 702 个职业逐个估「这活多大概率能交给计算机做」……
+        模型里决定风险高低的，是三处机器目前迈不过去的坎，作者叫它「工程瓶颈」。
+        一是感知与操作，包括手指灵巧度、手部灵巧度、在狭窄空间和别扭姿势下作业。
+        二是创造性智能（想出新东西的能力）。三是社会智能（跟人打交道的能力）。
+        <span class="who">同上 · 证据栏</span></blockquote>
+      </div>
+      <div class="side b">
+        <span class="who">乙方 · 凯利（第六章「注定的发展方向」· 第十四章）</span>
+        <blockquote>所有保持稳定自组织的自适应复杂系统——从银河系到海星再到人脑——
+        将展现自发形态和<strong>固有方向</strong>。我们称这些形态为必然事物，
+        是因为不论何时，只要环境适合，它们就会像排水时产生的旋涡
+        或者冬日暴雪中的雪花一样显露无遗。
+        <span class="who">第六章</span></blockquote>
+        <blockquote>技术元素的旋涡<strong>按照自己的节奏、自己的规则和自己的方向发展</strong>。
+        它的父母和创造者──人类──<strong>不再拥有完全的掌控力</strong>。
+        <span class="who">第六章</span></blockquote>
+        <blockquote>人类不是科技轨迹的终点，而是中点，恰好在生命和制造品中间。
+        <span class="who">第十四章「无限博弈」</span></blockquote>
+      </div>
+    </div>
+
+    <div class="verdict"><span class="lbl">◆ 我的判断：只有在凯利主张「强版本」时才是冲突，而他主张的是弱版本——所以这一场的条件不成立</span>
+      <p><strong>先把凯利的「方向」定准</strong>（这一步在<a href="冲突与呼应地图.html">冲突地图</a>的 CF4/CF9 里已经做过）：
+      <em>他在反古尔德时说「<strong>智人是趋势，而非个例</strong>」——
+      「趋势」的对立面被他自己定成了「个例」。
+      也就是说，他的「方向」是关于<strong>会不会重演</strong>的断言，
+      不是关于<strong>历史终将走向哪里</strong>的断言。</em></p>
+      <p><strong>在这个弱版本下，甲方那条建议与凯利不冲突，而且方向一致</strong>：
+      <em>凯利说「同样的约束会让技术反复收敛到相似形态」，
+      甲方说「流程固定、只处理信息的岗位最容易被顶掉」——
+      两者都在说<strong>同一种物理与信息约束下的必然结果</strong>。</em></p>
+      <p><strong>真正会冲突的是强版本</strong>：<em>如果凯利主张「技术有内在目标」，
+      那么「挑一个不容易被替代的技能」就是一个<strong>注定无效</strong>的策略——
+      因为个体选择改变不了方向。而甲方那条建议的存在本身，
+      就假定了个人选择是有用的。</em></p>
+      <p><strong>而甲方有一处比凯利更保守</strong>：<em>它明说了那个 47% 是<strong>早期估算</strong>——
+      「后来按具体任务估的比例低得多」。这是一个自我削弱的注脚，
+      凯利的书里没有类似的自削。</em></p>
+    </div>
+
+    <div class="bounds"><span class="lbl">⚠️ 边界</span>
+      <strong>① 甲方那条的等级是 B（说不出确切数字），不是 A。</strong>
+      <em>它引的「702 个职业」是一个模型输出，模型本身依赖「工程瓶颈」这个判断，
+      而那是作者的观点而非测量。</em>
+      <br><strong>② 凯利也承认人的作用。</strong>
+      <em>「人类不是科技轨迹的终点，而是<strong>中点</strong>」——中点意味着人在这条线上仍在起作用。
+      严格说，凯利的强版本是「人不再是<strong>唯一的</strong>决定者」，
+      而不是「人的选择无关」。所以连强版本下也未必与甲方冲突。</em>
+      <br><strong>③ 我判「条件不成立」，依赖我在 CF4/CF9 里对凯利的读法。</strong>
+      <em>如果那个读法错了（把强版本当成了弱版本），这一场的结论也要翻。</em>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<h2>九 · 终极原因 vs 个人可操作：看起来最像对撞，实际上最不该打</h2>
+<div class="s">保留这一场，是为了防止误判</div>
+
+<div class="cf">
+  <div class="cf-head">
+    <span class="cf-num">A9</span><span class="cf-kind k3">② 类 · 层次不同（提醒不要误用）</span>
+    <span class="cf-title">指南（全部 669 条的性质）⚔ 戴蒙德《枪炮、病菌与钢铁》 · 多伊奇《无穷的开始》</span>
+  </div>
+  <div class="cf-body">
+    <div class="two">
+      <div class="side a">
+        <span class="who">甲方 · 指南（一条条的「怎么做才不亏」）</span>
+        <blockquote>买到过期、变质的食品……你可以要价款十倍或损失三倍的赔偿，
+        不到一千元的按一千元算。<strong>找卖家还是找厂家由你挑，
+        被你找上的那一方必须先赔，不许推给另一方。</strong>
+        <span class="who">05-不要浪费钱 第 31 条</span></blockquote>
+        <blockquote>单位和你自己交满 1 年、又不是你主动提的辞职，办完失业登记就能领钱。
+        交满 1 年不到 5 年，最多领 12 个月。满 5 年不到 10 年，最多 18 个月。
+        10 年以上，最多 24 个月。<span class="who">07-没钱的时候怎么活</span></blockquote>
+        <p><em>它的全部内容都是这个形态：<strong>给定一套已有的制度规则，
+        算出在这个规则下怎么做对自己最有利。</strong>
+        它自己也明说：「法律、医保、社保这些制度上的内容，<strong>按中国大陆的现行规定写</strong>」。</em></p>
+      </div>
+      <div class="side b">
+        <span class="who">乙方 · 戴蒙德（把「制度」判为近因）</span>
+        <blockquote>通常人们在回答这个问题时，都会谈到一些近因，例如资本主义、
+        重商主义、科学研究、技术，以及病菌……<strong>所有这些要素都只是近因，
+        而不是终极原因。</strong>
+        <span class="who">前言</span></blockquote>
+        <blockquote>仅用制度来解释国家贫富的另一个不足之处在于，
+        这种观点并未谈及<strong>良好制度的渊源</strong>。……换句话说，
+        通常的观点只强调了良好制度，而<strong>混淆了近因（因变量）和终极因（自变量）</strong>。
+        ……如果一位婚姻咨询专家只把婚姻破裂归结为妻子打了丈夫一个耳光，
+        就解决不了婚姻危机。<span class="who">论「制度起源」一章</span></blockquote>
+        <p><em>（另一侧的对照：多伊奇方向相反——「历史是思想的历史，
+        不是生物地理学的机械影响的历史」，第 17 章。）</em></p>
+      </div>
+    </div>
+
+    <div class="verdict"><span class="lbl">◆ 我的判断：戴蒙德那句警告对准甲方会得到一个形式上成立、实质上不成立的指责</span>
+      <p><strong>如果把「你只讲了近因，没讲终极因」对准甲方</strong>，会得到：
+      <em>「你只教人怎么在这套规则下取利，不问这套规则为什么是这样。」
+      <strong>这个指责在事实层面是对的</strong>——甲方确实不问，而且它<strong>自认</strong>是规则手册。</em></p>
+      <p><strong>但它不构成对撞，因为戴蒙德的例子自己就限定了这句话的适用范围</strong>：
+      <em>「如果一位婚姻咨询专家只把婚姻破裂归结为妻子打了丈夫一个耳光，
+      就解决不了婚姻危机。」——
+      <strong>他批评的是把近因<em>当成</em>终极因，不是批评研究近因。</strong></em></p>
+      <p><strong>所以正确的读法是</strong>：<em>甲方在处理近因，而且<strong>没有假装</strong>自己在处理终极因。
+      它出的问题是「这个规则下怎么做最有利」，
+      戴蒙德出的问题是「这个规则为什么长这样」。
+      前者的答案不构成后者的答案，<strong>但它也不必构成</strong>。</em></p>
+      <p><strong>★ 这一场真正的用处，是标出整个「底层」项目的分工</strong>：
+      <em>这个项目的 10 个域学的都是戴蒙德那一类问题（为什么），
+      而甲方答的是近因那一类（怎么办）。
+      两边都存在得合理，但<strong>不能拿一边的标准去否定另一边</strong>——
+      那正是<a href="冲突与呼应地图.html">冲突地图</a>里 CF5 处理过的同一种错
+      （用一类问题的标准去裁另一类）。</em></p>
+    </div>
+
+    <div class="bounds"><span class="lbl">⚠️ 边界</span>
+      <strong>① 我说「甲方没有假装在处理终极因」，依据是它 readme 里那句自我限定。</strong>
+      <em>但它的元描述用的是「用最少的钱、时间和精力<strong>换回</strong>寿命、金钱和人身自由」——
+      这是一个相当强的承诺，而「换回」这个说法本身就是折算。
+      所以它<strong>在口号上</strong>比在正文里更强。这一处我没有更多证据，如实标出。</em>
+      <br><strong>② 一处引文的性质要说清</strong>：<em>「戴蒙德否认自己的理论为『地理决定论』」
+      这一类表述，其出处是<strong>全书末的「解读/导读」部分</strong>——
+      即<strong>第三方解读文章</strong>，不是戴蒙德正文。
+      所以本场只引戴蒙德本人的前言与「制度起源」章。</em>
+      <br><strong>③ 这一场是九场里信息量最小的，但我不删它。</strong>
+      <em>因为它是<strong>最容易被误当成对撞</strong>的一场。如果一个读者看到「近因 vs 终极因」
+      就去说「指南太浅」，那他就犯了 CF5 那类错。</em>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<h2>十 · 九场打完之后</h2>
+
+<table>
+  <tr><th style="width:5%">场</th><th style="width:24%">对撞点</th>
+    <th style="width:15%">类型</th><th>打完之后的结论</th></tr>
+  <tr><td><strong>①</strong></td><td>意志力会不会耗竭</td><td><span class="tag t-a">实测反驳</span></td>
+    <td><strong>甲方赢</strong>。而输掉的是卡尼曼框架的一根柱子，不是他的整个框架；
+    且推翻用的是他自己主张的那种方法（多实验室预注册重做）。</td></tr>
+  <tr><td><strong>②</strong></td><td>知道偏差能不能改善判断</td><td><span class="tag t-a">互证</span></td>
+    <td><strong>核对后结论反转</strong>：卡尼曼本人说「我写本书是为了指导批评家，不是决策制定者」，
+    而甲方那 669 条正是把「机构做法」下放到个人的一种形态。
+    <em>这一场从「甲方印证乙方」变成了「甲方回答乙方认为做不到的事」。</em></td></tr>
+  <tr><td><strong>③</strong></td><td>婚姻的健康账</td><td><span class="tag t-b">颗粒度</span></td>
+    <td><strong>甲方更细</strong>：它把「这只是相关，不是结婚起的作用」写进了同一条。
+    <em>而 Miller 的方法论提醒没有贯彻到这一处。</em></td></tr>
+  <tr><td><strong>④</strong></td><td>关系质量的可预测性</td><td><span class="tag t-b">颗粒度</span></td>
+    <td><strong>甲方补了乙方缺的数字</strong>（45% → 18%；自己报告强 2–4 倍），
+    而那是一条关于<strong>社会科学能预测什么</strong>的边界陈述。</td></tr>
+  <tr><td><strong>⑤</strong></td><td>沉没成本</td><td><span class="tag t-b">互补</span></td>
+    <td><strong>各有一块对方没有的</strong>：甲方给判断规则，乙方给制度设计（先做基准预测）。
+    而乙方那段自述证明了「懂这条规则，并不能让你在那一天用得上它」。</td></tr>
+  <tr><td><strong>⑥</strong></td><td>切身利害与担保</td><td><span class="tag t-b">硬呼应</span></td>
+    <td><strong>最干净的呼应</strong>，但检索出一个反证：
+    <em>塔勒布全书「担保」只出现 1 次，且不是连带责任义</em>——
+    原则是他给的，具体动作是甲方找的。</td></tr>
+  <tr><td><strong>⑦</strong></td><td>四种货币不折算</td><td><span class="tag t-b">方法论</span></td>
+    <td><strong>两种用途，两种合法性</strong>：为了<strong>解释集体行为</strong>可以折算，
+    为了<strong>一个人的决定</strong>不能。<em>而《置身事内》自己也承认折算会漏掉东西。</em></td></tr>
+  <tr><td><strong>⑧</strong></td><td>技术有没有方向</td><td><span class="tag t-b">条件性</span></td>
+    <td><strong>条件不成立</strong>：凯利主张的是弱版本（重演性），与「挑技能」不冲突。
+    真正会冲突的强版本他没有主张。</td></tr>
+  <tr><td><strong>⑨</strong></td><td>终极原因 vs 个人可操作</td><td><span class="tag t-b">层次</span></td>
+    <td><strong>不是对撞</strong>。戴蒙德批评的是「把近因当成终极因」，
+    而甲方自认是规则手册，没有假装。<em>保留这一场是为了防止误判。</em></td></tr>
+</table>
+
+<div class="box my">
+  <div class="h">◆ 打完之后的三个发现</div>
+  <p><strong>发现一 · 甲方最锋利的不是它的数字，是它的<em>元数据</em>。</strong>
+  <em>九场里真正伤到乙方的只有一场（①），而那场靠的是多实验室预注册。
+  甲方更普遍的贡献是<strong>给每一句话配上了强度、口径与出处</strong>——
+  这是乙方普遍缺的写法：卡尼曼没给「自我损耗」标等级，
+  Miller 没给「已婚者更长寿」标「这只是相关」。</em></p>
+  <p><strong>发现二 · 甲方的边界比它的主张更值得学。</strong>
+  <em>它主动标出的限定至少有五处：「成本那一栏是作者按市面价格的粗略估计，
+  只用来互相比较，不要拿去引用」·「作者自己也没做到其中大部分」·
+  「但这只是两件事同时出现，不是结婚起的作用」·
+  「这些数字基本来自欧美，对国内只能当量级参考」·
+  「后来按具体任务估的比例低得多」（自我削弱）。
+  <strong>这五处都不是证据，是<em>证据的适用范围</em>——而后者更难写。</strong></em></p>
+  <p><strong>发现三 · 「对撞」这件事本身要先分类。</strong>
+  <em>九场里只有一场是①类（实测反驳承重假设），四场是②类（颗粒度与方法论），
+  两场是③类（互补），一场是「看起来像对撞其实不是」。
+  <strong>如果不先分类就开打，会把 ⑨ 那种误判成 ①。</strong></em></p>
+</div>
+
+<div class="box warn">
+  <div class="h">★ 这一份自己的局限（必须写明）</div>
+  <p><strong>① 我只独立核对了甲方的「引文」，没有核它的「证据」。</strong>
+  <em>它的每一条都带 DOI 或官方文件链接，而我没有去查过任何一篇原始文献
+  （Cochrane 那篇、Hagger 2016、PNAS 2020、Manzoli 2007 都没有）。
+  所以我核的是「它有没有如实引用」，不是「它引的东西对不对」。</em>
+  <strong>这是这一份最大的局限。</strong></p>
+  <p><strong>② 九场是从 669 条里挑的，挑法是「找与在库书立场直接相关的」。</strong>
+  <em>我没有做系统扫描，所以这九场是<strong>样本</strong>，不是全部。
+  尤其没有覆盖甲方那两百多条制度／法律类条目——
+  那些需要《置身事内》以外的对照物，而库里没有法律与社保的专业材料。</em></p>
+  <p><strong>③ 乙方这边用的是各书的整体立场，不是逐条主张。</strong>
+  <em>「卡尼曼的系统 2 模型」「塔勒布的切身利害」「凯利的方向」
+  都是我对那几本书的概括，而概括本身可能不准。
+  凡我意识到的地方都在「边界」栏里标了。</em></p>
+  <p><strong>④ 我对甲方的判断有预设偏向。</strong>
+  <em>写这一份之前，我已经在<a href="高性价比人生指南-评估.html">评估</a>里
+  判定它的证据纪律「比我自己的项目更细」。
+  这个预设可能让我在模棱两可处倾向它。<strong>如实标出，供读者打折。</strong></em></p>
+  <p><strong>⑤ 一处章号更正</strong>：<em>第一场里我把「自我损耗」标成第 2 章，
+  核对后应为<strong>第 3 章</strong>；第二场里我把「认知错觉比感知错觉更难以识别」
+  与「指导批评家而非决策者」标成第 30 章，实为<strong>第 38 章</strong>。
+  两处均已改正。</em></p>
+</div>
+
+<footer class="doc">
+  底层 · 对撞场 · 《高性价比人生指南》× 在库书目<br>
+  <em>甲方 669 条断言（A 级 437）与乙方 26 本书的原文均已核对；<br>
+  每场标出「边界」——指出该对撞在哪里不成立；<br>
+  甲方证据我未逐条独立验证的，已在该场边界里写明</em>
+</footer>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>高性价比人生指南 · 评估 · 底层</title>
+<meta name="description" content="它是什么 · 自称的特征逐条核实 · 与「底层」的关系">
+<meta name="theme-color" content="#f2f8fc">
+<style>
+  :root{
+    --paper:#f2f8fc; --card:#ffffff; --card-2:#e9f4fb;
+    --edge:#cfe0ec; --edge-lit:#a4c6dd;
+    --ink:#12232e; --ink-2:#627480; --ink-3:#587286;
+    --accent:#2c7ea2; --accent-2:#377972; --gold:#84744a;
+    --quote-bg:#fbf8ef; --quote-edge:#d8cba4; --quote-ink:#5f5527;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--paper); color:var(--ink); line-height:1.9;
+    -webkit-font-smoothing:antialiased;
+    padding:32px 16px 60px;
+  }
+  ::selection{background:rgba(63,180,232,.26); color:#0d2430;}
+  .wrap{max-width:860px; margin:0 auto;}
+
+  header.doc{
+    background:var(--card); border:1px solid var(--edge);
+    border-top:4px solid var(--accent); border-radius:10px;
+    padding:34px 34px 28px; margin-bottom:24px;
+  }
+  header.doc h1{
+    font-size:26px; font-weight:800; line-height:1.4; letter-spacing:.01em;
+    margin-bottom:12px;
+    background:linear-gradient(135deg,#1d4a68,#2c7ea2 55%,#377972);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  header.doc .sub{font-size:14.6px; color:var(--ink-2); line-height:1.95;}
+  header.doc .src{
+    margin-top:16px; padding-top:14px; border-top:1px dashed var(--edge);
+    font-size:12.6px; color:var(--ink-3); line-height:1.95;
+  }
+  header.doc .src strong{color:var(--ink-2);}
+
+  main{
+    background:var(--card); border:1px solid var(--edge); border-radius:10px;
+    padding:36px 38px 40px;
+  }
+
+  h2{
+    font-size:19px; font-weight:700; color:var(--ink);
+    margin:38px 0 14px; padding-left:12px;
+    border-left:4px solid var(--gold); line-height:1.55;
+  }
+  h2:first-child{margin-top:0;}
+  h3{font-size:16px; font-weight:700; color:var(--ink); margin:26px 0 10px;}
+  h4{
+    font-size:15.2px; font-weight:700; color:#1d4a68;
+    margin:22px 0 9px; padding-left:10px;
+    border-left:3px solid rgba(63,180,232,.45); line-height:1.6;
+  }
+
+  p{font-size:14.6px; color:var(--ink-2); margin-bottom:13px; text-wrap:pretty;}
+  strong{color:var(--ink); font-weight:700;}
+  em{font-style:normal; color:var(--ink); background:rgba(63,180,232,.10);
+     border-radius:3px; padding:0 3px;}
+
+  code{
+    font-family:ui-monospace,Consolas,monospace; font-size:13px;
+    background:var(--card-2); border:1px solid var(--edge); border-radius:4px;
+    padding:1px 6px; color:#1d5c86; word-break:break-all;
+  }
+
+  a{color:var(--accent); text-decoration:none; border-bottom:1px solid #cfe4f0;}
+  a:hover{border-bottom-color:var(--accent);}
+
+  blockquote{
+    margin:14px 0; padding:13px 18px;
+    background:var(--quote-bg); border:1px solid #e8dfc4;
+    border-left:3px solid var(--quote-edge); border-radius:5px;
+    font-size:14.2px; color:var(--quote-ink); line-height:1.95;
+  }
+  blockquote p{margin-bottom:9px; color:inherit; font-size:inherit;}
+  blockquote p:last-child{margin-bottom:0;}
+  blockquote strong{color:#8a6a24;}
+  blockquote em{background:rgba(138,106,36,.10); color:#8a6a24;}
+  blockquote code{background:rgba(255,255,255,.7); color:#7a5f1c; border-color:#e0d2ac;}
+
+  ul,ol{margin:12px 0 14px 22px;}
+  li{font-size:14.5px; color:var(--ink-2); margin-bottom:8px; line-height:1.9;}
+  li strong{color:var(--ink);}
+
+  table{width:100%; border-collapse:collapse; margin:16px 0; font-size:13.6px;}
+  th,td{padding:9px 12px; border:1px solid var(--edge); text-align:left;
+        vertical-align:top; line-height:1.8;}
+  th{background:var(--card-2); color:#1d5c86; font-weight:700; font-size:12.8px;}
+  td{color:var(--ink-2);}
+  td strong{color:var(--ink);}
+  td code{font-size:12.4px;}
+
+  hr{border:none; border-top:1px dashed var(--edge); margin:32px 0;}
+
+  pre{
+    background:#eef4f9; border:1px solid var(--edge); border-radius:6px;
+    padding:14px 16px; margin:16px 0; overflow-x:auto;
+    line-height:1.7;
+  }
+  pre code{
+    background:none; border:none; padding:0; font-size:12.8px;
+    color:#1d4a68; white-space:pre; word-break:normal;
+  }
+
+  footer.doc{
+    margin-top:26px; padding-top:20px; border-top:1px solid var(--edge);
+    font-size:12.4px; color:var(--ink-3); line-height:2; text-align:center;
+  }
+  footer.doc a{color:var(--ink-2);}
+  @media(max-width:700px){
+    body{padding:16px 10px 40px;}
+    header.doc{padding:24px 20px 20px;} header.doc h1{font-size:21px;}
+    main{padding:24px 18px 28px;} h2{font-size:17px;}
+    table{font-size:12.2px;} th,td{padding:7px 8px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="doc">
+    <h1>高性价比人生指南 · 评估</h1>
+    <p class="sub">它是什么 · 自称的特征逐条核实 · 与「底层」的关系</p>
+    <p class="src">一份外部材料的评估：669 条建议、每条带成本标签与证据等级（A 437 / B 177 / C 55）、带原始文献链接。<strong>结论是不能平级并入「底层」，但有两处高价值用法</strong>——尤其它的 A/B/C 分级可以借来当引用强度的外部参照。</p>
+  </header>
+  <main>
+<h1>《高性价比人生指南》评估</h1>
+<blockquote><p>这份文件回答一个问题：<strong>这个东西要不要进「底层」知识库，如果要进，以什么方式进。</strong></p><p>所有数字均由磁盘实测（解出离线版 HTML 内联的 <code>window.__CORPUS__</code> JSON 后逐项统计）， 不引用它自己的宣传语——<strong>引用方给的数据必须独立核</strong>。</p></blockquote>
+<hr>
+<h2>一 · 它是什么（实测）</h2>
+<table>
+<tr><th>项</th><th>实测值</th></tr>
+<tr><td>载体</td><td><code>高性价比人生指南_离线版.html</code>（2,251,122 字节）——<strong>单页应用</strong>，正文全部内联在 <code>window.__CORPUS__</code> 里（854,444 字符 JSON）</td></tr>
+<tr><td>结构</td><td><code>parts</code> <strong>34 篇</strong> + <code>docs</code> <strong>9 篇</strong> + <code>readme</code> —— 共 <strong>43 份文档</strong></td></tr>
+<tr><td>规模</td><td><strong>444,145 汉字</strong>（正文）· 含 readme 共 455,486</td></tr>
+<tr><td>条目</td><td><strong>669 条</strong>，每条带 <code>### N.</code> 编号</td></tr>
+<tr><td>配套</td><td>另有 <code>高性价比人生指南.pdf</code>（7.7 MB）· <code>.epub</code>（1.0 MB）</td></tr>
+<tr><td>来源</td><td><code>https://eternity4719.github.io/HowToLiveBetter/</code></td></tr>
+<tr><td>开源</td><td>GitHub 仓库 <code>eternity4719/HowToLiveBetter</code> · <strong>CC BY 4.0</strong> · 自述「Claude Code 协助编写」</td></tr>
+</table>
+<p><strong>它的内容分区</strong>（34 篇的题名本身就是它的主张）：</p>
+<blockquote><p>不要早死 · 不要慢慢死 · 不要浪费精力 · 不要浪费时间 · 不要浪费钱 · 反面清单 · 没钱的时候怎么活 · 别把自己搭进去 · 普通人容易踩的法律红线 · 恋爱和结婚划不划算 · 程序员和技术人容易踩的红线 · 创业与做生意 · 紧急情况 · 账号与信息安全 · 租房与买房 · 得了慢性病之后怎么活 · 家里有老人 · 养孩子划不划算 · 在职离职和工伤 · 刚出生的孩子怎么带 · 出国旅行与境外安全 · 怎么放松 · 学什么技能划算 · 看病 · 人走了以后要办什么 · 做一个网站或平台 · 怀孕和生产 · 别为了外形把身体搞坏 · 遭遇重大打击之后 · 上学以后的孩子 · 十八岁之后有哪几条路 · 出国留学 · 残疾之后怎么活 · 家里的常备药别吃出事</p></blockquote>
+<hr>
+<h2>二 · 它自称的核心特征，逐条核实</h2>
+<p>它的元描述说：「<strong>每条写明成本、收益、证据等级和原始出处</strong>」。</p>
+<p>这句话如果只是标语，那它和网上的一般建议清单没区别。所以逐条测：</p>
+<table>
+<tr><th>它说</th><th>实测</th><th>结论</th></tr>
+<tr><td>669 条</td><td><code>### N.</code> 编号小节 <strong>669</strong> 个</td><td>✓</td></tr>
+<tr><td>每条有成本</td><td><code>&lt;!-- 成本标签: 钱=X 时间=X 毅力=X 收益=X 口径=X --&gt;</code> <strong>结构化注释</strong>，669 组</td><td>✓</td></tr>
+<tr><td>每条有证据等级</td><td>「证据等级：」<strong>669</strong> 处</td><td>✓</td></tr>
+<tr><td>每条有出处</td><td>「来源：」<strong>681</strong> 处</td><td>✓</td></tr>
+<tr><td>证据分级 A 437 · B 177 · C 55</td><td><strong>A 437 · B 177 · C 55</strong>，完全一致</td><td>✓</td></tr>
+<tr><td>原始文献 1689 条链接</td><td>正文 URL <strong>1,718</strong> 个（去重 <strong>1,297</strong>）</td><td>✓（口径略有差异）</td></tr>
+</table>
+<h3>一条完整条目的实际样子</h3>
+<blockquote><p><strong>1. 系安全带，前排后排都系</strong> <code>&lt;!-- 成本标签: 钱=0 时间=少 毅力=否 收益=大 口径=死亡率 --&gt;</code> · <strong>成本</strong>：不花钱。每次上车多花 2 秒。 · <strong>说人话</strong>：坐前排系上安全带，出车祸时被撞死的概率大约降一半。坐轻型卡车前排的降六成。美国 2022 年死在车里的人，能查到系没系带的，有一半没系。 · <strong>收益</strong>：美国交通安全主管部门（NHTSA）估计，系安全带能让轿车前排乘员受致命伤的风险下降 45%。轻型卡车前排下降 60%。……世界卫生组织（WHO）的口径是，安全带让车内人员的死亡风险最多降低 50%。WHO 估计中国 2021 年死于道路交通事故的有 248,099 人，相当于每 10 万人里死 17.4 人。 · <strong>证据等级</strong>：A</p></blockquote>
+<hr>
+<h2>三 · 它做对的三件「底层认知」的事</h2>
+<h3>① 它把「证据强度」做成了一个<strong>字段</strong>，不是一句形容词</h3>
+<p>这是我该学的地方。<strong>我自己的项目只区分「已核对原文 / 未核对」， 而它分了 A / B / C 三级，并且在 readme 里给了每一级的判据。</strong></p>
+<p><strong>而且它在 readme 里给了三级各自的判据</strong>（照原样）：</p>
+<table>
+<tr><th>等级</th><th>它给的定义</th></tr>
+<tr><td><strong>A</strong></td><td>有具体数字可查，出处是多项研究合并起来的<strong>荟萃分析</strong>、<strong>跟踪很多人很多年的大型队列</strong>，或者<strong>随机分组的试验（RCT）</strong>，能说出降了多少（HR、RR、下降百分比）</td></tr>
+<tr><td><strong>B</strong></td><td>有研究支持，但<strong>说不出一个确切数字</strong>；或者只有<strong>小样本、单独一项研究</strong>撑着</td></tr>
+<tr><td><strong>C</strong></td><td><strong>作者自己的经验</strong>，或者大家公认的做法，<strong>没有直接的研究文献</strong></td></tr>
+</table>
+<p><strong>这个分级的实质是「能不能说出一个确切的数字」</strong>，而不是笼统的「靠不靠谱」—— A 级的判据是「能说出降了多少」，B 级是「说不出确切数字」，C 级是「没有研究文献」。 <strong>这是一个可以照着判的规则，不是模糊的形容词。</strong></p>
+<p>更细的是它的<strong>术语表</strong>——它把研究方法本身解释了，而且解释里带着<strong>这条方法的弱点</strong>：</p>
+<blockquote><p>· <strong>队列</strong>：队列研究。挑一大群人跟踪很多年，记录谁出了事。 <strong>能看出两件事常一起出现，但不足以证明是前一件事造成了后一件事。</strong> · <strong>观察性</strong>：观察性研究。研究者只在旁边记录，不安排谁做、谁不做。 <strong>结果容易被别的因素带偏</strong>（见本表的混杂、反向因果两条），<strong>数字要打点折看</strong>。 · <strong>混杂</strong>：有第三个因素同时牵动着前因和后果，让两件事看起来像有因果。 <strong>比如爱吃菜的人往往也更爱运动，分不清是哪一样在起作用。</strong> · <strong>反向因果</strong>：……</p></blockquote>
+<p><strong>这不是科普话术——它是在教读者怎么打折看它自己给的数字。</strong></p>
+<p><strong>还有一条我漏看了的</strong>：在证据分级那一节，它写「全书 669 条中 A 级 437 条、 B 级 177 条、C 级 55 条，<strong>另有 69 条标注了争议</strong>、3 处标注了……」—— 也就是说，<strong>除了 A/B/C，还有一层「争议」标记</strong>。</p>
+<h3>② 它把四种「货币」明确分开，并且<strong>拒绝互相折算</strong></h3>
+<blockquote><p>死亡率的数字、时间精力的数字、金钱的数字和法律后果，各算各的，不互相折算。 这四样对应检索页上那四个「换回什么」，<strong>彼此之间不比大小</strong>。</p></blockquote>
+<p><strong>这一条相当硬。</strong> 通常的「人生建议」会把「多活三年」和「省五万块」放进一个性价比公式里算总分—— 而那样做必须假定一个「一条命值多少时间」的汇率，而那个汇率是任意设的。</p>
+<p><strong>它拒绝设那个汇率。</strong> 每条的 <code>口径=</code> 字段（如上例的 <code>口径=死亡率</code>） 就是在标明「这一条的收益是用哪种货币计的」。</p>
+<h3>③ 它反复标出自己的边界，而且标得很不客气</h3>
+<ul><li>「成本那一栏是作者按市面价格的<strong>粗略估计</strong>，只用来互相比较，<strong>不要拿去引用</strong>」</li><li>「<strong>不用全做</strong>：这是按性价比排好的备选单，不是任务清单——挑走一两条就算数， <strong>作者自己也没做到其中大部分</strong>」</li><li>对陌生人出不出手：「<strong>不替你把它算成非做不可的理由</strong>」</li><li>还专门声明「从未发行、也不会发行任何代币」，并把「别买虚拟货币」单列为第 5 节第 45 条</li></ul>
+<p><strong>「作者自己也没做到其中大部分」这句话，是这份材料里最诚实的一句。</strong></p>
+<hr>
+<h2>四 · 它与「底层」是什么关系</h2>
+<h3>结论：<strong>不能平级并入，但有两处高价值的用法。</strong></h3>
+<p>原因在<strong>目标不同</strong>：</p>
+<table>
+<tr><th></th><th>「底层」知识库</th><th>《高性价比人生指南》</th></tr>
+<tr><td>回答的问题</td><td><strong>为什么</strong>（解释世界怎么运作）</td><td><strong>做什么</strong>（我该怎么办）</td></tr>
+<tr><td>单位</td><td>一本书 → 一份解释框架</td><td>一个决定 → 一条可执行建议</td></tr>
+<tr><td>证据的作用</td><td>检验一个解释</td><td>决定要不要做</td></tr>
+<tr><td>失败的形态</td><td>解释被反驳</td><td>建议无效或有害</td></tr>
+<tr><td>它的书</td><td>26 本书，<strong>全是解释类</strong></td><td>43 份文档，<strong>绝大部分是行动类</strong></td></tr>
+</table>
+<p><strong>所以把它放进 <code>00_中文原典</code>（原典库）或任何一个域，都会破例</strong>—— 那些域的定义都是「一句话的问题」（如 01「认识本身怎么才可能」）， 而这本书不是对一个问题的回答，是<strong>几百个不同问题的清单</strong>。</p>
+<h3>但有两种用法是真正有价值的</h3>
+<h4>用法一 · 把它当<strong>引用强度的外部参照</strong></h4>
+<p><strong>这是最有价值的一处。</strong> 我的项目里引文只有两种状态（核对过 / 没核对）， 而它给的 A/B/C 分级可以直接借来当一个<strong>更细的口径</strong>。</p>
+<p>更关键的是：<strong>它让我看到我自己的引文核对缺了什么。</strong></p>
+<ul><li>我做的：<strong>这句话是不是原文</strong>（字面准确性）</li><li>它做的：<strong>这句话背后的证据有多硬</strong>（证据强度）</li></ul>
+<p><strong>这是两件不同的事，而我只做了前一件。</strong> 例如《亲密关系》里那些结论，我核对了它们是原文， 但<strong>从没标注过那些结论本身是 A 级（多项 RCT / 荟萃）还是 C 级（单个观察研究）</strong>—— 而 Miller 在每个结论后面其实都带了样本与设计。</p>
+<h4>用法二 · 用它当<strong>「可检验断言」的来源</strong>，去和在库的解释类书对撞</h4>
+<p>它的 669 条里<strong>大量是可检验的断言</strong>，而其中一部分<strong>与我库里那 26 本书的立场直接相关</strong>：</p>
+<table>
+<tr><th>它的条目类型</th><th>可能撞上的在库书</th></tr>
+<tr><td>「某某筛查能降低死亡率」（证据等级 A）</td><td>《思考，快与慢》的基率忽视与可得性偏差</td></tr>
+<tr><td>「这一类风险被高估/低估」</td><td>卡尼曼的风险认知</td></tr>
+<tr><td>「不要相信直觉的某某判断」</td><td>《无穷的开始》的「好解释 vs 直觉」</td></tr>
+<tr><td>应急、急救、法律红线的决策规则</td><td>《非对称风险》的「切身利害」与「遍历性」</td></tr>
+<tr><td>「恋爱和结婚划不划算」的核算</td><td>《亲密关系》的相互依赖理论 · Fromm 的「交换 vs 给予」</td></tr>
+<tr><td>「学什么技能划算」</td><td>《科技想要什么》的技术方向论</td></tr>
+</table>
+<p><strong>这一条能直接变成一份跨域产出</strong>：<code>《高性价比人生指南》× 项目在库书目 · 对照</code>—— <strong>它的价值在于：这 669 条里有证据等级的，正好可以用来检验那 26 本书的哪些主张在实务上站得住。</strong></p>
+<hr>
+<h2>五 · 它没有的东西（我库里有的）</h2>
+<p>为了不把它捧过头，也要说清它缺什么：</p>
+<table>
+<tr><th>缺</th><th>为什么重要</th></tr>
+<tr><td><strong>不解释机制</strong></td><td>它说「系安全带降 45%」，不说「为什么人的直觉低估低概率高后果的风险」。<strong>给出的是行动，不是理解。</strong></td></tr>
+<tr><td><strong>不做跨书连接</strong></td><td>它自成一个封闭的建议体系，不引用别的框架（除了它自己的 docs）。<strong>项目最看重的那件事（书与书之间的海）它不做。</strong></td></tr>
+<tr><td><strong>没有「我的判断」与「原文」的区分</strong></td><td>它的条目是<strong>混合体</strong>：官方统计 + 自己的推算 + 判断。它标了证据等级，但<strong>没有逐句标出哪一句是原文、哪一句是它自己的推论</strong></td></tr>
+<tr><td><strong>时效性风险</strong></td><td>法律、医保、社保部分「按中国大陆现行规定写」——<strong>这一部分会过时</strong>，而它无法自我更新</td></tr>
+<tr><td><strong>覆盖面的偏向</strong></td><td>34 篇里健康与安全占了大半。<strong>认识论、社会结构、历史因果这些「底层」问题它不碰。</strong></td></tr>
+</table>
+<hr>
+<h2>六 · 我建议的处理方式</h2>
+<h3>建议：<strong>收进来，但作为「原料库」的独立一类</strong>，不做平级的书</h3>
+<p>具体三条：</p>
+<ol><li><strong>不放进 <code>00_中文原典</code></strong>——那是个古典原典库，放一个 21 世纪的应用清单会破坏它的性质。</li></ol>
+<ol><li><strong>建一个 <code>11_实用决策库</code>（或类似名），只放这一类材料</strong>， 并在 README 里写清它与 01–10 域的区别： <strong>10 个域回答「为什么」，这一个回答「做什么」，两者不互相替代。</strong> 这一条正好呼应项目已有的原则——<strong>域的划分要按「问题」，不能按「来源」</strong>， 而「我该怎么办」是一个<strong>独立的问题</strong>，不是任何现有域的子问题。</li></ol>
+<ol><li><strong>先把那三个文件的问题解决</strong>：</li></ol>
+<ul><li>离线 HTML 是<strong>单页应用</strong>，数据靠 JS 渲染 —— 如果直接放进站点，<strong>内容显示不出来</strong>（只有壳）。</li><li>要么把 43 篇文档抽出来重新渲染（工作量大，但可控）， 要么<strong>只作本地留档，不进站点</strong>，PDF 与 epub 用作阅读。</li><li>我倾向<strong>先抽 readme + 34 篇的分篇清单</strong>（<code>parts</code> 的键就是完整目录）， 做成一份「它有什么」的索引，而不是整本上线。</li></ul>
+<hr>
+<h2>七 · 一句话结论</h2>
+<blockquote><p><strong>它的证据纪律比我自己的项目更细，值得学它的 A/B/C 分级与「四种货币不互相折算」这两条； 但它回答的是「做什么」，而「底层」回答的是「为什么」—— 两者的价值不重叠，所以不能平级并入，只能作为「可检验断言的来源」引入。</strong></p><p><strong>最有价值的一处用法不是读它，而是用它那 669 条里带证据等级的断言， 去检验我库里那 26 本书的哪些主张在实务上站得住。</strong></p></blockquote>
+<hr>
+<h2>附 · 评估方法（可复核）</h2>
+<pre class="lang-text"><code>① 从 高性价比人生指南_离线版.html 里解出 window.__CORPUS__（大括号配平扫描 → JSON）
+② 结构：parts 34 · docs 9 · readme 1
+③ 规模：逐文档统计 U+4E00–U+9FFF 汉字数
+④ 条目：正则 ^###\s+(\d+)\.   →  669
+⑤ 证据等级：正则 证据等级[：:]\s*([A-C])  →  A437 B177 C55
+⑥ 出处：正则 来源[：:]  →  681；https?://  →  1718（去重 1297）
+⑦ 成本标签：正则 &lt;!-- 成本标签: ... --&gt;  →  669 组</code></pre>
+<p><em>评估日期：本轮 · 未改动任何原文件（三个文件仍在根目录，未加入清单、未推送）</em></p>
+  </main>
+  <footer class="doc">
+    本页由 Markdown 渲染而成 · 原文为 <code>高性价比人生指南-评估.md</code>（留在项目内作编辑源，不单独发布）
+  </footer>
+</div>
+</body>
+</html>
