@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>地理决定论的检验：中国案例 · 底层</title>
+<meta name="description" content="用《史記》原文检验戴蒙德的地理决定论：哪些解释站得住、哪些被司马迁自己的记载否掉、哪些解释反了。">
+<meta name="theme-color" content="#f2f8fc">
+<style>
+  :root{
+    --paper:#f2f8fc; --card:#ffffff; --card-2:#e9f4fb;
+    --edge:#cfe0ec; --edge-lit:#a4c6dd;
+    --ink:#12232e; --ink-2:#627480; --ink-3:#587286;
+    --accent:#2c7ea2; --gold:#84744a;
+    --quote-bg:#fbf8ef; --quote-edge:#d8cba4; --quote-ink:#5f5527;
+    --warn:#a85035; --warn-soft:#fcf1ec;
+    --my:#2f7a5c; --my-soft:#eef8f3;
+    --core:#1d5c86; --core-soft:#eef6fb;
+    --shiji:#7a4f96; --shiji-soft:#f4eef8;
+    --yes:#2f7a5c; --no:#a85035; --part:#8a6a24;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--paper); color:var(--ink); line-height:1.9;
+    -webkit-font-smoothing:antialiased; padding:32px 16px 60px;}
+  ::selection{background:rgba(63,180,232,.26); color:#0d2430;}
+  .wrap{max-width:950px; margin:0 auto;}
+  header.doc{background:var(--card); border:1px solid var(--edge);
+    border-top:4px solid var(--accent); border-radius:10px;
+    padding:34px 34px 28px; margin-bottom:22px;}
+  header.doc h1{font-size:26px; font-weight:800; line-height:1.4; margin-bottom:12px;
+    background:linear-gradient(135deg,#1d4a68,#2c7ea2 55%,#377972);
+    -webkit-background-clip:text; background-clip:text; color:transparent;}
+  header.doc .sub{font-size:14.6px; color:var(--ink-2); line-height:1.95;}
+  header.doc .src{margin-top:16px; padding-top:14px; border-top:1px dashed var(--edge);
+    font-size:12.6px; color:var(--ink-3); line-height:1.95;}
+  h2{font-size:19.5px; font-weight:700; margin:42px 0 6px; padding-left:12px;
+    border-left:4px solid var(--gold); line-height:1.55;}
+  .s{color:var(--ink-3); font-size:12.9px; margin:0 0 16px 16px; line-height:1.85;}
+  h3{font-size:16.5px; font-weight:700; margin:28px 0 10px;}
+  h4{font-size:15.2px; font-weight:700; color:var(--core); margin:22px 0 9px;
+    padding-left:10px; border-left:3px solid rgba(63,180,232,.45); line-height:1.6;}
+  p{font-size:14.5px; color:var(--ink-2); margin-bottom:12px; text-wrap:pretty;}
+  p strong{color:var(--ink);}
+  code{font-family:ui-monospace,Consolas,monospace; font-size:12.7px;
+    background:var(--card-2); border:1px solid var(--edge); border-radius:4px;
+    padding:1px 6px; color:var(--core); word-break:break-all;}
+  a{color:var(--accent); text-decoration:none; border-bottom:1px solid #cfe4f0;}
+  blockquote{margin:12px 0; padding:13px 18px; background:var(--quote-bg);
+    border:1px solid #e8dfc4; border-left:3px solid var(--quote-edge);
+    border-radius:5px; font-size:14.4px; color:var(--quote-ink); line-height:2.0;}
+  blockquote p{margin-bottom:7px; color:inherit; font-size:inherit;}
+  blockquote p:last-child{margin-bottom:0;}
+  blockquote .who{display:block; margin-top:7px; font-size:12px;
+    color:#8a7a52; text-align:right;}
+  blockquote strong{color:#8a6a24;}
+  .box{background:var(--card); border:1px solid var(--edge); border-radius:9px;
+    padding:18px 21px; margin:15px 0; font-size:14px; color:var(--ink-2);}
+  .box .h{font-weight:700; color:var(--gold); margin-bottom:9px; font-size:13.5px;}
+  .box p+p{margin-top:8px;} .box strong{color:var(--ink);}
+  .box.core{background:var(--core-soft); border-color:#cfe4f0;}
+  .box.core .h{color:var(--core);}
+  .box.warn{background:var(--warn-soft); border-color:#e8cfc4;}
+  .box.warn .h{color:var(--warn);}
+  .box.my{background:var(--my-soft); border-color:#cfe6dc;}
+  .box.my .h{color:var(--my);}
+  .box.shiji{background:var(--shiji-soft); border-color:#dcc9e8;}
+  .box.shiji .h{color:var(--shiji);}
+  /* 检验卡 */
+  .cf{background:var(--card); border:1px solid var(--edge); border-radius:10px;
+    margin:18px 0 22px; overflow:hidden;}
+  .cf-head{display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+    padding:14px 20px; background:var(--card-2); border-bottom:1px solid var(--edge);}
+  .cf-num{font-family:ui-monospace,Consolas,monospace; font-size:11.6px; font-weight:700;
+    color:#fff; background:var(--accent); border-radius:4px; padding:2px 9px;}
+  .verdict-tag{font-size:11.6px; font-weight:700; padding:2px 10px; border-radius:999px;}
+  .v-yes{background:#eef8f3; color:var(--yes); border:1px solid #cfe6dc;}
+  .v-part{background:#f7f0dd; color:var(--part); border:1px solid #e3d3a8;}
+  .v-no{background:#fcf1ec; color:var(--no); border:1px solid #e8cfc4;}
+  .v-rev{background:#f4eef8; color:var(--shiji); border:1px solid #d9c4e6;}
+  .cf-title{font-size:14.8px; font-weight:700; color:var(--ink);}
+  .cf-body{padding:18px 20px 16px;}
+  .claim{background:#f7fbfe; border:1px solid var(--edge); border-left:3px solid var(--accent);
+    border-radius:6px; padding:12px 15px; margin:11px 0; font-size:13.8px; color:var(--ink-2);}
+  .claim .lbl{display:block; font-weight:700; color:var(--core); font-size:12.5px; margin-bottom:5px;}
+  .verdict{margin-top:12px; padding:14px 17px; border-radius:8px; font-size:14px;
+    background:var(--my-soft); border:1px solid #cfe6dc; color:var(--ink-2); line-height:1.95;}
+  .verdict .lbl{display:block; font-weight:700; color:var(--my); font-size:12.8px; margin-bottom:7px;}
+  .bounds{margin-top:11px; padding:13px 16px; border-radius:8px; font-size:13.6px;
+    background:var(--warn-soft); border:1px solid #e8cfc4; border-left:3px solid var(--warn);
+    color:#7a3d28; line-height:1.92;}
+  .bounds .lbl{display:block; font-weight:700; font-size:12.6px; margin-bottom:6px;}
+  table{width:100%; border-collapse:collapse; margin:14px 0; font-size:13.2px;}
+  th,td{padding:9px 11px; border:1px solid var(--edge); text-align:left;
+    vertical-align:top; line-height:1.78;}
+  th{background:var(--card-2); color:var(--core); font-weight:700; font-size:12.6px;}
+  td{color:var(--ink-2);} td strong{color:var(--ink);}
+  ul,ol{margin:10px 0 13px 22px;}
+  li{font-size:14.4px; color:var(--ink-2); margin-bottom:7px; line-height:1.9;}
+  li strong{color:var(--ink);}
+  hr{border:none; border-top:1px dashed var(--edge); margin:32px 0;}
+  footer.doc{margin-top:32px; padding-top:20px; border-top:1px solid var(--edge);
+    font-size:12.4px; color:var(--ink-3); line-height:2; text-align:center;}
+  @media(max-width:760px){
+    body{padding:16px 10px 40px;} header.doc{padding:24px 20px 20px;}
+    header.doc h1{font-size:21px;} h2{font-size:17.5px;}
+    table{font-size:12px;} th,td{padding:6px 7px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="doc">
+  <h1>地理决定论的检验：中国案例</h1>
+  <p class="sub">用《史記》的原文去测戴蒙德的因果框架 —— <strong>不是介绍《史記》，是拿它当实验材料</strong></p>
+  <p class="src">
+    <strong>底本</strong>：<code>00_中文原典/史記_司馬遷.txt</code>（<strong>512,628 汉字</strong>）<br>
+    <strong>实测结构</strong>：12 本紀 · 4 表 · 8 書 · 30 世家 · 68 列傳 · 「太史公曰」<strong>137 处</strong> ·
+    「索隱述贊」附于各篇末；<strong>《太史公自序》列出全部 130 篇</strong>，并自述
+    「凡百三十篇，<strong>五十二萬六千五百字</strong>」——与今本规模相符<br>
+    <strong>引文均逐句核对底本</strong>，照原样写（繁体）。<br>
+    相关：《枪炮、病菌与钢铁》·《无穷的开始》· <a href="中国智慧-整体架构.html">中国智慧 · 整体架构</a>
+    （它把「05 域 · 地理决定论的检验」列为五条未开工路线之一）· <a href="../对撞场.html">对撞场</a>
+  </p>
+</header>
+
+<div class="box core">
+  <div class="h">◆ 这份文件要做什么（以及为什么不是「史記导读」）</div>
+  <p><strong>05 域（历史与地理）在本项目里对中国史是零覆盖</strong>，而它现在只有一本书：
+  《枪炮、病菌与钢铁》。<em>而戴蒙德被批评「没有人的历史」——这个批评对中国史尤其要紧，
+  因为中国给了地理决定论<strong>最强的正例</strong>（统一、早熟的官僚制）和<strong>最强的反例</strong>（它的技术曾经领先又落后）。</em></p>
+  <p><strong>所以这一份不写「《史記》讲了什么」。</strong>
+  <em>它做的是：把戴蒙德框架里<strong>可检验的具体主张</strong>抽出来，
+  一条条拿《史記》的原文去测。</em></p>
+  <p><strong>五条。每条给一个结果：成立 / 部分成立 / 不成立 / <span style="color:var(--shiji);">解释反了</span>。</strong>
+  <em>而最后一条结果，是这份文件里最值钱的。</em></p>
+</div>
+
+<!-- ============================================================ -->
+<h2>一 · 先看《史記》是什么：它自己就是一份「元文本」</h2>
+<div class="s">这一步不是背景介绍，是方法——因为它决定了这本史书能不能当证据用</div>
+
+<p><strong>《史記》的结构不是编年，是五体分工。</strong><em>而这个分工意味着它对同一件事有五种记法，
+可以互相对照——这是它能当「检验材料」而不是「史料堆」的原因。</em></p>
+
+<table>
+  <tr><th style="width:12%">体</th><th style="width:10%">实测</th><th>它记什么</th></tr>
+  <tr><td><strong>本紀</strong></td><td>12 篇</td>
+    <td><em>帝王与朝代的时间主线</em></td></tr>
+  <tr><td><strong>表</strong></td><td>10 篇（本语料至少 7 篇可检）</td>
+    <td><em>把并时异世的事件排成网格——这是「跨国家同期比较」的最早形态</em></td></tr>
+  <tr><td><strong>書</strong></td><td>8 篇</td>
+    <td><strong>制度专史</strong>：禮 · 樂 · 律 · 曆 · 天官 · 封禪 · <strong>河渠</strong> · 平準</td></tr>
+  <tr><td><strong>世家</strong></td><td>30 篇</td>
+    <td><em>诸侯与重要家族的兴衰——按「家」而不是按「国」为单位</em></td></tr>
+  <tr><td><strong>列傳</strong></td><td>68 篇</td>
+    <td><em>人物· 边疆（匈奴 · 南越 · 朝鲜 · 西南夷 · 大宛）· <strong>经济（貨殖）</strong> · 制度（平準）</em></td></tr>
+</table>
+
+<div class="box shiji">
+  <div class="h">◆ 关键的一步：《太史公自序》是《史記》的元文本</div>
+  <p>这一篇里，司马迁<strong>逐篇列出了 130 篇的名字，并给每一篇写了一句「作这一篇的理由」</strong>。
+  例如：</p>
+  <blockquote>維禹浚川，九州攸寧；爰及宣防，決瀆通溝。<strong>作河渠書第七</strong>。
+  <span class="who">太史公自序</span></blockquote>
+  <blockquote>布衣匹夫之人，不害於政，不妨百姓，取與以時而息財富，智者有採焉。
+  <strong>作貨殖列傳第六十九</strong>。<span class="who">太史公自序</span></blockquote>
+  <p><strong>这有什么方法论价值：它给了我们一个「作者自己的目录」。</strong>
+  <em>于是可以问一个别处问不出来的问题：
+  <strong>司马迁把哪些题目单独列为一篇，又把哪些题目合在一起？</strong>
+  ——因为「单独列一篇」意味着他认为那件事有独立的因果作用。</em></p>
+  <p><strong>而这份目录里有两篇正是这一份要用的</strong>：
+  <em>河渠書（水利）与貨殖列傳（经济）——
+  也就是说，<strong>在公元前 1 世纪，治水与物产已经被当成两个独立的历史变量来处理了。</strong></em></p>
+</div>
+
+<!-- ============================================================ -->
+<h2>二 · 把戴蒙德的主张拆成可检验的五条</h2>
+<div class="s">不能拿「地理决定论」这个标签去打——那是个筐。要先拆出具体的、能判对错的断言</div>
+
+<table>
+  <tr><th style="width:6%">#</th><th style="width:34%">戴蒙德的具体主张</th>
+    <th style="width:20%">用什么去测（《史記》哪一篇）</th><th>判据</th></tr>
+  <tr><td><strong>①</strong></td>
+    <td><strong>可驯化物种与物产的分布决定文明起点</strong>（「有些环境提供了更多的起步素材」）</td>
+    <td>河渠書 · 貨殖列傳</td>
+    <td><em>若成立，水利与物产的差异应先于并解释国家能力的差异</em></td></tr>
+  <tr><td><strong>②</strong></td>
+    <td><strong>统一来自地理</strong>——尤其「大陆轴线东西向」使同一纬度带的作物与技术易于传播</td>
+    <td>河渠書 · 貨殖列傳的区域划分</td>
+    <td><em>若成立，中国的区域分工应沿东西/纬度带排列</em></td></tr>
+  <tr><td><strong>③</strong></td>
+    <td><strong>治水需求 → 中央集权</strong>（魏特夫的「治水社会」假说；戴蒙德虽未主张，但常被并入地理决定论）</td>
+    <td>河渠書</td>
+    <td><em>若成立，大型水利应是国家出现的原因而非结果</em></td></tr>
+  <tr><td><strong>④</strong></td>
+    <td><strong>地理/生物地理是「终极原因」，制度与观念只是「近因」</strong></td>
+    <td>平準書 · 秦始皇本紀 · 六國年表序</td>
+    <td><em>若成立，制度变革应能被还原为地理条件的变化</em></td></tr>
+  <tr><td><strong>⑤</strong></td>
+    <td><strong>环境而非人的选择解释历史的轨迹</strong>（「各族群的历史循着不同的轨迹开展，那是环境而非生物差异造成的」）</td>
+    <td>六國年表序（秦为什么能统一）· 貨殖列傳（贫富从哪里来）</td>
+    <td><em>若成立，司马迁对重大转折的解释应落在天时地利上</em></td></tr>
+</table>
+
+<!-- ============================================================ -->
+<h2>三 · 五条检验</h2>
+
+<!-- ——— 检验 1 ——— -->
+<div class="cf">
+  <div class="cf-head">
+    <span class="cf-num">检验 ①</span><span class="verdict-tag v-yes">成立</span>
+    <span class="cf-title">物产的地理分布确实先行，而且司马迁把它写成了历史的起点</span>
+  </div>
+  <div class="cf-body">
+    <div class="claim"><span class="lbl">戴蒙德的主张</span>
+      「有些环境提供了更多的起步素材，提供了更适合利用新发明的情境。」
+      以及全书一句话概括：「各族群的历史循着不同的轨迹开展，那是环境而非生物差异造成的。」</div>
+
+    <p><strong>《貨殖列傳》开篇就把这件事按地理写成了清单</strong>：</p>
+    <blockquote>夫山西饒材、竹、穀、纑、旄、玉石；山東多魚、鹽、漆、絲、聲色；
+    江南出棻、梓、薑、桂、金、錫、連、丹沙、犀、玳瑁、珠璣、齒革；
+    龍門、碣石北多馬、牛、羊、旃裘、筋角；銅、鐵則千里往往山出釭置：此其大較也。
+    <span class="who">貨殖列傳</span></blockquote>
+    <p><strong>而紧接着，司马迁给出了一个「不需要政令」的机制</strong>：</p>
+    <blockquote>故待農而食之，虞而出之，工而成之，商而通之。<strong>此寧有政教發徵期會哉？</strong>
+    人各任其能，竭其力，以得所欲。……<strong>若水之趨下，日夜無休時，不召而自來，不求而民出之。</strong>
+    豈非道之所符，而自然之驗邪？<span class="who">貨殖列傳</span></blockquote>
+    <p><em>「此寧有政教發徵期會哉」——这难道需要政令征召、约定时间吗？
+    这句话在两千年前就说了戴蒙德式的意思：<strong>分工会自己出现，因为物产本来就不均。</strong></em></p>
+
+    <div class="verdict"><span class="lbl">◆ 判断：成立，而且司马迁给了它一个比戴蒙德更具体的版本</span>
+      <p><strong>戴蒙德讲的是「起点快慢」</strong>（哪个大陆先有粮食、家畜、文字、国家）；
+      <strong>司马迁讲的是「分工必然」</strong>——<em>因为他把物产不均当成了前提，
+      于是交换的产生就不需要解释成某个聪明人的发明。</em></p>
+      <p><strong>这一点值得单独指出</strong>：<em>戴蒙德的因果链是
+      「有可驯化物种 → 粮食剩余 → 人口密集 → 国家」；
+      司马迁的链是「物产地理不均 → 交换 → 各业分工 → 财货流通」。
+      <strong>后一条不经过「国家」，可以直接解释市场</strong>——这是戴蒙德框架里缺的一环。</em></p>
+    </div>
+    <div class="bounds"><span class="lbl">⚠️ 边界</span>
+      <strong>司马迁说的是「大較」（大概），他自己标了这是粗略的罗列。</strong>
+      <em>而且他列的是汉代的情况，不是「起点」——用它证明「起点由地理决定」是跨了时代。
+      严格说他支持的是「物产分布长期稳定且影响分工」，不是「文明起点由地理决定」。</em>
+    </div>
+  </div>
+</div>
+
+<!-- ——— 检验 2 ——— -->
+<div class="cf">
+  <div class="cf-head">
+    <span class="cf-num">检验 ②</span><span class="verdict-tag v-part">部分成立 · 而且有反例</span>
+    <span class="cf-title">中国确有东西向的区域分工，但司马迁记的分界不是纬度带</span>
+  </div>
+  <div class="cf-body">
+    <div class="claim"><span class="lbl">戴蒙德的主张</span>
+      「大陆轴线的方向可能是某个族群得以征服其他族群的<strong>终极因</strong>」——
+      欧亚大陆东西向，同纬度带气候相似，作物与牲畜易于传播；非洲与美洲南北向，传播受阻。</div>
+
+    <p><strong>《貨殖列傳》里确实有一个宏观的二分</strong>，而且它<strong>同时是纬度带和产业带</strong>：</p>
+    <blockquote>總之，<strong>楚越之地，地廣人希，飯稻羹魚，或火耕而水耨</strong>，
+    果隋蠃蛤，不待賈而足，<strong>地埶饒食，無饑饉之患，以故呰窳偷生，無積聚而多貧。</strong>
+    是故<strong>江淮以南，無凍餓之人，亦無千金之家。</strong>
+    <strong>沂、泗水以北，宜五穀桑麻六畜，地小人眾，數被水旱之害，民好畜藏</strong>，
+    故秦、夏、梁、魯好農而重民。三河、宛、陳亦然，加以商賈。
+    <strong>齊、趙設智巧，仰機利。燕、代田畜而事蠶。</strong>
+    <span class="who">貨殖列傳</span></blockquote>
+
+    <p><strong>这段话的信息量很大，而且它的切分方式与戴蒙德不同。</strong>
+    <em>戴蒙德按<strong>纬度带</strong>（同纬度 → 传播快）切；
+    司马迁按<strong>南北两条大界线</strong>（江淮、沂泗）切，
+    然后在每一条里再按<strong>产业与风俗</strong>细分（农 · 商贾 · 智巧 · 田畜事蠶）。</em></p>
+
+    <p><strong>而这段话里有一处是戴蒙德框架完全解释不了的</strong>：</p>
+    <blockquote><strong>地埶饒食，無饑饉之患，以故呰窳偷生，無積聚而多貧。</strong>
+    ……是故江淮以南，無凍餓之人，亦無千金之家。<span class="who">貨殖列傳</span></blockquote>
+    <p><em>南方自然条件好（「地埶饒食」），结果是<strong>「無積聚而多貧」</strong>——
+    而北方条件差（「數被水旱之害」），结果是<strong>「民好畜藏」</strong>。</em></p>
+    <p><strong>这是「地理决定论」的一个方向相反的例子</strong>：
+    <em>优渥的环境产生的是不积累，严酷的环境产生的是积累与制度。
+    如果按戴蒙德的逻辑（条件好 → 先发展），这一段正好是反的。</em></p>
+
+    <div class="verdict"><span class="lbl">◆ 判断：部分成立——地理有效，但它的作用不是「条件好就快」</span>
+      <p><strong>可取的部分</strong>：<em>司马迁的南北二分确实落在地理上，
+      而且它稳定到汉代还在起作用（他說「大體如此矣」）。
+      戴蒙德「地理影响长期路径」这一层得到支持。</em></p>
+      <p><strong>不能取的部分</strong>：<em>戴蒙德的具体机制是「同纬度传播快」，
+      而司马迁记的分工是<strong>南北差</strong>——恰恰是<strong>跨纬度</strong>的差。
+      也就是说，中国这个案例里，<strong>起作用的不是「东西向轴线使传播容易」，
+      而是「南北向的水热差造成产业差」。</strong></em></p>
+      <p><strong>更值得记的是那处反向因果</strong>：<em>「地埶饒食」导致「無積聚而多貧」。
+      它说明地理的作用<strong>不是通过「容易」而是通过「压力」</strong>——
+      这一点戴蒙德的框架里没有，而它对理解「为什么某些地区先出现复杂制度」很关键。</em></p>
+    </div>
+    <div class="bounds"><span class="lbl">⚠️ 边界</span>
+      <strong>① 司马迁没有给出量化比较</strong>，他的南北二分是观察与传闻的整理，
+      <em>不能当成统计结论用。</em>
+      <br><strong>② 他这句话里混着道德评价</strong>（「呰窳偷生」是一个贬词）。
+      <em>所以不能把「無積聚而多貧」读成纯经济描述——它也带着当时的偏见。
+      这一点在下判断时要打折。</em>
+      <br><strong>③ 中国的东西向</strong>：<em>黄河中下游与长江中下游纬度相差约 8–10 度，
+      确实比欧亚大陆整体的东西向轴线更「斜」。
+      所以「大陆轴线」这个变量在中国内部本来就不如它在洲际尺度上那么强——
+      这是尺度问题，不是理论错。</em>
+    </div>
+  </div>
+</div>
+
+<!-- ——— 检验 3 ——— -->
+<div class="cf">
+  <div class="cf-head">
+    <span class="cf-num">检验 ③</span><span class="verdict-tag v-rev">解释反了</span>
+    <span class="cf-title">治水与集权：《河渠書》记的是「国家有能力才治水」，不是「要治水才有国家」</span>
+  </div>
+  <div class="cf-body">
+    <div class="claim"><span class="lbl">待测主张（魏特夫的「治水社会」假说，常被并入地理决定论）</span>
+      大规模水利需要组织大量人力 → 因此需要中央权力 → 所以治水需求<strong>产生</strong>了集权国家。</div>
+
+    <p><strong>《河渠書》开头确实从「禹治水」讲起</strong>，看起来支持这个方向：</p>
+    <blockquote>夏書曰：<strong>禹抑洪水十三年，過家不入門。</strong>陸行載車，水行載舟，
+    泥行蹈毳，山行即橋。以別九州，隨山浚川，任土作貢。通九道，陂九澤，度九山。
+    <strong>然河菑衍溢，害中國也尤甚。唯是為務。</strong>
+    <span class="who">河渠書</span></blockquote>
+    <p><em>「唯是為務」——只有这件事是当务之急。这一句是治水优先的明证。</em></p>
+
+    <p><strong>但接下来《河渠書》记的全是「已有国家之后」的事</strong>：</p>
+    <blockquote>此渠皆可行舟，<strong>有餘則用溉騑，百姓饗其利</strong>。至於所過，往往引其水益用溉田疇之渠，
+    以萬億計，然莫足數也。西門豹引漳水溉鄴，<strong>以富魏之河內</strong>。
+    <span class="who">河渠書</span></blockquote>
+    <blockquote>而韓聞秦之好興事，欲罷之，毋令東伐，<strong>乃使水工鄭國間說秦</strong>，
+    令鑿涇水自中山西邸瓠口為渠……渠就，用註填閼之水，
+    <strong>溉澤鹵之地四萬餘頃，收皆畝一鐘。於是關中為沃野，無凶年，秦以富彊，卒並諸侯。</strong>
+    <span class="who">河渠書</span></blockquote>
+
+    <p><strong>郑国渠这一条的信息量最大</strong>：
+    <em>韩国派水工郑国去游说秦国修渠，目的是<strong>让秦国把人力耗在工程上，无力东伐</strong>
+    （「欲罷之，毋令東伐」）。事情中途被发现，郑国说：「始臣為間，然渠成亦秦之利也。」
+    秦国认为有理，让他把渠修完。<strong>结果关中变成沃野，秦国因此富强，终于并吞诸侯。</strong></em></p>
+
+    <p><strong>也就是说：修渠的动机是「疲敌」，而结果成了「强国」的原因；而能做这件事的前提，
+    是秦国已经有了调动数万人的能力。</strong></p>
+
+    <div class="verdict"><span class="lbl">◆ 判断：这一条的因果方向反了——《史記》给的是「国家 → 水利 → 更强国家」</span>
+      <p><strong>《河渠書》里每一处大型水利，主语都是一个已经存在的国家</strong>：
+      <em>魏（西门豹）· 秦（郑国渠）· 汉（瓠子塞决，天子令群臣从官皆负薪）。
+      没有一处是「因为要治水，所以形成了国家」。</em></p>
+      <p><strong>而司马迁自己的评语，把这件事说成了一个循环而不是一个起点</strong>：</p>
+      <blockquote>太史公曰：……<strong>甚哉，水之為利害也！</strong>
+      餘從負薪塞宣房，悲瓠子之詩而作河渠書。<span class="who">河渠書 · 太史公曰</span></blockquote>
+      <p><em>「水之為利害也」——他标的是<strong>两面性</strong>（利与害）。</em>
+      而《河渠書》全篇记的正是这个循环：<strong>治水成功 → 农业增产 → 国力增强 → 更能治水；
+      而治水失败 → 连年不收 → 国力受损</strong>（「自河決瓠子後二十餘歲，歲因以數不登」）。</p>
+      <p><strong>所以这一条的正确表述是</strong>：
+      <em>治水与集权是<strong>相互强化的关系</strong>，不是单向的因果。
+      把它读成「治水需求产生集权」，是把一个正反馈回路中的一段拿出来当成了起点。</em></p>
+      <p><strong>这一处还藏着一个更硬的证据</strong>：<em>田蚡反对塞决，理由正是
+      「江河之決皆天事，未易以人力為彊塞，塞之未必應天」——
+      他反对的原因是<strong>河决向南流则他的封邑无水灾、收成好</strong>。
+      也就是说，在治水这件事上，<strong>中央的决策会被地方私利扭曲</strong>，
+      而这恰恰说明国家能力不是自动用来治水的。</em></p>
+    </div>
+    <div class="bounds"><span class="lbl">⚠️ 边界</span>
+      <strong>① 我否掉的是「单向因果」，不是「水利重要」。</strong>
+      <em>《河渠書》全篇都在说水利重要，而且它被单列为一「書」就是证据。</em>
+      <br><strong>② 「治水社会」假说本身在学界争议很大</strong>，而且戴蒙德在《枪炮》里
+      <strong>没有</strong>主张它。<em>我把它放进这份检验，是因为中文语境里
+      「地理决定论」经常被等同于「治水 → 集权」。所以要标清：
+      <strong>这一条被打掉的是魏特夫，不是戴蒙德。</strong></em>
+      <br><strong>③ 《河渠書》是西汉的作品，它描述的「禹治水」是追述。</strong>
+      <em>拿它去测「国家起源」本来就不合适——这是我把一条不太可测的主张也放进来的代价，
+      如实标出。</em>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+<!-- ——— 检验 4 ——— -->
+<div class="cf">
+  <div class="cf-head">
+    <span class="cf-num">检验 ④</span><span class="verdict-tag v-part">部分成立 · 但驱动项不是地理</span>
+    <span class="cf-title">制度只能算近因？——《平準書》给出一条制度自我演化的链条，起点是政治不是地理</span>
+  </div>
+  <div class="cf-body">
+    <div class="claim"><span class="lbl">戴蒙德的主张</span>
+      「通常的观点只强调了良好制度，而<strong>混淆了近因（因变量）和终极因（自变量）</strong>。」
+      —— 制度是果，地理是因。</div>
+
+    <p><strong>《平準書》整篇就是一部「制度怎么变」的专史。</strong>
+    <em>它从汉初的窘境开始，一路记到武帝朝的财政机器。而这条链条的每一环都能看清驱动项是什么：</em></p>
+
+    <h4>环节一 · 货币权下放，然后造反</h4>
+    <blockquote>至孝文時，莢錢益多，輕，乃更鑄四銖錢，其文為「半兩」，<strong>令民縱得自鑄錢。</strong>
+    故吳諸侯也，以即山鑄錢，<strong>富埒天子，其後卒以叛逆</strong>。鄧通，大夫也，以鑄錢財過王者。
+    故吳、鄧氏錢布天下，<strong>而鑄錢之禁生焉。</strong>
+    <span class="who">平準書</span></blockquote>
+    <p><em>逻辑很清楚：<strong>放开铸币 → 地方势力富可敌国 → 叛乱 → 于是禁铸钱。</strong>
+    这里的驱动项是<strong>政治后果</strong>，不是地理。</em></p>
+
+    <h4>环节二 · 边患逼出卖爵</h4>
+    <blockquote>匈奴數侵盜北邊，屯戍者多，<strong>邊粟不足給食當食者</strong>。
+    於是募民能輸及轉粟於邊者拜爵，爵得至大庶長。
+    <span class="who">平準書</span></blockquote>
+    <p><em>这一环<strong>确实</strong>接上了地理：北边要驻军 → 粮不够 → 卖爵换粮。
+    而「北边」这个变量是地理给的（农牧分界线）。</em>
+    <strong>但要注意顺序：地理提供的是「约束」，制度提供的是「应对」。</strong>
+    <em>同一个约束可以有很多种应对——卖爵只是其中之一，而它是个制度选择。</em></p>
+
+    <h4>环节三 · 盛世自己转向</h4>
+    <blockquote>至今上即位數歲，漢興七十餘年之間，國家無事，非遇水旱之災，民則人給家足……
+    <strong>京師之錢累巨萬，貫朽而不可校。太倉之粟陳陳相因，充溢露積於外，至腐敗不可食。</strong>
+    ……故人人自愛而重犯法，先行義而後絀恥辱焉。
+    <strong>當此之時，網疏而民富，役財驕溢，或至兼併豪黨之徒，以武斷於鄉曲。</strong>
+    ……爭於奢侈，室廬輿服僭於上，無限度。<strong>物盛而衰，固其變也。</strong>
+    <span class="who">平準書</span></blockquote>
+    <p><strong>「物盛而衰，固其變也」是这一篇的枢纽。</strong>
+    <em>它在最富的时候写下转折，而转折的原因不是天灾——原文明确说「非遇水旱之災」。
+    转折来自<strong>兼并、奢侈、以及随后的对外用兵</strong>：
+    「自是之後……江淮之間蕭然煩費矣……兵連而不解，天下苦其勞，而干戈日滋。
+    ……興利之臣自此始也。」</em></p>
+    <p><em>于是有了这一篇的结论句：<strong>「事勢之流，相激使然，曷足怪焉。」</strong>——
+    形势的流转是<strong>互相激发</strong>造成的，有什么可奇怪的。</em></p>
+
+    <div class="verdict"><span class="lbl">◆ 判断：部分成立，但「制度只是近因」这一句被《平準書》削弱了</span>
+      <p><strong>成立的部分</strong>：<em>地理确实提供了约束。
+      北边农牧分界造成持续的军事压力（卖爵那一环），水旱造成周期性的财政危机。
+      这些都是戴蒙德说的「负面约束」。</em></p>
+      <p><strong>被削弱的部分</strong>：<em>《平準書》里制度变革的<strong>触发点绝大多数不是地理</strong>：
+      铸钱之禁由叛乱触发；卖爵由边患触发（这一处接地理）；而盛世转入衰世，
+      原文明确排除了天灾（「非遇水旱之災」），归因于兼并、奢侈与用兵。</em></p>
+      <p><strong>而「事勢之流，相激使然」这句话是对戴蒙德框架最直接的方法论挑战</strong>：
+      <em>它说的正是一个<strong>正反馈系统</strong>——货币制度、土地兼并、军事开支、财政手段
+      互相激发，无法指出一个单一的自变量。</em>
+      <strong>戴蒙德要求「终极因 vs 近因」的层级，而司马迁描述的是一个没有头的环。</strong></p>
+      <p><strong>这一处的意义不在于「谁对」</strong>：<em>戴蒙德要解释的是跨大陆的万年尺度差异，
+      在那个尺度上找一个终极因是合理的；司马迁记的是<strong>几十年内一个国家的制度漂移</strong>，
+      在那个尺度上找终极因本来就不合适。
+      <strong>所以这一条的正确结论是：终极因/近因的区分有尺度适用范围。</strong></em></p>
+    </div>
+    <div class="bounds"><span class="lbl">⚠️ 边界</span>
+      <strong>① 《平準書》的立场不是中立的。</strong>
+      <em>它记财政手段（卖爵、算缗、告缗、均输平准）时带明显批评
+      （「興利之臣自此始也」「選舉陵遲，廉恥相冒」）。
+      所以不能把它的因果描述当成一份中性的机制分析。</em>
+      <br><strong>② 戴蒙德本人没有讨论过中国的内部制度史。</strong>
+      <em>拿《平準書》去反驳他，严格说是拿一个他没处理的案例去测他的框架——
+      这正是这份文件要做的，但要标清它是<strong>外推测试</strong>，不是他与司马迁的正面交锋。</em>
+      <br><strong>③ 地理约束在《平準書》里是被默认的。</strong>
+      <em>「漕轉山東粟，以給中都官，歲不過數十萬石」这一句里，
+      山东产粮、关中消费、靠漕运连接——这整个结构本身就是地理的。
+      司马迁不需要论证它，因为它是背景。</em>
+      <strong>所以「地理是不是终极因」在这个文本里问不出答案——它是被当成给定的。</strong>
+    </div>
+  </div>
+</div>
+
+<!-- ——— 检验 5 ——— -->
+<div class="cf">
+  <div class="cf-head">
+    <span class="cf-num">检验 ⑤</span><span class="verdict-tag v-rev">司马迁自己就否认了 · 但他同时转述了它</span>
+    <span class="cf-title">环境还是人的选择：《六國年表》序是这场辩论里最完整的一份证据</span>
+  </div>
+  <div class="cf-body">
+    <div class="claim"><span class="lbl">戴蒙德的主张（全书一句话概括）</span>
+      「各族群的历史循着不同的轨迹开展，<strong>那是环境而非生物差异造成的</strong>。」</div>
+
+    <p><strong>《六國年表》序是一个人专门为「战国二百七十年」写的方法论前言。</strong>
+    <em>而他在里面做了两件相反的事。第一件是否认：</em></p>
+
+    <blockquote>秦始小國僻遠，諸夏賓之，比於戎翟，至獻公之後常雄諸侯。
+    <strong>論秦之德義不如魯衛之暴戾者，量秦之兵不如三晉之彊也，然卒並天下，
+    非必險固便形埶利也，蓋若天所助焉。</strong>
+    <span class="who">六國年表 · 序</span></blockquote>
+    <p><em>逐句读：<strong>论德义</strong>，秦不如鲁卫（鲁卫在当时是「暴戾」的典型）；
+    <strong>论兵力</strong>，秦不如三晋；<strong>然而终于并吞天下</strong>——
+    「<strong>非必險固便形埶利也</strong>」：<strong>未必是险要地形与便利形势带来的好处</strong>。
+    最后一句是「蓋若天所助焉」——<strong>大概像是天在帮它</strong>。</em></p>
+    <p><strong>这是对「地理决定统一」最直接的否认，而且说这话的人正在为战国写年表。</strong>
+    <em>他否掉了三个候选解释里的一个（地形），另外两个（德义、兵力）他也认为不成立，
+    最后只能给「天」——这个「天」不是地理，是他承认自己解释不了。</em></p>
+
+    <p><strong>但紧接着，他做了第二件事——转述一派地理说法，并给了五个例子：</strong></p>
+    <blockquote><strong>或曰</strong>「東方物所始生，西方物之成孰」。
+    <strong>夫作事者必於東南，收功實者常於西北。</strong>
+    故禹興於西羌，湯起於亳，周之王也以豐鎬伐殷，秦之帝用雍州興，漢之興自蜀漢。
+    <span class="who">六國年表 · 序</span></blockquote>
+    <p><em>五个例子排得很整齐：禹（西羌）· 汤（亳）· 周（丰镐）· 秦（雍州）· 汉（蜀汉）——
+    <strong>都是「起于西/西北，成于天下」。</strong>
+    而开头那个「<strong>或曰</strong>」（有人说）说明他是在<strong>转述</strong>，不一定是他自己的主张。</em></p>
+
+    <div class="verdict"><span class="lbl">◆ 判断：这一条的结果最有意思——司马迁在同一段里既否认又转述，而这个「既…又…」本身是答案</span>
+      <p><strong>先说清楚他不是自相矛盾。</strong>
+      <em>他否认的是<strong>具体的</strong>地理条件（秦的「險固便形埶利」）；
+      他转述的是<strong>方位的</strong>规律（东南作事、西北收功）。
+      这是两个不同层次的东西：一个是地形，一个是方位趋势。</em></p>
+      <p><strong>而他真正在做的事，是<em>展示两种解释框架的并存</em>。</strong>
+      <em>他先按自己的材料读，发现地形说不通（德义、兵力也说不通），于是给了「天」；
+      然后他补一句「有人说……」把当时流行的一套方位论完整记下，附上五个例子，<strong>不下结论</strong>。</em></p>
+      <p><strong>★ 而这份文件里最值钱的一条结论在这里：</strong>
+      <em>司马迁在两千年前就已经区分了「<strong>我自己的判断</strong>」
+      与「<strong>当时流行的一种说法</strong>」，并且把两者都留在了文本里。</em>
+      <strong>这正是本项目的做法</strong>——标「判断」与「原文」，
+      在<a href="../冲突与呼应地图.html">冲突地图</a>里标「判断 / 可反驳条件 / 反向自查」。</p>
+      <p><strong>而他对戴蒙德那个问题的回答，实际上比戴蒙德更保守</strong>：
+      <em>戴蒙德说「那是环境而非生物差异造成的」——这是一个确定的排他性断言。
+      司马迁说「非必險固便形埶利也，蓋若天所助焉」——
+      <strong>「非必」（未必）是一个不确定的否定，「蓋若」（大概像）是一个不确定的肯定。</strong>
+      他两个都不肯给实。</em></p>
+    </div>
+    <div class="bounds"><span class="lbl">⚠️ 边界</span>
+      <strong>① 「或曰」那一段不一定代表司马迁的观点，也不一定不代表。</strong>
+      <em>我没有找到他别处对这个方位论的评判，所以只能如实说「他记下了它，没有下断语」。</em>
+      <br><strong>② 他把秦的成功归给「天」，这不是一个好的解释。</strong>
+      <em>按<a href="中国智慧-问题手册.html">本项目对「好解释」的判据</a>，
+      「天所助」是不可反驳的——它不能被任何观察推翻。
+      <strong>但要注意：这是他在排除了三个候选（地形、德义、兵力）之后的退路，
+      而不是他的首选解释。</strong></em>
+      <br><strong>③ 这一场对戴蒙德其实是不公平的。</strong>
+      <em>戴蒙德解释的是「为什么是欧亚大陆的人征服了别人」这个<strong>洲际尺度</strong>问题；
+      司马迁解释的是「为什么秦这个国家统一了中国」这个<strong>国家尺度</strong>问题。
+      在后者这个尺度上，地理本来就不该是主因——
+      <strong>戴蒙德自己说的是「地理的确会影响历史，问题在于影响的程度如何」。</strong>
+      所以这一条的结论应该是<strong>尺度不同</strong>，而不是「司马迁驳倒了戴蒙德」。</em>
+      <br><strong>④ 但要指出一处对戴蒙德不利的</strong>：
+      <em>中国提供了他框架里最看重的那个机制的<strong>正例</strong>——
+      东西向轴线、可驯化物种丰富、早期统一。
+      而统一之后发生的事（技术进步然后停滞、制度反复、周期性崩溃）
+      <strong>他的框架解释不了</strong>，因为那些不是地理变化带来的。
+      《六國年表》序里的「非必險固便形埶利」正好是这一类问题的早期表述。</em>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<h2>四 · 五条检验的结果</h2>
+
+<table>
+  <tr><th style="width:6%">#</th><th style="width:32%">戴蒙德的具体主张</th>
+    <th style="width:22%">《史記》给的结果</th><th>结论</th></tr>
+  <tr><td><strong>①</strong></td><td>物产的地理分布决定文明起点</td>
+    <td><span class="verdict-tag v-yes">成立</span></td>
+    <td><strong>成立</strong>，而且司马迁给了一个更直接的版本：
+    物产不均 → 分工必然，<em>不必经过「国家」这一环</em>。</td></tr>
+  <tr><td><strong>②</strong></td><td>统一来自地理（大陆轴线东西向）</td>
+    <td><span class="verdict-tag v-part">部分成立</span></td>
+    <td><strong>部分成立</strong>，但有反例：<em>中国内部起作用的是<strong>南北水热差</strong>，
+    不是东西向传播；而且南方「地埶饒食」导致的是「無積聚而多貧」——方向与「条件好就快」相反。</em></td></tr>
+  <tr><td><strong>③</strong></td><td>治水需求 → 中央集权（魏特夫）</td>
+    <td><span class="verdict-tag v-rev">解释反了</span></td>
+    <td><strong>方向反了</strong>：《河渠書》里每一处大型水利的主语都是<strong>已经存在的国家</strong>。
+    <em>治水与集权是相互强化的回路，不是单向因果。</em>
+    <strong>注：这一条打的是魏特夫，不是戴蒙德。</strong></td></tr>
+  <tr><td><strong>④</strong></td><td>地理是终极因，制度只是近因</td>
+    <td><span class="verdict-tag v-part">部分成立</span></td>
+    <td><strong>部分成立</strong>：《平準書》里制度变革的触发点多数是政治（叛乱、边患、用兵），
+    且盛世转入衰世<strong>明确排除了天灾</strong>。<em>司马迁给的是「事勢之流，相激使然」——
+    一个没有头的正反馈环。<strong>「终极因/近因」的区分有尺度适用范围。</strong></em></td></tr>
+  <tr><td><strong>⑤</strong></td><td>环境而非人的选择解释历史轨迹</td>
+    <td><span class="verdict-tag v-rev">司马迁本人否认</span></td>
+    <td><strong>司马迁在同一段里既否认又转述</strong>：
+    他否掉地形（「非必險固便形埶利也」），又记下方位论（「或曰……作事者必於東南」）而不下断语。
+    <em>他的回答比戴蒙德更保守：「非必」与「蓋若」两个不确定。</em>
+    <strong>但两边的尺度不同，所以这是「尺度」问题，不是「谁驳倒谁」。</strong></td></tr>
+</table>
+
+<div class="box my">
+  <div class="h">◆ 打完之后的三个结论</div>
+  <p><strong>结论一 · 戴蒙德在中国这个案例上，成立的部分不在他最强的地方。</strong>
+  <em>他最强的机制是「大陆轴线东西向 → 传播快」。而《史記》里起作用的是
+  <strong>南北水热差造成的产业差</strong>，以及<strong>农牧分界线造成的持续军事压力</strong>。
+  前者是跨纬度的，后者是生态边界——<strong>两个都不是「轴线」那个机制</strong>。</em></p>
+  <p><strong>结论二 · 最值钱的不是任何一条检验的结果，是「尺度」这个变量。</strong>
+  <em>五条里有两条（④⑤）的结论都是「尺度不同」而非「谁对」。
+  戴蒙德解释万年与洲际，司马迁记几十年与一国。
+  <strong>把两者放在一起对撞，唯一可靠的收获是知道「终极因」这个要求只在特定尺度上成立。</strong></em></p>
+  <p><strong>结论三 · 《史記》对这个项目的用处，不是「中国史的史料」，是「另一种史学的样本」。</strong>
+  <em>司马迁做了三件戴蒙德没做的事：<br>
+  ① 他把<strong>「作者的判断」与「当时流行的说法」分开写</strong>（「或曰」那种处理）；<br>
+  ② 他给制度单列专史（八書），而且给经济单列一传（貨殖）；<br>
+  ③ 他在<strong>否定一个解释之后，明确说自己解释不了</strong>（「蓋若天所助焉」），
+     而不是换一个不可反驳的说法把窟窿填上。</em>
+  <strong>这三件都是写法，而写法决定了读者能不能反驳你。</strong></p>
+</div>
+
+<div class="box warn">
+  <div class="h">★ 这一份自己的局限</div>
+  <p><strong>① 我用的是白文底本，无注疏。</strong>
+  <em>《史記》的注解史（三家注：集解、索隐、正义）有两千年，
+  而我对「非必險固便形埶利也」这一句的断句与理解可能不是主流读法。
+  底本里附了「索隱述贊」（四言韵语的总评），但它不是逐句注解。</em></p>
+  <p><strong>② 我只用了五篇（河渠書 · 貨殖列傳 · 平準書 · 六國年表 · 太史公自序）。</strong>
+  <em>全书 130 篇 · 512,628 汉字，其余部分（尤其匈奴列傳的边疆材料、
+  秦始皇本紀的制度记载）没有进入这一轮检验。所以这是<strong>抽样</strong>。</em></p>
+  <p><strong>③ 戴蒙德那一侧我用的是他的框架，不是逐条主张。</strong>
+  <em>「终极因/近因」「大陆轴线」是我从他的书里抽出的两个核心机制，
+  而他在书里对它们的表述比我这里引的更细。
+  凡我意识到抽得太粗的地方，都在各条的「边界」栏里标了。</em></p>
+  <p><strong>④ 我对司马迁有一个明显的偏向。</strong>
+  <em>这份文件写到后面，语气从「检验戴蒙德」漂移到了「称赞司马迁的写法」。
+  这两件事应该分开。<strong>如实标出，供读者打折。</strong></em></p>
+</div>
+
+<footer class="doc">
+  底层 · 05 历史与地理 · 地理决定论的检验：中国案例<br>
+  <em>底本：史記_司馬遷.txt（512,628 汉字 · 实测 12 本紀 / 4 表 / 8 書 / 30 世家 / 68 列傳 · 太史公曰 137 处）；<br>
+  用《史記》测戴蒙德框架，不是《史記》导读；五条检验各标结果与边界；<br>
+  引文均逐句核对底本，照原样写（繁体）；这一份的局限见文末</em>
+</footer>
+
+</div>
+</body>
+</html>
