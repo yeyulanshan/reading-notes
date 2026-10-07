@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>中国智慧 · 底本说明 · 底层</title>
+<meta name="description" content="「关系性自我」这一轴的 16 部中文原典：实际规模、哪些已被用、哪些零使用、名称对齐问题、缺失的四书三本。">
+<meta name="theme-color" content="#f2f8fc">
+<style>
+  :root{
+    --paper:#f2f8fc; --card:#ffffff; --card-2:#e9f4fb;
+    --edge:#cfe0ec; --edge-lit:#a4c6dd;
+    --ink:#12232e; --ink-2:#627480; --ink-3:#587286;
+    --accent:#2c7ea2; --gold:#84744a;
+    --quote-bg:#fbf8ef; --quote-edge:#d8cba4; --quote-ink:#5f5527;
+    --warn:#a85035; --warn-soft:#fcf1ec;
+    --dormant:#7a4f96; --dormant-soft:#f4eef8;
+    --my:#2f7a5c; --my-soft:#eef8f3;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--paper); color:var(--ink); line-height:1.9;
+    -webkit-font-smoothing:antialiased; padding:32px 16px 60px;}
+  ::selection{background:rgba(63,180,232,.26); color:#0d2430;}
+  .wrap{max-width:900px; margin:0 auto;}
+  header.doc{background:var(--card); border:1px solid var(--edge);
+    border-top:4px solid var(--accent); border-radius:10px;
+    padding:34px 34px 28px; margin-bottom:22px;}
+  header.doc h1{font-size:26px; font-weight:800; line-height:1.4; margin-bottom:12px;
+    background:linear-gradient(135deg,#1d4a68,#2c7ea2 55%,#377972);
+    -webkit-background-clip:text; background-clip:text; color:transparent;}
+  header.doc .sub{font-size:14.6px; color:var(--ink-2); line-height:1.95;}
+  header.doc .src{margin-top:16px; padding-top:14px; border-top:1px dashed var(--edge);
+    font-size:12.6px; color:var(--ink-3); line-height:1.95;}
+  h2{font-size:19px; font-weight:700; margin:40px 0 6px; padding-left:12px;
+    border-left:4px solid var(--gold); line-height:1.55;}
+  .s{color:var(--ink-3); font-size:12.9px; margin:0 0 16px 16px; line-height:1.85;}
+  h3{font-size:16.4px; font-weight:700; margin:28px 0 10px;}
+  p{font-size:14.5px; color:var(--ink-2); margin-bottom:12px; text-wrap:pretty;}
+  p strong{color:var(--ink);}
+  code{font-family:ui-monospace,Consolas,monospace; font-size:12.8px;
+    background:var(--card-2); border:1px solid var(--edge); border-radius:4px;
+    padding:1px 6px; color:#1d5c86; word-break:break-all;}
+  a{color:var(--accent); text-decoration:none; border-bottom:1px solid #cfe4f0;}
+  table{width:100%; border-collapse:collapse; margin:15px 0; font-size:13.4px;}
+  th,td{padding:9px 11px; border:1px solid var(--edge); text-align:left;
+    vertical-align:top; line-height:1.8;}
+  th{background:var(--card-2); color:#1d5c86; font-weight:700; font-size:12.7px;}
+  td{color:var(--ink-2);} td strong{color:var(--ink);}
+  td.num{text-align:right; font-variant-numeric:tabular-nums;
+    font-family:ui-monospace,Consolas,monospace; font-size:12.6px;}
+  blockquote{margin:13px 0; padding:13px 18px; background:var(--quote-bg);
+    border:1px solid #e8dfc4; border-left:3px solid var(--quote-edge);
+    border-radius:5px; font-size:14.1px; color:var(--quote-ink); line-height:1.95;}
+  blockquote .who{display:block; margin-top:7px; font-size:12px;
+    color:#8a7a52; text-align:right;}
+  .box{background:var(--card); border:1px solid var(--edge); border-radius:9px;
+    padding:19px 22px; margin:16px 0; font-size:14px; color:var(--ink-2);}
+  .box .h{font-weight:700; color:var(--gold); margin-bottom:10px; font-size:13.6px;}
+  .box p+p{margin-top:9px;} .box strong{color:var(--ink);}
+  .box.warn{background:var(--warn-soft); border-color:#e8cfc4;}
+  .box.warn .h{color:var(--warn);}
+  .box.dormant{background:var(--dormant-soft); border-color:#d9c4e6;}
+  .box.dormant .h{color:var(--dormant);}
+  .box.my{background:var(--my-soft); border-color:#cfe6dc;}
+  .box.my .h{color:var(--my);}
+  ul,ol{margin:11px 0 14px 22px;}
+  li{font-size:14.4px; color:var(--ink-2); margin-bottom:8px; line-height:1.9;}
+  li strong{color:var(--ink);}
+  hr{border:none; border-top:1px dashed var(--edge); margin:34px 0;}
+  footer.doc{margin-top:30px; padding-top:20px; border-top:1px solid var(--edge);
+    font-size:12.4px; color:var(--ink-3); line-height:2; text-align:center;}
+  @media(max-width:700px){
+    body{padding:16px 10px 40px;} header.doc{padding:24px 20px 20px;}
+    header.doc h1{font-size:21px;} h2{font-size:17px;}
+    table{font-size:12.1px;} th,td{padding:7px 8px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="doc">
+  <h1>中国智慧 · 底本说明</h1>
+  <p class="sub">「关系性自我」这一轴的 16 部中文原典 —— 实际规模、使用状态、名称对齐、缺口</p>
+  <p class="src">
+    <strong>本文所有数字均由磁盘实测</strong>（逐文件读入、统计汉字数），
+    不引用任何旧估算。<br>
+    统计口径：汉字数 = 该文件中 <code>U+4E00–U+9FFF</code> 的字符个数；
+    <strong>Project Gutenberg 的页眉页脚是纯英文，本就不计入</strong>（实测每份约 1.9 万英文字符，不影响汉字统计）。
+  </p>
+</header>
+
+<div class="box warn">
+  <div class="h">⚠️ 先看这一条：有 4 部原典至今零引用</div>
+  <p>这一轴有 <strong>16 部原典、879 万汉字</strong>，而项目实际做出的产出，
+  只用到其中 <strong>2 部</strong>（《論語》《道德經》）。</p>
+  <p>另有 <strong>4 部从未被任何产出引用过</strong>——
+  连「提到」都没有：<code>史記</code> · <code>漢書</code> · <code>宋史</code> · <code>左傳</code> ·
+  <code>易經</code> · <code>鬼谷子</code>。</p>
+  <p><em>而《史記》512,628 汉字、《漢書》712,137 汉字、《宋史》3,907,797 汉字——
+  这三部加起来 513 万汉字，占这一轴总量的 58%。</em></p>
+</div>
+
+<!-- ============================================================ -->
+<h2>一 · 16 部原典的实际规模</h2>
+<div class="s">按真实正文汉字数降序；「状态」指是否已被产出引用</div>
+
+<table>
+  <tr><th style="width:30%">原典</th><th style="width:14%">真实正文汉字</th>
+    <th style="width:12%">文件字节</th><th style="width:16%">体量</th><th>状态</th></tr>
+  <tr><td><strong>宋史</strong></td><td class="num">3,907,797</td><td class="num">14,755,503</td>
+    <td>巨型</td><td><span style="color:var(--warn);">★ 零引用</span></td></tr>
+  <tr><td><strong>王陽明全集</strong></td><td class="num">763,358</td><td class="num">2,809,946</td>
+    <td>巨型</td><td>仅被《定位决策》提到</td></tr>
+  <tr><td><strong>紅樓夢</strong></td><td class="num">724,631</td><td class="num">2,663,455</td>
+    <td>巨型</td><td>仅在《定位决策》与接口清单中列名</td></tr>
+  <tr><td><strong>漢書</strong></td><td class="num">712,137</td><td class="num">2,740,709</td>
+    <td>巨型</td><td><span style="color:var(--warn);">★ 零引用</span></td></tr>
+  <tr><td><strong>西遊記</strong></td><td class="num">588,720</td><td class="num">2,264,069</td>
+    <td>巨型</td><td>仅列名</td></tr>
+  <tr><td><strong>史記</strong></td><td class="num">512,628</td><td class="num">1,977,089</td>
+    <td>巨型</td><td><span style="color:var(--warn);">★ 零引用</span></td></tr>
+  <tr><td>三國志演義</td><td class="num">484,892</td><td class="num">1,863,656</td>
+    <td>巨型</td><td>仅列名</td></tr>
+  <tr><td>水滸傳</td><td class="num">437,348</td><td class="num">1,632,003</td>
+    <td>巨型</td><td>仅列名</td></tr>
+  <tr><td>儒林外史</td><td class="num">231,940</td><td class="num">853,632</td>
+    <td>中等</td><td>仅列名</td></tr>
+  <tr><td>左傳</td><td class="num">180,498</td><td class="num">705,592</td>
+    <td>中等</td><td><span style="color:var(--warn);">★ 零引用</span></td></tr>
+  <tr><td>古文觀止</td><td class="num">145,263</td><td class="num">562,960</td>
+    <td>中等</td><td>仅列名</td></tr>
+  <tr><td>山海經</td><td class="num">31,925</td><td class="num">145,380</td>
+    <td>短篇</td><td>仅列名</td></tr>
+  <tr><td>易經</td><td class="num">21,647</td><td class="num">113,609</td>
+    <td>短篇</td><td><span style="color:var(--warn);">★ 零引用</span></td></tr>
+  <tr><td><strong>論語</strong>（純中文底本）</td><td class="num">18,613</td><td class="num">75,455</td>
+    <td>短篇</td><td><strong style="color:var(--my);">✓ 已做完整产出</strong></td></tr>
+  <tr><td>論語（Legge 中英对照）</td><td class="num">18,613</td><td class="num">270,928</td>
+    <td>短篇</td><td>已用作章号校对</td></tr>
+  <tr><td>鬼谷子</td><td class="num">8,398</td><td class="num">51,269</td>
+    <td>短篇</td><td><span style="color:var(--warn);">★ 零引用</span></td></tr>
+  <tr><td><strong>道德經</strong></td><td class="num">5,698</td><td class="num">41,533</td>
+    <td>短篇</td><td>已用于三处冲突对照</td></tr>
+  <tr><td colspan="2"><strong>合计（不含《下载记录》）</strong></td>
+    <td class="num"><strong>33,526,788</strong></td><td></td>
+    <td><strong>879 万汉字</strong></td></tr>
+</table>
+
+<div class="box">
+  <div class="h">◆ 一个反直觉的事实</div>
+  <p><strong>已做出产出的两部（《論語》18,613 + 《道德經》5,698 = 24,299 汉字）
+  占这一轴总量的 0.28%。</strong></p>
+  <p><em>而这一轴的产出（精读笔记 + 三处冲突对照 + 助人手册）质量并不低——
+  问题不在质量，在于<strong>原料与产出之间差了三个数量级</strong>。</em></p>
+</div>
+
+<!-- ============================================================ -->
+<h2>二 · 体量与读法的对应关系</h2>
+<div class="s">不是所有原典都该用同一种方式处理</div>
+
+<table>
+  <tr><th style="width:16%">体量</th><th style="width:12%">汉字区间</th>
+    <th style="width:20%">包含</th><th>该怎么处理</th></tr>
+  <tr><td><strong>短篇</strong></td><td>5 千 – 5 万</td>
+    <td>道德經 · 鬼谷子 · 論語 · 易經 · 山海經</td>
+    <td><strong>可逐章精读</strong>，做成与《論語》同规格的产出</td></tr>
+  <tr><td><strong>中等</strong></td><td>5 万 – 30 万</td>
+    <td>古文觀止 · 左傳 · 儒林外史</td>
+    <td><strong>需选读</strong>——按主题抽篇目，不宜通读</td></tr>
+  <tr><td><strong>巨型</strong></td><td>30 万以上</td>
+    <td>史記 · 水滸傳 · 三國志演義 · 西遊記 · 漢書 · 紅樓夢 · 王陽明全集 · 宋史</td>
+    <td><strong>只能按主题检索</strong>——先定问题，再定位到篇/章</td></tr>
+</table>
+
+<div class="box my">
+  <div class="h">◆ 由这一条推出的做法</div>
+  <p><strong>巨型原典不能"从头读"</strong>。以《王陽明全集》为例：
+  763,358 汉字，其中「良知」出现 815 次、「致良知」108 次、「知行合一」37 次——
+  <em>真正需要的是那 37 处，而不是全书。</em></p>
+  <p><strong>所以这一轴的正确工序是：先有问题 → 再去巨型原典里检索 → 局部精读。</strong>
+  <em>反过来做（先通读再找问题）在 879 万汉字的规模上不可行。</em></p>
+</div>
+
+<!-- ============================================================ -->
+<h2>三 · 名称对齐：一个必须写明的技术问题</h2>
+<div class="s">全文文件的命名与项目其余部分不一致，会导致检索不到</div>
+
+<p>项目其余各书的全文本地命名为 <code>书名_全文.txt</code>。这一轴<b>不符合</b>该约定：</p>
+
+<table>
+  <tr><th style="width:34%">实际文件名</th><th style="width:30%">按约定应为</th><th>后果</th></tr>
+  <tr><td><code>道德經_老子.txt</code></td><td><code>道德經_全文.txt</code></td>
+    <td>检索「道德經_全文」会落空</td></tr>
+  <tr><td><code>論語/論語_純中文底本.txt</code></td><td><code>論語_全文.txt</code></td>
+    <td>同上；「純中文底本」是自造名</td></tr>
+  <tr><td><code>史記_司馬遷.txt</code></td><td><code>史記_全文.txt</code></td>
+    <td>同上；且「司馬遷」为作者名，混入了文件名</td></tr>
+  <tr><td><code>論語/論語_Confucian_Analects.txt</code></td><td>（中英对照，可另名）</td>
+    <td>可接受，但宜命名为 <code>論語_中英对照.txt</code></td></tr>
+</table>
+
+<div class="box warn">
+  <div class="h">⚠️ 这个问题的实际影响</div>
+  <p><strong>它已经造成过一次检索失败</strong>：核对《记录.txt》引文时，
+  按 <code>道德經_全文.txt</code> 去搜会找不到文件，必须知道它叫 <code>道德經_老子.txt</code>。</p>
+  <p><em>本文不改动这些文件（改名会牵动已有引用）。
+  处理方式是在此<strong>登记对照</strong>，让检索者知道该找哪个名字。</em></p>
+</div>
+
+<!-- ============================================================ -->
+<h2>四 · 缺口：没有拿到的书</h2>
+
+<div class="box warn">
+  <div class="h">★ 「四书」只有《論語》一部</div>
+  <p><strong>《孟子》《大學》《中庸》三本没有拿到。</strong></p>
+  <p><em>尝试过 Project Gutenberg 的 #3100 / #4094，但那是 Legge 的<strong>英译</strong>本，
+  中文原文占比仅约 1% 与 8%，作为中文底本不合格。</em></p>
+  <p><strong>另据早前记录，以下来源当时不可用</strong>：ctext.org（Cloudflare 拦截，
+  且其页面明确要求研究者通过机构订阅）· 国学网（人机验证）· 古诗文网（返回空）·
+  中文维基文库（连接重置）· archive.org（超时）· openlibrary（连接失败）。</p>
+  <p><em>可用的来源是 Project Gutenberg（古典中文属公共领域）与殆知阁、中国古籍全录。</em></p>
+</div>
+
+<div class="box">
+  <div class="h">◆ 这一缺口意味着什么</div>
+  <p><strong>《大學》缺失的后果最直接</strong>：</p>
+  <p><em>「格物致知」出自《大學》——而它是这一轴用来质疑 01 域（认识论）的<strong>主要武器之一</strong>。
+  没有原文，就只能引用二手转述。</em></p>
+  <p><strong>《中庸》缺失影响「诚」这条线</strong>；<strong>《孟子》缺失影响「性善」与「义利之辨」。</strong></p>
+</div>
+
+<!-- ============================================================ -->
+<h2>五 · 使用限制（逐条）</h2>
+
+<table>
+  <tr><th style="width:26%">限制</th><th>说明</th></tr>
+  <tr><td><strong>无注疏</strong></td>
+    <td>这 16 部全部是<strong>白文</strong>（只有原文，没有注解）。
+    <em>古文多义性未消，凡解释皆有歧义——产出中凡涉解释处，均须标「待议」。</em></td></tr>
+  <tr><td><strong>繁体</strong></td>
+    <td>除《論語》純中文底本外，其余均为繁体，
+    <em>检索简体词会落空（例：搜「损有余」不如搜「損有餘」）。</em></td></tr>
+  <tr><td><strong>无标点差异登记</strong></td>
+    <td>各版本句读不同，<em>《論語》已做过底本考订，其余 15 部未做。</em></td></tr>
+  <tr><td><strong>Gutenberg 页眉页脚</strong></td>
+    <td>每份文件首尾含约 1.9 万英文字符的版权说明。
+    <em>引用时须避开；但统计汉字数时不受影响。</em></td></tr>
+  <tr><td><strong>《宋史》未做分卷</strong></td>
+    <td>3,907,797 汉字在单一文件里，<em>无法按篇定位，需先做分卷索引才可用。</em></td></tr>
+</table>
+
+<!-- ============================================================ -->
+<h2>六 · 这一轴的产出清单与状态</h2>
+
+<table>
+  <tr><th style="width:30%">产出</th><th style="width:10%">状态</th><th>说明</th></tr>
+  <tr><td><strong>定位决策</strong></td><td>✓ 已完成</td>
+    <td>确立「不新增中国哲学域」的判断，并列出按域分发的五条路线</td></tr>
+  <tr><td><strong>精读笔记与专业问题</strong></td><td>✓ 已完成</td>
+    <td>《論語》结构（本·途·成）· 儒道三处冲突 · 24 个专业问题 · 三条使用限制</td></tr>
+  <tr><td><strong>儒家加法 vs 道家减法</strong></td><td>✓ 已完成</td>
+    <td>三处正面冲突的原文并列与裁决</td></tr>
+  <tr><td><strong>关系性自我 · 助人手册</strong></td><td>✓ 已完成</td>
+    <td>12 个「你和他的自我模型不一样」的场景</td></tr>
+  <tr><td><strong>整体架构</strong></td><td>✓ 已补</td>
+    <td>这一轴的地图：它是什么、与各域的接口、未做的事</td></tr>
+  <tr><td><strong>问题手册</strong></td><td>✓ 已补</td>
+    <td>三档标准格式，与项目其余 17 份问题手册对齐</td></tr>
+  <tr><td><strong>底本说明</strong></td><td>✓ 本页</td>
+    <td>16 部原典的实际状态</td></tr>
+  <tr><td colspan="3" style="background:var(--dormant-soft);">↓ 以下五条来自《定位决策》第四节，<strong>一条都尚未开工</strong></td></tr>
+  <tr><td>01 域 · 关系性自我问题手册（总纲）</td><td><span style="color:var(--dormant);">未做</span></td>
+    <td>用它逼问项目现有的每一条认识论前提</td></tr>
+  <tr><td>02 域 · WEIRD 之外的心智模型</td><td><span style="color:var(--dormant);">未做</span></td>
+    <td><em>《定位决策》认为杠杆最大的一条</em>：把两种自我观当可检验的心理学假设对照</td></tr>
+  <tr><td>05 域 · 地理决定论的检验：中国案例</td><td><span style="color:var(--dormant);">未做</span></td>
+    <td>中国史是本项目零覆盖；材料已在库（史記·漢書·宋史·左傳）</td></tr>
+  <tr><td>06 域 · 关系作为主角</td><td><span style="color:var(--dormant);">未做</span></td>
+    <td>指出西方叙事学预设了「个体主角」；材料已在库（5 部小说）</td></tr>
+  <tr><td>08 域 · 「孝」的解析</td><td><span style="color:var(--dormant);">未做</span></td>
+    <td>它在西方伦理学框架里无法归类——正合 08 域第 8 层「越界之维」</td></tr>
+</table>
+
+<!-- ============================================================ -->
+<h2>七 · 一句话总结这一轴的状态</h2>
+
+<blockquote>
+这一轴的<strong>判断已经做完</strong>（它是什么、该往哪走、五条路线各补什么），
+<strong>原料也已经在库</strong>（16 部、879 万汉字）。<br>
+缺的是<strong>把原料接上判断</strong>——五条路线一条都没开工。
+<span class="who">中国智慧 · 底本说明</span>
+</blockquote>
+
+<footer class="doc">
+  底层 · 中国智慧 · 底本说明<br>
+  <em>全部数字由磁盘实测（逐文件统计汉字数），不引用任何旧估算；<br>
+  统计口径：汉字 = U+4E00–U+9FFF 字符数，Project Gutenberg 英文页眉页脚不计入；<br>
+  本文不改动任何原典文件，名称对齐问题以登记方式处理</em>
+</footer>
+
+</div>
+</body>
+</html>

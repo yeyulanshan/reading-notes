@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>中国智慧 · 问题手册 · 底层</title>
+<meta name="description" content="「关系性自我」这一轴的 28 个问题，三档：概念理解 / 应用与辨认 / 边界与反驳。引文均回原文核对。">
+<meta name="theme-color" content="#f2f8fc">
+<style>
+  :root{
+    --paper:#f2f8fc; --card:#ffffff; --card-2:#e9f4fb;
+    --edge:#cfe0ec; --edge-lit:#a4c6dd;
+    --ink:#12232e; --ink-2:#627480; --ink-3:#587286;
+    --accent:#2c7ea2; --gold:#84744a;
+    --quote-bg:#fbf8ef; --quote-edge:#d8cba4; --quote-ink:#5f5527;
+    --warn:#a85035; --warn-soft:#fcf1ec;
+    --l1:#2c6f9e; --l2:#8a6a24; --l3:#7a4f96;
+    --key:#7e713d;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--paper); color:var(--ink); line-height:1.9;
+    -webkit-font-smoothing:antialiased; padding:32px 16px 60px;}
+  ::selection{background:rgba(63,180,232,.26); color:#0d2430;}
+  .wrap{max-width:900px; margin:0 auto;}
+  header.doc{background:var(--card); border:1px solid var(--edge);
+    border-top:4px solid var(--accent); border-radius:10px;
+    padding:34px 34px 28px; margin-bottom:22px;}
+  header.doc h1{font-size:26px; font-weight:800; line-height:1.4; margin-bottom:12px;
+    background:linear-gradient(135deg,#1d4a68,#2c7ea2 55%,#377972);
+    -webkit-background-clip:text; background-clip:text; color:transparent;}
+  header.doc .sub{font-size:14.6px; color:var(--ink-2); line-height:1.95;}
+  header.doc .src{margin-top:16px; padding-top:14px; border-top:1px dashed var(--edge);
+    font-size:12.6px; color:var(--ink-3); line-height:1.95;}
+  h2{font-size:19px; font-weight:700; margin:40px 0 6px; padding-left:12px;
+    border-left:4px solid var(--gold); line-height:1.55;}
+  .s{color:var(--ink-3); font-size:12.9px; margin:0 0 16px 16px; line-height:1.85;}
+  h3{font-size:17px; font-weight:700; margin:34px 0 8px;}
+  h3 .cnt{font-size:12.4px; font-weight:600; color:var(--ink-3); margin-left:8px;}
+  p{font-size:14.5px; color:var(--ink-2); margin-bottom:12px; text-wrap:pretty;}
+  p strong{color:var(--ink);}
+  code{font-family:ui-monospace,Consolas,monospace; font-size:12.8px;
+    background:var(--card-2); border:1px solid var(--edge); border-radius:4px;
+    padding:1px 6px; color:#1d5c86; word-break:break-all;}
+  a{color:var(--accent); text-decoration:none; border-bottom:1px solid #cfe4f0;}
+  blockquote{margin:13px 0; padding:13px 18px; background:var(--quote-bg);
+    border:1px solid #e8dfc4; border-left:3px solid var(--quote-edge);
+    border-radius:5px; font-size:14.1px; color:var(--quote-ink); line-height:1.95;}
+  blockquote p{margin-bottom:8px; color:inherit; font-size:inherit;}
+  blockquote p:last-child{margin-bottom:0;}
+  blockquote .who{display:block; margin-top:7px; font-size:12px;
+    color:#8a7a52; text-align:right;}
+  .box{background:var(--card); border:1px solid var(--edge); border-radius:9px;
+    padding:19px 22px; margin:16px 0; font-size:14px; color:var(--ink-2);}
+  .box .h{font-weight:700; color:var(--gold); margin-bottom:10px; font-size:13.6px;}
+  .box p+p{margin-top:9px;} .box strong{color:var(--ink);}
+  .box.warn{background:var(--warn-soft); border-color:#e8cfc4;}
+  .box.warn .h{color:var(--warn);}
+
+  /* —— 题目块（项目标准结构） —— */
+  .q{background:var(--card); border:1px solid var(--edge); border-radius:9px;
+    padding:17px 20px 15px; margin-bottom:14px;}
+  .q-head{display:flex; align-items:center; gap:9px; flex-wrap:wrap; margin-bottom:9px;}
+  .q-id{font-family:ui-monospace,Consolas,monospace; font-size:11.6px; font-weight:700;
+    color:#fff; background:var(--accent); border-radius:4px; padding:1px 8px;}
+  .q-lv{font-family:ui-monospace,Consolas,monospace; font-size:10.6px; font-weight:700;
+    padding:1px 7px; border-radius:3px;}
+  .lv1{background:#e3eff8; color:var(--l1); border:1px solid #bcd8ec;}
+  .lv2{background:#f7f0dd; color:var(--l2); border:1px solid #e3d3a8;}
+  .lv3{background:#f2eaf7; color:var(--l3); border:1px solid #d9c4e6;}
+  .q-tag{font-size:11.6px; color:var(--ink-3); border:1px solid var(--edge);
+    border-radius:999px; padding:1px 9px; background:#f7fbfe;}
+  .q-text{font-size:15px; font-weight:600; color:var(--ink); line-height:1.8;}
+  details{margin-top:11px; border-top:1px dashed var(--edge); padding-top:10px;}
+  details summary{cursor:pointer; font-size:13.4px; font-weight:600; color:var(--accent);
+    list-style:none; user-select:none;}
+  details summary::-webkit-details-marker{display:none;}
+  details summary::before{content:"▸ "; font-size:11px;}
+  details[open] summary::before{content:"▾ ";}
+  .a{padding-top:12px; font-size:14.2px; color:var(--ink-2);}
+  .a p{font-size:14.2px;}
+  .a strong{color:var(--ink);}
+  .key{color:var(--key); font-weight:700;}
+  .pit{margin-top:11px; padding:11px 14px; background:var(--warn-soft);
+    border:1px solid #e8cfc4; border-left:3px solid var(--warn); border-radius:5px;
+    font-size:13.5px; color:#8a4630; line-height:1.9;}
+  .pit .lbl{display:block; font-weight:700; font-size:12.6px; margin-bottom:5px;}
+  .pit strong{color:#7a3d28;}
+  table{width:100%; border-collapse:collapse; margin:14px 0; font-size:13.4px;}
+  th,td{padding:9px 11px; border:1px solid var(--edge); text-align:left;
+    vertical-align:top; line-height:1.8;}
+  th{background:var(--card-2); color:#1d5c86; font-weight:700; font-size:12.7px;}
+  td{color:var(--ink-2);} td strong{color:var(--ink);}
+  ul,ol{margin:11px 0 14px 22px;}
+  li{font-size:14.4px; color:var(--ink-2); margin-bottom:8px; line-height:1.9;}
+  li strong{color:var(--ink);}
+  footer.doc{margin-top:34px; padding-top:20px; border-top:1px solid var(--edge);
+    font-size:12.4px; color:var(--ink-3); line-height:2; text-align:center;}
+  @media(max-width:700px){
+    body{padding:16px 10px 40px;} header.doc{padding:24px 20px 20px;}
+    header.doc h1{font-size:21px;} h2{font-size:17px;} h3{font-size:15.6px;}
+    .q{padding:14px 14px 12px;} table{font-size:12.1px;} th,td{padding:7px 8px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="doc">
+  <h1>中国智慧 · 问题手册</h1>
+  <p class="sub">「关系性自我」这一轴 · 35 题 · 三档：概念理解 / 应用与辨认 / 边界与反驳</p>
+  <p class="src">
+    <strong>底本</strong>：《論語》純中文底本 18,613 汉字 ·《道德經》5,698 ·《王陽明全集》763,358<br>
+    <strong>所有引文均逐句核对过原文</strong>，且<strong>照底本原样写</strong>（含顿号与繁体；《論語》底本的句读与通行本不同，见<a href="論語/底本考订.html">底本考订</a>）。<br>
+    相关产出：<a href="中国智慧-整体架构.html">整体架构</a> ·
+    <a href="中国智慧-底本说明.html">底本说明</a> ·
+    <a href="中国智慧-精华笔记与专业问题.html">精读笔记</a> ·
+    <a href="儒家加法与道家减法.html">儒家加法 vs 道家减法</a> ·
+    <a href="关系性自我-助人手册.html">助人手册</a>
+  </p>
+</header>
+
+<div class="box warn">
+  <div class="h">⚠️ 三条使用限制（先看这个再看题）</div>
+  <p><strong>① 无注疏可依</strong>：这一轴的 16 部原典<strong>全部是白文</strong>（只有原文，没有注解）。
+  古文的<strong>多义性未消</strong>——<em>凡本手册给的解释，都可能有别的读法，请回原文自己判断。</em></p>
+  <p><strong>② 底本句读与通行本不同</strong>：《論語》底本的章号与断句与通行本有出入，
+  <em>引用时不能按记忆写，须照底本。</em></p>
+  <p><strong>③ 有 30 题出自《論語》，《道德經》3 题 ·《王陽明》2 题</strong>——
+  <em>另外 11 部原典（史記·漢書·宋史·左傳·易經·鬼谷子等）本手册尚未出题，
+  原因见<a href="中国智慧-底本说明.html">底本说明</a>：体量过大，需先做主题检索。</em></p>
+</div>
+
+<!-- ============================================================ -->
+<h2>L1 · 概念理解</h2>
+<div class="s">读懂主张本身：它说了什么、用了什么概念</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">A1</span><span class="q-lv lv1">L1</span>
+    <span class="q-tag">核心概念</span></div>
+  <div class="q-text">「仁」在《論語》里出现上百次，而孔子每次说的都不一样。这是没定义清楚，
+  还是「仁」属于另一类概念？</div>
+  <details><summary>展开参考答案</summary><div class="a">
+    <p><strong>先看四个学生问同一个问题，得到的四个不同答案</strong>（均属《顏淵》篇）：</p>
+    <blockquote>
+      <p>顏淵問仁。子曰、克己復禮為仁。一日克己復禮、天下歸仁焉。為仁由己、而由人乎哉。仲弓問仁。子曰、出門如見大賓、使民如承大祭。己所不欲、勿施於人。司馬牛問仁。子曰、仁者其言也訒。樊遲問仁。子曰、愛人。<span class="who">《論語》底本 · 顏淵篇</span></p></blockquote>
+    <p><span class="key">所以《論語》不觉得这是缺陷</span>——它没有试图给「仁」下一个覆盖全部用例的定义。</p>
+    <p><strong>这说明「仁」是一个实践型概念，不是一个定义型概念</strong>：
+    它的内容由「<em>谁在问、在什么处境</em>」决定。
+    <em>对颜渊说「克己复礼」，对司马牛说「说话要慢」——后者据说是个性子急躁的人，
+    所以给他的答案与给颜渊的完全不同。</em></p>
+    <div class="pit"><span class="lbl">⚠️ 常见误读</span>
+      把四个答案<strong>当成四种并列的德目</strong>（以为「仁 = 克己复礼 + 爱人 + 言语谨慎 + ……」）——
+      那样就成了拼盘，而《論語》的做法是<strong>因人给方</strong>。
+      另一常见误读是据此说「孔子没有体系」——<em>他的体系不是定义体系，是「怎么做人」的体系。</em></div>
+  </div></details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">A2</span><span class="q-lv lv1">L1</span>
+    <span class="q-tag">结构根基</span></div>
+  <div class="q-text">「孝弟也者、其為仁之本與」——这个「本」字在主张什么？
+  如果把它改成「孝弟是仁的一种表现」，整本书会有什么变化？</div>
+  <details><summary>展开参考答案</summary><div class="a">
+    <blockquote>有子曰、其為人也孝弟、而好犯上者鮮矣、不好犯上、而好作亂者、未之有也。君子務本、本立、而道生、孝弟也者、其為仁之本與。<span class="who">《論語》底本 · 學而篇</span></blockquote>
+    <p><strong>「本」做的工作是「逻辑优先」</strong>：
+    若说「孝弟是一种表现」，它与别的表现就是<strong>并列</strong>的；
+    而「本」使它<strong>成为其他一切的前提</strong>——<em>没有孝弟，仁就没有生长的地方。</em></p>
+    <p><span class="key">换成「一种表现」的后果</span>：整本书的结构会松掉。
+    <em>因为《論語》不讲「什么是仁」，它讲「仁从哪里长出来」；一旦孝弟降为并列项，
+    「从哪里长出来」这个问题就没有答案了，全书就变成一本格言集。</em></p>
+    <div class="pit"><span class="lbl">⚠️ 两处容易忽略</span>
+      <strong>① 这一章是有子说的，不是孔子说的</strong>——
+      《論語》把有子的话编在很靠前的位置，本身就值得注意。<br>
+      <strong>② 代价是真实的</strong>：<em>一个没有家庭、或家庭很糟的人，还能不能成仁？
+      《論語》没有正面处理这个问题。</em></div>
+  </div></details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">A3</span><span class="q-lv lv1">L1</span>
+    <span class="q-tag">结构根基</span></div>
+  <div class="q-text">「吾道一以貫之」是孔子说的，但那个「一」的内容是曾子补的。
+  这个安排说明什么？</div>
+  <details><summary>展开参考答案</summary><div class="a">
+    <blockquote>子曰、參乎、<strong>吾道一以貫之</strong>。曾子曰、唯。子出、門人問曰、何謂也。
+    曾子曰、夫子之道、<strong>忠恕而已矣</strong>。
+    <span class="who">《論語》底本 · 里仁篇</span></blockquote>
+    <p><strong>孔子只说了「一以贯之」，没说那个「一」是什么。</strong>
+    门人问的是<strong>曾子</strong>，答案也是<strong>曾子</strong>给的。</p>
+    <p><span class="key">所以「忠恕」是曾子的解释，不是孔子的原话。</span>
+    而《論語》把这个解释过程<strong>原样记下来</strong>，没有删掉它。</p>
+    <p><strong>这个安排说明两件事</strong>：
+    <em>① 孔子的教学里，「一」是要学生自己说出来的，不是给的；
+    ② 《論語》作为文本，保留了「弟子如何理解老师」这一层——
+    它不假装自己是一份权威定义表。</em></p>
+    <div class="pit"><span class="lbl">⚠️ 常见误读</span>
+      直接把「忠恕」当成孔子对「一以贯之」的定义——
+      <em>那是把曾子的答复当成了老师的原话。</em></div>
+  </div></details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">A4</span><span class="q-lv lv1">L1</span>
+    <span class="q-tag">方法论</span></div>
+  <div class="q-text">孔子几乎不给定义。这是思想不严密，还是一种自觉的方法？
+  要判断这一点，你需要先看哪两处原文？</div>
+  <details><summary>展开参考答案</summary><div class="a">
+    <p><strong>关键的两处</strong>：</p>
+    <blockquote>子曰、吾有知乎哉、<strong>無知也</strong>。有鄙夫問於我、空空如也。
+    我叩其兩端而竭焉。<span class="who">《論語》底本 · 子罕篇</span></blockquote>
+    <blockquote>子曰、吾嘗終日不食、終夜不寢、以思、無益、<strong>不如學也</strong>。
+    <span class="who">《論語》底本 · 衛靈公篇</span></blockquote>
+    <p><strong>第一处</strong>：孔子自称「无知」，方法是「叩其两端而竭焉」——
+    <em>把对方问题的两端都问到底，让答案从对方那里出来。</em>
+    <strong>这是教育方法，不是在下判断。</strong></p>
+    <p><strong>第二处</strong>：他明确说「思不如学」——<em>不是贬低思考，是说没有材料的思想没有用。</em></p>
+    <p><span class="key">所以「不给定义」更可能是一种自觉的方法</span>：
+    <em>他教的是「怎么做人」，而做人的标准如果被固定成一个定义，就变成可背诵的条文了——
+    那恰好不是他要的。</em></p>
+    <div class="pit"><span class="lbl">⚠️ 代价也是真实的</span>
+      方法上的自觉，会<strong>伪装成理论上的模糊</strong>。
+      <em>后果是：《論語》可以被引用来支持互相矛盾的做法，而且都有道理。
+      这不是读者的问题，是文本的性质。</em></div>
+  </div></details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">A5</span><span class="q-lv lv1">L1</span>
+    <span class="q-tag">概念辨析</span></div>
+  <div class="q-text">「學而不思則罔、思而不學則殆」与「吾嘗終日不食、終夜不寢、以思、無益、不如學也」
+  ——这两处一致吗？</div>
+  <details><summary>展开参考答案</summary><div class="a">
+    <blockquote>子曰、<strong>學而不思則罔、思而不學則殆</strong>。<span class="who">為政篇</span></blockquote>
+    <blockquote>子曰、吾嘗終日不食、終夜不寢、以思、無益、<strong>不如學也</strong>。<span class="who">衛靈公篇</span></blockquote>
+    <p><strong>表面上冲突</strong>：前者说学思<strong>并重</strong>（缺一不可）；
+    后者说空想<strong>不如去学</strong>（学优先）。</p>
+    <p><span class="key">可以调和，关键在于两处的「思」不是同一种思</span>：</p>
+    <ul>
+      <li>「思而不學則殆」的「思」，是<strong>无所依凭的思</strong>（没有学的材料）——所以危险；</li>
+      <li>「以思、無益」检讨的，正是这种<strong>没有材料的空想</strong>（他试过，说没用）。</li>
+    </ul>
+    <p><em>而「學而不思則罔」反对的是另一件事：<strong>只学不思</strong>——
+    有材料但不加工，就会迷惘无所得。</em></p>
+    <p><strong>所以两处并不矛盾</strong>：一处反对「无材料的思」，一处反对「无思的学」。
+    <em>真正的对立面是各自的那个「缺」。</em></p>
+    <div class="pit"><span class="lbl">⚠️ 常见误读</span>
+      把「不如學也」读成「思考不重要」——<em>那是把一次自我检讨当成了普遍主张。
+      孔子说的是「我曾经整天不吃不睡地想，没有收获」，这是一个经验陈述，不是一条方法论断言。</em></div>
+  </div></details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">A6</span><span class="q-lv lv1">L1</span>
+    <span class="q-tag">德目关系</span></div>
+  <div class="q-text">「信近於義、言可復也」——那「信」和「义」哪个优先？</div>
+  <details><summary>展开参考答案</summary><div class="a">
+    <blockquote>有子曰、<strong>信近於義、言可復也</strong>。恭近於禮、遠恥辱也。
+    <span class="who">《論語》底本 · 學而篇</span></blockquote>
+    <p><strong>这一句的前提是：信有可能「不近于义」。</strong>
+    <em>否则不需要说「近于义」这个条件。</em></p>
+    <p><span class="key">所以答案是：义优先。</span>
+    一个承诺如果本身不合义，就不必守——<em>「言可復也」（说话能兑现）的前提是
+    「信近於義」。</em></p>
+    <p><strong>而这一点在《論語》里还有更硬的一处支持</strong>：</p>
+    <blockquote>葉公語孔子曰、吾黨有直躬者、其父攘羊、而子證之。孔子曰、
+    吾黨之直者異於是、<strong>父為子隱、子為父隱、直在其中矣</strong>。<span class="who">子路篇</span></blockquote>
+    <p><em>儿子不为父亲作证——这里「直」压过了「守法」。
+    可见《論語》的德目之间有次序，而这个次序不是法律次序。</em></p>
+    <div class="pit"><span class="lbl">⚠️ 这一处的边界很难划</span>
+      「义优先」听着合理，但《論語》<strong>没有给出判断「合不合义」的程序</strong>。
+      <em>所以到了具体情形，「义」由谁说、按什么标准说——文本没有回答。</em></div>
+  </div></details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">A7</span><span class="q-lv lv1">L1</span>
+    <span class="q-tag">德目关系</span></div>
+  <div class="q-text">《論語》有「恕」（己所不欲、勿施於人），但有没有对付「恶」的部分？</div>
+  <details><summary>展开参考答案</summary><div class="a">
+    <p><strong>有，而且很可能不是你预期的那个答案</strong>：</p>
+    <blockquote>或曰、以德報怨、何如？子曰、何以報德？
+    <strong>以直報怨、以德報德。</strong><span class="who">《論語》底本 · 憲問篇</span></blockquote>
+    <p><strong>孔子明确拒绝了「以德报怨」</strong>——理由是<em>「何以報德？」</em>
+    （那你拿什么报答德？）</p>
+    <p><span class="key">他给的是「以直报怨」</span>：既不是以德（那会抹平德与怨的差别），
+    也不是以怨（那是以恶报恶）。
+    <em>「直」是什么，文本没有进一步定义——这是《論語》里最难落实的一个德目。</em></p>
+    <p><strong>另一处值得注意的是「直」的用法不一致</strong>：
+    <em>上面「父為子隱」那一章，把「隐」称为「直」；
+    而这里「以直報怨」的「直」显然不是隐。
+    同一部书里，「直」至少有两种用法。</em></p>
+    <div class="pit"><span class="lbl">⚠️ 与《道德經》的正面冲突</span>
+      第六十三章有「<strong>報怨以德</strong>」——<em>与孔子这一句直接相反。
+      这是儒家与道家三处冲突之一，完整对照见
+      <a href="儒家加法与道家减法.html">儒家加法 vs 道家减法</a>。</em></div>
+  </div></details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">A8</span><span class="q-lv lv1">L1</span>
+    <span class="q-tag">文本性质</span></div>
+  <div class="q-text">《論語》为什么以「學而」开头，以「堯曰」结尾？这个首尾安排有意图吗？</div>
+  <details><summary>展开参考答案</summary><div class="a">
+    <p><strong>两端各有一个可核实的特征</strong>：</p>
+    <ul>
+      <li>开头「學而」第一句：「子曰、<strong>學而時習之</strong>、不亦說乎」——
+      <em>全书从「学」开始。</em></li>
+      <li>结尾「堯曰」是<strong>唯一以「堯曰」起首、通篇讲治道传承</strong>的篇章：
+      <em>从尧传给舜、舜传给禹的训辞，收束全书。</em></li>
+    </ul>
+    <p><span class="key">一个从「个人怎么学」开始、到「天下怎么治」结束的安排。</span>
+    <em>这与《論語》的整体路线（修身 → 成人 → 治世）是吻合的。</em></p>
+    <p><strong>但必须说清证据的强度</strong>：《論語》是<strong>弟子与再传弟子编纂</strong>的，
+    二十篇的次序<strong>未必是孔子的安排，甚至未必是一次编成的</strong>。
+    <em>所以「首尾有意图」是一个合理的读法，不是可证实的事实。</em></p>
+    <div class="pit"><span class="lbl">⚠️ 常见误读</span>
+      把编纂者的安排说成孔子的设计——<em>这两者需要分开说。
+      可以说「这个编排产生了一个效果」，不能说「孔子这样安排」。</em></div>
+  </div></details>
+</div>
+
+<!-- ============================================================ -->
+<h2>L2 · 应用与辨认</h2>
+<div class="s">把主张推到具体处境：能辨认、能用、能区分</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">B1</span><span class="q-lv lv2">L2</span>
+    <span class="q-tag">辨认</span></div>
+  <div class="q-text">如果要你删掉三章而「整栋楼还立得住」——删哪三章？哪三章绝对不能删？</div>
+  <details><summary>展开参考答案</summary><div class="a">
+    <p><strong>这道题问的是：哪些章是<em>承重的</em>。</strong>
+    对每一章的「内容」很熟，与知道它「承重」是两回事。</p>
+    <p><strong>一处可用的候选</strong>：「孝弟也者、其為仁之本與」（學而）——
+    <em>它给全书一个起点，删了之后「仁从哪里长出来」就没有答案。</em></p>
+    <p><strong>另一处</strong>：「仁遠乎哉、<strong>我欲仁、斯仁至矣</strong>」（述而）——
+    <em>它主张仁当下可及，与「孝弟为本」（要靠长期生长）形成张力。
+    删掉它，全书会变得单向。</em></p>
+    <div class="pit"><span class="lbl">⚠️ 这道题的陷阱</span>
+      如果选的是「最有名的三章」（學而時習之、己所不欲勿施於人、三人行必有我師），
+      <strong>那说明判断标准是「知名度」而不是「承重性」</strong>——
+      <em>这两者常常不一致，而这正是这道题要暴露的。</em></div>
+  </div></details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">B2</span><span class="q-lv lv2">L2</span>
+    <span class="q-tag">辨认</span></div>
+  <div class="q-text">「孝弟為仁之本」（要从关系里长出来）和「仁遠乎哉、我欲仁、斯仁至矣」（当下就能有）
+  矛盾吗？</div>
+  <details><summary>展开参考答案</summary><div class="a">
+    <blockquote>子曰、<strong>仁遠乎哉、我欲仁、斯仁至矣</strong>。
+    <span class="who">《論語》底本 · 述而篇</span></blockquote>
+    <p>加上前一条「孝弟也者、其為仁之本與」，两处确实<strong>方向相反</strong>：
+    <em>一个说仁要靠长期在关系里生长，一个说我要仁、仁就来了。</em></p>
+    <p><span class="key">判断这一处是不是「矛盾」，取决于怎么定义「本」</span>：</p>
+    <table>
+      <tr><th style="width:34%">若「本」是……</th><th>那么</th></tr>
+      <tr><td><strong>逻辑根据</strong>（没有孝弟就没有仁）</td>
+        <td><strong>矛盾</strong>——仁不能既依赖长期生长，又当下可及</td></tr>
+      <tr><td><strong>发生顺序</strong>（人在关系里先学会的）</td>
+        <td><strong>不矛盾</strong>——先在哪里学会，与随时能不能做到，是两件事</td></tr>
+    </table>
+    <p><em>而《論語》自己<strong>没有说清是哪一个</strong>。所以这一处是真张力，不是误读，
+    但它是不是「矛盾」，由你选择的读法决定。</em></p>
+    <div class="pit"><span class="lbl">⚠️ 这一处与《道德經》第十八章接上</span>
+      老子说「六親不和，有孝慈」——<em>直接把「孝慈」当成关系坏了的<strong>症状</strong>，
+      而不是仁的根本。</em>这一处使上面的张力变成<strong>三方</strong>：
+      孔子（孝弟为本）· 孔子（仁远乎哉）· 老子（孝慈是症状）。</div>
+  </div></details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">B3</span><span class="q-lv lv2">L2</span>
+    <span class="q-tag">应用</span></div>
+  <div class="q-text">「己欲立而立人、己欲達而達人」——用你自己的处境举一个例子，
+  并说明它和「己所不欲、勿施於人」是什么关系。</div>
+  <details><summary>展开参考答案</summary><div class="a">
+    <blockquote>夫仁者、<strong>己欲立而立人、己欲達而達人</strong>。
+    能近取譬、可謂仁之方也已。<span class="who">《論語》底本 · 雍也篇</span></blockquote>
+    <blockquote>子曰、其恕乎、<strong>己所不欲、勿施於人</strong>。<span class="who">衛靈公篇</span></blockquote>
+    <p><span class="key">两者的关系是「消极 / 积极」之分，而且是单向包含</span>：</p>
+    <ul>
+      <li><strong>己所不欲勿施於人</strong>：<em>不做什么</em>——不把自己不想要的加给别人。
+      <strong>这是底线，做到了可能仍然什么都没做。</strong></li>
+      <li><strong>己欲立而立人</strong>：<em>要做什么</em>——自己想站住，就让别人也站住。
+      <strong>这是要求你主动出力。</strong></li>
+    </ul>
+    <p><strong>所以「勿施於人」是不做恶，「立人达仁」是行善。</strong>
+    <em>前者容易被满足（只要克制就行），后者不能。</em></p>
+    <p><em>而《論語》把「恕」（己所不欲）当作可以「一以貫之」的那个「一」，
+    却没有把「立人达人」放上去——这个选择本身值得注意：
+    它把最低要求当成了贯穿全书的线索。</em></p>
+    <div class="pit"><span class="lbl">⚠️ 常见误读</span>
+      把「己所不欲勿施於人」当成儒家的最高标准——
+      <strong>它其实是底线</strong>，<em>而《論語》把底线当成了总纲。
+      这可能是因为底线更可操作，也可能是因为它更不容易被曲解。</em></div>
+  </div></details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">B4</span><span class="q-lv lv2">L2</span>
+    <span class="q-tag">应用</span></div>
+  <div class="q-text">「三年無改於父之道、可謂孝矣」和「見賢思齊、見不賢而內自省」能同时成立吗？</div>
+  <details><summary>展开参考答案</summary><div class="a">
+    <blockquote>子曰、父在、觀其志。父沒、觀其行。<strong>三年無改於父之道、可謂孝矣</strong>。
+    <span class="who">《論語》底本 · 學而篇</span></blockquote>
+    <blockquote>子曰、<strong>見賢思齊焉、見不賢而內自省也</strong>。<span class="who">里仁篇</span></blockquote>
+    <p><strong>两处指向不同的东西</strong>：</p>
+    <ul>
+      <li>前者要求<strong>不改</strong>（对父之道保持三年）；</li>
+      <li>后者要求<strong>改</strong>（见到比自己好的就要向上去）。</li>
+    </ul>
+    <p><span class="key">能同时成立，但需要加一个区分</span>：<em>「父之道」指的是父亲的
+    行事方式与价值取向，「见贤思齐」指的是自己向谁学。
+    这两件事可以是同一个方向——父亲若本来就是「贤」，那「不改」与「思齐」不冲突。</em></p>
+    <p><strong>真正的冲突出现在一种情形</strong>：<em>若父亲不是「贤」，
+    那「三年无改」与「见不贤而内自省」就撞上了——
+    你要么跟着父亲（不贤），要么改。而《論語》没有直接处理这个情形。</em></p>
+    <div class="pit"><span class="lbl">⚠️ 这一处的历史背景不能忽略</span>
+      「三年无改」是在<strong>宗法社会</strong>里说的，
+      <em>当时的「父之道」包含具体的家业与身份继承，不只是个人习惯。
+      把它移到今天，需要先说明移的是什么。</em></div>
+  </div></details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">B5</span><span class="q-lv lv2">L2</span>
+    <span class="q-tag">文本处理</span></div>
+  <div class="q-text">「民可使由之、不可使知之」——这一章你怎么处理？</div>
+  <details><summary>展开参考答案</summary><div class="a">
+    <blockquote>子曰、<strong>民可使由之、不可使知之</strong>。<span class="who">《論語》底本 · 泰伯篇</span></blockquote>
+    <p><strong>这一章历来有三种处理方式，各有代价</strong>：</p>
+    <table>
+      <tr><th style="width:26%">处理方式</th><th>做法</th><th style="width:26%">代价</th></tr>
+      <tr><td><strong>① 照字面接受</strong></td>
+        <td>承认孔子主张百姓可以驱使、不必让他们懂道理</td>
+        <td><em>与现代政治观念直接冲突</em></td></tr>
+      <tr><td><strong>② 改断句</strong></td>
+        <td>读作「民可，使由之；不可，使知之」<br>（百姓认可，就让他做；不认可，就让他明白）</td>
+        <td><em>断句依据薄弱——是在「救」这句话</em></td></tr>
+      <tr><td><strong>③ 语境化</strong></td>
+        <td>指出这是对「民」的治理技术陈述，不是价值主张</td>
+        <td><em>但《論語》别处对「民」的用法并不支持这个区分</em></td></tr>
+    </table>
+    <p><span class="key">三者的共同弱点是：都在为这一句话找一个可接受的读法。</span>
+    <em>而最诚实的做法可能是先承认：这一章与《論語》别处的「有教无类」「诲人不倦」
+    存在张力，而这个张力在文本内部没有解决。</em></p>
+    <div class="pit"><span class="lbl">⚠️ 不要做的事</span>
+      <strong>不要用②的断句来「消除」这一章的困难</strong>——
+      <em>那样做既不诚实，也丢掉了这一章真正的用处：
+      它逼你面对「同一部经典里可以有你不认同的内容」这件事。</em></div>
+  </div></details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">B6</span><span class="q-lv lv2">L2</span>
+    <span class="q-tag">辨认</span></div>
+  <div class="q-text">「子不語、怪、力、亂、神」——《論語》里有没有和这句冲突的内容？</div>
+  <details><summary>展开参考答案</summary><div class="a">
+    <blockquote>子不語、<strong>怪、力、亂、神</strong>。<span class="who">《論語》底本 · 述而篇</span></blockquote>
+    <p><strong>有，而且是最常被引的那一章之一</strong>：</p>
+    <blockquote>子疾病。子路請禱。子曰、有諸。子路對曰、有之、誄曰、禱爾於上下神祗。子曰、丘之禱久矣。<span class="who">述而篇</span></blockquote>
+    <p><em>子路要为孔子祷告，孔子先问「有这回事吗」，然后说「我祷告很久了」——
+    这是对「神」这个范畴的处理，而不是彻底不谈。</em></p>
+    <p><span class="key">所以「不语」不等于「不信」或「不谈」</span>：
+    <em>「不语」是不作为教学主题来讲，与在具体对话里被提及，是两件事。
+    《論語》正是这样处理的——它记下了弟子们关于鬼神的问题，和孔子的回应。</em></p>
+    <div class="pit"><span class="lbl">⚠️ 常见误读</span>
+      把「子不語怪力亂神」读成「孔子是无神论者」或「孔子不谈宗教」——
+      <em>文本没有支持这么强的结论。孔子谈过，只是不给确定答案。</em></div>
+  </div></details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">B7</span><span class="q-lv lv2">L2</span>
+    <span class="q-tag">辨认</span></div>
+  <div class="q-text">「不知命、無以為君子也」——如果一个人不信「命」，他还能不能读《論語》？</div>
+  <details><summary>展开参考答案</summary><div class="a">
+    <blockquote>子曰、不知命、<strong>無以為君子也</strong>。不知禮、無以立也。不知言、無以知人也。
+    <span class="who">《論語》底本 · 堯曰篇</span></blockquote>
+    <p><strong>这一句是全书结尾部分的三句之一</strong>——
+    <em>它把「知命」放在「知礼」和「知言」之前，作为成为君子的第一个条件。</em></p>
+    <p><span class="key">「命」在这里不是「命运论」，更接近「承认有些事不由自己决定」</span>：
+    <em>不知道这一条，人就无法区分「该努力的」与「努力也没用的」——
+    于是要么什么都归自己（自责），要么什么都不归自己（怨天）。</em></p>
+    <p><strong>所以不信「命」的人可以读《論語》，但会在这一章停下来</strong>：
+    <em>他需要先决定「承认有限制」这件事在不在他的框架里。
+    如果不在，那这一章对他就是空的；如果在（无论叫什么名字），那这一章能接上。</em></p>
+    <div class="pit"><span class="lbl">⚠️ 这一处与《无穷的开始》形成对照</span>
+      多伊奇的主张是「所有的恶都是<strong>知识不足</strong>造成的」——
+      <em>它倾向于把「限制」都归为「还不够懂」。
+      而《論語》的「知命」承认有一类限制<strong>不是知识问题</strong>。
+      这两者构成一处真对立。</em></div>
+  </div></details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">B8</span><span class="q-lv lv2">L2</span>
+    <span class="q-tag">应用</span></div>
+  <div class="q-text">「不學禮、無以立」——「礼」在这里的作用是什么？它与「仁」是什么关系？</div>
+  <details><summary>展开参考答案</summary><div class="a">
+    <blockquote>陳亢問於伯魚曰、子亦有異聞乎。對曰、未也。嘗獨立、鯉趨而過庭。曰、學詩乎。對曰、未也。不學詩、無以言。鯉退而學詩。他日、又獨立、鯉趨而過庭。曰、學禮乎。對曰、未也。不學禮、無以立。<span class="who">《論語》底本 · 季氏篇</span></blockquote>
+    <p><strong>「礼」在这里的功能是「立」——让人站得住</strong>：
+    <em>它给行为定形。没有形，内在的东西就说不出来、也传不下去。</em></p>
+    <p><span class="key">与「仁」的关系：仁是内容，礼是形式；而《論語》认为两者不能分开</span>：</p>
+    <blockquote>子曰、人而不仁、如禮何。人而不仁、如樂何。
+    <span class="who">八佾篇</span></blockquote>
+    <p><em>这一句是说：如果人没有仁，礼乐对他有什么用？
+    它反对的是「只有礼的外形而没有仁」。</em></p>
+    <p><strong>所以两者的关系是双向约束</strong>：<em>无仁之礼是空壳（八佾篇的批评），
+    无礼之仁立不住（季氏篇的说法）。</em></p>
+    <div class="pit"><span class="lbl">⚠️ 这一处是儒道冲突的核心</span>
+      《道德經》第三十八章：「失道而后德，失德而后仁，失仁而后義，失義而后禮」——
+      <em>它给了一个<strong>降级序列</strong>：礼是最后、最薄的一层，
+      而且是「忠信之薄，而亂之首」。
+      所以老子认为礼不是「立身之本」，而是衰败的产物。
+      完整对照见<a href="儒家加法与道家减法.html">儒家加法 vs 道家减法</a>。</em></div>
+  </div></details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">B9</span><span class="q-lv lv2">L2</span>
+    <span class="q-tag">接口</span></div>
+  <div class="q-text">《論語》对「女性」几乎不说话。这个沉默怎么处理？</div>
+  <details><summary>展开参考答案</summary><div class="a">
+    <p><strong>先核实「几乎不说话」这个判断本身</strong>：
+    《論語》里出现的女性形象极少，且多为「以其子」或「妻」的身份出现。
+    <em>全书没有一段以女性为主体的对话。</em></p>
+    <p><span class="key">三种处理方式，都不能只选一种</span>：</p>
+    <ul>
+      <li><strong>史料性的</strong>：<em>这是春秋时期的教育对象范围决定的，
+      不必然是孔子的主张（他讲「有教无类」）。</em></li>
+      <li><strong>文本性的</strong>：<em>沉默就是沉默，不要用别处的话去填。
+      《論語》本身没有处理这个问题。</em></li>
+      <li><strong>使用性的</strong>：<em>今天读它时，「关系性自我」这个主张要不要包含女性？
+      如果不包含，那这个主张就是残缺的——而它残缺的方式需要说清楚。</em></li>
+    </ul>
+    <div class="pit"><span class="lbl">⚠️ 最常见的两种错</span>
+      <strong>① 辩护式的</strong>：「当时都这样」——<em>这是解释来源，不是解决问题。</em><br>
+      <strong>② 取消式的</strong>：「所以《論語》不值得读」——
+      <em>这是把一个具体缺口扩大成整体否定。</em>
+      <strong>两种都是用一个方便的回答替代了那个沉默本身。</strong></div>
+  </div></details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">B10</span><span class="q-lv lv2">L2</span>
+    <span class="q-tag">辨认</span></div>
+  <div class="q-text">「其身正、不令而行；其身不正、雖令不從」——这是不是一种过度依赖个人德性的治理观？</div>
+  <details><summary>展开参考答案</summary><div class="a">
+    <p><strong>是</strong>，而且《論語》里有一处把它推到了极致：</p>
+    <blockquote>子曰、<strong>為政以德</strong>、譬如北辰、居其所、而眾星共之。<span class="who">為政篇</span></blockquote>
+    <blockquote>李康子問政於孔子。孔子對曰、政者正也、子帥以正、孰敢不正。<span class="who">顏淵篇</span></blockquote>
+    <p><span class="key">这一路主张的强弱之处都很清楚</span>：</p>
+    <ul>
+      <li><strong>强处</strong>：<em>它抓住了「制度要人执行」这一点——
+      一个不正直的人执行再好的制度，也会走形。</em></li>
+      <li><strong>弱处</strong>：<em>它没有回答「如果上面的人不正，下面怎么办」。
+      《論語》里没有一条制度性的纠错机制。</em></li>
+    </ul>
+    <p><strong>把这个主张与《史記》《漢書》《宋史》对读会有意思</strong>——
+    <em>那三部里充满了「上面不正、下面无从」的实例，而它们都在库里（合计 513 万汉字）。
+    这是这一轴 05 域接口的具体材料。</em></p>
+    <div class="pit"><span class="lbl">⚠️ 不要把它当成「中国没有制度思想」</span>
+      《論語》不讨论制度，不等于当时的政治思想不讨论制度。
+      <em>《左傳》里有大量关于盟誓、礼制、继承规则的记载——《左傳》也在库里。</em></div>
+  </div></details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">B11</span><span class="q-lv lv2">L2</span>
+    <span class="q-tag">应用</span></div>
+  <div class="q-text">用「忠恕」这个曾子给的解释，去解读《論语》里任意三章——
+  看它能不能贯通。若某一章贯不通，那一章是什么？</div>
+  <details><summary>展开参考答案</summary><div class="a">
+    <p><strong>「忠恕」两字的可分性</strong>：<em>「忠」是尽己（把自己这边的做到），
+    「恕」是推己（己所不欲勿施於人）。</em></p>
+    <p><strong>可以贯通的三类</strong>：</p>
+    <ul>
+      <li>「己欲立而立人、己欲達而達人」（雍也）——<em>恕的积极版本</em></li>
+      <li>「己所不欲、勿施於人」（顏淵、衛靈公）——<em>恕的消极版本</em></li>
+      <li>「見賢思齊焉、見不賢而內自省也」（里仁）——<em>恕的自我运用</em></li>
+    </ul>
+    <p><span class="key">贯不通的明显一类是「礼」的部分</span>：
+    <em>「不學禮、無以立」「非禮勿視、非禮勿聽」——这些要求的是
+    <strong>遵守一套既定的形式</strong>，而不是从自己的感受出发推及别人。
+    礼是从外来的，恕是从内出的。</em></p>
+    <p><strong>所以「忠恕」能贯通《論語》的一大半，但贯不通礼制那一部分</strong>——
+    <em>而那一部分正是《道德經》第三十八章攻击的靶子。
+    这说明：曾子给的那个「一」，选的是一侧，不是全部。</em></p>
+    <div class="pit"><span class="lbl">⚠️ 这道题真正要检验的</span>
+      能否接受「一个经典的核心可以只覆盖它的一部分」——
+      <em>如果不能接受，就会忍不住把礼也解释成「恕」，那样两边都失真。</em></div>
+  </div></details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">B12</span><span class="q-lv lv2">L2</span>
+    <span class="q-tag">接口</span></div>
+  <div class="q-text">「仁」在《論語》里不被定义，但在《王陽明全集》里被叫做「良知」。
+  这两个说法的差别在哪？</div>
+  <details><summary>展开参考答案</summary><div class="a">
+    <blockquote>知是心之本體，心自然會知：見父自然知孝，見兄自然知弟，見孺子入井自然知惻隱，此便是良知不假外求。若良知之發，更無私意障礙。」<span class="who">《王陽明全集》· 傳習錄</span></blockquote>
+    <p><span class="key">三点差别</span>：</p>
+    <table>
+      <tr><th style="width:20%"></th><th style="width:38%">《論語》的「仁」</th><th>《王陽明》的「良知」</th></tr>
+      <tr><td><strong>来源</strong></td><td>从关系里长出来（孝弟为本）</td>
+        <td><strong>心自然會知</strong>——「不假外求」</td></tr>
+      <tr><td><strong>获知方式</strong></td><td>因人给方（四个学生四个答案）</td>
+        <td><strong>人人本有</strong>，只需「致」</td></tr>
+      <tr><td><strong>要解决的困难</strong></td><td>怎么从关系里生长</td>
+        <td>怎么不被私欲隔断</td></tr>
+    </table>
+    <p><strong>所以《王陽明》把《論語》的「关系性起点」内移到了「心」</strong>——
+    <em>「见父自然知孝」这句里，孝仍然是关系性的（对父），
+    但「自然知」这个保证是从心里来的。</em>
+    <strong>这是一个重大改写：它使「仁」不再需要长期在关系里生长。</strong></p>
+    <div class="pit"><span class="lbl">⚠️ 这正是《論語》里那处张力的解法之一</span>
+      「孝弟為仁之本」（要生长）与「我欲仁斯仁至矣」（当下可及）的矛盾，
+      <strong>王陽明的「良知」选择了后者，并给了它一个更硬的根据</strong>。
+      <em>而这个选择有代价：「孝弟为本」的结构意义被削弱了。</em></div>
+  </div></details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">B13</span><span class="q-lv lv2">L2</span>
+    <span class="q-tag">辨认</span></div>
+  <div class="q-text">「為學日益，為道日損」——《論語》整本书都站在「益」这一侧。
+  那《論語》在「损」的方向上是不是完全空白？</div>
+  <details><summary>展开参考答案</summary><div class="a">
+    <blockquote>為學日益，為道日損。損之又損，以至于無為。
+    <span class="who">《道德經》底本 · 第四十八章</span></blockquote>
+    <p><strong>不是完全空白，但《論語》的「损」与老子的「损」不是一件事</strong>：</p>
+    <ul>
+      <li><strong>《論語》里的「损」是减法式的自我约束</strong>：
+      「非禮勿視、非禮勿聽、非禮勿言、非禮勿動」（顏淵）——
+      <em>减掉不合礼的行为，但目标仍然是「益」（成为君子）。</em></li>
+      <li><strong>老子的「损」是减掉求知与作为本身</strong>：
+      「損之又損，以至于無為」——<em>终点是无为，不是成为什么。</em></li>
+    </ul>
+    <p><span class="key">所以差别在「减法的终点」</span>：
+    <em>《論語》减掉的是妨碍生长的东西（终点仍是生长）；
+    老子减掉的是生长这件事本身（终点是「無為」）。</em></p>
+    <p><strong>另有一处《論語》接近「损」的方向</strong>：
+    「吾有知乎哉、無知也」（子罕）——<em>孔子自称无知，这是减掉「有知」这个自我定位。
+    但它紧接着给了方法（叩其两端），所以仍然落在「益」这一侧。</em></p>
+    <div class="pit"><span class="lbl">⚠️ 这一处的读法会影响整轴的判断</span>
+      若认为「损」与「益」只是方法差异，那儒道可以互补；
+      <strong>若认为两者的终点不同（成人与无为），那就是互相否定</strong>——
+      <em>三处正面冲突（礼 · 孝慈 · 学）都是后一种读法的证据。</em></div>
+  </div></details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">B14</span><span class="q-lv lv2">L2</span>
+    <span class="q-tag">应用</span></div>
+  <div class="q-text">「知者不言，言者不知」（道德經第五十六章）和《論語》的「誨人不倦」怎么并存？</div>
+  <details><summary>展开参考答案</summary><div class="a">
+    <blockquote>知者不言，言者不知。<span class="who">《道德經》底本 · 第五十六章</span></blockquote>
+    <p>《論語》这一侧的证据是「學而不厭、<strong>誨人不倦</strong>」（述而），
+    以及全书本身——<em>它就是一部孔子说了很多话的记录。</em></p>
+    <p><span class="key">两者的分歧在「言」这件事的价值上</span>：</p>
+    <ul>
+      <li><strong>老子</strong>：<em>道不可道（第一章「道可道，非常道」），
+      所以言说本身就会偏离对象。</em></li>
+      <li><strong>孔子</strong>：<em>他自称「述而不作」（述而），
+      承认自己不是在创造，是在传述——这已经是一种对「言」的限定了。</em></li>
+    </ul>
+    <p><strong>所以并不完全并存，但两者对「言」的怀疑有共同点</strong>：
+    <em>孔子也说「予欲無言」（陽貨），子贡问那怎么传下去，
+    他说「天何言哉」——这一处与老子很近。</em></p>
+    <div class="pit"><span class="lbl">⚠️ 常见误读</span>
+      把「知者不言」读成「有知识的人都很谦虚，不爱说话」——
+      <em>那是把它降成了一条性格建议。它其实是一个关于语言与道之关系的论断。</em></div>
+  </div></details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">B15</span><span class="q-lv lv2">L2</span>
+    <span class="q-tag">辨认</span></div>
+  <div class="q-text">「三年無改於父之道」与「天行健，君子以自強不息」——
+  一个要求守，一个要求进。这两者在什么条件下会撞上？</div>
+  <details><summary>展开参考答案</summary><div class="a">
+    <blockquote><strong>天行健，君子以自強不息</strong>。<span class="who">《易經》· 乾卦象辭</span></blockquote>
+    <p><strong>撞上的条件很具体</strong>：<em>当「父之道」与「自强不息」指向不同的做法时。</em></p>
+    <p>例如：<em>父亲一辈子做某个行当，而时代变了；「无改」要求继承，
+    「自强不息」要求转型。这时两者不能同时满足。</em></p>
+    <p><span class="key">《易經》这一句本身提供了另一种处理</span>：
+    「天行健」讲的是<strong>持续运动</strong>，不是「持续同一方向」——
+    <em>天体运行从不停，但它也不是不动的。
+    所以「自强不息」可能恰恰包含「改变做法而不停止努力」这一层。</em></p>
+    <p><strong>而《論語》那一章的限制是「三年」</strong>——
+    <em>它给的是一个期限，不是永久。三年之后可以改。</em>
+    <strong>这一点常被忽略：它要的是「不急着改」，不是「不能改」。</strong></p>
+    <div class="pit"><span class="lbl">⚠️ 这道题的用处</span>
+      它检验你能否把「守」读成「限期的守」而不是「永久的守」——
+      <em>若读成永久，就会以为《論語》反对一切改变，那样连它自己的「学」都无法解释。</em></div>
+  </div></details>
+</div>
+
+<!-- ============================================================ -->
+<h2>L3 · 边界与反驳</h2>
+<div class="s">它在哪里不成立、能被什么反驳、代价是什么</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">C1</span><span class="q-lv lv3">L3</span>
+    <span class="q-tag">边界</span></div>
+  <div class="q-text">「孝弟為仁之本」在什么社会条件下成立？城市化、少子化、异地工作之后它还成立吗？</div>
+  <details><summary>展开参考答案</summary><div class="a">
+    <p><strong>先分清这一章依赖哪些条件</strong>：</p>
+    <table>
+      <tr><th style="width:40%">它依赖的条件</th><th>今天的状态</th></tr>
+      <tr><td>人从小与父母长期共处</td><td><em>异地工作、留守，共处时间大幅缩短</em></td></tr>
+      <tr><td>家庭是基本的经济与身份单位</td><td><em>个人化的就业与社保体系替代了一部分</em></td></tr>
+      <tr><td>有兄弟姐妹（「弟」指兄弟）</td><td><em>少子化——很多人没有兄弟</em></td></tr>
+    </table>
+    <p><span class="key">所以「孝弟」这个具体起点确实被削弱了。但要注意这一章的主张是什么</span>：
+    <em>它说的不是「人必须从家庭开始」，而是「仁从关系里长出来」。
+    孝弟只是它举的那个例。</em></p>
+    <p><strong>所以有两种读法，结论不同</strong>：
+    <em>① 若「孝弟」是唯一入口，那这一章在今天的适用范围缩小了；
+    ② 若「关系」是入口、孝弟只是一个例，那这一章可以换别的例——
+    但它就必须回答：还有哪个关系能有孝弟那样的强度与早期性？《論語》没有回答。</em></p>
+    <div class="pit"><span class="lbl">⚠️ 这一处是本项目 08 域的直接接口</span>
+      08 域登记了「孝」的缺口（<a href="中国智慧-整体架构.html">整体架构</a> 第三节）——
+      <em>它在西方伦理学框架里无法归类：不是义务（无法则化），不是情感（不纯是感受）。
+      而「无法被归类」正是 08 域第 8 层「越界之维」在处理的事。</em></div>
+  </div></details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">C2</span><span class="q-lv lv3">L3</span>
+    <span class="q-tag">反驳</span></div>
+  <div class="q-text">用《无穷的开始》第 1 章的判据（「好解释难以改变」）去审查
+  「孝弟也者、其為仁之本與」——它是好解释还是坏解释？</div>
+  <details><summary>展开参考答案</summary><div class="a">
+    <p><strong>判据</strong>：<em>好解释是难以改变的——改变细节会毁掉整个解释。</em>
+    所以测法是：<strong>去掉「本」字，看整个主张会不会垮。</strong></p>
+    <p><strong>试改</strong>：</p>
+    <table>
+      <tr><th style="width:44%">改法</th><th>结果</th></tr>
+      <tr><td>「孝弟是仁的<strong>一种</strong>表现」</td>
+        <td><em>主张没垮，只是弱了</em>——因为「仁从关系里长出来」这一层还在</td></tr>
+      <tr><td>「孝弟是仁的<strong>唯一</strong>来源」</td>
+        <td><em>垮了</em>——与「仁遠乎哉、我欲仁、斯仁至矣」直接冲突</td></tr>
+    </table>
+    <p><span class="key">所以按多伊奇的判据，这一句偏「可以改而不垮」那一侧</span>——
+    <em>它的强度依赖「本」这个字的用法，而《論語》自己没把「本」定死。</em></p>
+    <p><strong>这不是说它错，而是说它的<em>可反驳性弱</em></strong>：
+    <em>你很难说出「什么观察会让它站不住」，因为它可以被读松。
+    按多伊奇，这使它更像一个<strong>框架</strong>，而不是一个<strong>解释</strong>。</em></p>
+    <div class="pit"><span class="lbl">⚠️ 这个审查本身有一个限度</span>
+      多伊奇的判据是为<strong>科学理论</strong>设计的。
+      <em>用它审《論語》，会遇到一个根本困难：这一类文本的「强」恰恰在于可以被不同处境读活。
+      所以审查的结论只能是「按这个判据它偏弱」，不能是「它不好」。</em></div>
+  </div></details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">C3</span><span class="q-lv lv3">L3</span>
+    <span class="q-tag">冲突</span></div>
+  <div class="q-text">《道德經》第十八章「六親不和，有孝慈」直接否定了「孝弟為仁之本」。
+  这一处怎么处理？</div>
+  <details><summary>展开参考答案</summary><div class="a">
+    <blockquote>大道廢，有仁義﹔智慧出，有大偽﹔六親不和，有孝慈﹔國家昏亂，有忠臣。<span class="who">《道德經》底本 · 第十八章</span></blockquote>
+    <p><strong>这一章的结构是：三个「A 坏了，才出现 B」</strong>——
+    <em>大道废了才讲仁义，六亲不和才讲孝慈，国家昏乱才有忠臣。</em></p>
+    <p><span class="key">所以它说的不是「孝慈不好」，而是「孝慈被<strong>需要</strong>，本身是一个症状」</span>：
+    <em>如果关系本来就好，就用不着强调孝。</em></p>
+    <p><strong>这与《論語》的对立是硬的</strong>：
+    <em>孔子把孝弟当作<strong>起点</strong>（本），老子把它当作<strong>症状</strong>。
+    这不是两个视角，是对同一件事的相反评价。</em></p>
+    <p><strong>哪一方更站得住？两个可反驳条件</strong>：</p>
+    <ul>
+      <li><strong>若老子对</strong>：<em>那关系良好的人群里，孝慈应该不显著——因为不需要。
+      可观察到的是：孝的行为在任何关系质量下都存在，只是形式不同。</em></li>
+      <li><strong>若孔子对</strong>：<em>那应该存在一个关系良好、但完全没有孝的社会。
+      这个反例很难找。</em></li>
+    </ul>
+    <div class="pit"><span class="lbl">⚠️ 完整对照在别处</span>
+      这一处是儒家与道家三处正面冲突之一。
+      <a href="儒家加法与道家减法.html">儒家加法 vs 道家减法</a> 给了原文并列与逐条分析。</div>
+  </div></details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">C4</span><span class="q-lv lv3">L3</span>
+    <span class="q-tag">冲突</span></div>
+  <div class="q-text">《道德經》第三十八章「失道而后德…」与《論語》「不學禮、無以立」——
+  互补还是矛盾？</div>
+  <details><summary>展开参考答案</summary><div class="a">
+    <blockquote>故失道而后德，失德而后仁，失仁而后義，失義而后禮。夫禮者，忠信之薄，而亂之首。<span class="who">《道德經》底本 · 第三十八章</span></blockquote>
+    <blockquote>不學禮、<strong>無以立</strong>。<span class="who">《論語》底本 · 季氏篇</span></blockquote>
+    <p><span class="key">是矛盾，不是互补。</span></p>
+    <p><strong>第三十八章给的是一个「降级序列」</strong>：
+    <em>道 → 德 → 仁 → 义 → 礼，一层比一层薄。礼是<strong>最后、最薄</strong>的一层，
+    而且是「忠信之薄，而乱之首」。</em></p>
+    <p><strong>而《論語》把礼当作立身的必要条件</strong>：
+    <em>不学礼，站不住。这是把礼放在<strong>基础</strong>的位置。</em></p>
+    <p><strong>同一个东西，一个说是地板，一个说是天花板塌下来的碎屑。</strong>
+    这不可能是互补。</p>
+    <div class="pit"><span class="lbl">⚠️ 有一处容易误判</span>
+      <strong>《論語》自己也批评过「只有礼的外形」</strong>——
+      「人而不仁、如禮何」（八佾）。
+      <em>但那是说礼需要仁作内容，<strong>不是说礼本身是衰败的产物</strong>。
+      这两句不构成对老子的让步——孔子要的是「有仁之礼」，
+      老子要的是「不需要礼」。</em></div>
+  </div></details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">C5</span><span class="q-lv lv3">L3</span>
+    <span class="q-tag">边界</span></div>
+  <div class="q-text">《論語》的「以直報怨」——「直」是什么？
+  如果说不清，这个主张还能用吗？</div>
+  <details><summary>展开参考答案</summary><div class="a">
+    <blockquote>或曰、以德報怨、何如？子曰、何以報德？
+    <strong>以直報怨、以德報德。</strong><span class="who">《論語》底本 · 憲問篇</span></blockquote>
+    <p><strong>《論語》没有定义「直」，而且用得不一致</strong>：</p>
+    <ul>
+      <li>「<strong>父為子隱、子為父隱、直在其中矣</strong>」（子路）——
+      <em>这里「直」= 不揭发亲人</em></li>
+      <li>「<strong>以直報怨</strong>」（憲問）——<em>这里「直」= 对等的回应</em></li>
+      <li>「人之生也直、罔之生也幸而免」（雍也）——<em>这里「直」= 人的本然状态</em></li>
+    </ul>
+    <p><span class="key">三种用法不能互换</span>：
+    <em>「不揭发亲人」与「对等回应」不是同一个东西；
+    而「本然状态」是存在论层面的，与前两个都不同层。</em></p>
+    <p><strong>所以「以直报怨」在操作上是空的</strong>：
+    <em>它划掉了两个极端（以德、以怨），但没给出中间该怎么做。
+    遇到具体情形，你仍然要在两个极端之间自己选。</em></p>
+    <div class="pit"><span class="lbl">⚠️ 但「空」不等于「无用」</span>
+      它的用处是<strong>否定的</strong>：<em>它明确拒绝了「以德报怨」——
+      而这一点很重要，因为「以德报怨」在后来成了很流行的一种理想。
+      《論語》的立场是：那样做会使「德」与「怨」失去区别。</em></div>
+  </div></details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">C6</span><span class="q-lv lv3">L3</span>
+    <span class="q-tag">反驳</span></div>
+  <div class="q-text">《論語》全书不给定义，主张「你怎么做」。用《无穷的开始》的标准看，
+  这使它逃避了反驳吗？</div>
+  <details><summary>展开参考答案</summary><div class="a">
+    <p><strong>部分是的，但《論語》自己给了两处例外</strong>——而这两处恰恰很重要：</p>
+    <blockquote>子曰、<strong>吾有知乎哉、無知也</strong>。有鄙夫問於我、空空如也。
+    我叩其兩端而竭焉。<span class="who">子罕篇</span></blockquote>
+    <blockquote>子曰、<strong>予欲無言</strong>。子貢曰、子如不言、則小子何述焉。
+    子曰、天何言哉。四時行焉、百物生焉、天何言哉。<span class="who">陽貨篇</span></blockquote>
+    <p><span class="key">这两处显示「不给定义」是自觉的，不是疏忽</span>：
+    <em>他明说自己是「无知」，明说想「无言」。
+    也就是说，他清楚这个方法会被要求给出可检验的命题，而他不给。</em></p>
+    <p><strong>所以按多伊奇的判据</strong>：<em>难以说出「什么会推翻《論語》」——
+    因为它可以被读活。这使它的<strong>可反驳性弱</strong>。</em></p>
+    <p><strong>但有一个重要的补充</strong>：<em>《論語》里并非全无硬主张。
+    「孝弟為仁之本」「不學禮無以立」「以直報怨」都是有具体内容的断言，
+    都可以被检验（见 C1–C5）。所以「不给定义」不等于「不可反驳」——
+    它只是把可反驳的部分<strong>藏在了具体的断语里</strong>，而不是藏在定义里。</em></p>
+    <div class="pit"><span class="lbl">⚠️ 两种都失真的处理</span>
+      <strong>①</strong> 说「所以《論語》不是哲学」——<em>那是用一套判据取消了对象。</em><br>
+      <strong>②</strong> 说「《論語》高于定义式思维」——<em>那是把它抬到免检的位置。</em>
+      <strong>合用的做法是：承认它可反驳性弱，然后去把它那些具体的断语挖出来审。</strong></div>
+  </div></details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">C7</span><span class="q-lv lv3">L3</span>
+    <span class="q-tag">边界</span></div>
+  <div class="q-text">王陽明的「知而不行，只是未知」——这个判据有没有反例？</div>
+  <details><summary>展开参考答案</summary><div class="a">
+    <blockquote>未有知而不行者。<strong>知而不行，只是未知</strong>。
+    <span class="who">《王陽明全集》· 傳習錄（答徐愛問知行合一）</span></blockquote>
+    <p><strong>这一句的力量在于它不可辩驳</strong>：
+    <em>你说「我知道该做但没做」，他就说「那你其实不知道」——
+    任何反例都会被重新描述掉。</em></p>
+    <p><span class="key">按多伊奇的判据，这是<strong>坏解释</strong>的特征：它怎么改都成立。</span>
+    但王陽明本人给了它一个出口，就在同一段里：</p>
+    <blockquote>此已被私慾隔斷，不是知行的本體了。<span class="who">同上</span></blockquote>
+    <p><em>他把「知而不行」的原因定为「私欲隔断」——
+    也就是说，「知」本来是整全的，被私欲切断之后才显得知行分离。</em></p>
+    <p><strong>这样它有了一点可检验性</strong>：
+    <em>若知而不行确实是「私欲」造成的，那排除私欲（克己）之后行为应当随之改变。
+    这个预测可以被检验——虽然很难操作化。</em></p>
+    <div class="pit"><span class="lbl">⚠️ 另一句更可操作</span>
+      「聖賢只是為己之學、<strong>重功夫不重效驗</strong>」——
+      <em>这一句给出了一个具体的判据：看你有没有在做（功夫），
+      而不是看结果好不好（效验）。
+      它比「知行合一」更容易落实到日常，也更容易被判错。</em></div>
+  </div></details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">C8</span><span class="q-lv lv3">L3</span>
+    <span class="q-tag">边界</span></div>
+  <div class="q-text">「天之道，損有餘而補不足；人之道，則不然，損不足以奉有餘」——
+  这一句是在描述，还是在规定？两者后果不同。</div>
+  <details><summary>展开参考答案</summary><div class="a">
+    <blockquote>天之道，其猶張弓歟？高者抑之，下者舉之﹔有餘者損之，不足者補之。天之道，損有餘而補不足。人之道，則不然，損不足以奉有餘。孰能有餘以奉天下，唯有道者。<span class="who">《道德經》底本 · 第七十七章</span></blockquote>
+    <p><span class="key">它同时是描述与规定，但两者指向相反的方向</span>：</p>
+    <table>
+      <tr><th style="width:22%"></th><th>读法</th><th>后果</th></tr>
+      <tr><td><strong>描述</strong></td>
+        <td>天道的实际运作是「损有余补不足」；<br>人道的实际运作是「损不足以奉有余」</td>
+        <td><em>它在说实然：人事实上就是这么干的</em></td></tr>
+      <tr><td><strong>规定</strong></td>
+        <td>天道的做法是<strong>应当效法</strong>的；<br>人道的做法是<strong>偏失</strong></td>
+        <td><em>它在说应然：「唯有道者」能反过来做</em></td></tr>
+    </table>
+    <p><strong>两者同时成立，而且《道德經》的写法本身就在制造这个双重性</strong>：
+    <em>「人之道则不然」的「不然」是评价性的词，
+    而整句的结构（天道 / 人道对照）又像是在陈述两类事实。</em></p>
+    <p><strong>「孰能有餘以奉天下，唯有道者」这一句定了性</strong>：
+    <em>它把「损有余补不足」立为一个<strong>要努力达到</strong>的目标，
+    所以说到底它是规定性的——描述只是它的外壳。</em></p>
+    <div class="pit"><span class="lbl">⚠️ 这一处最常见的误用</span>
+      <strong>把「天之道损有余而补不足」当成「宇宙会自动补偿」</strong>——
+      <em>那是把它读成了一个自动机制。
+      但原文的下一句立刻说「人之道则不然」——
+      也就是说，人在的那个层面恰恰<strong>不</strong>自动补偿，所以才需要「有道者」去补。</em>
+      把天道当成会自动发生的事，正好抹掉了原文的批评部分。</div>
+  </div></details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">C9</span><span class="q-lv lv3">L3</span>
+    <span class="q-tag">边界</span></div>
+  <div class="q-text">「道可道，非常道」——如果道不能说，那《道德經》五千言在做什么？
+  这是一个自指矛盾吗？</div>
+  <details><summary>展开参考答案</summary><div class="a">
+    <blockquote><strong>道可道，非常道</strong>。名可名、非常名。
+    <span class="who">《道德經》底本 · 第一章</span></blockquote>
+    <p><strong>它确实是自指的</strong>：<em>一部用五千字说「道不可说」的书。</em></p>
+    <p><span class="key">三种处理，代价不同</span>：</p>
+    <ul>
+      <li><strong>① 它不是矛盾，是层级区分</strong>：<em>能说出来的道不是那个道，
+      但可以说「什么不是道」——全书做的是否定的工作。</em>
+      <br><em>代价：那它给出的正面主张（无为、不争、柔弱胜刚强）算什么？
+      那些是有内容的断言。</em></li>
+      <li><strong>② 它是修辞，不是严格命题</strong>：<em>开篇在提醒读者别把书当定义表。</em>
+      <br><em>代价：那就等于承认全书的命题强度不统一。</em></li>
+      <li><strong>③ 矛盾是真的，而且是它的一部分</strong>：<em>
+      「正言若反」（第七十八章）——它自己承认自己的说法方式是反的。</em>
+      <br><em>代价：这使任何引用都需要先说明引的是哪一层。</em></li>
+    </ul>
+    <p><strong>而第七十八章那一句给了《道德經》自己的答案</strong>：
+    <em>「正言若反」——正确的话听起来像反话。
+    所以它不认为这是缺陷，而认为这是道这个对象的性质决定的说话方式。</em></p>
+    <div class="pit"><span class="lbl">⚠️ 这一点会直接影响怎么用它</span>
+      若接受「正言若反」，那<strong>引用《道德經》的任何一句都必须先问：这一句是正说还是反说？</strong>
+      <em>这是这一轴里《道德經》相关引文最容易出错的地方。</em></div>
+  </div></details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">C10</span><span class="q-lv lv3">L3</span>
+    <span class="q-tag">冲突</span></div>
+  <div class="q-text">《論語》的「知命」与《无穷的开始》的「所有的恶都是知识不足造成的」——
+  这两者对「限制」的处理方式不同。哪一方更站得住？</div>
+  <details><summary>展开参考答案</summary><div class="a">
+    <blockquote>子曰、不知命、無以為君子也。<span class="who">《論語》底本 · 堯曰篇</span></blockquote>
+    <blockquote>乐观主义（在我主张的意义上）是这样一种理论：
+    <strong>所有的失败——所有的恶——都是知识不足造成的</strong>。
+    <span class="who">多伊奇《无穷的开始》第 9 章</span></blockquote>
+    <p><span class="key">两者的差别在「有一类限制不是知识问题」这一句上</span>：</p>
+    <ul>
+      <li><strong>多伊奇</strong>：<em>限制只有自然法则，其余都是知识不足。
+      所以任何失败都还有下一步（去解决）。</em></li>
+      <li><strong>《論語》</strong>：<em>「命」是一类不由自己决定的限制——
+      不知道它，人就分不清「该努力的」与「努力也没用的」。</em></li>
+    </ul>
+    <p><strong>这是一处真对立</strong>：<em>按多伊奇，「知命」这个态度本身是知识不足的表现
+    （你还没找到解释）；按《論語》，承认「命」恰恰是成熟的条件。</em></p>
+    <p><strong>可反驳条件</strong>：</p>
+    <ul>
+      <li><strong>若多伊奇对</strong>：<em>应该不存在「无论投入多少知识都无法改变」的事。
+      这个断言很难证成——死亡、他人的意志、已经发生的事，都在候选里。</em></li>
+      <li><strong>若《論語》对</strong>：<em>应该存在一类事，承认它无法改变会使人更有力量而不是更消沉。
+      「知命」的效果是可观察的，但它也可以被解释成心理安慰。</em></li>
+    </ul>
+    <div class="pit"><span class="lbl">⚠️ 与冲突地图已有的两处相连</span>
+      这一处与 <a href="../../冲突与呼应地图.html">冲突与呼应地图</a> 里的
+      <strong>CF2</strong>（好解释 vs 实践论：真理的标准）与
+      <strong>CF12</strong>（认知错误能否被无限消除）是同一族问题，
+      而这一处问的是<strong>限制的性质</strong>，比它们更靠前一步。</div>
+  </div></details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">C11</span><span class="q-lv lv3">L3</span>
+    <span class="q-tag">边界</span></div>
+  <div class="q-text">「关系性自我」这个主张，如果在某些关系里不成立（例如被虐待的孩子），
+  它还能当作普遍主张吗？</div>
+  <details><summary>展开参考答案</summary><div class="a">
+    <p><strong>这是这一轴最硬的一处边界</strong>，因为它不是文本内部的问题，是主张本身的问题。</p>
+    <p><strong>主张的内容</strong>：<em>人是在关系里被定义出来的，不是一个先有边界、再去连接的实体
+    （见 <a href="定位决策.html">定位决策</a> 第三节）。</em></p>
+    <p><span class="key">若这个主张是普遍的，那它必须能处理「坏的关系」</span>：</p>
+    <ul>
+      <li><strong>它能处理</strong>：<em>坏关系确实<strong>定义</strong>了人——
+      被虐待的孩子会长成某种特定的样子，这不是「独立的自我受损」，是自我被那种关系构成的。</em></li>
+      <li><strong>它难以处理</strong>：<em>若自我完全由关系构成，那「从坏关系里走出来」
+      意味着什么？走出来之后剩下的那个「谁」是什么？
+      这个主张倾向于说「换一段好关系」，但《論語》没有给出这条路
+      （它讲的是从好的关系里长出来，不是从坏关系里修出来）。</em></li>
+    </ul>
+    <p><strong>所以这里的缺口是</strong>：<em>这一轴讲了「关系构成自我」，
+    但没有讲「关系坏了之后怎么办」。
+    而这恰好是它与其他域（08 亲密关系、02 心智与认知）最需要对接的地方。</em></p>
+    <div class="pit"><span class="lbl">⚠️ 两处接口已在库里，但都未做</span>
+      <strong>08 域</strong>：登记了「孝」的缺口（4 处）——<em>未展开</em>；<br>
+      <strong>02 域</strong>：登记了「WEIRD 样本偏差」（独立自我 1 处）——<em>未展开</em>。<br>
+      <em>《定位决策》认为 02 域那一条杠杆最大：把两种自我观当作可检验的心理学假设对照，
+      而不是当成两种文化风格。</em></div>
+  </div></details>
+</div>
+
+<div class="q">
+  <div class="q-head"><span class="q-id">C12</span><span class="q-lv lv3">L3</span>
+    <span class="q-tag">方法论</span></div>
+  <div class="q-text">用现代哲学问题的框架去问一部先秦文本——这个操作本身有没有问题？</div>
+  <details><summary>展开参考答案</summary><div class="a">
+    <p><strong>有问题，而且这个问题在汉学界是有争论的。</strong></p>
+    <p><strong>支持这一操作的理据</strong>：<em>本项目是<strong>按问题组织</strong>的，
+    不是按学术史组织。若不用「认识论」「伦理学」这些框架，就无法把《論語》
+    接进 01、02、08 域的问题里去。</em></p>
+    <p><span class="key">代价有三条</span>：</p>
+    <ul>
+      <li><strong>框架会拣选材料</strong>：<em>用「认识论」去读，会只看见「知」「学」相关的章，
+      而漏掉大量不讲这些的章——而那些章可能是全书的主体。</em></li>
+      <li><strong>它会造成虚假的错位</strong>：<em>问「孔子的知识论是什么」，
+      可能相当于问「一把锤子的哲学是什么」——
+      问题本身预设了对象没有的结构。</em></li>
+      <li><strong>它掩盖了文本自己的组织原则</strong>：<em>《論語》按人物、按情境编排，
+      这个编排本身携带信息（如 A3 的曾子答问）。用主题框架读，这层信息会丢。</em></li>
+    </ul>
+    <p><strong>本手册采用这个框架，是因为本项目的组织方式要求如此，不是因为它是唯一正确的读法</strong>——
+    <em>这一点须自觉。凡遇到不适配处（如 C5「直」的三种用法、C12 本条），都应标出来，
+    而不是把它硬塞进框架。</em></p>
+    <div class="pit"><span class="lbl">⚠️ 这一题是自查题</span>
+      它检验的是<strong>读者有没有意识到自己在用一套外部框架</strong>。
+      <em>用框架而不自知，与用框架而标明它，是两种读法——
+      而后者才允许别人反驳你。</em></div>
+  </div></details>
+</div>
+
+<!-- ============================================================ -->
+<h2>附 · 本手册的覆盖范围与缺口</h2>
+
+<table>
+  <tr><th style="width:22%">档</th><th style="width:12%">题数</th><th>覆盖</th></tr>
+  <tr><td><span class="q-lv lv1">L1</span> 概念理解</td><td><strong>9 题</strong></td>
+    <td>《論語》的核心概念与结构（仁 · 本 · 一以贯之 · 无定义 · 学思 · 信义 · 怨 · 首尾）</td></tr>
+  <tr><td><span class="q-lv lv2">L2</span> 应用与辨认</td><td><strong>16 题</strong></td>
+    <td>承重性辨认 · 仁的两处张力 · 忠恕的应用 · 礼与仁 · 沉默 · 德治 · 儒道对照 ·
+    《王陽明》与《易經》的接口</td></tr>
+  <tr><td><span class="q-lv lv3">L3</span> 边界与反驳</td><td><strong>13 题</strong></td>
+    <td>社会条件 · 判据审查 · 三处儒道冲突 · 不可定义的德目 · 可反驳性 ·
+    「命」与知识不足 · 坏关系 · 框架本身</td></tr>
+</table>
+
+<div class="box warn">
+  <div class="h">★ 覆盖缺口（必须说明）</div>
+  <p><strong>① 11 部原典本手册尚未出题</strong>：史記 · 漢書 · 宋史 · 左傳 · 紅樓夢 ·
+  西遊記 · 水滸傳 · 三國志演義 · 儒林外史 · 古文觀止 · 山海經 · 易經 · 鬼谷子。</p>
+  <p><em>原因见<a href="中国智慧-底本说明.html">底本说明</a>：
+  其中 8 部是「巨型」（30 万汉字以上），只能先按主题检索再出题——
+  而这一步尚未做。</em></p>
+  <p><strong>② 《王陽明全集》763,358 汉字只用到了 2 题</strong>：
+  <em>「知行合一」37 处、「致良知」108 处、「良知」815 处、「事上磨」4 处——
+  本手册只涉及了最前面的那几处。</em></p>
+  <p><strong>③ 五条按域接口一条都未开工</strong>：
+  01 域总纲 · 02 域 WEIRD · 05 域地理决定论 · 06 域关系作为主角 · 08 域「孝」。
+  <em>详见<a href="中国智慧-整体架构.html">整体架构</a>第二节。</em></p>
+</div>
+
+<footer class="doc">
+  底层 · 中国智慧 · 问题手册（35 题：L1 9 · L2 16 · L3 13）<br>
+  <em>全部引文均逐句核对原文，照底本原样写（含顿号与繁体）；<br>
+  16 部原典为白文，无注疏可依——凡解释处皆可能有别的读法，请回原文判断；<br>
+  「◎」标记处为跨域接口，非本书内容</em>
+</footer>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>定位决策 · 底层</title>
+<meta name="description" content="为什么中国智慧不是一个域，而是一条贯穿轴">
+<meta name="theme-color" content="#f2f8fc">
+<style>
+  :root{
+    --paper:#f2f8fc; --card:#ffffff; --card-2:#e9f4fb;
+    --edge:#cfe0ec; --edge-lit:#a4c6dd;
+    --ink:#12232e; --ink-2:#627480; --ink-3:#587286;
+    --accent:#2c7ea2; --accent-2:#377972; --gold:#84744a;
+    --quote-bg:#fbf8ef; --quote-edge:#d8cba4; --quote-ink:#5f5527;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--paper); color:var(--ink); line-height:1.9;
+    -webkit-font-smoothing:antialiased;
+    padding:32px 16px 60px;
+  }
+  ::selection{background:rgba(63,180,232,.26); color:#0d2430;}
+  .wrap{max-width:860px; margin:0 auto;}
+
+  header.doc{
+    background:var(--card); border:1px solid var(--edge);
+    border-top:4px solid var(--accent); border-radius:10px;
+    padding:34px 34px 28px; margin-bottom:24px;
+  }
+  header.doc h1{
+    font-size:26px; font-weight:800; line-height:1.4; letter-spacing:.01em;
+    margin-bottom:12px;
+    background:linear-gradient(135deg,#1d4a68,#2c7ea2 55%,#377972);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  header.doc .sub{font-size:14.6px; color:var(--ink-2); line-height:1.95;}
+  header.doc .src{
+    margin-top:16px; padding-top:14px; border-top:1px dashed var(--edge);
+    font-size:12.6px; color:var(--ink-3); line-height:1.95;
+  }
+  header.doc .src strong{color:var(--ink-2);}
+
+  main{
+    background:var(--card); border:1px solid var(--edge); border-radius:10px;
+    padding:36px 38px 40px;
+  }
+
+  h2{
+    font-size:19px; font-weight:700; color:var(--ink);
+    margin:38px 0 14px; padding-left:12px;
+    border-left:4px solid var(--gold); line-height:1.55;
+  }
+  h2:first-child{margin-top:0;}
+  h3{font-size:16px; font-weight:700; color:var(--ink); margin:26px 0 10px;}
+  h4{
+    font-size:15.2px; font-weight:700; color:#1d4a68;
+    margin:22px 0 9px; padding-left:10px;
+    border-left:3px solid rgba(63,180,232,.45); line-height:1.6;
+  }
+
+  p{font-size:14.6px; color:var(--ink-2); margin-bottom:13px; text-wrap:pretty;}
+  strong{color:var(--ink); font-weight:700;}
+  em{font-style:normal; color:var(--ink); background:rgba(63,180,232,.10);
+     border-radius:3px; padding:0 3px;}
+
+  code{
+    font-family:ui-monospace,Consolas,monospace; font-size:13px;
+    background:var(--card-2); border:1px solid var(--edge); border-radius:4px;
+    padding:1px 6px; color:#1d5c86; word-break:break-all;
+  }
+
+  a{color:var(--accent); text-decoration:none; border-bottom:1px solid #cfe4f0;}
+  a:hover{border-bottom-color:var(--accent);}
+
+  blockquote{
+    margin:14px 0; padding:13px 18px;
+    background:var(--quote-bg); border:1px solid #e8dfc4;
+    border-left:3px solid var(--quote-edge); border-radius:5px;
+    font-size:14.2px; color:var(--quote-ink); line-height:1.95;
+  }
+  blockquote p{margin-bottom:9px; color:inherit; font-size:inherit;}
+  blockquote p:last-child{margin-bottom:0;}
+  blockquote strong{color:#8a6a24;}
+  blockquote em{background:rgba(138,106,36,.10); color:#8a6a24;}
+  blockquote code{background:rgba(255,255,255,.7); color:#7a5f1c; border-color:#e0d2ac;}
+
+  ul,ol{margin:12px 0 14px 22px;}
+  li{font-size:14.5px; color:var(--ink-2); margin-bottom:8px; line-height:1.9;}
+  li strong{color:var(--ink);}
+
+  table{width:100%; border-collapse:collapse; margin:16px 0; font-size:13.6px;}
+  th,td{padding:9px 12px; border:1px solid var(--edge); text-align:left;
+        vertical-align:top; line-height:1.8;}
+  th{background:var(--card-2); color:#1d5c86; font-weight:700; font-size:12.8px;}
+  td{color:var(--ink-2);}
+  td strong{color:var(--ink);}
+  td code{font-size:12.4px;}
+
+  hr{border:none; border-top:1px dashed var(--edge); margin:32px 0;}
+
+  pre{
+    background:#eef4f9; border:1px solid var(--edge); border-radius:6px;
+    padding:14px 16px; margin:16px 0; overflow-x:auto;
+    line-height:1.7;
+  }
+  pre code{
+    background:none; border:none; padding:0; font-size:12.8px;
+    color:#1d4a68; white-space:pre; word-break:normal;
+  }
+
+  footer.doc{
+    margin-top:26px; padding-top:20px; border-top:1px solid var(--edge);
+    font-size:12.4px; color:var(--ink-3); line-height:2; text-align:center;
+  }
+  footer.doc a{color:var(--ink-2);}
+  @media(max-width:700px){
+    body{padding:16px 10px 40px;}
+    header.doc{padding:24px 20px 20px;} header.doc h1{font-size:21px;}
+    main{padding:24px 18px 28px;} h2{font-size:17px;}
+    table{font-size:12.2px;} th,td{padding:7px 8px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="doc">
+    <h1>定位决策</h1>
+    <p class="sub">为什么中国智慧不是一个域，而是一条贯穿轴</p>
+    <p class="src">这份文件解决的问题是：中国智慧应该放在项目的哪个位置。<strong>结论是不新增一个「中国哲学」域</strong>——因为项目的域结构按「问题」组织，而「中国」不是一个问题。</p>
+  </header>
+  <main>
+<h1>「中国智慧」板块 · 定位决策</h1>
+<p><strong>这份文件解决的问题是：中国智慧应该放在项目的哪个位置。</strong></p>
+<hr>
+<h2>一、先说结论</h2>
+<p><strong>不要新增一个「中国哲学」域。</strong> 理由不是它不重要，恰恰相反—— <strong>是因为项目的域结构是按「问题」组织的，而"中国"不是一个问题。</strong></p>
+<p><strong>建议的做法</strong>：把它作为一条<strong>贯穿轴</strong>（与 08 域的"第 8 层越界之维"同一手法）， 按<strong>每个域各自的问题</strong>分发进去，并建一个<strong>协调板块</strong>放原典与总纲。</p>
+<hr>
+<h2>二、这个判断是怎么得出的（可复核）</h2>
+<p>我逐个读了 01–10 域 README 的"这个域解决什么问题"，结果如下：</p>
+<table>
+<tr><th>域</th><th>它是怎么定义自己的</th></tr>
+<tr><td><strong>01 哲学与思维地基</strong></td><td>"在你开始认识任何东西之前，先弄清<strong>认识本身</strong>是怎么可能的、会在哪里出错"</td></tr>
+<tr><td><strong>02 心智与认知</strong></td><td>"<strong>我以为的世界</strong>和<strong>实际的世界</strong>之间，隔着什么"</td></tr>
+<tr><td><strong>03 自然与数学</strong></td><td>"<strong>世界</strong>在人类出现之前是什么样……唯一<strong>不涉及人</strong>的部分"</td></tr>
+<tr><td><strong>04 社会与制度</strong></td><td>"人与人之间那些<strong>不由感情决定</strong>的关系"</td></tr>
+<tr><td><strong>05 历史与地理</strong></td><td>"<strong>为什么</strong>世界长成现在这个样子"</td></tr>
+<tr><td><strong>06 文学与生命书写</strong></td><td>"<strong>那些无法被机制化的部分</strong>"</td></tr>
+<tr><td><strong>07 技术</strong></td><td>"人造系统是怎么被设计出来的，<strong>取舍从哪里来</strong>"</td></tr>
+<tr><td><strong>08 性与亲密关系</strong></td><td>"你<strong>大部分的生命质量</strong>取决于这个域"</td></tr>
+<tr><td><strong>10 专业知识库</strong></td><td>明确声明"<strong>这不是「底层」的延续</strong>"，按能力组织</td></tr>
+</table>
+<p><strong>每一条都是一个"问题"，没有一条是"某个文化"或"某个学科"。</strong></p>
+<p>（唯一的例外是 <code>00_中文原典/</code>，我刚建的——但它是按<strong>来源</strong>组织的<strong>素材库</strong>， 不是按问题组织的域，所以不算破例。见下面第五节。）</p>
+<p><strong>推论</strong>：如果加一个 <code>11_中国智慧</code>，就会在一个"按问题"的体系里插进一个"按文化"的类目。 后果不是不整齐，而是<strong>它会被架空</strong>——</p>
+<blockquote><p>因为一旦成了独立域，它和 01 的关系就变成"两个并列的哲学域"， 而不是"对 01 那个问题的另一种回答"。 于是读它的时候，你不会拿它去修正 01 的框架，只会把它当成另一块知识。</p></blockquote>
+<p><strong>而这恰恰是项目现在的问题所在</strong>——项目已经记录了四个域的缺口， 但记录的方式是"缺几本书"。真正缺的不是书。</p>
+<hr>
+<h2>三、真正缺的是什么（一句话）</h2>
+<p><strong>项目现有的全部材料，都建立在一个默认前提上：自我是独立的个体。</strong></p>
+<table>
+<tr><th>项目里的说法</th><th>它隐含的前提</th></tr>
+<tr><td>02 卡尼曼：认知偏误</td><td>有一个<strong>独立的判断者</strong>，他的判断可以偏离正确</td></tr>
+<tr><td>02 波伏娃：处境塑造人</td><td>这是<strong>最接近</strong>中国思路的一条，但它被放在"对个体认知研究的挑战"位置上</td></tr>
+<tr><td>04 制度：陌生人的协作</td><td>关系是<strong>契约关系</strong>，是可计算的</td></tr>
+<tr><td>08 依恋：你与人建立关系的基本姿势</td><td><strong>"你"先存在，然后才建立关系</strong></td></tr>
+<tr><td>01 塔勒布：风险共担、可信度</td><td>判断的对象是<strong>他人</strong>，标准是<strong>利益是否对齐</strong></td></tr>
+</table>
+<p><strong>中国思路的起点不是这个。</strong> 它的起点是： <strong>人是在关系里被定义出来的，不是一个先有边界、再去连接的实体。</strong></p>
+<p>这不是一个"补充视角"，而是<strong>对上面每一条前提的重新提问</strong>。</p>
+<p><strong>所以我把它叫做「关系性自我」这一轴，而不是「中国哲学」这一块。</strong> 名字的差别很重要：<strong>前者是一个可检验的主张，后者是一个文化标签。</strong></p>
+<hr>
+<h2>四、按域分发：每一域该补什么</h2>
+<p><strong>这才是真正的工作量所在。</strong> 下面每一条都对应"用中国材料重新问一遍那个域的问题"。</p>
+<h3>→ 01 哲学与思维地基：<strong>认识的起点是不是"个体"？</strong></h3>
+<p><strong>那个域的问题</strong>：认识本身怎么才可能、会在哪里出错。</p>
+<p><strong>中国思路的重新提问</strong>：</p>
+<ul><li>西方认识论从"我如何知道"出发；中国思路从"<strong>如何成人</strong>"出发 （《論語》的核心不是"什么是真"，而是"怎么做人"）</li><li><strong>"知"与"行"是不是两件事？</strong>（王陽明：知行合一） —— 这一条直接挑战 01 现有的"判断框架"预设：它假设知道和做到可以分开</li><li><strong>"格物致知"</strong>（《大學》）的"知"和西方 epistemic justification 是不是一回事？</li></ul>
+<p><strong>已下载可直接用的原典</strong>：<code>論語</code>、<code>王陽明全集</code>、<code>易經</code></p>
+<p><strong>这一域最该产出的一个东西</strong>：一份「<strong>关系性自我</strong>」的问题手册—— 不是讲中国哲学史，而是<strong>用它逼问项目现有的每一条认识论前提</strong>。</p>
+<hr>
+<h3>→ 02 心智与认知：<strong>"自我"是被建构的，还是被关系定义的？</strong></h3>
+<p><strong>那个域的问题</strong>：「我以为的世界」和「实际的世界」之间隔着什么。</p>
+<p><strong>★ 这一条最有价值，因为 02 域自己就留了接口。</strong></p>
+<p>02 的 README 末尾写了一条"贯穿性的矛盾"，三条路线：</p>
+<ol><li>卡尼曼：把认知拆成机制，用实验测量偏差</li><li>波伏娃：<strong>"偏差"的测量本身可能带着处境偏见</strong></li><li>卡拉尼什：被拆解的那个人，还有一套无法被测量的内在经验</li></ol>
+<p><strong>而它自己说</strong>："三条路线互相不能替代。这个项目目前<strong>倾向第一条</strong>，这是需要自觉的。"</p>
+<p><strong>中国思路是第四条路线，而且它回答的正是第 2、3 条留下的问题</strong>：</p>
+<ul><li>波伏娃说"处境"——中国思路说<strong>关系本身就是处境，而且是构成性的</strong>（不只是影响，是构成）</li><li>卡拉尼什说"无法被测量的内在经验"——中国思路说<strong>这种经验本身就是在关系中生成的</strong> （"仁"不是一个人内部的属性，是两个人之间的东西）</li></ul>
+<p><strong>而且 02 自己记了</strong>："<strong>非西方的心智观</strong>：目前全是欧美样本——而这在跨文化心理学里是个真问题（WEIRD 样本偏差）"</p>
+<p><strong>已下载可直接用的原典</strong>：<code>論語</code>（"仁"）、<code>王陽明全集</code>（"心即理"）</p>
+<p><strong>这一域最该产出的</strong>：一份「<strong>WEIRD 之外的心智模型</strong>」对照—— 把"独立自我"与"关系性自我"当作<strong>两个可检验的心理学假设</strong>来对照， 而不是当成两种文化风格。</p>
+<hr>
+<h3>→ 05 历史与地理：<strong>中国史不是"另一个案例"，是"另一种因果"</strong></h3>
+<p><strong>那个域的问题</strong>：为什么世界长成现在这个样子。</p>
+<p><strong>★ 这一域的缺口最具体：项目对中国史是零。</strong></p>
+<p><strong>05 现在只有《枪炮、病菌与钢铁》</strong>，而戴蒙德被批评"没有人的历史"—— 这个批评对<strong>中国史</strong>尤其致命，因为中国提供了地理决定论最强的反例和最强的正例：</p>
+<ul><li><strong>统一与分裂</strong>：为什么欧洲分裂而中国趋向统一？（戴蒙德的解释 / 反方）</li><li><strong>长时段的制度延续</strong>：为什么中国的官僚制比欧洲早一千多年？</li><li><strong>05 自己记了</strong>："<strong>反方</strong>：对地理决定论的批评应当一并读" —— 中国史材料正好是这个反方</li></ul>
+<p><strong>已下载可直接用的原典</strong>：<code>史記</code>（512,628 汉字）、<code>漢書</code>（712,137）、<code>宋史</code>（3,907,797）、<code>左傳</code>（180,498）</p>
+<p><strong>这一域最该产出的</strong>：一份「<strong>地理决定论的检验：中国案例</strong>」—— 用中国史的实际材料去测试 05 域从戴蒙德那里继承的因果框架。</p>
+<hr>
+<h3>→ 06 文学与生命书写：<strong>中国经验的叙事形态</strong></h3>
+<p><strong>那个域的问题</strong>：那些无法被机制化的部分。</p>
+<p><strong>06 自己记了三个缺口</strong>：诗完全空白、东方叙事全是西方作品、中国当代文学只有《置身事内》一本非虚构。</p>
+<p><strong>中国文学在这个域里的特殊作用</strong>（这是它的功能，不是"补一个文化"）：</p>
+<p><strong>中国的叙事传统有一件西方小说不太做的事——它把"关系"当主角，而不是把"个人"当主角。</strong></p>
+<ul><li>《紅樓夢》的主角不是贾宝玉，是<strong>贾府这张关系网</strong>（"人"在网里被定义，网散了人就散了）</li><li>《儒林外史》是<strong>制度如何塑造人</strong>的连续画像（和 04 域直接接口）</li><li>这一点和 06 自己的功能"<strong>检验抽象是否遗漏了要紧的东西</strong>"完全吻合</li></ul>
+<p><strong>已下载可直接用的原典</strong>：<code>紅樓夢</code>（724,631 汉字）、<code>儒林外史</code>（231,940）、<code>西遊記</code>、<code>水滸傳</code>、<code>三國志演義</code>、<code>古文觀止</code>、<code>山海經</code></p>
+<p><strong>这一域最该产出的</strong>：一份「<strong>关系作为主角</strong>」的叙事分析—— 不是文学史，而是<strong>指出西方叙事学预设了"个体主角"这件事</strong>。</p>
+<hr>
+<h3>→ 08 性与亲密关系：<strong>关系是"建立"的，还是"构成"的？</strong></h3>
+<p><strong>那个域的问题</strong>：你每天实际生活在其中的关系。</p>
+<p><strong>★ 这一域有个现成的把手：它的"八层结构"里，第 4.5 层和第 8 层都是后加的。</strong></p>
+<table>
+<tr><th>层</th><th>内容</th><th>中国思路能问什么</th></tr>
+<tr><td>第 2 层 依恋</td><td>"你与人建立关系的基本姿势"</td><td><strong>"你"先存在吗？</strong> 依恋理论的预设是"个体 + 依恋风格"</td></tr>
+<tr><td>第 3 层 亲情与亲缘</td><td>"血缘是另一套规则"</td><td><strong>"孝"是不是一种伦理？</strong> 它在西方框架里几乎无法归类（不是义务、不是情感）</td></tr>
+<tr><td>第 5 层 历史与结构</td><td>"关系是被制度塑造的"</td><td><strong>"关系"能不能反过来塑造制度？</strong>（差序格局）</td></tr>
+<tr><td><strong>第 8 层 越界之维</strong></td><td>"原七层缺的那一轴"</td><td>中国思路能提供一条<strong>第 9 层</strong>吗？</td></tr>
+</table>
+<p><strong>这一域最该产出的</strong>：一份「<strong>孝</strong>的解析」—— 因为它是一个<strong>在西方伦理学框架里无法被归类</strong>的东西， 而"无法被归类"正是 08 域第 8 层已经在做的事（它专门处理"越界之维"）。</p>
+<hr>
+<h2>五、原典库放哪里</h2>
+<p><strong>已经建好了：<code>00_中文原典/</code>（16 部，约 830 万汉字）</strong></p>
+<p><strong>为什么放在项目最外层，而不是某个域里</strong>：</p>
+<table>
+<tr><th>放的方案</th><th>问题</th></tr>
+<tr><td>放进 01</td><td>但《紅樓夢》不属 01，《宋史》也不属 01</td></tr>
+<tr><td>放进 05</td><td>但《論語》《道德經》不属 05</td></tr>
+<tr><td>建 <code>11_中国哲学</code></td><td>变成独立域，落进第二节说的那个陷阱</td></tr>
+<tr><td><strong><code>00_中文原典/</code></strong></td><td><strong>它是按"来源"组织的素材库，不是按"问题"组织的域</strong> —— 和 01–08 不冲突</td></tr>
+</table>
+<p><strong>这个命名沿用了项目已有的 <code>00_待补书目/</code> 的约定</strong>（项目里各域都有 <code>00_待补书目/</code>）。</p>
+<hr>
+<h2>六、已下载的原典（可直接开工）</h2>
+<table>
+<tr><th>原典</th><th>汉字数</th><th>主要服务的域</th></tr>
+<tr><td><strong>王陽明全集</strong></td><td><strong>763,358</strong></td><td>01、02（知行合一）</td></tr>
+<tr><td><strong>史記</strong></td><td><strong>512,628</strong></td><td>05</td></tr>
+<tr><td><strong>漢書</strong></td><td><strong>712,137</strong></td><td>05</td></tr>
+<tr><td><strong>宋史</strong></td><td><strong>3,907,797</strong></td><td>05</td></tr>
+<tr><td><strong>左傳</strong></td><td><strong>180,498</strong></td><td>05</td></tr>
+<tr><td><strong>論語</strong>（含中文原文）</td><td>18,613</td><td>01、02、08</td></tr>
+<tr><td><strong>易經</strong></td><td>21,647</td><td>01</td></tr>
+<tr><td><strong>道德經</strong></td><td>5,698</td><td>01</td></tr>
+<tr><td><strong>红楼梦</strong></td><td>724,631</td><td>06</td></tr>
+<tr><td><strong>西遊記</strong></td><td>588,720</td><td>06</td></tr>
+<tr><td><strong>水滸傳</strong></td><td>437,348</td><td>06</td></tr>
+<tr><td><strong>三國志演義</strong></td><td>484,892</td><td>06</td></tr>
+<tr><td><strong>儒林外史</strong></td><td>231,940</td><td>06、04</td></tr>
+<tr><td><strong>古文觀止</strong></td><td>145,263</td><td>06</td></tr>
+<tr><td><strong>山海經</strong></td><td>31,925</td><td>06</td></tr>
+<tr><td><strong>鬼谷子</strong></td><td>8,398</td><td>04（策略）</td></tr>
+</table>
+<p><strong>共 16 部，约 830 万汉字。</strong></p>
+<h3>一个必须写明的缺口</h3>
+<p><strong>《孟子》《大學》《中庸》没有找到。</strong> "四书"目前只有《論語》可读原文。 Gutenberg 的 #3100/#4094 是 Legge 英译，中文原文占比仅 1% 和 8%，作为中文本不合格。</p>
+<h3>关于来源的一段诚实说明</h3>
+<p><strong>ctext.org 被 Cloudflare 拦住，而且它页面上明确写着</strong>：</p>
+<blockquote><p>"Attention researchers: if you're trying to do web scraping for a research project, please ask your institution to subscribe"</p></blockquote>
+<p><strong>所以我没有绕过它</strong> —— 它主动要求机构订阅，绕过不合适。</p>
+<p><strong>同样不可用的还有</strong>：国学网（Cloudflare 人机验证）、古诗文网（返回空）、 中文维基文库（连接重置）、archive.org（超时）、openlibrary（连接失败）。</p>
+<p><strong>可用的</strong>：Project Gutenberg（古典中文作品属公共领域）、 殆知阁、中国古籍全录、Stanford 哲学百科、IEP。</p>
+<hr>
+<h2>七、我建议的下一步（按价值排序）</h2>
+<table>
+<tr><th>顺序</th><th>做什么</th><th>为什么排这个位置</th></tr>
+<tr><td><strong>1</strong></td><td><strong>02 域的「WEIRD 之外的心智模型」</strong></td><td><strong>02 自己留了接口</strong>（"倾向第一条，这是需要自觉的"），而且"关系性自我"在这里最像一个<strong>可检验的心理学假设</strong></td></tr>
+<tr><td><strong>2</strong></td><td><strong>01 域的「关系性自我」问题手册</strong></td><td>它是这条轴的<strong>总纲</strong>，做完之后其他域有统一的提问方式</td></tr>
+<tr><td><strong>3</strong></td><td><strong>05 域的「地理决定论的检验：中国案例」</strong></td><td>缺口最具体（中国史是零），而且 05 自己记了"要读反方"</td></tr>
+<tr><td><strong>4</strong></td><td><strong>08 域「孝」的解析</strong></td><td>最能显示"西方框架装不下"的那一个</td></tr>
+<tr><td><strong>5</strong></td><td><strong>06 域「关系作为主角」</strong></td><td>材料最多（5 部小说），但它的结论最"软"</td></tr>
+</table>
+<p><strong>为什么把 02 排第一</strong>：因为它是<strong>唯一一个"用中国材料去检验项目自己的前提"会直接产出可证伪结论</strong>的地方。 其他四个域更像是"补一块内容"，而 02 这里是"改一个前提"——<strong>改动前提比增加内容的杠杆大得多。</strong></p>
+<hr>
+<h2>八、需要你决定的一件事</h2>
+<p><strong>上面七条里，我可以从任何一条开始。但有一个选择会影响后面的全部工作：</strong></p>
+<table>
+<tr><th>选项</th><th>含义</th><th>后果</th></tr>
+<tr><td><strong>A. 先做总纲（01）</strong></td><td>先建"关系性自我"的提问框架</td><td>后面四个域都用同一套问题，<strong>一致性强</strong>，但见效慢</td></tr>
+<tr><td><strong>B. 先做 02</strong></td><td>直接改一个前提</td><td><strong>杠杆最大</strong>，但如果没有总纲，后面可能各说各的</td></tr>
+<tr><td><strong>C. 先做 05</strong></td><td>补最具体的缺口</td><td><strong>最快见效</strong>（中国史确实为零），但它不触动任何前提</td></tr>
+</table>
+<p><strong>我的建议是 B → A → C</strong>：先用 02 证明"这条轴确实能改前提"， 再把它写成总纲（01），最后补最具体的内容（05）。</p>
+<p><strong>但我承认这里有不确定性</strong>：我对你现有的中国经典阅读程度一无所知。 如果你已经读过《論語》《道德經》，那 01/02 的路子要换（不能从"什么是仁"讲起）； 如果没读过，那得先带你过一遍原文。</p>
+<p><strong>所以如果你愿意，告诉我一句</strong>：这些原典你读过哪些、大概什么程度？ 这比选 A/B/C 更重要。</p>
+  </main>
+  <footer class="doc">
+    本页由 Markdown 渲染而成 · 原文为 <code>定位决策.md</code>（留在项目内作编辑源，不单独发布）
+  </footer>
+</div>
+</body>
+</html>
