@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>易經 · 可操作手册 · 底层</title>
+<meta name="description" content="把《易經》读成一份可操作的手册：可取的部分（时、位、中、变、关系）与应当丢掉的部分（占筮、宿命、术数附会），并给出可复用的判断规则。">
+<meta name="theme-color" content="#f2f8fc">
+<style>
+  :root{
+    --paper:#f2f8fc; --card:#ffffff; --card-2:#e9f4fb;
+    --edge:#cfe0ec; --edge-lit:#a4c6dd;
+    --ink:#12232e; --ink-2:#627480; --ink-3:#587286;
+    --accent:#2c7ea2; --gold:#84744a;
+    --quote-bg:#fbf8ef; --quote-edge:#d8cba4; --quote-ink:#5f5527;
+    --warn:#a85035; --warn-soft:#fcf1ec;
+    --my:#2f7a5c; --my-soft:#eef8f3;
+    --core:#1d5c86; --core-soft:#eef6fb;
+    --keep:#2f7a5c; --keep-soft:#eef8f3;
+    --drop:#a85035; --drop-soft:#fcf1ec;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--paper); color:var(--ink); line-height:1.9;
+    -webkit-font-smoothing:antialiased; padding:32px 16px 60px;}
+  ::selection{background:rgba(63,180,232,.26); color:#0d2430;}
+  .wrap{max-width:940px; margin:0 auto;}
+  header.doc{background:var(--card); border:1px solid var(--edge);
+    border-top:4px solid var(--accent); border-radius:10px;
+    padding:34px 34px 28px; margin-bottom:22px;}
+  header.doc h1{font-size:27px; font-weight:800; line-height:1.4; margin-bottom:12px;
+    background:linear-gradient(135deg,#1d4a68,#2c7ea2 55%,#377972);
+    -webkit-background-clip:text; background-clip:text; color:transparent;}
+  header.doc .sub{font-size:14.6px; color:var(--ink-2); line-height:1.95;}
+  header.doc .src{margin-top:16px; padding-top:14px; border-top:1px dashed var(--edge);
+    font-size:12.6px; color:var(--ink-3); line-height:1.95;}
+  h2{font-size:19.5px; font-weight:700; margin:42px 0 6px; padding-left:12px;
+    border-left:4px solid var(--gold); line-height:1.55;}
+  .s{color:var(--ink-3); font-size:12.9px; margin:0 0 16px 16px; line-height:1.85;}
+  h3{font-size:16.4px; font-weight:700; margin:28px 0 10px;}
+  h4{font-size:15.2px; font-weight:700; color:var(--core); margin:22px 0 9px;
+    padding-left:10px; border-left:3px solid rgba(63,180,232,.45); line-height:1.6;}
+  p{font-size:14.5px; color:var(--ink-2); margin-bottom:12px; text-wrap:pretty;}
+  p strong{color:var(--ink);}
+  code{font-family:ui-monospace,Consolas,monospace; font-size:12.8px;
+    background:var(--card-2); border:1px solid var(--edge); border-radius:4px;
+    padding:1px 6px; color:var(--core); word-break:break-all;}
+  a{color:var(--accent); text-decoration:none; border-bottom:1px solid #cfe4f0;}
+  blockquote{margin:13px 0; padding:13px 18px; background:var(--quote-bg);
+    border:1px solid #e8dfc4; border-left:3px solid var(--quote-edge);
+    border-radius:5px; font-size:14.1px; color:var(--quote-ink); line-height:1.95;}
+  blockquote p{margin-bottom:8px; color:inherit; font-size:inherit;}
+  blockquote p:last-child{margin-bottom:0;}
+  blockquote .who{display:block; margin-top:7px; font-size:12px;
+    color:#8a7a52; text-align:right;}
+  blockquote strong{color:#8a6a24;}
+  .box{background:var(--card); border:1px solid var(--edge); border-radius:9px;
+    padding:19px 22px; margin:16px 0; font-size:14px; color:var(--ink-2);}
+  .box .h{font-weight:700; color:var(--gold); margin-bottom:10px; font-size:13.6px;}
+  .box p+p{margin-top:9px;} .box strong{color:var(--ink);}
+  .box.core{background:var(--core-soft); border-color:#cfe4f0;}
+  .box.core .h{color:var(--core);}
+  .box.keep{background:var(--keep-soft); border-color:#cfe6dc;}
+  .box.keep .h{color:var(--keep);}
+  .box.drop{background:var(--drop-soft); border-color:#e8cfc4;}
+  .box.drop .h{color:var(--drop);}
+  table{width:100%; border-collapse:collapse; margin:15px 0; font-size:13.2px;}
+  th,td{padding:9px 11px; border:1px solid var(--edge); text-align:left;
+    vertical-align:top; line-height:1.78;}
+  th{background:var(--card-2); color:var(--core); font-weight:700; font-size:12.6px;}
+  td{color:var(--ink-2);} td strong{color:var(--ink);}
+  td.k{background:var(--keep-soft);}
+  td.d{background:var(--drop-soft);}
+  ul,ol{margin:11px 0 14px 22px;}
+  li{font-size:14.4px; color:var(--ink-2); margin-bottom:8px; line-height:1.9;}
+  li strong{color:var(--ink);}
+  hr{border:none; border-top:1px dashed var(--edge); margin:34px 0;}
+  .tag{display:inline-block; font-size:11.5px; font-weight:700; padding:1px 8px;
+    border-radius:999px; margin-right:5px; white-space:nowrap;}
+  .t-keep{background:var(--keep-soft); color:var(--keep); border:1px solid #cfe6dc;}
+  .t-drop{background:var(--drop-soft); color:var(--drop); border:1px solid #e8cfc4;}
+  .t-mid{background:#f7f0dd; color:#8a6a24; border:1px solid #e3d3a8;}
+  .y{color:var(--drop); font-weight:700;}
+  .g{color:var(--keep); font-weight:700;}
+  footer.doc{margin-top:32px; padding-top:20px; border-top:1px solid var(--edge);
+    font-size:12.4px; color:var(--ink-3); line-height:2; text-align:center;}
+  @media(max-width:720px){
+    body{padding:16px 10px 40px;} header.doc{padding:24px 20px 20px;}
+    header.doc h1{font-size:21px;} h2{font-size:17.5px;} h3{font-size:15.6px;}
+    table{font-size:12px;} th,td{padding:6px 7px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="doc">
+  <h1>易經 · 可操作手册</h1>
+  <p class="sub">把《易經》拆成两堆：<strong>能用的一堆</strong>与<strong>该丢掉的一堆</strong>——
+  然后只把能用的一堆做成规则</p>
+  <p class="src">
+    <strong>底本</strong>：<code>00_中文原典/易經.txt</code>（21,647 汉字）· 结构实测：
+    <strong>64 卦全</strong> · 64 条「彖曰」· <strong>443 条「象曰」</strong> ·
+    十翼（繫辭上 13 / 繫辭下 12 / 說卦 11 / 序卦 1 / 雜卦 1）· 含占筮法（大衍之數）<br>
+    <strong>引文均逐句核对过底本</strong>，照原样写（繁体）。<br>
+    相关产出：<a href="中国智慧-整体架构.html">中国智慧 · 整体架构</a> ·
+    <a href="中国智慧-问题手册.html">问题手册</a> ·
+    <a href="中国智慧-底本说明.html">底本说明</a> ·
+    <a href="儒家加法与道家减法.html">儒家加法 vs 道家减法</a> ·
+    <a href="中国智慧-精华笔记与专业问题.html">精读笔记</a>
+  </p>
+</header>
+
+<!-- ============================================================ -->
+<div class="box core">
+  <div class="h">◆ 这份手册的立场（先说清，否则「取其精华」会变成自选超市）</div>
+  <p><strong>《易經》里混着四类完全不同的东西，而它们必须分开处理：</strong></p>
+  <table style="margin:12px 0 4px;">
+    <tr><th style="width:20%">层次</th><th style="width:34%">内容</th><th>该怎么处理</th></tr>
+    <tr><td><strong>① 判断框架</strong></td>
+      <td>时 · 位 · 中 · 变 · 关系</td>
+      <td><span class="tag t-keep">可取</span><strong>这是主体</strong>——
+      <em>它是一套<strong>处境的类型学</strong>，与占卜无关，可以单独拿出来用</em></td></tr>
+    <tr><td><strong>② 经验格言</strong></td>
+      <td>卦辞与爻辞里那些直接可读的句子</td>
+      <td><span class="tag t-keep">部分可取</span><em>要逐条筛：
+      「亢龍有悔」是经验，「利涉大川」是占断</em></td></tr>
+    <tr><td><strong>③ 占筮装置</strong></td>
+      <td>大衍之數 · 揲蓍 · 本卦变卦 · 吉凶悔吝</td>
+      <td><span class="tag t-drop">丢掉</span><em>它能<strong>生成</strong>一个卦，
+      但不能<strong>验证</strong>任何东西——没有可反驳性</em></td></tr>
+    <tr><td><strong>④ 术数附会</strong></td>
+      <td>纳甲 · 五行生克配卦 · 京房易 · 各种「旺衰」</td>
+      <td><span class="tag t-drop">丢掉</span><em>底本里<strong>几乎没有</strong>
+      （这是汉代以后加上去的），不必替它操心</em></td></tr>
+  </table>
+  <p><strong>所以「取其精华去其糟粕」在这本书上是一件<em>可操作</em>的事</strong>：
+  <em>因为精华（①）与糟粕（③）在文本上是<strong>分开的</strong>——
+  ①在彖、象、繫辭里，③在大衍之數那一段里。它们只是被装订在一起。</em></p>
+</div>
+
+<!-- ============================================================ -->
+<h2>一 · 第一步：明确丢掉什么</h2>
+<div class="s">不先划掉，后面每一条都会被「它可以预测」污染</div>
+
+<h3>丢掉 ① · 占筮的生成程序</h3>
+<blockquote>大衍之數五十，其用四十有九。分而為二以象兩，掛一以象三，揲之以四以象四時，
+歸奇於扐以象閏，五歲再閏。故再扐而後掛。<span class="who">繫辭上傳 · 第九章</span></blockquote>
+<p><strong>它是什么</strong>：<em>一套用五十根蓍草分出六、七、八、九四个数字的<strong>随机数生成器</strong>，
+再按数字定出六爻，组成一卦。</em></p>
+<p><strong>为什么丢掉</strong>：<em>因为它<strong>没有可反驳性</strong>——
+无论出什么卦、解出什么意思、后来应验不应验，它都不会被推翻。
+按《无穷的开始》的判据，这不是一个解释，是一个<strong>自我封闭的系统</strong>。</em></p>
+<div class="box drop">
+  <div class="h">★ 一个必须说清楚的对比</div>
+  <p><strong>「没有可反驳性」不等于「它没用」</strong>——它作为<strong>强制换视角的工具</strong>可以有用。</p>
+  <p><em>掷出一个你没想过的卦，等于被迫从一个未考虑的角度看自己的处境。
+  这是<strong>随机提示词</strong>，不是预测。</em></p>
+  <p><strong>但这两件事的后果完全不同</strong>：<em>当成提示词用，你的判断仍然是你的；
+  当成预测用，你就把判断交出去了。</em></p>
+</div>
+
+<h3>丢掉 ② · 吉凶的绝对化</h3>
+<p>底本里「吉」286 处、「凶」117 处、「悔」57 处、「吝」34 处。</p>
+<p><strong>这些字不能被读成「运气好坏」</strong>：<em>在《易經》的用法里，
+它们是对<strong>当前处境与当前做法是否相称</strong>的评价，不是对未来的预报。</em></p>
+<blockquote>亢龍有悔。<span class="who">乾 · 上九</span></blockquote>
+<p><em>这一句的现代读法不是「你要倒霉了」，而是
+「<strong>已经到了极点还在往上，接下来会转向</strong>」——它是<strong>趋势判断</strong>，不是命运通知。</em></p>
+
+<h3>丢掉 ③ · 「不可变」的宿命读法</h3>
+<p><strong>这是最要紧的一条，因为它是把《易經》读反了。</strong></p>
+<blockquote>生生之謂易……通變之謂事，陰陽不測之謂神。
+<span class="who">繫辭上傳 · 第五章</span></blockquote>
+<p><em>「易」这个字本身就是<strong>变</strong>。全书讲的是<strong>没有固定结局</strong>——
+而把它读成「命中注定」，正好与它自己的前提相反。</em></p>
+<div class="box drop">
+  <div class="h">★ 三条自我检验（用来测自己有没有读反）</div>
+  <p><strong>① 用卦象决定要不要做一件事</strong> → <em>读反了</em>。卦象不能替你判断事实。</p>
+  <p><strong>② 事后用卦象解释为什么失败了</strong> → <em>读反了</em>。这是不可反驳的典型用法。</p>
+  <p><strong>③ 用卦象<em>逼自己列出</em>「我现在处在哪个阶段」</strong> → <em>读对了</em>。
+  它给的是<strong>提问的角度</strong>，不是答案。</p>
+</div>
+
+<!-- ============================================================ -->
+<h2>二 · 第二步：留下什么——五个可操作的判据</h2>
+<div class="s">这五条是《易經》真正在教的东西，而且都能脱离占卜单独使用</div>
+
+<h3>判据 ① 时（時）：现在是不是做这件事的时候</h3>
+<blockquote>君子進德修業，欲及時也。<span class="who">乾 · 文言（九四）</span></blockquote>
+<blockquote>時止則止，時行則行，動靜不失其時，其道光明。<span class="who">艮 · 彖曰</span></blockquote>
+<p><strong>可操作化</strong>：<em>把「这事对不对」换成一个更细的问题：
+「<strong>现在做它对不对</strong>」。</em></p>
+<p><strong>它反对的两种做法</strong>：</p>
+<ul>
+  <li><em>「只要方向对，什么时候做都一样」</em>——<strong>《易經》反对</strong>：
+  同一件事在不同时点上的结果不同。</li>
+  <li><em>「再等等看」</em>——<strong>《易經》也反对</strong>：
+  「時行則行」说的是该动的时候必须动（見「需」卦的整体主张：<strong>等待是有条件的等</strong>）。</li>
+</ul>
+
+<h3>判据 ② 位（位）：你在什么位置，决定了什么做法是对的</h3>
+<blockquote>貴而無位，高而無民，賢人在下而無輔，是以動而有悔也。
+<span class="who">乾 · 文言（上九）</span></blockquote>
+<p><em>这一句是「亢龍有悔」的解释：<strong>出问题的不是能力，是位置</strong>——
+地位高但没有实位，下面没有人跟。</em></p>
+<p><strong>六爻就是六个位置的原型</strong>（这是全书最可迁移的一件工具）：</p>
+<table>
+  <tr><th style="width:12%">爻位</th><th style="width:22%">处境的类型</th>
+    <th style="width:32%">该做的</th><th>典型的错</th></tr>
+  <tr><td><strong>初</strong></td><td>刚进入，无根基</td>
+    <td><strong>潜</strong>：积累，不出头</td>
+    <td><em>急着证明自己</em>（「潛龍勿用」）</td></tr>
+  <tr><td><strong>二</strong></td><td>已经露头，有初步认可</td>
+    <td><strong>见</strong>：找对人，把事做实</td>
+    <td><em>只经营关系不做实事</em></td></tr>
+  <tr><td><strong>三</strong></td><td>承上启下，最危险</td>
+    <td><strong>惕</strong>：白天干、晚上查</td>
+    <td><em>以为可以松一口气</em>（「終日乾乾，夕惕，若厲」）</td></tr>
+  <tr><td><strong>四</strong></td><td>接近核心，进退两可</td>
+    <td><strong>试</strong>：小规模试，可退回</td>
+    <td><em>孤注一掷</em>（「或躍在淵」——「或」就是不确定）</td></tr>
+  <tr><td><strong>五</strong></td><td>主位，承担最大</td>
+    <td><strong>治</strong>：把事情做成</td>
+    <td><em>只顾自己的位置</em>（「飛龍在天，上治也」）</td></tr>
+  <tr><td><strong>上</strong></td><td>极盛之后</td>
+    <td><strong>退</strong>：承认已到顶</td>
+    <td><em>还想再往上</em>（「亢龍有悔」「盈不可久也」）</td></tr>
+</table>
+<div class="box keep">
+  <div class="h">◆ 为什么这六格能用（而它跟占卜无关）</div>
+  <p><strong>它是一个「位置—动作」对应表</strong>：<em>先定位自己在哪一格，
+  再查那一格该做什么。它不预测任何事，只是防止你在初位做上位的动作。</em></p>
+  <p><em>而这恰好是很多失败的实际形态：<strong>不是方向错了，是位置和动作不匹配</strong>。</em></p>
+</div>
+
+<h3>判据 ③ 中（中）：不走极端，但不是折中</h3>
+<blockquote>九二悔亡，能久中也。<span class="who">恆 · 象曰</span></blockquote>
+<blockquote>知臨，大君之宜，吉。<span class="who">臨 · 六五</span></blockquote>
+<p style="font-size:12.9px;color:var(--ink-3);"><em>（读法，非原文）「知」通「智」；
+这一爻是六五，居上卦之中。</em></p>
+<p><strong>「中」是一个结构位置，不是一个态度</strong>——<em>二爻与五爻分别是下卦与上卦的中间，
+所以《易經》里「中」的爻（九二、六五之类）普遍评价较好。</em></p>
+<p><strong>它和「折中」是两件事</strong>：</p>
+<ul>
+  <li><strong>折中</strong>：<em>两边各让一步，结果是两边都不满意</em>。</li>
+  <li><strong>中</strong>：<em>在一个结构里找到<strong>可持续的那个点</strong>——
+  「能久中也」的落点是「久」，即<strong>能一直做下去</strong>。</em></li>
+</ul>
+<p><strong>可操作的问法</strong>：<em>「我现在的做法，能不能长期做下去？」
+能长期做的，通常就不在极端上。</em></p>
+
+<h3>判据 ④ 变（變）：到什么程度会转向</h3>
+<blockquote>無平不陂，無往不復。<span class="who">泰 · 九三</span></blockquote>
+<blockquote>城復于隍，勿用師。<span class="who">泰 · 上六</span></blockquote>
+<p><em>泰卦本身是「通泰」的好卦，而它的九三在提醒「没有一直平的，没有只去不返的」，
+上六已经在说「城墙倒回壕沟里了，这时不要用兵」。</em></p>
+<p><strong>这是全书最实用的一条</strong>：<em><strong>好卦里也有坏爻，坏卦里也有好爻</strong>。
+泰（好）的上六是坏的，否（坏）的上九是「傾否，先否後喜」。</em></p>
+<div class="box keep">
+  <div class="h">◆ 可操作化：把「变」用成一个检查项</div>
+  <p><strong>不管现在顺不顺，都问两个问题：</strong></p>
+  <p><em>① 如果继续现在的做法，最先出问题的是哪一环？（<strong>找那个先转向的点</strong>）</em><br>
+  <em>② 我现在处在自己这条曲线的哪一段——还没开始、在上升、在顶部、还是在下？</em></p>
+  <p><strong>《易經》的价值在这里最大</strong>：<em>它训练的是<strong>看阶段</strong>，而不是看吉凶。</em></p>
+</div>
+
+<h3>判据 ⑤ 关系（應）：上下、内外、以及「有没有人跟你」</h3>
+<blockquote>同聲相應，同氣相求；水流濕，火就燥；雲從龍，風從虎。
+<span class="who">乾 · 文言（九五）</span></blockquote>
+<blockquote>貴而無位，高而無民，賢人在下而無輔。<span class="who">乾 · 文言（上九）</span></blockquote>
+<p><strong>这几句把「位置」加了一个维度：位置不只由高度决定，还由「有没有人跟你」决定。</strong>
+<em>「高而無民」「賢人在下」——高度够了，但跟你的人都不在，那就是孤立的顶点。</em></p>
+<p><strong>可操作化</strong>：<em>评估自己的位置时，不只看「我在第几层」，
+还看「这一层有几件事需要别人配合，而我手上有没有那些人」。</em></p>
+
+<!-- ============================================================ -->
+<h2>三 · 第三步：把六爻用成一个决策程序</h2>
+<div class="s">这是整份手册最实用的部分——一个可以照着走的流程</div>
+
+<table>
+  <tr><th style="width:6%">步</th><th style="width:20%">问什么</th>
+    <th style="width:34%">依据（原文）</th><th>要产出的东西</th></tr>
+  <tr><td><strong>1</strong></td><td><strong>时</strong>：现在是不是做这件事的时候？</td>
+    <td><em>「時止則止，時行則行」</em></td>
+    <td>一句话：「现在是做／不是做这件事的时候」，并写明<strong>你怎么判断的</strong></td></tr>
+  <tr><td><strong>2</strong></td><td><strong>位</strong>：我在哪一格？</td>
+    <td><em>六爻：初潜 · 二见 · 三惕 · 四试 · 五治 · 上退</em></td>
+    <td>一个格位。若答不出，说明你对自己处境的了解还不够</td></tr>
+  <tr><td><strong>3</strong></td><td><strong>配</strong>：这一格该做的动作，和我实际打算做的，一致吗？</td>
+    <td><em>「潛龍勿用」「亢龍有悔」</em></td>
+    <td>列出<strong>不一致处</strong>——这一栏通常会暴露真正的问题</td></tr>
+  <tr><td><strong>4</strong></td><td><strong>中</strong>：这个做法能长期做下去吗？</td>
+    <td><em>「能久中也」</em></td>
+    <td>若不能长期做，找出它能做多久，以及到期后怎么办</td></tr>
+  <tr><td><strong>5</strong></td><td><strong>变</strong>：继续下去，哪个环节先转向？</td>
+    <td><em>「無平不陂，無往不復」</em></td>
+    <td>一个具体的、<strong>可观察</strong>的转折信号（不是感觉）</td></tr>
+  <tr><td><strong>6</strong></td><td><strong>应</strong>：这一步需要谁？他在不在？</td>
+    <td><em>「高而無民」「同聲相應」</em></td>
+    <td>人名或角色。缺人的地方就是这一步的真实风险</td></tr>
+</table>
+
+<div class="box core">
+  <div class="h">◆ 这个程序与占筮的关系（说清楚，免得被误用）</div>
+  <p><strong>它不需要起卦。</strong>
+  <em>六格位置、五个判据，都可以直接对照自己的处境用。</em></p>
+  <p><strong>起卦在这里唯一可能的作用是</strong>：<em>随机给你一个卦，
+  逼你用它的角度重看一遍。这是「换视角」，不是「问答案」。</em></p>
+  <p><strong>如果你用了起卦，请守住一条</strong>：
+  <em>把卦辞当作<strong>提问清单</strong>读，不当作<strong>结论</strong>读。
+  凡是你不能用自己的事实反驳的解读，就是无效解读。</em></p>
+</div>
+
+<!-- ============================================================ -->
+<h2>四 · 六十四卦速查：每卦的「可取」与「警惕」</h2>
+<div class="s">
+  逐卦给两栏。左边是<strong>可以脱离占卜使用的原则</strong>；
+  右边是<strong>这一卦最容易被误用的方式</strong>。
+  卦辞均照底本原样（繁体）；「可取」一栏是我的读法，不是原文。
+</div>
+
+<table>
+  <tr><th style="width:5%">序</th><th style="width:9%">卦</th>
+    <th style="width:25%">卦辞（底本原文）</th>
+    <th style="width:33%">可取 · 可操作的原则</th>
+    <th>警惕 · 最易误用处</th></tr>
+
+  <tr><td>1</td><td><strong>乾</strong></td>
+    <td>乾：元，亨，利，貞。</td>
+    <td class="k">纯粹的<strong>生长与主动</strong>。六爻给了一条完整的阶段曲线：
+    <em>潜 → 见 → 惕 → 试 → 治 → 亢</em>。</td>
+    <td class="d"><span class="y">「飛龍在天」被当成追求目标</span>——
+    <em>它的下一爻就是「亢龍有悔」。这条曲线的意义在于知道<strong>顶点之后是什么</strong>。</em></td></tr>
+
+  <tr><td>2</td><td><strong>坤</strong></td>
+    <td>坤：元，亨，利牝馬之貞。</td>
+    <td class="k">纯粹的<strong>承载与顺</strong>。「履霜，堅冰至」——
+    <em>见到薄霜就知道坚冰要来：<strong>从最小的征兆推趋势</strong>。</em>
+    「括囊；無咎，無譽」——<em>该闭嘴时闭嘴，不求有功但求无过。</em></td>
+    <td class="d"><span class="y">「順」被读成听话、忍让</span>——
+    <em>坤的「順」是<strong>承载</strong>（牝马之贞：有力而不争先），不是顺从。</em></td></tr>
+
+  <tr><td>3</td><td><strong>屯</strong></td>
+    <td>屯：元，亨，利，貞，勿用，有攸往，利建侯。</td>
+    <td class="k"><strong>开局之难</strong>。「勿用，有攸往」——
+    <em>不是不动，是<strong>别急着往前冲，先建班底</strong>（「利建侯」）。</em>
+    「君子幾不如舍」——<em>没有向导就不要进林子。</em></td>
+    <td class="d"><span class="y">把「开局难」当成「注定要难」</span>——
+    <em>屯卦给的是<strong>该做什么</strong>（建侯），不是情绪安慰。</em></td></tr>
+
+  <tr><td>4</td><td><strong>蒙</strong></td>
+    <td>蒙：亨。匪我求童蒙，童蒙求我。初噬告，再三瀆，瀆則不告。</td>
+    <td class="k"><strong>教与学的不对称</strong>：
+    <em>「不是我去求蒙昧的人，是他来求我」——
+    <strong>求教方必须先有求的意愿</strong>，否则教了没用。
+    「再三瀆，瀆則不告」——<strong>反复问同一件事就不该再答</strong>。</em></td>
+    <td class="d"><span class="y">拿「童蒙求我」当作傲慢的借口</span>——
+    <em>它讲的是<strong>教学的效率条件</strong>（没有意愿的人教不会），
+    不是讲<strong>教的人可以摆架子</strong>。</em></td></tr>
+
+  <tr><td>5</td><td><strong>需</strong></td>
+    <td>需：有孚，光亨，貞吉。利涉大川。</td>
+    <td class="k"><strong>有条件地等</strong>。六爻是等待的<strong>六个位置</strong>：
+    <em>郊（远）→ 沙（近一点）→ 泥（已经陷进去）→ 血（危险）→ 酒食（从容）→ 穴（进入）。</em>
+    <strong>等的位置越靠前越安全</strong>；「需于泥，致寇至」——陷进泥里，麻烦就自己找上门。</td>
+    <td class="d"><span class="y">把「需」读成「躺平等」</span>——
+    <em>它给的是<strong>等待的距离管理</strong>：要等到什么时候、站在哪里等。
+    「需于郊。利用恆」——离得远地等，才能等得久。</em></td></tr>
+
+  <tr><td>6</td><td><strong>訟</strong></td>
+    <td>訟：有孚，窒。惕中吉。終凶。利見大人，不利涉大川。</td>
+    <td class="k"><strong>争讼的成本结构</strong>：「惕中吉。終凶」——
+    <em>中途警觉是对的，<strong>打到底一定是坏的</strong>。</em>
+    「或錫之鞶帶，終朝三褫之」——<em>就算赢了，赏赐也可能一天被剥夺三次。</em></td>
+    <td class="d"><span class="y">只读「惕中吉」当作赢了就行</span>——
+    <em>「終凶」才是这一卦的主张：<strong>诉讼的收益是负的</strong>。</em></td></tr>
+
+  <tr><td>7</td><td><strong>師</strong></td>
+    <td>師：貞，丈人，吉無咎。</td>
+    <td class="k"><strong>组织与统率</strong>。「丈人吉」——
+    <em>关键是<strong>领头的人</strong>，不是人数或士气。</em>
+    六五「長子帥師，弟子輿尸」——<em>用错人会把队伍拉回来送葬。</em></td>
+    <td class="d"><span class="y">把「師」读成「打仗」</span>——
+    <em>它是<strong>任何需要统率的集体行动</strong>；核心问题是<strong>授权给谁</strong>。</em></td></tr>
+
+  <tr><td>8</td><td><strong>比</strong></td>
+    <td>比：吉。原筮元永貞，無咎。不寧方來，後夫凶。</td>
+    <td class="k"><strong>亲附与结盟</strong>。「後夫凶」——
+    <em><strong>来晚了的人没有位置</strong>。这是时机在关系上的应用。</em></td>
+    <td class="d"><span class="y">读成「要选对阵营」</span>——
+    <em>它同时说「不寧方來」：<strong>不安定的人才会来投靠</strong>。
+    招来的是谁，取决于你什么时候开门。</em></td></tr>
+
+  <tr><td>9</td><td><strong>小畜</strong></td>
+    <td>小畜：亨。密雲不雨，自我西郊。</td>
+    <td class="k"><strong>积攒但还不到时候</strong>。
+    <em>「密雲不雨」——云厚了却不下雨：<strong>条件看着快齐了，但还差一步</strong>。</em></td>
+    <td class="d"><span class="y">把「快到点了」当成「可以动了」</span>——
+    <em>小畜的落点正是<strong>那个差距还在</strong>。</em></td></tr>
+
+  <tr><td>10</td><td><strong>履</strong></td>
+    <td>履：履虎尾，不咥人，亨。</td>
+    <td class="k"><strong>在危险边上行走</strong>。「履虎尾，愬愬，終吉」——
+    <em>踩到老虎尾巴而<strong>保持警觉</strong>，最终是吉的。
+    <strong>危险不必然致祸，失警觉才致祸。</strong></em></td>
+    <td class="d"><span class="y">把「不咥人」读成「不会有事」</span>——
+    <em>它是「你踩了虎尾但没被咬」，即<strong>这次侥幸</strong>。
+    「視履考祥，其旋元吉」——要<strong>回头看自己走过的路</strong>才算周全。</em></td></tr>
+
+  <tr><td>11</td><td><strong>泰</strong></td>
+    <td>泰：小往大來，吉亨。</td>
+    <td class="k"><strong>通泰</strong>。「小往大來」——
+    <em>小的走了，大的来了：<strong>结构在向好的方向换</strong>。</em>
+    但九三「無平不陂，無往不復」——<em>通泰里已经埋了转向。</em></td>
+    <td class="d"><span class="y">在顺境里只看「吉亨」</span>——
+    <em>泰卦六爻里最值得读的是<strong>上六「城復于隍」</strong>：
+    墙倒了填回壕沟。<strong>好的时候要想好怎么收。</strong></em></td></tr>
+
+  <tr><td>12</td><td><strong>否</strong></td>
+    <td>否：否之匪人，不利君子貞，大往小來。</td>
+    <td class="k"><strong>闭塞</strong>——与泰相反。
+    <em>但九五「其亡其亡，繫于苞桑」：
+    <strong>把「要完了要完了」一直放在心上，反而系在了结实的桑根上。</strong>
+    这是全书最有用的一句之一：<strong>危机意识本身是保险</strong>。</em></td>
+    <td class="d"><span class="y">把「否」当成「没办法了」</span>——
+    <em>上九是「傾否，先否後喜」：<strong>否是可以倾覆的，而且先否后喜。</strong></em></td></tr>
+
+  <tr><td>13</td><td><strong>同人</strong></td>
+    <td>同人：同人于野，亨。利涉大川，利君子貞。</td>
+    <td class="k"><strong>公开地联合</strong>。「同人于野」——
+    <em>在<strong>旷野</strong>上聚人，不在小圈子里：<strong>范围越大越能成事</strong>。
+    （「同人于宗，吝」——只在宗族内搞，就窄了。）</em></td>
+    <td class="d"><span class="y">读成「要合群」</span>——
+    <em>它的对立面是<strong>小圈子</strong>，不是孤独。
+    「于野」强调的是<strong>公开性与广度</strong>。</em></td></tr>
+
+  <tr><td>14</td><td><strong>大有</strong></td>
+    <td>大有：元亨。</td>
+    <td class="k"><strong>所有很多</strong>。卦辞极短，重点在九三：
+    <em>「公用亨于天子，小人弗克」——<strong>有的东西要能拿得出去</strong>；
+    拿不出去的人（小人）守不住这个「有」。</em></td>
+    <td class="d"><span class="y">读成「要发财了」</span>——
+    <em>「大有」的問題是<strong>如何持有</strong>：九四「匪其彭，無咎」——
+    不炫耀就没有问题。</em></td></tr>
+
+  <tr><td>15</td><td><strong>謙</strong></td>
+    <td>謙：亨，君子有終。</td>
+    <td class="k"><strong>六爻全吉</strong>——64 卦里唯一。
+    <em>「勞謙君子，有終吉」：<strong>有功劳而谦</strong>，才有好结局。
+    「謙謙君子，用涉大川」：<strong>谦到极点可以渡大河</strong>。</em></td>
+    <td class="d"><span class="y">读成「要贬低自己」</span>——
+    <em>「勞謙」的前提是<strong>先有劳</strong>。
+    没有功劳的谦不是谦，是没内容。</em></td></tr>
+
+  <tr><td>16</td><td><strong>豫</strong></td>
+    <td>豫：利建侯行師。</td>
+    <td class="k"><strong>预备与和乐</strong>。「豫」兼有「预」与「乐」两义——
+    <em>提前准备，然后才能从容。<strong>从容是一种准备的结果，不是一种性格。</strong></em></td>
+    <td class="d"><span class="y">只读「乐」不读「预」</span>——
+    <em>六三「盱豫，悔；遲有悔」：<strong>仰着头等快乐会悔，等太久也悔。</strong>
+    这一句把「预」这一层点出来了。</em></td></tr>
+
+  <tr><td>17</td><td><strong>隨</strong></td>
+    <td>隨：元亨利貞，無咎。</td>
+    <td class="k"><strong>跟随</strong>。「係小子，失丈夫」「係丈夫，失小子」——
+    <em><strong>跟随是有取舍的：跟了这个就丢了那个。</strong>
+    「隨有獲，貞凶」——<em>跟着跟着自己得了好处，反而是凶</em>。</em></td>
+    <td class="d"><span class="y">读成「要跟对人」</span>——
+    <em>它更想说<strong>跟随的代价</strong>：
+    「隨有獲」是在提醒<strong>跟随者一旦开始获利，关系就变了</strong>。</em></td></tr>
+
+  <tr><td>18</td><td><strong>蠱</strong></td>
+    <td>蠱：元亨，利涉大川。先甲三日，後甲三日。</td>
+    <td class="k"><strong>整治积弊</strong>。「先甲三日，後甲三日」——
+    <em>动手前后各留三天：<strong>事前准备、事后收尾，都算在整治里面</strong>。</em>
+    「幹父之蠱」——<em>替上一代收拾烂摊子。</em></td>
+    <td class="d"><span class="y">急着「拨乱反正」</span>——
+    <em>「裕父之蠱，往見吝」（六四）：<strong>宽纵着不治，往后就难了；
+    但反过来操之过急，也不在原文里。</strong></em></td></tr>
+
+  <tr><td>19</td><td><strong>臨</strong></td>
+    <td>臨：元，亨，利，貞。至于八月有凶。</td>
+    <td class="k"><strong>居高临下地推进</strong>。六爻是六种「临」的方式：
+    <em>咸临（感应）→ 甘临（讨好，无攸利）→ 至临（到位）
+    → 知临（明智）→ 敦临（厚道）。</em>
+    <strong>「知臨」与「敦臨」是好的，「甘臨」是没用的。</strong></td>
+    <td class="d"><span class="y">只读「元亨利貞」</span>——
+    <em>卦辞紧接着「至于八月有凶」：<strong>好势头有期限</strong>，要标出来。</em></td></tr>
+
+  <tr><td>20</td><td><strong>觀</strong></td>
+    <td>觀：盥而不薦，有孚顒若。</td>
+    <td class="k"><strong>看与被看</strong>。「盥而不薦」——
+    <em>洗手净了但还没献祭：<strong>看的是准备状态，不是完成状态</strong>。
+    「觀我生」「觀其生」——<strong>观自己，也观别人怎么活。</strong></em></td>
+    <td class="d"><span class="y">读成「多观察」</span>——
+    <em>这一卦有一半是讲<strong>被人看</strong>：
+    「觀國之光，利用賓于王」——你被人看着，所以你在被选。<strong>观是双向的。</strong></em></td></tr>
+
+  <tr><td>21</td><td><strong>噬嗑</strong></td>
+    <td>噬嗑：亨。利用獄。</td>
+    <td class="k"><strong>咬断阻碍</strong>。「利用獄」——
+    <em>用在断案上：<strong>有东西卡在中间，必须咬掉才能合</strong>。
+    六二「噬膚滅鼻」、六三「噬腊肉，遇毒」——<em>咬的难度分级。</em></em></td>
+    <td class="d"><span class="y">读成「要强硬」</span>——
+    <em>初九「屨校滅趾，無咎」：<strong>小惩可以免大错</strong>。
+    这一卦的重点是<strong>惩罚的适度</strong>，不是狠。</em></td></tr>
+
+  <tr><td>22</td><td><strong>賁</strong></td>
+    <td>賁：亨。小利有所往。</td>
+    <td class="k"><strong>修饰</strong>。「小利有所往」——
+    <em>修饰只有小的用处。上九「白賁，無咎」：<strong>回到没有修饰，才是无咎。</strong></em></td>
+    <td class="d"><span class="y">把「賁」当成「包装重要」</span>——
+    <em>它的结论是<strong>白賁</strong>：
+    「賁，无色也」（雜卦）——<strong>修饰的最高形态是看不出来修饰过</strong>。</em></td></tr>
+
+  <tr><td>23</td><td><strong>剝</strong></td>
+    <td>剝：不利有攸往。</td>
+    <td class="k"><strong>剥落</strong>——「不利有攸往」：<em>这时候不要往前走。</em>
+    「碩果不食」——<em>树上还剩一个大果子没被摘掉：
+    <strong>剥到最后会剩下一颗种子</strong>，而下一卦（復）就从这个种子开始。</em></td>
+    <td class="d"><span class="y">读成「完了」</span>——
+    <em>「剝」的落点是<strong>「碩果不食」</strong>：留种。
+    <strong>衰败期该做的事是保住能重启的那一点。</strong></em></td></tr>
+
+  <tr><td>24</td><td><strong>復</strong></td>
+    <td>復：亨。出入無疾，朋來無咎。反復其道，七日來復，利有攸往。</td>
+    <td class="k"><strong>回复</strong>。「反復其道，七日來復」——
+    <em>走回原来的路，七天就回来了：
+    <strong>「复」有一个大致的时间尺度，而且它会自己发生。</strong>
+    初九「不遠復，無祗悔」——<em>错得不远就回头，不会有悔。</em></em></td>
+    <td class="d"><span class="y">把「七日」当准确的周期</span>——
+    <em>它的用法是<strong>「偏离之后，回复是会发生的」</strong>，
+    不是给出一个天数。</em></td></tr>
+
+  <tr><td>25</td><td><strong>無妄</strong></td>
+    <td>無妄：元，亨，利，貞。其匪正有眚，不利有攸往。</td>
+    <td class="k"><strong>不做非分之想</strong>。「无妄之灾」——
+    <em>六三「无妄之灾，或系之牛，行人之得，邑人之灾」：
+    <strong>有人把牛系在那儿，过路人牵走了，村里人遭殃——这就是无妄之灾的原型。</strong>
+    它教你辨认<strong>不是你造成的灾</strong>。</em></td>
+    <td class="d"><span class="y">把「無妄」读成「什么都不做」</span>——
+    <em>卦辞是「元亨利贞」：<strong>做对的事是大通的</strong>，
+    「不利有攸往」的条件是「其匪正」（不正）。</em></td></tr>
+
+  <tr><td>26</td><td><strong>大畜</strong></td>
+    <td>大畜：利貞，不家食吉，利涉大川。</td>
+    <td class="k"><strong>大的积累</strong>。「不家食吉」——
+    <em>不在家里吃：<strong>积累到一定程度就要出去用</strong>。
+    「利涉大川」——<em>攒够了才能渡大河。</em></em></td>
+    <td class="d"><span class="y">读成「越多越好」</span>——
+    <em>上九「何天之衢，亨」：<strong>积到极处是四通八达</strong>，
+    但前提是门打开了。积而不出，就不是大畜。</em></td></tr>
+
+  <tr><td>27</td><td><strong>頤</strong></td>
+    <td>頤：貞吉。觀頤，自求口實。</td>
+    <td class="k"><strong>养</strong>。「自求口實」——
+    <em>自己解决吃饭问题：<strong>养的第一条是自己能养自己</strong>。
+    「觀頤」——<em>看一个人怎么养、养什么，就知道他是什么人。</em></em></td>
+    <td class="d"><span class="y">只读「养」的正面</span>——
+    <em>六二「顛頤，拂經于丘頤，征凶」：
+    <strong>反过来向下求养（求不该求的人），是凶的。</strong>
+    这一卦区分<strong>该向谁求</strong>。</em></td></tr>
+
+  <tr><td>28</td><td><strong>大過</strong></td>
+    <td>大過：棟橈，利有攸往，亨。</td>
+    <td class="k"><strong>超过了正常的承载</strong>。「棟橈」——
+    <em>房梁弯了：<strong>结构已经吃力</strong>。
+    但卦辞又说「利有攸往」——<em>非常时期要用非常做法。</em></em></td>
+    <td class="d"><span class="y">把「非常时期」当常态</span>——
+    <em>「棟橈」是说这个状态<strong>撑不久</strong>。
+    大过是<strong>过而后改</strong>，不是<strong>过下去</strong>。</em></td></tr>
+
+  <tr><td>29</td><td><strong>坎</strong></td>
+    <td>坎：習坎，有孚，維心亨，行有尚。</td>
+    <td class="k"><strong>重复的险</strong>。「習坎」——
+    <em>险是重来的，一个接一个。「維心亨」——
+    <strong>险里能通的只有心</strong>：外在走不通时，保住内在的连贯。</em>
+    「行有尚」——<em>还是要走，走了才有可嘉之处。</em></td>
+    <td class="d"><span class="y">读成「要小心」</span>——
+    <em>坎的主张是<strong>在险里继续走</strong>（「行有尚」），不是避开。
+    上六「係用徽纆，寘于叢棘，三歲不得，凶」——<em>但走错就是被绑住三年。</em></em></td></tr>
+
+  <tr><td>30</td><td><strong>離</strong></td>
+    <td>離：利貞，亨。畜牝牛，吉。</td>
+    <td class="k"><strong>附着与光明</strong>。「畜牝牛」——
+    <em>养温顺的牛：<strong>依附于什么，决定你会变成什么</strong>。
+    光明要附着在燃料上才存在。</em></td>
+    <td class="d"><span class="y">只读「光明」</span>——
+    <em>九四「突如其來如，焚如，死如，棄如」：
+    <strong>突然来的火，烧掉、死掉、被抛弃。</strong>
+    光是消耗性的：<strong>烧得快，灭得快。</strong></em></td></tr>
+
+  <tr><td>31</td><td><strong>咸</strong></td>
+    <td>咸：亨，利貞，取女吉。</td>
+    <td class="k"><strong>感应</strong>。「咸，感也」——
+    <em>九四「憧憧往來，朋從爾思」：
+    <strong>心来回动，只有同党跟着你的想法走</strong>——
+    这是「感应」的失败形态。</em>
+    「聖人感人心而天下和平」——<em>感应是双向的。</em></td>
+    <td class="d"><span class="y">读成「要真诚就能感动人」</span>——
+    <em>「憧憧往来」正是在说：<strong>自己心里反复琢磨，并不能真的感应到别人</strong>。
+    咸卦要求的是<strong>虚空以受</strong>（「君子以虛受人」）。</em></td></tr>
+
+  <tr><td>32</td><td><strong>恆</strong></td>
+    <td>恆：亨，無咎，利貞，利有攸往。</td>
+    <td class="k"><strong>恒久</strong>。「恆，久也」。
+    「不恆其德，或承之羞」——<em>守不住自己的德，就会招来羞辱。
+    <strong>而「无恒」的后果是「无所容」：没有地方站得住。</strong></em>
+    「天地之道，恆久而不已也」。</td>
+    <td class="d"><span class="y">把「恆」读成「不变」</span>——
+    <em>「利有攸往，終則有始也」：<strong>恒是「终则有始」，是循环，不是冻结。</strong>
+    「浚恆，貞凶」——<em>一开始就求深，反而凶。</em></em></td></tr>
+
+  <tr><td>33</td><td><strong>遯</strong></td>
+    <td>遯：亨，小利貞。</td>
+    <td class="k"><strong>退避</strong>。卦名在卦辞里作「遯」。
+    <em>「遯亨，遯而亨也」——<strong>退本身就是通</strong>。
+    「肥遯，無不利」——<em>从容地退，没有不利。</em></em></td>
+    <td class="d"><span class="y">把「退」当失败</span>——
+    <em>《易經》把它列为「亨」。这一卦最有用的地方是：
+    <strong>退出是一个可以主动做的决定，而不是被赶走的结果。</strong>
+    「係遯，有疾厲」——<em>想退又被牵住，才是真麻烦。</em></em></td></tr>
+
+  <tr><td>34</td><td><strong>大壯</strong></td>
+    <td>大壯：利貞。</td>
+    <td class="k"><strong>力量强盛</strong>。但全卦在警告<strong>力量的用法</strong>：
+    <em>「壯于趾，征凶」（初九）——脚上有劲就冲，凶。
+    「羝羊觸藩，羸其角」——公羊顶篱笆，角被卡住。
+    上六「羝羊觸藩，不能退，不能遂」——<strong>进也进不去，退也退不出。</strong></em></td>
+    <td class="d"><span class="y">读成「该出手了」</span>——
+    <em>大壮六爻里几乎每一爻都在说<strong>用力过猛的下场</strong>。
+    「藩決不羸」才是好的：篱笆破了而不卡角。<strong>有力而不被力困住，才算壮。</strong></em></td></tr>
+
+  <tr><td>35</td><td><strong>晉</strong></td>
+    <td>晉：康侯用錫馬蕃庶，晝日三接。</td>
+    <td class="k"><strong>上进</strong>。「晝日三接」——
+    <em>一天被接见三次：<strong>上升期的一个特征是被频繁召见</strong>。
+    「明出地上，順而麗乎大明」——<em>光明升到地上：显出来了。</em></em></td>
+    <td class="d"><span class="y">把「被看见」当成目标</span>——
+    <em>上九「晉其角，維用伐邑」：
+    <strong>进到角上了，只能用来讨伐自己的城邑</strong>——
+    升到尽头，能用的地方反而只剩内部。<strong>上升期要预留去处。</strong></em></td></tr>
+
+  <tr><td>36</td><td><strong>明夷</strong></td>
+    <td>明夷：利艱貞。</td>
+    <td class="k"><strong>光明受伤</strong>。「利艱貞」——
+    <em>在艰难里守正。六二「明夷于左股，用拯馬壯，吉」——
+    <strong>受伤了要赶紧救，而且要救得快（壮马）。</strong>
+    「箕子之明夷，利貞」——<em>箕子装疯避祸：<strong>在坏环境里保住自己是正当的。</strong></em></em></td>
+    <td class="d"><span class="y">读成「忍」</span>——
+    <em>它的动作是<strong>藏</strong>（「明入地中」），
+    但「用拯馬壯」又要求<strong>该救的时候快救</strong>。
+    <strong>藏与救，要分清哪件事是哪件。</strong></em></td></tr>
+
+  <tr><td>37</td><td><strong>家人</strong></td>
+    <td>家人：利女貞。</td>
+    <td class="k"><strong>内部秩序</strong>。「利女貞」——
+    <em>内位守正是基础。初九「閑有家，悔亡」——
+    <strong>趁着家里还没出事就把规矩立起来（闲＝防闲）。</strong>
+    九五「王假有家，勿恤，吉」——<em>上面带头，家里就好了。</em></em></td>
+    <td class="d"><span class="y">把「利女貞」读成对女性的要求</span>——
+    <em>在这一卦的结构里，「内」是一个<strong>位置</strong>（内卦），
+    讲的是<strong>内部那一半必须稳定，外部那一半才有效</strong>。
+    把它滑成性别规范，是后世的读法，不是卦的结构。</em></td></tr>
+
+  <tr><td>38</td><td><strong>睽</strong></td>
+    <td>睽：小事吉。</td>
+    <td class="k"><strong>背离与分歧</strong>。「小事吉」——
+    <em>分歧状态下只能做小事。但「天地睽而其事同也，
+    男女睽而其志通也，萬物睽而其事類也」——
+    <strong>差异本身可以共存，且互相需要。</strong></em></td>
+    <td class="d"><span class="y">读成「一致才好」</span>——
+    <em>睽的落点是「睽之時用大矣哉」：
+    <strong>差异是有大用处的</strong>。
+    「見豕負塗，載鬼一車」——<em>把对方看成脏猪、看成鬼，是分歧的典型形态。</em></em></td></tr>
+
+  <tr><td>39</td><td><strong>蹇</strong></td>
+    <td>蹇：利西南，不利東北；利見大人，貞吉。</td>
+    <td class="k"><strong>行路难</strong>。「利西南，不利東北」——
+    <em>往平坦处走，不往险处走：<strong>难的时候要挑方向，不能硬闯。</strong>
+    「利見大人」——<em>难的时候要找人。</em>
+    「往蹇來譽」「往蹇來反」「往蹇來連」——<strong>往那边是难，回来是誉/反/连。</strong></em></td>
+    <td class="d"><span class="y">把「来」读成退缩</span>——
+    <em>这一卦六爻里有四爻说的是「往蹇来X」，
+    <strong>而「来」的结果是好的</strong>——
+    《易經》在这里明确主张<strong>回头是有效动作</strong>，不是软弱。</em></td></tr>
+
+  <tr><td>40</td><td><strong>解</strong></td>
+    <td>解：利西南，無所往，其來復吉。有攸往，夙吉。</td>
+    <td class="k"><strong>解除</strong>。「無所往，其來復吉」——
+    <em>不要往外走，回来就吉。但「有攸往，夙吉」——
+    <strong>如果确实要走，越早越好。</strong>
+    这两句合起来：<strong>要么回，要么早走；最坏的是拖着。</strong></em></td>
+    <td class="d"><span class="y">认为「解」就是问题结束了</span>——
+    <em>上六「公用射隼于高墉之上，獲之，無不利」：
+    <strong>还要把高墙上的那只隼射下来</strong>——
+    解除之后仍有残余要处理。</em></td></tr>
+
+  <tr><td>41</td><td><strong>損</strong></td>
+    <td>損：有孚，元吉，無咎，可貞，利有攸往？曷之用，二簋可用享。</td>
+    <td class="k"><strong>减损</strong>。「二簋可用享」——
+    <em>两个簋就可以祭：<strong>减到最低也够用</strong>。
+    「損而有孚」——<em>减损要有原则，否则只是损失。</em></em></td>
+    <td class="d"><span class="y">把「损」读成「越少越好」</span>——
+    <em>「利有攸往？」这一问是原文里的<strong>不确定</strong>：
+    <strong>减损不一定有利，要有孚才行。</strong>
+    与下一卦「益」互为反面：损上益下才是益。</em></td></tr>
+
+  <tr><td>42</td><td><strong>益</strong></td>
+    <td>益：利有攸往，利涉大川。</td>
+    <td class="k"><strong>增益</strong>。「利涉大川」——
+    <em>有余力才能渡大河。「君子以見善則遷，有過則改」——
+    <strong>益的第一个对象是自己：见好就学，有错就改。</strong></em>
+    「損上益下，民說無疆」——<em>把上面的减下来给下面，才算益。</em></td>
+    <td class="d"><span class="y">读成「要不断增加」</span>——
+    <em>上九「莫益之，或擊之，立心勿恆，凶」：
+    <strong>没有人来增益你，反而有人打你——因为你的心不定。</strong>
+    益卦的边界是：<strong>只想着自己增，就会变成被攻击的对象。</strong></em></td></tr>
+
+  <tr><td>43</td><td><strong>夬</strong></td>
+    <td>夬：揚于王庭，孚號，有厲，告自邑，不利即戎，利有攸往。</td>
+    <td class="k"><strong>决断／决除</strong>。六爻几乎全在讲<strong>怎么处理一个必须除掉的东西</strong>：
+    <em>「揚于王庭」（公开）·「孚號」（讲清）·「告自邑」（从自己这边先讲）
+    ·「不利即戎」（不要动武）。</em>
+    <strong>它给的是一个「清除」的标准流程，而且明确禁止用武力。</strong></td>
+    <td class="d"><span class="y">把「夬」读成「果断下手」</span>——
+    <em>「不利即戎」是明说的。
+    九三「壯于頄，有凶」：<strong>怒形于色，凶。</strong>
+    「君子夬夬，獨行遇雨，若濡有慍，無咎」——<em>独自去做，被淋湿、被埋怨，但无咎。</em></em></td></tr>
+
+  <tr><td>44</td><td><strong>姤</strong></td>
+    <td>姤：女壯，勿用取女。</td>
+    <td class="k"><strong>不期而遇</strong>。「女壯，勿用取女」——
+    <em>碰上了一个很强的东西，不要娶（不要接纳进来）。</em>
+    「包有魚，無咎，不利賓」——<em>有鱼在自己包里，不拿出去待客。</em>
+    「繫于金柅，貞吉」——<em>用金属刹车把它拴住。</em></td>
+    <td class="d"><span class="y">把「勿用取女」读成贬低女性</span>——
+    <em>在这一卦的结构里，「女」是<strong>阴柔初生的力量</strong>（初六一阴始生）。
+    它讲的是<strong>一个刚出现、看着很弱、但会长大的东西</strong>该不该让它进来。
+    <strong>把它读成性别判断，就把这一卦的用处丢掉了。</strong></em></td></tr>
+
+  <tr><td>45</td><td><strong>萃</strong></td>
+    <td>萃：亨。王假有廟，利見大人，亨，利貞。用大牲吉，利有攸往。</td>
+    <td class="k"><strong>聚集</strong>。「用大牲吉」——
+    <em>聚集要花大代价（用大牲），这是<strong>聚集的成本</strong>。
+    「君子以除戎器，戒不虞」——
+    <strong>人聚起来的时候要修武器、防意外</strong>：聚集本身带来风险。</em></td>
+    <td class="d"><span class="y">只读「聚」的好处</span>——
+    <em>「萃」的告诫在「除戎器，戒不虞」。
+    上六「齎咨涕洟，無咎」——<em>聚到尽头是叹息流泪。</em>
+    <strong>聚之前先想好人多了会出什么事。</strong></em></td></tr>
+
+  <tr><td>46</td><td><strong>升</strong></td>
+    <td>升：元亨，用見大人，勿恤，南征吉。</td>
+    <td class="k"><strong>上升</strong>。「勿恤」——
+    <em>不要忧虑。「君子以順德，積小以高大」——
+    <strong>顺着长，靠一点点积累到高大。</strong>
+    「升虛邑」——<em>升进一个空城：没有抵抗的上升。</em></em></td>
+    <td class="d"><span class="y">读成「会一直升」</span>——
+    <em>上六「冥升，利于不息之貞」：
+    <strong>在昏暗中还往上升</strong>——这是升的尽头。</em></td></tr>
+
+  <tr><td>47</td><td><strong>困</strong></td>
+    <td>困：亨，貞，大人吉，無咎，有言不信。</td>
+    <td class="k"><strong>困穷</strong>。「有言不信」——
+    <em>说话没人信。<strong>困的一个实际特征是你的话失去传递能力。</strong>
+    「困而不失其所亨，其唯君子乎」——<em>困里还能通，只有君子。</em>
+    「君子以致命遂志」——<em>把命用出去，把志完成。</em></em></td>
+    <td class="d"><span class="y">把「困」当纯粹的坏</span>——
+    <em>卦辞第一个字是「亨」。困的用处是<strong>筛出「不失其所亨」的人</strong>。
+    但也别浪漫化：「有言不信」是真实的处境，不是心态问题。</em></td></tr>
+
+  <tr><td>48</td><td><strong>井</strong></td>
+    <td>井：改邑不改井，無喪無得，往來井井。汔至，亦未繘井，羸其瓶，凶。</td>
+    <td class="k"><strong>公共资源</strong>。「改邑不改井」——
+    <em>村落可以搬，井不能搬：<strong>有些东西是不可迁移的基础设施</strong>。
+    「無喪無得」——<em>井不增不减，用的人来来回回。
+    <strong>它讲的是「维持一个所有人都能用的东西」这件事。</strong></em></em></td>
+    <td class="d"><span class="y">把「井」读成「自己埋头积累」</span>——
+    <em>它的核心是<strong>公共性</strong>：
+    「井冽，寒泉食」——井水清冽，是给人吃的。
+    「井渫不食，為我心惻」——<em>井淘干净了却没人喝，这才是可惜。</em>
+    <strong>井的价值在被人用，不在自己有水。</strong></em></td></tr>
+
+  <tr><td>49</td><td><strong>革</strong></td>
+    <td>革：己日乃孚，元亨利貞，悔亡。</td>
+    <td class="k"><strong>变革</strong>。「己日乃孚」——
+    <em>到「己日」人们才信（己日＝变革时机成熟之日）：
+    <strong>改得太早，没人信。</strong>
+    「天地革而四時成」——<em>四季就是变出来的。</em>
+    「君子以治歷明時」——<em>治历法、明时令：变革要先建立时间秩序。</em></em></td>
+    <td class="d"><span class="y">把「革」读成「该改变了」</span>——
+    <em>它有一个明确的门槛：<strong>「己日乃孚」</strong>。
+    初九「鞏用黃牛之革」：<em>先用牛皮把自己捆住</em>——
+    <strong>变革的第一步是不动。</strong></em></td></tr>
+
+  <tr><td>50</td><td><strong>鼎</strong></td>
+    <td>鼎：元吉，亨。</td>
+    <td class="k"><strong>建立新的承载</strong>（与革相对：革是破，鼎是立）。
+    <em>「鼎，象也；以木巽火，亨飪也」——
+    鼎是把东西<strong>转化</strong>的容器：生的放进去，熟的出来。</em>
+    九四「鼎折足，覆公餗，其形渥，凶」——
+    <em><strong>鼎的脚断了，把给公家的饭倒了</strong>：
+    承载力不够而承担大事，是最典型的失败。</em></td>
+    <td class="d"><span class="y">只读「元吉」</span>——
+    <em>「鼎折足」是这一卦最有名的一爻，而它讲的正是
+    <strong>「德薄而位尊，知小而謀大，力少而任重」</strong>（繫辭下傳）。
+    这一句是该背下来的。</em></td></tr>
+
+  <tr><td>51</td><td><strong>震</strong></td>
+    <td>震：亨。震來虩虩，笑言啞啞。震驚百里，不喪匕鬯。</td>
+    <td class="k"><strong>震动／惊</strong>。「震來虩虩，笑言啞啞」——
+    <em>来的时候吓得发抖，事后又说笑自如：
+    <strong>这是「惊」的完整过程，而成语「震惊百里」的落点是「不喪匕鬯」——
+    受了惊，手里的祭器没掉。</strong>
+    这一条极实用：<strong>衡量一个系统的强度，看它受惊时手里还握着什么。</strong></em></td>
+    <td class="d"><span class="y">读成「要稳住」</span>——
+    <em>它的重点不是不惊（「震來虩虩」是正常反应），
+    而是<strong>惊的同时没有丢掉正在做的事</strong>。
+    上六「震索索，視矍矍，征凶」——<em>吓得东张西望还往前走，才凶。</em></em></td></tr>
+
+  <tr><td>52</td><td><strong>艮</strong></td>
+    <td>艮：艮其背，不獲其身，行其庭，不見其人，無咎。</td>
+    <td class="k"><strong>止</strong>。「艮其背」——
+    <em>止在背后：背是<strong>自己看不见的地方</strong>。
+    「不獲其身」——<em>感觉不到自己的身体：
+    <strong>止到极致是忘了自己在止。</strong></em>
+    「時止則止，時行則行」出自这一卦的彖。</em></td>
+    <td class="d"><span class="y">把「止」读成「停」</span>——
+    <em>「時止則止，時行則行」——<strong>止和行是一对，止是为了行得对。</strong>
+    「艮其限，列其夤，厲薰心」：<em>止在腰上，把脊背撕裂了，危险烧到心</em>——
+    <strong>止错位置比不止更糟。</strong></em></td></tr>
+
+  <tr><td>53</td><td><strong>漸</strong></td>
+    <td>漸：女歸吉，利貞。</td>
+    <td class="k"><strong>渐进</strong>。「女歸吉」——
+    <em>按礼一步步来（古代婚嫁有六礼，是渐进的典型）。
+    「君子以居賢德善俗」——<strong>移风易俗也要渐。</strong>
+    六爻的顺序：<em>干 → 磐 → 陆 → 木 → 陵 → 逵</em>：
+    <strong>鸿雁一步步从水边飞到高处的路线。</strong></em></td>
+    <td class="d"><span class="y">把「漸」读成「慢」</span>——
+    <em>它是<strong>有序</strong>，不是慢。
+    「鴻漸于陸，夫征不復，婦孕不育，凶」——
+    <em>跳到陆地上（脱离原有次序），就有凶。</em>
+    <strong>渐进的关键是次序，不是速度。</strong></em></td></tr>
+
+  <tr><td>54</td><td><strong>歸妹</strong></td>
+    <td>歸妹：征凶，無攸利。</td>
+    <td class="k"><strong>不合礼的结合</strong>。这是 64 卦里<strong>评价最差的一卦</strong>
+    （「征凶，無攸利」）。
+    <em>但它的用处很具体：「歸妹，女之終也」（雜卦）——
+    它讲的是<strong>「不按次序做的事会怎样」</strong>。
+    「眇能視，利幽人之貞」——<em>看不全的人能看见（一点），贞守的人有利。</em></em></td>
+    <td class="d"><span class="y">读成「对婚姻的警告」</span>——
+    <em>它是<strong>结构性的警告</strong>：<strong>位置不对而强行结合</strong>。
+    「歸妹以娣，跛能履」（初九）：<em>以陪嫁的身份过去，跛脚也能走</em>——
+    <strong>降格进入也是一种做法，但要认清自己是降格进去的。</strong></em></td></tr>
+
+  <tr><td>55</td><td><strong>豐</strong></td>
+    <td>豐：亨，王假之，勿憂，宜日中。</td>
+    <td class="k"><strong>盛大</strong>。「宜日中」——
+    <em>太阳到正午最好：<strong>盛大的正确状态是正午，不是下午。</strong>
+    「日中則昃，月盈則食」——<em>过了正午就偏，月满了就亏。</em>
+    「天地盈虛，與時消息」——<strong>盈虚是跟着时间走的。</strong></em></td>
+    <td class="d"><span class="y">读成「越大越好」</span>——
+    <em>「宜日中」的下一句就是「日中則昃」。
+    <strong>丰卦的主张是：盛大的时候要知道自己在正午，正午之后是下午。</strong>
+    上六「豐其屋，蔀其家，闚其戶，闃其無人」——<em>房子盖得很大，里面没有人。</em></em></td></tr>
+
+  <tr><td>56</td><td><strong>旅</strong></td>
+    <td>旅：小亨，旅貞吉。</td>
+    <td class="k"><strong>旅居在外</strong>。「小亨」——
+    <em>在外只能得小通。六二「旅即次，懷其資，得童僕貞」——
+    <strong>住下、带着钱、有个可靠的帮手：这是旅的三个要件。</strong>
+    「君子以明慎用刑，而不留獄」——<em>旅的时候办事务必快（不留狱）。</em></em></td>
+    <td class="d"><span class="y">把「旅」读成「自由」</span>——
+    <em>「旅」的处境是<strong>无位</strong>：
+    「旅焚其次，喪其童僕，貞厲」——<em>烧了住处、丢了帮手，就危险了</em>。
+    <strong>在外最重要的资产是「次」（落脚处）和「童僕」（可靠的人）。</strong></em></td></tr>
+
+  <tr><td>57</td><td><strong>巽</strong></td>
+    <td>巽：小亨，利攸往，利見大人。</td>
+    <td class="k"><strong>入／顺</strong>。「巽，入也」——
+    <em>风无孔不入。九二「巽在床下，用史巫紛若，吉，無咎」——
+    <strong>深入到床底下，用史巫反复申说</strong>：
+    <strong>要让人听进去，得反复讲、从下面讲。</strong>
+    「君子以申命行事」——<em>反复申明命令再行动。</em></em></td>
+    <td class="d"><span class="y">把「巽」读成「顺从」</span>——
+    <em>它是<strong>渗透</strong>，不是服从。
+    「巽在床下，喪其資斧，貞凶」（上九）——
+    <strong>入得太深、把工具都丢了，就凶。</strong>
+    入的边界是：<strong>别把工具丢在深处。</strong></em></td></tr>
+
+  <tr><td>58</td><td><strong>兌</strong></td>
+    <td>兌：亨，利貞。</td>
+    <td class="k"><strong>悦／说</strong>。「兌，說也」——
+    <em>兼「悦」与「说」两义。
+    「君子以朋友講習」——<strong>愉悦的正确来源是一起学习讨论。</strong>
+    「兌以利貞」——<em>悦要有正当性。</em></em></td>
+    <td class="d"><span class="y">读成「要让人高兴」</span>——
+    <em>「來兌，凶」（六三）·「孚于剝，有厲」（九五）·「引兌」（上六）——
+    <strong>主动去讨好（来兑）、被剥蚀着还信（孚于剥）、拉着人求悦（引兑），
+    这三爻都不好。</strong><em>悦是被动来的，不是求来的。</em></em></td></tr>
+
+  <tr><td>59</td><td><strong>渙</strong></td>
+    <td>渙：亨。王假有廟，利涉大川，利貞。</td>
+    <td class="k"><strong>涣散</strong>。「王假有廟」——
+    <em>涣散的时候要到宗庙去（重新建立共同的中心）。
+    「風行水上，渙」——<em>风在水上吹，散开。
+    「涣奔其机，悔亡」（九二）：<strong>散开来奔向可以依靠的地方。</strong></em></em></td>
+    <td class="d"><span class="y">把「渙」当成坏事</span>——
+    <em>卦辞是「亨」。<strong>散开是解除壅塞的一种方式。</strong>
+    「渙其群，元吉」（六四）——<em>把派系打散，是大吉。</em>
+    <strong>散的是壅塞，不是关系。</strong></em></td></tr>
+
+  <tr><td>60</td><td><strong>節</strong></td>
+    <td>節：亨。苦節不可貞。</td>
+    <td class="k"><strong>节制</strong>。「苦節不可貞」——
+    <em>苦的节制不能坚持：<strong>节制的边界是它得受得了。</strong>
+    「君子以制數度，議德行」——<em>制定度量标准。</em>
+    「甘節，吉」（九五）——<strong>甘的节制才是吉。</strong></em></td>
+    <td class="d"><span class="y">把「節」读成「越省越好」</span>——
+    <em>「苦節不可貞」直接否掉了这一读法。
+    <strong>《易經》在节制这一条上明确说：太苦的守不住，所以不是好标准。</strong></em></td></tr>
+
+  <tr><td>61</td><td><strong>中孚</strong></td>
+    <td>中孚：豚魚，吉，利涉大川，利貞。</td>
+    <td class="k"><strong>内在的诚信</strong>。「豚魚」——
+    <em>连猪和鱼都感化了：<strong>诚信到极致，连最迟钝的对象都有反应。</strong>
+    「中孚以利貞，乃應乎天也」。
+    「君子以議獄緩死」——<em>诚的人办死刑都要缓：审慎。</em></em></td>
+    <td class="d"><span class="y">读成「做人要有信用」</span>——
+    <em>「中孚」的重点在<strong>中</strong>（内在）；
+    「翰音登于天，貞凶」（上九）——
+    <strong>鸡的声音升到天上</strong>：只有声音没有内容，就算贞也是凶。
+    <strong>这一爻把「信用」与「口碑」分开了。</strong></em></td></tr>
+
+  <tr><td>62</td><td><strong>小過</strong></td>
+    <td>小過：亨，利貞，可小事，不可大事。飛鳥遺之音，不宜上宜下，大吉。</td>
+    <td class="k"><strong>小幅度地超过</strong>。「可小事，不可大事」——
+    <em>小事上可以稍过，大事上不能。
+    「不宜上宜下」——<strong>宜于往下，不宜往上。</strong>
+    「君子以行過乎恭，喪過乎哀，用過乎儉」——
+    <em><strong>三个可以「过」的地方：恭敬、哀悼、节俭——都是往低处过。</strong></em></em></td>
+    <td class="d"><span class="y">把「過」读成「过分」</span>——
+    <em>它的规则很具体：<strong>可以过，但只能往「谦下」的方向过</strong>
+    （恭、哀、俭）。「飛鳥離之，凶，是謂災眚」（上六）——
+    <em>鸟飞太高离开了，就是灾。</em></em></td></tr>
+
+  <tr><td>63</td><td><strong>既濟</strong></td>
+    <td>既濟：亨，小利貞，初吉終亂。</td>
+    <td class="k"><strong>已经完成</strong>。「初吉終亂」——
+    <em>开始吉，最后乱：<strong>64 卦里唯一把「完成」放在前面的卦，
+    而它的判词是「终乱」。</strong>
+    「君子以思患而豫防之」——<em>想可能的祸患，提前防。</em></em></td>
+    <td class="d"><span class="y">把「既濟」当成终点</span>——
+    <em>「初吉終亂」是明说的。<strong>完成状态的唯一任务就是防它变乱。</strong>
+    上六「濡其首，厲」——<em>连头都湿了（过河过头）。</em></em></td></tr>
+
+  <tr><td>64</td><td><strong>未濟</strong></td>
+    <td>未濟：亨，小狐汔濟，濡其尾，無攸利。</td>
+    <td class="k"><strong>未完成</strong>——64 卦以它结尾。
+    <em>「小狐汔濟，濡其尾」：小狐狸快过完河了，尾巴湿了。
+    <strong>差一点就成的时候，最要紧的是尾巴。</strong>
+    「君子以慎辨物居方」——<em>谨慎地分辨事物、安置位置。</em></em></td>
+    <td class="d"><span class="y">把「未濟」当失败</span>——
+    <em>卦辞第一个字是「亨」。
+    <strong>而全书以「未完成」结尾，这个安排本身就是《易經》的主张：
+    没有终局那一卦。</strong>（「生生之謂易」——它不能以「完成」结束。）</em></td></tr>
+</table>
+
+<!-- ============================================================ -->
+<h2>五 · 最值得单独拿出来的十句</h2>
+<div class="s">如果只记十句，记这些。都能脱离占卜直接用</div>
+
+<table>
+  <tr><th style="width:6%">#</th><th style="width:40%">原文</th><th style="width:14%">出处</th>
+    <th>为什么是这一句</th></tr>
+  <tr><td>1</td><td><strong>天行健，君子以自強不息。</strong></td><td>乾 · 象曰</td>
+    <td><em>全书最有名的一句。它的结构是<strong>「天行健」→「君子以……」</strong>：
+    从自然现象推出人的做法。<strong>这个推理形式本身就是《易經》的方法。</strong></em></td></tr>
+  <tr><td>2</td><td><strong>亢龍有悔。</strong></td><td>乾 · 上九</td>
+    <td><em>四个字否定了「越高越好」。
+    <strong>配合「貴而無位，高而無民」读：顶点的问题不是能力，是位置。</strong></em></td></tr>
+  <tr><td>3</td><td><strong>履霜，堅冰至。</strong></td><td>坤 · 初六</td>
+    <td><em>从最小的征兆推趋势。
+    <strong>「履霜」是当下可观察的，「堅冰」是推出来的——这是一次完整的推理。</strong></em></td></tr>
+  <tr><td>4</td><td><strong>無平不陂，無往不復。</strong></td><td>泰 · 九三</td>
+    <td><em>在最好的卦里说这句，才有效。
+    <strong>它是一条双向的：既提醒顺境要转，也提醒逆境会回。</strong></em></td></tr>
+  <tr><td>5</td><td><strong>其亡其亡，繫于苞桑。</strong></td><td>否 · 九五</td>
+    <td><em>「要完了要完了」——一直这么想的人，反而系在结实的桑根上。
+    <strong>这是「危机意识是保险」的最早表述。</strong></em></td></tr>
+  <tr><td>6</td><td><strong>時止則止，時行則行，動靜不失其時，其道光明。</strong></td><td>艮 · 彖曰</td>
+    <td><em>「时」这一判据的完整表述。
+    <strong>注意它的落点是「動靜不失其時」，不是「静」。</strong></em></td></tr>
+  <tr><td>7</td><td><strong>不恆其德，或承之羞。</strong></td><td>恆 · 九三</td>
+    <td><em>守不住自己的标准，就会招来羞辱。
+    <strong>象曰更狠：「不恆其德，無所容也」——没有地方站得住。</strong></em></td></tr>
+  <tr><td>8</td><td><strong>震來虩虩，笑言啞啞……不喪匕鬯。</strong></td><td>震 · 卦辞</td>
+    <td><em>衡量一个系统强不强，看它<strong>受惊时手里还握着什么</strong>。
+    不是看它惊不惊（惊是正常的）。</em></td></tr>
+  <tr><td>9</td><td><strong>鼎折足，覆公餗。</strong></td><td>鼎 · 九四</td>
+    <td><em>繫辭下傳给它的解释是该背的：
+    <strong>「德薄而位尊，知小而謀大，力少而任重」</strong>——
+    三种错配，一句话。</em></td></tr>
+  <tr><td>10</td><td><strong>初吉終亂。</strong></td><td>既濟 · 卦辞</td>
+    <td><em>「完成」这个状态本身带着「终乱」。
+    <strong>它不是诅咒，是提醒：完成之后唯一要做的是防它变乱。</strong></em></td></tr>
+</table>
+
+<!-- ============================================================ -->
+<h2>六 · 这份手册自己的三条限制</h2>
+
+<div class="box drop">
+  <div class="h">⚠️ 限制 ① · 我丢掉的那部分，是<em>我的判断</em>，不是文本的判断</div>
+  <p>《易經》自己把占筮放在很重要的位置（<strong>繫辭上傳第九章整章在讲大衍之數</strong>）。</p>
+  <p><em>我说「丢掉它」，理由是<strong>它不可反驳</strong>——
+  这是本项目采用的《无穷的开始》那条判据，<strong>不是《易經》的判据</strong>。
+  换句话说：<strong>我是在用一本书的标准裁剪另一本书。</strong></em></p>
+  <p><strong>这个操作的代价要说清</strong>：<em>按这个标准，
+  《易經》里被丢掉的不只是占筮，还有「吉凶」这套评价体系本身。
+  剩下来的东西更像是<strong>一部处境类型学</strong>，而不是原来那本书。</em></p>
+</div>
+
+<div class="box drop">
+  <div class="h">⚠️ 限制 ② · 无注疏可依</div>
+  <p>底本是<strong>白文</strong>（只有原文，无注）。而《易經》的注解史有两千多年，
+  各家分歧极大（王弼、程颐、朱熹、焦循……），<strong>而且很多分歧直接影响卦义</strong>。</p>
+  <p><em>所以「可取」那一栏<strong>全部是我的读法</strong>，不是权威解释。
+  遇到关键处我标了它对应哪一爻哪一象，你可以回原文自己判断。</em></p>
+</div>
+
+<div class="box drop">
+  <div class="h">⚠️ 限制 ③ · 「可操作化」有一个固有的损耗</div>
+  <p>《易經》原文是<strong>极度压缩的</strong>（全书卦爻辞约 5,000 字，加上十翼才 2 万余字），
+  它的力量有一部分正来自这个压缩——<em>同一个卦可以对应很多处境。</em></p>
+  <p><strong>把它「操作化」，等于替它选定了一种读法。</strong>
+  <em>好处是能用；代价是<strong>丢掉了它的多义性</strong>，而那多义性也是它的功能之一。</em></p>
+  <p><em>所以我建议的用法是：<strong>先把这一份当脚手架用，用完回原文</strong>——
+  而不是把这一份当作《易經》本身。</em></p>
+</div>
+
+<hr>
+
+<div class="box core">
+  <div class="h">◆ 一句话总结这份手册</div>
+  <p><strong>《易經》可用的是它的「提问方式」，不可用的是它的「回答方式」。</strong></p>
+  <p><em>它问：现在是什么时候 · 你在什么位置 · 这个动作配不配这个位置 ·
+  能不能长期做下去 · 哪个环节会先转向 · 需要谁而他在不在。</em></p>
+  <p><strong>这六个问题本身就够用了。</strong>
+  <em>而它的回答方式（起一卦、看吉凶）——按本项目的判据，那不是解释，是封闭系统。</em></p>
+</div>
+
+<footer class="doc">
+  底层 · 中国智慧 · 易經 · 可操作手册<br>
+  <em>底本：易經.txt（21,647 汉字 · 64 卦全 · 64 彖 · 443 象 · 十翼 · 含大衍之數）；<br>
+  引文均逐句核对底本，照原样写（繁体）；「可取」一栏为读法，非原文；<br>
+  丢弃占筮是按本项目采用的判据（可反驳性）做的判断，不是《易經》自身的判断——见限制①</em>
+</footer>
+
+</div>
+</body>
+</html>
