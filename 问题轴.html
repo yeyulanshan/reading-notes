@@ -138,7 +138,7 @@
 <p><strong>在你读轴之前，先知道每道题现在都能被指回来。</strong></p>
 <table>
 <tr><th>事实</th><th>数</th></tr>
-<tr><td>问题手册</td><td><strong>18 份</strong>（问题索引原称 17 份）</td></tr>
+<tr><td>问题手册</td><td><strong>18 份问题手册</strong>（《问题索引》原称 17 份）</td></tr>
 <tr><td>题目总数</td><td><strong>398 道</strong>（原称 366 道）</td></tr>
 <tr><td>注入锚点</td><td><strong>401 个</strong>（含 3 个被解析器排除的术语清单容器）</td></tr>
 </table>
@@ -355,11 +355,26 @@
 <tr><td><strong>3</strong></td><td>待补</td><td>—</td><td>—</td></tr>
 </table>
 <hr>
-<h2>五 · 这份轴自己的缺口</h2>
-<blockquote><p><strong>《问题索引》自己标出的那个缺口，现在是轴的第一个待办。</strong></p></blockquote>
-<ul><li><strong>Q9「关系和自我怎么构成」</strong>：索引写「<strong>目前无法裁决，要补的话需要引入一本跨文化心理学</strong>」。 → 这是全轴<strong>唯一一处有明确补法的缺口</strong>：补一本跨文化心理学，就能给 Q9 增加一个 与「关系性自我」正面对照的材料。</li></ul>
-<p>其余缺口（尚未定位到具体的书）：</p>
-<ul><li>12 个跨书问题只覆盖 386 道题里的一部分，<strong>覆盖面不全</strong>（索引自己声明过）</li><li><strong>七种关系类型里，Ⅰ 类只判出两处</strong>（Q1 的多伊奇 vs 毛选 · Q4 的戴蒙德 vs 多伊奇）</li><li>轴还<strong>没有反指回</strong>地图、对撞场、问题索引三件产出——这一步未做</li></ul>
+<h2>五 · 这份轴自己的缺口（含一处我自己搞错的更正）</h2>
+<h3>更正 · Q9「缺一本跨文化心理学」这个缺口，<strong>已经有材料了</strong></h3>
+<p>《问题索引》写「<strong>目前无法裁决，要补的话需要引入一本跨文化心理学</strong>」。 <strong>我照抄进了轴，然后才发现材料已经有了。</strong></p>
+<p><code>00_中文原典/WEIRD之外的心智模型.html</code>（18,502 字符）已经做完了这件事：</p>
+<table>
+<tr><th>它给了什么</th><th>出处</th></tr>
+<tr><td>两个自我构念的<strong>形式化表述</strong>（自我先于关系 / 关系先于自我）</td><td>Miller《亲密关系》第 11 章</td></tr>
+<tr><td><strong>Miller 自己否掉「文明差异」读法</strong>：「独立和依赖往往在每个人身上都会有所表现」</td><td>同上</td></tr>
+<tr><td><strong>四个可判定的预测</strong>：归因落点 · 「相似」在择偶中的权重 · 描述爱时提到的内容 · 关系的稳定性机制</td><td>同上</td></tr>
+<tr><td><strong>反方向证据</strong>：浪漫爱情的 fMRI 激活无文化差异 · 爱情风格类型跨文化一致 · 美的判断趋同</td><td>Miller 第 8 / 第 3 章</td></tr>
+<tr><td>三个失效边界（坏关系 · 个体内变异 · 「文化」这个单位太粗）</td><td>——</td></tr>
+</table>
+<p><strong>所以 Q9 的状态不是「无法裁决」，而是「已有一份完整的假设 + 四个可判定的预测」。</strong></p>
+<blockquote><p><strong>★ 但我不能因此说这个缺口已经补上了。</strong> <strong>因为那份文件的 21 处引用全部来自 Miller——而 Miller 就是 08 域已经在用的那本书。</strong> 它引的是 Miller <strong>第 11 章</strong>，不是一本独立的跨文化心理学著作。 <strong>用一个域自己的书去裁决那个域的争议，是循环论证。</strong></p><p><strong>所以准确的表述是</strong>： - 已做：把 Q9 从「无法裁决」推进到「有形式化假设 + 可判定预测」 - <strong>仍缺</strong>：一份<strong>独立于 Miller</strong> 的跨文化心理学来源，用来测 Miller 的表述是否被更广的证据支持</p></blockquote>
+<blockquote><p><strong>这个错误本身值得记</strong>：我照抄了索引里一句「需要引入一本跨文化心理学」， 而<strong>没有先查库里有没有</strong>。这与首页数字的漂移是同一个病： <strong>状态陈述脱离了实际状态。</strong> 区别只是这次漂移在轴上，不在首页。</p></blockquote>
+<h3>其余缺口（尚未定位到具体的书）</h3>
+<ul><li>12 个跨书问题只覆盖 398 道题里的一部分，<strong>覆盖面不全</strong></li><li><strong>五种关系类型里，Ⅰ 类只判出两处</strong>（Q1b 的多伊奇 vs 毛选 · Q4 的戴蒙德 vs 多伊奇）</li><li>轴还<strong>没有反指回</strong>地图、对撞场两件产出（问题索引已反指回轴）</li><li>~~<strong>环上没有闭环</strong>：新产出不会自动更新轴，也没有校验器检查轴是否陈旧~~ → <strong>已补</strong>：<code>09_工具与脚本/校验问题轴.py</code> 会核「轴声称的缺口是否其实已有材料」， 已接进部署流程。<strong>上面那条更正就是它要防的那类错。</strong></li><li><strong>Q9 仍缺一份独立于 Miller 的来源</strong>（详见下）</li></ul>
+<h3>用轴选书 · 第 1 号申请</h3>
+<p>轴要用来选书，而判据是「<strong>哪个跨书问题现在答不上来，哪本书能补上那一角</strong>」。 第一份申请已经写出：<strong>《问题轴 · 选书申请（第 1 号）》</strong>（<code>问题轴-选书申请01.md</code> / <code>.html</code>）。</p>
+<p>它把「需要一本跨文化心理学」写成了<strong>五个可执行条件</strong>，并列出四个候选书目。 其中最要紧的一条是<strong>条件 ⑤：那本书必须能对现有材料的四个预测中的至少一个说「不成立」</strong> ——<strong>只会加强已有结论的书，对轴的价值很低。</strong></p>
 <hr>
 <h2>六 · 这一份的局限</h2>
 <ol><li><strong>关系类型是我判的，不是书里写的。</strong> 每一条都可能有别的读法。</li><li><strong>我只核了题号指回的准确性（66 处核 61 处命中），没核答案摘要是否忠实于原题。</strong> 摘要仍来自《问题索引》，而那份索引是手工挑的。</li><li><strong>12 个跨书问题不是全库问题的全集</strong>——它是手工挑的主干。 398 道题里绝大多数还没有被归到任何一个跨书问题下。</li><li><strong>「我信几分」没有量化的判据</strong>（高/中/低是我的直觉）， 这一栏如果要严格执行，需要给出可比的标准。</li></ol>

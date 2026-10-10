@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>问题轴 · 选书申请（第 1 号） · 底层</title>
+<meta name="description" content="用轴选书 · Q9 关系和自我怎么构成 · 四个候选书目 · 一个硬条件">
+<meta name="theme-color" content="#f2f8fc">
+<style>
+  :root{
+    --paper:#f2f8fc; --card:#ffffff; --card-2:#e9f4fb;
+    --edge:#cfe0ec; --edge-lit:#a4c6dd;
+    --ink:#12232e; --ink-2:#627480; --ink-3:#587286;
+    --accent:#2c7ea2; --accent-2:#377972; --gold:#84744a;
+    --quote-bg:#fbf8ef; --quote-edge:#d8cba4; --quote-ink:#5f5527;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--paper); color:var(--ink); line-height:1.9;
+    -webkit-font-smoothing:antialiased;
+    padding:32px 16px 60px;
+  }
+  ::selection{background:rgba(63,180,232,.26); color:#0d2430;}
+  .wrap{max-width:860px; margin:0 auto;}
+
+  header.doc{
+    background:var(--card); border:1px solid var(--edge);
+    border-top:4px solid var(--accent); border-radius:10px;
+    padding:34px 34px 28px; margin-bottom:24px;
+  }
+  header.doc h1{
+    font-size:26px; font-weight:800; line-height:1.4; letter-spacing:.01em;
+    margin-bottom:12px;
+    background:linear-gradient(135deg,#1d4a68,#2c7ea2 55%,#377972);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  header.doc .sub{font-size:14.6px; color:var(--ink-2); line-height:1.95;}
+  header.doc .src{
+    margin-top:16px; padding-top:14px; border-top:1px dashed var(--edge);
+    font-size:12.6px; color:var(--ink-3); line-height:1.95;
+  }
+  header.doc .src strong{color:var(--ink-2);}
+
+  main{
+    background:var(--card); border:1px solid var(--edge); border-radius:10px;
+    padding:36px 38px 40px;
+  }
+
+  h2{
+    font-size:19px; font-weight:700; color:var(--ink);
+    margin:38px 0 14px; padding-left:12px;
+    border-left:4px solid var(--gold); line-height:1.55;
+  }
+  h2:first-child{margin-top:0;}
+  h3{font-size:16px; font-weight:700; color:var(--ink); margin:26px 0 10px;}
+  h4{
+    font-size:15.2px; font-weight:700; color:#1d4a68;
+    margin:22px 0 9px; padding-left:10px;
+    border-left:3px solid rgba(63,180,232,.45); line-height:1.6;
+  }
+
+  p{font-size:14.6px; color:var(--ink-2); margin-bottom:13px; text-wrap:pretty;}
+  strong{color:var(--ink); font-weight:700;}
+  em{font-style:normal; color:var(--ink); background:rgba(63,180,232,.10);
+     border-radius:3px; padding:0 3px;}
+
+  code{
+    font-family:ui-monospace,Consolas,monospace; font-size:13px;
+    background:var(--card-2); border:1px solid var(--edge); border-radius:4px;
+    padding:1px 6px; color:#1d5c86; word-break:break-all;
+  }
+
+  a{color:var(--accent); text-decoration:none; border-bottom:1px solid #cfe4f0;}
+  a:hover{border-bottom-color:var(--accent);}
+
+  blockquote{
+    margin:14px 0; padding:13px 18px;
+    background:var(--quote-bg); border:1px solid #e8dfc4;
+    border-left:3px solid var(--quote-edge); border-radius:5px;
+    font-size:14.2px; color:var(--quote-ink); line-height:1.95;
+  }
+  blockquote p{margin-bottom:9px; color:inherit; font-size:inherit;}
+  blockquote p:last-child{margin-bottom:0;}
+  blockquote strong{color:#8a6a24;}
+  blockquote em{background:rgba(138,106,36,.10); color:#8a6a24;}
+  blockquote code{background:rgba(255,255,255,.7); color:#7a5f1c; border-color:#e0d2ac;}
+
+  ul,ol{margin:12px 0 14px 22px;}
+  li{font-size:14.5px; color:var(--ink-2); margin-bottom:8px; line-height:1.9;}
+  li strong{color:var(--ink);}
+
+  table{width:100%; border-collapse:collapse; margin:16px 0; font-size:13.6px;}
+  th,td{padding:9px 12px; border:1px solid var(--edge); text-align:left;
+        vertical-align:top; line-height:1.8;}
+  th{background:var(--card-2); color:#1d5c86; font-weight:700; font-size:12.8px;}
+  td{color:var(--ink-2);}
+  td strong{color:var(--ink);}
+  td code{font-size:12.4px;}
+
+  hr{border:none; border-top:1px dashed var(--edge); margin:32px 0;}
+
+  pre{
+    background:#eef4f9; border:1px solid var(--edge); border-radius:6px;
+    padding:14px 16px; margin:16px 0; overflow-x:auto;
+    line-height:1.7;
+  }
+  pre code{
+    background:none; border:none; padding:0; font-size:12.8px;
+    color:#1d4a68; white-space:pre; word-break:normal;
+  }
+
+  footer.doc{
+    margin-top:26px; padding-top:20px; border-top:1px solid var(--edge);
+    font-size:12.4px; color:var(--ink-3); line-height:2; text-align:center;
+  }
+  footer.doc a{color:var(--ink-2);}
+  @media(max-width:700px){
+    body{padding:16px 10px 40px;}
+    header.doc{padding:24px 20px 20px;} header.doc h1{font-size:21px;}
+    main{padding:24px 18px 28px;} h2{font-size:17px;}
+    table{font-size:12.2px;} th,td{padding:7px 8px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="doc">
+    <h1>问题轴 · 选书申请（第 1 号）</h1>
+    <p class="sub">用轴选书 · Q9 关系和自我怎么构成 · 四个候选书目 · 一个硬条件</p>
+    <p class="src">轴的第一份选书申请；主干是 问题轴-选书申请01.md，本页由脚本生成</p>
+  </header>
+  <main>
+<h1>问题轴 · 选书申请（第 1 号）</h1>
+<blockquote><p><strong>这份文件的用途</strong>：轴要用来选书，而选书的判据是 「<strong>哪个跨书问题现在答不上来，哪本书能补上那一角</strong>」。 这份就是轴的<strong>第一份选书申请</strong>——把「需要什么书」写成可执行的条件， 而不是一句「需要一本跨文化心理学」。</p></blockquote>
+<hr>
+<h2>一 · 提出申请的跨书问题</h2>
+<p><strong>Q9「关系和自我是怎么构成的」</strong> —— 涉及 5 本书。</p>
+<table>
+<tr><th>书</th><th>它怎么构成自我</th></tr>
+<tr><td>論語</td><td><code>LY-3</code> · <code>LY-7</code> · <code>LY-13</code> —— 「孝弟也者、其為仁之本與」：<strong>仁要从关系里长出来</strong></td></tr>
+<tr><td>中国智慧·关系性自我</td><td>自我<strong>由关系构成</strong>，不是先有独立自我再加关系</td></tr>
+<tr><td>Miller 亲密关系</td><td><code>MI-5</code> —— 依恋类型：早年关系构成成年模式。<strong>但 Miller 把它当文化变量处理，不是本体差异</strong></td></tr>
+<tr><td>Fromm 爱的艺术</td><td>成熟的爱情：在<strong>保留自己完整性</strong>的条件下与他人合二为一</td></tr>
+<tr><td>毛选·阶级地位</td><td>立场由关系（阶级地位）决定</td></tr>
+</table>
+<p><strong>争点</strong>：《論語》从关系出发，《弗洛姆》要求保持完整性，《Miller》给的是可测量的依恋类型—— <strong>三者对「自我是独立还是关系性的」给出的答案不同。</strong></p>
+<hr>
+<h2>二 · 这个缺口现在的真实状态（<strong>比索引写的好</strong>）</h2>
+<blockquote><p>《问题索引》写「<strong>目前无法裁决，要补的话需要引入一本跨文化心理学</strong>」。 <strong>这个说法已经过时</strong>——库里 <code>00_中文原典/WEIRD之外的心智模型.html</code>（18,502 字符）已做完了大半：</p></blockquote>
+<table>
+<tr><th>已做</th><th>内容</th></tr>
+<tr><td>两个构念的<strong>形式化表述</strong></td><td>独立自我：自我先于关系 · 关系性自我：关系先于自我</td></tr>
+<tr><td><strong>Miller 自己否掉「文明差异」读法</strong></td><td>「独立和依赖往往在每个人身上都会有所表现」</td></tr>
+<tr><td><strong>四个可判定的预测</strong></td><td>归因落点 · 「相似」在择偶中的权重 · 描述爱时提到的内容 · 关系的稳定性机制</td></tr>
+<tr><td><strong>反方向证据</strong></td><td>浪漫爱情的 fMRI 激活无文化差异 · 爱情风格类型跨文化一致 · 美的判断趋同</td></tr>
+<tr><td>三个失效边界</td><td>坏关系 · 个体内变异 · 「文化」这个单位太粗</td></tr>
+</table>
+<p><strong>所以 Q9 已经不是「无法裁决」，而是「有一份完整假设 + 四个可判定预测」。</strong></p>
+<hr>
+<h2>三 · 那么到底还缺什么（<strong>这是申请的核心</strong>）</h2>
+<blockquote><p><strong>缺的不是「跨文化心理学的结论」，是「独立于 Miller 的证据来源」。</strong></p></blockquote>
+<p><strong>为什么</strong>：上面那份文件的 <strong>21 处引用全部来自 Miller</strong>（第 11 章为主）。 而 <strong>Miller 就是 08 域已经在用的那本书</strong>。</p>
+<blockquote><p><strong>用一个域自己的书去裁决那个域的争议，是循环论证。</strong></p></blockquote>
+<p><strong>所以申请要的书，必须满足一个硬条件</strong>：</p>
+<table>
+<tr><th>#</th><th>条件</th><th>为什么</th></tr>
+<tr><td><strong>①</strong></td><td><strong>不是 Miller</strong></td><td>否则仍是循环</td></tr>
+<tr><td><strong>②</strong></td><td>对「自我构念」有<strong>独立的理论表述</strong>（不只是引用 Miller）</td><td>否则无法对照</td></tr>
+<tr><td><strong>③</strong></td><td>给出<strong>可测量的操作化</strong>（量表 / 实验 / 跨文化数据）</td><td>否则无法判定</td></tr>
+<tr><td><strong>④</strong></td><td>覆盖<strong>东亚 vs 西方</strong>这一组对照</td><td>因为争点正好落在这</td></tr>
+<tr><td><strong>⑤</strong></td><td>最好能对 <code>WEIRD之外</code> 里的<strong>四个预测</strong>中的至少一个说「不成立」</td><td>否则只是加强，不是检验</td></tr>
+</table>
+<p><strong>条件 ⑤ 是这份申请里最要紧的一条</strong>： &lt;em&gt;一本只会加强已有结论的书，对轴的价值很低。轴需要的是<strong>能推翻</strong>那份文件里某个预测的材料。&lt;/em&gt;</p>
+<hr>
+<h2>四 · 候选书目（按符合度排序，<strong>都未入库</strong>）</h2>
+<table>
+<tr><th>优先级</th><th>书</th><th>作者</th><th>为什么合条件</th><th>我能核到什么</th></tr>
+<tr><td><strong>1</strong></td><td><strong>《The WEIRDest People in the World》</strong>（中文版《西方怪人》）</td><td>Joseph Henrich</td><td>①③④⑤ 全中。它反过来论证<strong>西方人（WEIRD）才是特例</strong>，而且核心机制是<strong>教会婚姻制度</strong>——不是地理也不是观念。<strong>与 <code>WEIRD之外</code> 的「文化是价值导向」解释直接冲突</strong></td><td>只有题录与摘要，<strong>无全文</strong></td></tr>
+<tr><td><strong>2</strong></td><td><strong>《The Geography of Thought》</strong>（《思维的地理学》）</td><td>Richard Nisbett</td><td>②③④。它给的是<strong>可重复的认知实验</strong>（归因、分类、注意范围），可对上 <code>WEIRD之外</code> 的预测①（归因落点）</td><td>只有题录，<strong>无全文</strong></td></tr>
+<tr><td><strong>3</strong></td><td><strong>《Culture and the Self》</strong>（1991 论文）</td><td>Markus &amp; Kitayama</td><td>②③。这是「独立／互依自我构念」的<strong>原始出处</strong>——<code>WEIRD之外</code> 用的概念其实是经由 Miller 转述的</td><td>只有 ERIC 题录，<strong>无全文</strong></td></tr>
+<tr><td><strong>4</strong></td><td><strong>《The Weirdest People in the World?》</strong>（2010 论文）</td><td>Henrich, Heine &amp; Norenzayan</td><td>②③④⑤。<strong>WEIRD 偏差的原始论文</strong>，正是 <code>WEIRD之外</code> 第一节说「被记录了三次、无人处理」的那个来源</td><td>只有题录，<strong>无全文</strong></td></tr>
+</table>
+<blockquote><p><strong>注</strong>：<code>WEIRD之外的心智模型.html</code> 的第一节标题是「<strong>WEIRD 偏差被记录了三次，无人处理</strong>」—— 而「WEIRD」这个词就出自上表第 4 项。所以<strong>项目已经在用这个概念，却没有那篇原始论文。</strong></p></blockquote>
+<hr>
+<h2>五 · 我为什么没有直接做（真实约束，如实记录）</h2>
+<p><strong>我试了四种取全文的路径，全部失败</strong>：</p>
+<table>
+<tr><th>路径</th><th>结果</th></tr>
+<tr><td><code>https://weirdpeople.fas.harvard.edu/.../luhrmann_proof-1.pdf</code></td><td><strong>HTTP 403</strong></td></tr>
+<tr><td><code>https://eric.ed.gov/?id=EJ495676</code></td><td><strong>fetch failed</strong></td></tr>
+<tr><td><code>http://www.shehui.pku.edu.cn/.../2116.pdf</code></td><td><strong>不支持的 content type: application/pdf</strong></td></tr>
+<tr><td><code>https://psycnet.apa.org/record/1991-23978-001</code></td><td><strong>HTTP 200，但页面是 JS 渲染，正文取不到</strong></td></tr>
+</table>
+<p><strong>网络实测（TCP 直连）</strong>：<code>doi.org</code> 通；<code>wikipedia.org</code> · <code>scholar.google.com</code> <strong>不通</strong>。</p>
+<blockquote><p><strong>结论</strong>：我能检索到这些来源的<strong>存在与题录</strong>，但<strong>拿不到全文</strong>。 <strong>本项目的标准是「从底本精读」</strong>——那个前提在这里不成立。</p><p><strong>所以我不去从摘要里编一份「跨文化心理学」产出。</strong> 那会变成这个项目一直在防的事（「<strong>我未核</strong>」必须说出来，而不是用转述填上）。</p></blockquote>
+<hr>
+<h2>六 · 三个可执行的选项</h2>
+<table>
+<tr><th>选项</th><th>做什么</th><th>代价</th></tr>
+<tr><td><strong>A</strong></td><td><strong>你提供其中一本的 PDF 或全文</strong></td><td>最符合项目标准。我按常规流程做：底本实测 → 精读 → 整体架构 / 问题手册 → 接进 08 域与轴</td></tr>
+<tr><td><strong>B</strong></td><td><strong>我去找能取到全文的替代来源</strong>（例如公开的中文译本、开放获取版本）</td><td>需要时间，而且<strong>不保证找到</strong>；找到也是二手文本，要在产出里标明</td></tr>
+<tr><td><strong>C</strong></td><td><strong>先不做 Q9</strong>，改用轴去查<strong>其它跨书问题的缺口</strong></td><td>便宜，但绕开了索引标出的唯一明确缺口</td></tr>
+</table>
+<p><strong>我的建议是 A。</strong> 理由： &lt;em&gt;这一轴的价值恰恰在于「<strong>每条判断都留着反向自查</strong>」。如果第一份选书就用二手摘要凑出来， 那这个项目的核心纪律就在第一份申请上破了。&lt;/em&gt;</p>
+<p><strong>如果你选 B，我会明确标注哪些是转述、哪些核过。</strong> <strong>如果你选 C，我下一轮就用轴去扫其它 11 个问题的缺口，而不是补这本书。</strong></p>
+  </main>
+  <footer class="doc">
+    本页由 Markdown 渲染而成 · 原文为 <code>问题轴-选书申请01.md</code>（留在项目内作编辑源，不单独发布）
+  </footer>
+</div>
+</body>
+</html>
