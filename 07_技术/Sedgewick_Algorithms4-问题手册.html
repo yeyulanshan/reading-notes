@@ -134,7 +134,7 @@
   <div class="section-title">L1 · 基础（5 题）</div>
   <div class="section-sub">能准确说出 API 和代价，就算过关</div>
 
-  <div class="q">
+  <div class="q" id="q-SG-1">
     <div class="q-head"><span class="num">1</span><span class="txt">这本书用哪四层解剖每一个数据结构？为什么"代价"要单独成一层？</span><span class="lvtag l1">L1</span></div>
     <div class="q-body">
       <p>说出四层的名称，并解释第四层（策略）为什么不能从第三层（代价）直接推出来。</p>
@@ -160,7 +160,7 @@
     </div>
   </div>
 
-  <div class="q">
+  <div class="q" id="q-SG-2">
     <div class="q-head"><span class="num">2</span><span class="txt">什么是"代价模型"？为什么不说"3-sum 是 O(N³)"？</span><span class="lvtag l1">L1</span></div>
     <div class="q-body">
       <p>说出代价模型的定义，并解释为什么书里的表述比"O(N³)"更严格。</p>
@@ -182,7 +182,7 @@
     </div>
   </div>
 
-  <div class="q">
+  <div class="q" id="q-SG-3">
     <div class="q-head"><span class="num">3</span><span class="txt">写出五个符号表实现的查找/插入代价，并指出哪个不支持有序操作。</span><span class="lvtag l1">L1</span></div>
     <div class="q-body">
       <p>这是第 3 章的主表，也是全书最该背下来的一张表。</p>
@@ -205,7 +205,7 @@
     </div>
   </div>
 
-  <div class="q">
+  <div class="q" id="q-SG-4">
     <div class="q-head"><span class="num">4</span><span class="txt">栈和队列的链表实现与可扩容数组实现，各自的承诺是什么？</span><span class="lvtag l1">L1</span></div>
     <div class="q-body">
       <p>说出两条 Proposition 的准确差别，并说明这个差别在实际中意味着什么。</p>
@@ -229,7 +229,7 @@
     </div>
   </div>
 
-  <div class="q">
+  <div class="q" id="q-SG-5">
     <div class="q-head"><span class="num">5</span><span class="txt">在哪几种情况下根本不该指望"更快"？</span><span class="lvtag l1">L1</span></div>
     <div class="q-body">
       <p>说出第 6 章给出的判断标准，并解释"归约"和"不可解性"为什么放在一起讲。</p>
@@ -259,7 +259,7 @@
   <div class="section-title">L2 · 理解（9 题）</div>
   <div class="section-sub">能解释代价怎么来的</div>
 
-  <div class="q">
+  <div class="q" id="q-SG-6">
     <div class="q-head"><span class="num">6</span><span class="txt">为什么"翻倍测试的比值"能直接读出增长级？</span><span class="lvtag l2">L2</span></div>
     <div class="q-body">
       <p>说出比值与增长级的对应关系，并解释这个方法的原理。</p>
@@ -287,7 +287,7 @@
     </div>
   </div>
 
-  <div class="q">
+  <div class="q" id="q-SG-7">
     <div class="q-head"><span class="num">7</span><span class="txt">归并排序的两条 Proposition 说了什么？为什么它是最优的？</span><span class="lvtag l2">L2</span></div>
     <div class="q-body">
       <p>说出比较次数的上下界，以及"渐近最优"的依据。</p>
@@ -306,7 +306,7 @@
     </div>
   </div>
 
-  <div class="q">
+  <div class="q" id="q-SG-8">
     <div class="q-head"><span class="num">8</span><span class="txt">快速排序的最坏情况是什么？三向切分为什么被单独提出来？</span><span class="lvtag l2">L2</span></div>
     <div class="q-body">
       <p>说出两条 Proposition，并解释"熵最优"的含义。</p>
@@ -322,7 +322,7 @@
     </div>
   </div>
 
-  <div class="q">
+  <div class="q" id="q-SG-9">
     <div class="q-head"><span class="num">9</span><span class="txt">优先队列的四条 Proposition 说了什么？为什么堆构造是线性时间？</span><span class="lvtag l2">L2</span></div>
     <div class="q-body">
       <p>说出插入/删除的代价界、堆构造的代价、以及堆排序的代价。</p>
@@ -355,7 +355,7 @@
     </div>
   </div>
 
-  <div class="q">
+  <div class="q" id="q-SG-10">
     <div class="q-head"><span class="num">10</span><span class="txt">并查集从 quick-find 到加权 quick-union，代价是怎么降下来的？</span><span class="lvtag l2">L2</span></div>
     <div class="q-body">
       <p>说出四个版本的代价，以及那个关键的 Corollary。</p>
@@ -380,7 +380,7 @@
     </div>
   </div>
 
-  <div class="q">
+  <div class="q" id="q-SG-11">
     <div class="q-head"><span class="num">11</span><span class="txt">二叉搜索树的平均代价为什么不等于最坏代价？</span><span class="lvtag l2">L2</span></div>
     <div class="q-body">
       <p>说出 BST 的两条 Proposition，并说明"随机键"这个前提的重要性。</p>
@@ -401,7 +401,7 @@
     </div>
   </div>
 
-  <div class="q">
+  <div class="q" id="q-SG-12">
     <div class="q-head"><span class="num">12</span><span class="txt">红黑树的"2 lg N 高度"是怎么保证的？它换来了什么？</span><span class="lvtag l2">L2</span></div>
     <div class="q-body">
       <p>说出红黑树的关键 Proposition，并说明它相对于 BST 付出了什么代价。</p>
@@ -426,7 +426,7 @@
     </div>
   </div>
 
-  <div class="q">
+  <div class="q" id="q-SG-13">
     <div class="q-head"><span class="num">13</span><span class="txt">哈希表的两条 Proposition 说的是什么？"均匀散列"是假设还是结论？</span><span class="lvtag l2">L2</span></div>
     <div class="q-body">
       <p>说出拉链法与线性探测法的代价，并指出书里对散列假设的用词。</p>
@@ -453,7 +453,7 @@
     </div>
   </div>
 
-  <div class="q">
+  <div class="q" id="q-SG-14">
     <div class="q-head"><span class="num">14</span><span class="txt">图算法：DFS 为什么能在"预处理时间与空间"上做到线性？</span><span class="lvtag l2">L2</span></div>
     <div class="q-body">
       <p>说出 DFS 的命题，并解释"预处理"这个说法的含义。</p>
@@ -474,7 +474,7 @@
     </div>
   </div>
 
-  <div class="q">
+  <div class="q" id="q-SG-15">
     <div class="q-head"><span class="num">15</span><span class="txt">最小生成树和最短路径的四条经典命题，前提分别是什么？</span><span class="lvtag l2">L2</span></div>
     <div class="q-body">
       <p>说出 Prim、Kruskal、Dijkstra、Bellman-Ford 各自的命题与适用前提。</p>
@@ -508,7 +508,7 @@
   <div class="section-title">L3 · 应用（8 题）</div>
   <div class="section-sub">能对着访问模式选结构</div>
 
-  <div class="q">
+  <div class="q" id="q-SG-16">
     <div class="q-head"><span class="num">16</span><span class="txt">你要维护一个"随时插入、随时查第 k 小"的集合。选什么结构？</span><span class="lvtag l3">L3</span></div>
     <div class="q-body">
       <p>给出答案、理由，以及这个选择付出的代价。</p>
@@ -525,7 +525,7 @@
     </div>
   </div>
 
-  <div class="q">
+  <div class="q" id="q-SG-17">
     <div class="q-head"><span class="num">17</span><span class="txt">一个程序要读 10⁸ 个键做去重。用哈希表还是红黑树？</span><span class="lvtag l3">L3</span></div>
     <div class="q-body">
       <p>给出判断，并说明在什么条件下这个判断会反转。</p>
@@ -547,7 +547,7 @@
     </div>
   </div>
 
-  <div class="q">
+  <div class="q" id="q-SG-18">
     <div class="q-head"><span class="num">18</span><span class="txt">图像处理的滤波为什么用数组而不是链表？</span><span class="lvtag l3">L3</span></div>
     <div class="q-body">
       <p>从访问模式回答，并说明这引出 algs4 的哪个局限。</p>
@@ -574,7 +574,7 @@
     </div>
   </div>
 
-  <div class="q">
+  <div class="q" id="q-SG-19">
     <div class="q-head"><span class="num">19</span><span class="txt">压缩：为什么"没有前缀码用更少比特"？这和 03 域怎么接？</span><span class="lvtag l3">L3</span></div>
     <div class="q-body">
       <p>说出那条 Property，并把它与信息论的源编码定理对照。</p>
@@ -595,7 +595,7 @@
     </div>
   </div>
 
-  <div class="q">
+  <div class="q" id="q-SG-20">
     <div class="q-head"><span class="num">20</span><span class="txt">为什么 B 树出现在"语境"这一章而不是"查找"那一章？</span><span class="lvtag l3">L3</span></div>
     <div class="q-body">
       <p>解释 B 树的设计目标与红黑树的根本差别。</p>
@@ -622,7 +622,7 @@
     </div>
   </div>
 
-  <div class="q">
+  <div class="q" id="q-SG-21">
     <div class="q-head"><span class="num">21</span><span class="txt">字符串问题为什么需要专门的数据结构？Trie 换来了什么？</span><span class="lvtag l3">L3</span></div>
     <div class="q-body">
       <p>说明 Trie 与哈希表在字符串场景下的差别。</p>
@@ -651,7 +651,7 @@
     </div>
   </div>
 
-  <div class="q">
+  <div class="q" id="q-SG-22">
     <div class="q-head"><span class="num">22</span><span class="txt">"排序应用"那一节给了什么策略性结论？</span><span class="lvtag l3">L3</span></div>
     <div class="q-body">
       <p>说出那条 Property，并解释为什么它是 Property 而不是 Proposition。</p>
@@ -683,7 +683,7 @@
     </div>
   </div>
 
-  <div class="q">
+  <div class="q" id="q-SG-23">
     <div class="q-head"><span class="num">23</span><span class="txt">事件驱动模拟（6.1）为什么需要一个专用结构？</span><span class="lvtag l3">L3</span></div>
     <div class="q-body">
       <p>说明这个问题为什么不能直接用"排序 + 遍历"解决。</p>
@@ -713,7 +713,7 @@
   <div class="section-title">L4 · 批判（6 题）</div>
   <div class="section-sub">能指出命题的前提与失效边界</div>
 
-  <div class="q">
+  <div class="q" id="q-SG-24">
     <div class="q-head"><span class="num">24</span><span class="txt">Proposition、Property、Assumption 三者的区别为什么重要？</span><span class="lvtag l4">L4</span></div>
     <div class="q-body">
       <p>各举一例，并说明混淆它们会导致什么后果。</p>
@@ -736,7 +736,7 @@
     </div>
   </div>
 
-  <div class="q">
+  <div class="q" id="q-SG-25">
     <div class="q-head"><span class="num">25</span><span class="txt">这本书的结论在什么条件下会失效？举三个具体的失效场景。</span><span class="lvtag l4">L4</span></div>
     <div class="q-body">
       <p>分别给出场景、失效原因，以及应当求助哪里。</p>
@@ -769,7 +769,7 @@
     </div>
   </div>
 
-  <div class="q">
+  <div class="q" id="q-SG-26">
     <div class="q-head"><span class="num">26</span><span class="txt">为什么"渐近最优"这个说法必须跟着"在哪一类算法里"？</span><span class="lvtag l4">L4</span></div>
     <div class="q-body">
       <p>用归并排序和基数排序的对照回答。</p>
@@ -796,7 +796,7 @@
     </div>
   </div>
 
-  <div class="q">
+  <div class="q" id="q-SG-27">
     <div class="q-head"><span class="num">27</span><span class="txt">"摊还分析"和"平均情况分析"的区别是什么？</span><span class="lvtag l4">L4</span></div>
     <div class="q-body">
       <p>这两者经常被混淆，但它们对输入的要求完全不同。</p>
@@ -821,7 +821,7 @@
     </div>
   </div>
 
-  <div class="q">
+  <div class="q" id="q-SG-28">
     <div class="q-head"><span class="num">28</span><span class="txt">读完这本书，你应该能回答哪三类问题？</span><span class="lvtag l4">L4</span></div>
     <div class="q-body">
       <p>这是对全书 80% 掌握度的操作性检验。</p>

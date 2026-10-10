@@ -117,7 +117,7 @@
   <!-- ============ L1 ============ -->
   <div class="section-title">L1 · 基础（4 题）</div>
 
-  <div class="q">
+  <div class="q" id="q-DL-1">
     <div class="q-head"><span class="num">1</span><span class="txt">训练误差和泛化误差的定义分别是什么？为什么书里说"我们永远不能准确计算出泛化误差"？</span><span class="lvtag l1">L1</span></div>
     <div class="q-body">
       <p>说出两个定义，并解释那个"永远不能"的理由，以及实践中怎么办。</p>
@@ -141,7 +141,7 @@
     </div>
   </div>
 
-  <div class="q">
+  <div class="q" id="q-DL-2">
     <div class="q-head"><span class="num">2</span><span class="txt">怎么判断一个模型是欠拟合还是过拟合？</span><span class="lvtag l1">L1</span></div>
     <div class="q-body">
       <p>说出判据，并指出书里对"过拟合"的一个反直觉的宽容态度。</p>
@@ -164,7 +164,7 @@
     </div>
   </div>
 
-  <div class="q">
+  <div class="q" id="q-DL-3">
     <div class="q-head"><span class="num">3</span><span class="txt">影响过拟合的两个因素是什么？各是什么规律？</span><span class="lvtag l1">L1</span></div>
     <div class="q-body">
       <p>说出两个因素和它们的规律，并说出书里关于"深度学习需要多少数据"的那句判断。</p>
@@ -193,7 +193,7 @@
     </div>
   </div>
 
-  <div class="q">
+  <div class="q" id="q-DL-4">
     <div class="q-head"><span class="num">4</span><span class="txt">权重衰减是怎么实现的？数学上它做了什么？</span><span class="lvtag l1">L1</span></div>
     <div class="q-body">
       <p>写出损失函数的形式，并说出它把最优解从什么变成了什么。</p>
@@ -223,7 +223,7 @@
   <!-- ============ L2 ============ -->
   <div class="section-title">L2 · 理解（5 题）</div>
 
-  <div class="q">
+  <div class="q" id="q-DL-5">
     <div class="q-head"><span class="num">5</span><span class="txt">为什么"记住整个训练集"能得到完美的训练误差，但泛化一定差？</span><span class="lvtag l2">L2</span></div>
     <div class="q-body">
       <p>用书里那个"基因数据预测痴呆"的例子解释。</p>
@@ -243,7 +243,7 @@
     </div>
   </div>
 
-  <div class="q">
+  <div class="q" id="q-DL-6">
     <div class="q-head"><span class="num">6</span><span class="txt">书里为什么要用三个"思维实验"讲泛化误差？</span><span class="lvtag l2">L2</span></div>
     <div class="q-body">
       <p>说出三个实验各自在说明什么。</p>
@@ -273,7 +273,7 @@
     </div>
   </div>
 
-  <div class="q">
+  <div class="q" id="q-DL-7">
     <div class="q-head"><span class="num">7</span><span class="txt">为什么书里说"假设是存在漏洞的"？它举了哪两类失效？</span><span class="lvtag l2">L2</span></div>
     <div class="q-body">
       <p>说出 i.i.d. 假设的内容，以及书里给的两类失效情形。</p>
@@ -306,7 +306,7 @@
     </div>
   </div>
 
-  <div class="q">
+  <div class="q" id="q-DL-8">
     <div class="q-head"><span class="num">8</span><span class="txt">为什么"1/i! 特征缩放"是必要的？不做会怎样？</span><span class="lvtag l2">L2</span></div>
     <div class="q-body">
       <p>说出它解决的两个问题——一个是书里写的，一个是我实测发现的。</p>
@@ -335,7 +335,7 @@
     </div>
   </div>
 
-  <div class="q">
+  <div class="q" id="q-DL-9">
     <div class="q-head"><span class="num">9</span><span class="txt">为什么书里把"过拟合并不总是一件坏事"单独说出来？</span><span class="lvtag l2">L2</span></div>
     <div class="q-body">
       <p>解释这句话在实践上改变了什么判断。</p>
@@ -362,7 +362,7 @@
   <!-- ============ L3 ============ -->
   <div class="section-title">L3 · 应用（5 题）</div>
 
-  <div class="q">
+  <div class="q" id="q-DL-10">
     <div class="q-head"><span class="num">10</span><span class="txt">你有 500 个样本，该用多复杂的模型？怎么判断？</span><span class="lvtag l3">L3</span></div>
     <div class="q-body">
       <p>给出可操作的流程，而不是一个数字。</p>
@@ -386,7 +386,7 @@
     </div>
   </div>
 
-  <div class="q">
+  <div class="q" id="q-DL-11">
     <div class="q-head"><span class="num">11</span><span class="txt">验证误差 0.005，噪声方差是 0.01。这说明什么？</span><span class="lvtag l3">L3</span></div>
     <div class="q-body">
       <p>这是一道"识别异常"的题。</p>
@@ -413,7 +413,7 @@
     </div>
   </div>
 
-  <div class="q">
+  <div class="q" id="q-DL-12">
     <div class="q-head"><span class="num">12</span><span class="txt">离线指标 0.95，上线后效果很差。最可能的原因是什么？怎么排查？</span><span class="lvtag l3">L3</span></div>
     <div class="q-body">
       <p>给出最可能的原因和一套排查顺序。</p>
@@ -456,7 +456,7 @@
     </div>
   </div>
 
-  <div class="q">
+  <div class="q" id="q-DL-13">
     <div class="q-head"><span class="num">13</span><span class="txt">学习率太大和太小，症状有什么不同？</span><span class="lvtag l3">L3</span></div>
     <div class="q-body">
       <p>说出两种症状，以及为什么"从小往大试"更安全。</p>
@@ -486,7 +486,7 @@
     </div>
   </div>
 
-  <div class="q">
+  <div class="q" id="q-DL-14">
     <div class="q-head"><span class="num">14</span><span class="txt">"只看最终损失"为什么不够？应该看什么？</span><span class="lvtag l3">L3</span></div>
     <div class="q-body">
       <p>给出诊断训练曲线的三条判据。</p>
@@ -513,7 +513,7 @@
   <div class="section-title">L4 · 批判（6 题）</div>
   <div class="section-sub">这一层比例最高 —— 因为机器学习最大的风险不是不懂，是把偶然的观察当成普遍规律</div>
 
-  <div class="q">
+  <div class="q" id="q-DL-15">
     <div class="q-head"><span class="num">15</span><span class="txt">这本书的结论是什么性质？和 algs4 的 Proposition 有什么根本区别？</span><span class="lvtag l4">L4</span></div>
     <div class="q-body">
       <p>说出性质差别，并解释"经验结论"引用时必须带什么。</p>
@@ -553,7 +553,7 @@
     </div>
   </div>
 
-  <div class="q">
+  <div class="q" id="q-DL-16">
     <div class="q-head"><span class="num">16</span><span class="txt">"深度学习只有在有数千个训练样本时才优于线性模型"——这句话有什么问题？</span><span class="lvtag l4">L4</span></div>
     <div class="q-body">
       <p>找出这句话里三个不够严谨的地方。</p>
@@ -577,7 +577,7 @@
     </div>
   </div>
 
-  <div class="q">
+  <div class="q" id="q-DL-17">
     <div class="q-head"><span class="num">17</span><span class="txt">"过拟合并不总是一件坏事"——这句话会不会被误用？</span><span class="lvtag l4">L4</span></div>
     <div class="q-body">
       <p>指出它的正确读法和一种危险的误读。</p>
@@ -601,7 +601,7 @@
     </div>
   </div>
 
-  <div class="q">
+  <div class="q" id="q-DL-18">
     <div class="q-head"><span class="num">18</span><span class="txt">"更多数据不会有什么坏处"——这个说法在什么情况下不成立？</span><span class="lvtag l4">L4</span></div>
     <div class="q-body">
       <p>给出至少三种反例。</p>
@@ -648,7 +648,7 @@
     </div>
   </div>
 
-  <div class="q">
+  <div class="q" id="q-DL-19">
     <div class="q-head"><span class="num">19</span><span class="txt">书里说 i.i.d. 假设"轻微违背也没关系"。这个"轻微"的边界在哪？</span><span class="lvtag l4">L4</span></div>
     <div class="q-body">
       <p>用本项目实验 11 的实测数字回答。</p>
@@ -680,7 +680,7 @@
     </div>
   </div>
 
-  <div class="q">
+  <div class="q" id="q-DL-20">
     <div class="q-head"><span class="num">20</span><span class="txt">书里说"容量越大训练误差越低"，我实测不成立。谁错了？</span><span class="lvtag l4">L4</span></div>
     <div class="q-body">
       <p>这道题考的是"当一个理论陈述和实测冲突时该怎么想"。</p>

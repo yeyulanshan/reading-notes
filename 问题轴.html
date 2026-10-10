@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>问题轴 · 底层</title>
+<meta name="description" content="把「问题」升为一级对象 · 12 个跨书问题 · 398 道题的稳定 ID">
+<meta name="theme-color" content="#f2f8fc">
+<style>
+  :root{
+    --paper:#f2f8fc; --card:#ffffff; --card-2:#e9f4fb;
+    --edge:#cfe0ec; --edge-lit:#a4c6dd;
+    --ink:#12232e; --ink-2:#627480; --ink-3:#587286;
+    --accent:#2c7ea2; --accent-2:#377972; --gold:#84744a;
+    --quote-bg:#fbf8ef; --quote-edge:#d8cba4; --quote-ink:#5f5527;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--paper); color:var(--ink); line-height:1.9;
+    -webkit-font-smoothing:antialiased;
+    padding:32px 16px 60px;
+  }
+  ::selection{background:rgba(63,180,232,.26); color:#0d2430;}
+  .wrap{max-width:860px; margin:0 auto;}
+
+  header.doc{
+    background:var(--card); border:1px solid var(--edge);
+    border-top:4px solid var(--accent); border-radius:10px;
+    padding:34px 34px 28px; margin-bottom:24px;
+  }
+  header.doc h1{
+    font-size:26px; font-weight:800; line-height:1.4; letter-spacing:.01em;
+    margin-bottom:12px;
+    background:linear-gradient(135deg,#1d4a68,#2c7ea2 55%,#377972);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  header.doc .sub{font-size:14.6px; color:var(--ink-2); line-height:1.95;}
+  header.doc .src{
+    margin-top:16px; padding-top:14px; border-top:1px dashed var(--edge);
+    font-size:12.6px; color:var(--ink-3); line-height:1.95;
+  }
+  header.doc .src strong{color:var(--ink-2);}
+
+  main{
+    background:var(--card); border:1px solid var(--edge); border-radius:10px;
+    padding:36px 38px 40px;
+  }
+
+  h2{
+    font-size:19px; font-weight:700; color:var(--ink);
+    margin:38px 0 14px; padding-left:12px;
+    border-left:4px solid var(--gold); line-height:1.55;
+  }
+  h2:first-child{margin-top:0;}
+  h3{font-size:16px; font-weight:700; color:var(--ink); margin:26px 0 10px;}
+  h4{
+    font-size:15.2px; font-weight:700; color:#1d4a68;
+    margin:22px 0 9px; padding-left:10px;
+    border-left:3px solid rgba(63,180,232,.45); line-height:1.6;
+  }
+
+  p{font-size:14.6px; color:var(--ink-2); margin-bottom:13px; text-wrap:pretty;}
+  strong{color:var(--ink); font-weight:700;}
+  em{font-style:normal; color:var(--ink); background:rgba(63,180,232,.10);
+     border-radius:3px; padding:0 3px;}
+
+  code{
+    font-family:ui-monospace,Consolas,monospace; font-size:13px;
+    background:var(--card-2); border:1px solid var(--edge); border-radius:4px;
+    padding:1px 6px; color:#1d5c86; word-break:break-all;
+  }
+
+  a{color:var(--accent); text-decoration:none; border-bottom:1px solid #cfe4f0;}
+  a:hover{border-bottom-color:var(--accent);}
+
+  blockquote{
+    margin:14px 0; padding:13px 18px;
+    background:var(--quote-bg); border:1px solid #e8dfc4;
+    border-left:3px solid var(--quote-edge); border-radius:5px;
+    font-size:14.2px; color:var(--quote-ink); line-height:1.95;
+  }
+  blockquote p{margin-bottom:9px; color:inherit; font-size:inherit;}
+  blockquote p:last-child{margin-bottom:0;}
+  blockquote strong{color:#8a6a24;}
+  blockquote em{background:rgba(138,106,36,.10); color:#8a6a24;}
+  blockquote code{background:rgba(255,255,255,.7); color:#7a5f1c; border-color:#e0d2ac;}
+
+  ul,ol{margin:12px 0 14px 22px;}
+  li{font-size:14.5px; color:var(--ink-2); margin-bottom:8px; line-height:1.9;}
+  li strong{color:var(--ink);}
+
+  table{width:100%; border-collapse:collapse; margin:16px 0; font-size:13.6px;}
+  th,td{padding:9px 12px; border:1px solid var(--edge); text-align:left;
+        vertical-align:top; line-height:1.8;}
+  th{background:var(--card-2); color:#1d5c86; font-weight:700; font-size:12.8px;}
+  td{color:var(--ink-2);}
+  td strong{color:var(--ink);}
+  td code{font-size:12.4px;}
+
+  hr{border:none; border-top:1px dashed var(--edge); margin:32px 0;}
+
+  pre{
+    background:#eef4f9; border:1px solid var(--edge); border-radius:6px;
+    padding:14px 16px; margin:16px 0; overflow-x:auto;
+    line-height:1.7;
+  }
+  pre code{
+    background:none; border:none; padding:0; font-size:12.8px;
+    color:#1d4a68; white-space:pre; word-break:normal;
+  }
+
+  footer.doc{
+    margin-top:26px; padding-top:20px; border-top:1px solid var(--edge);
+    font-size:12.4px; color:var(--ink-3); line-height:2; text-align:center;
+  }
+  footer.doc a{color:var(--ink-2);}
+  @media(max-width:700px){
+    body{padding:16px 10px 40px;}
+    header.doc{padding:24px 20px 20px;} header.doc h1{font-size:21px;}
+    main{padding:24px 18px 28px;} h2{font-size:17px;}
+    table{font-size:12.2px;} th,td{padding:7px 8px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="doc">
+    <h1>问题轴</h1>
+    <p class="sub">把「问题」升为一级对象 · 12 个跨书问题 · 398 道题的稳定 ID</p>
+    <p class="src">全库唯一按「问题」组织的文件；主干是 问题轴.md，本页由脚本生成，不要手改</p>
+  </header>
+  <main>
+<h1>问题轴</h1>
+<blockquote><p><strong>这是全库唯一按「问题」组织的东西。</strong> 其余部分（26 座岛）按书组织。这一份把「问题」升为一级对象： 每个跨书问题下面挂「哪本书的哪一题给了什么答案 + 属于哪种关系 + 我信几分 + 什么能推翻我」。</p><p>生成方式：本文件是<strong>主干（手写）</strong>；HTML 由 <code>09_工具与脚本/渲染问题轴.py</code> 生成。 起点：<code>问题索引.html</code>（12 个跨书问题 · 手工挑自 78 条已核对材料， 它自己声明「覆盖面不全，这是主干不是全部」）。</p></blockquote>
+<hr>
+<h2>〇 · 地基：398 道题有了稳定 ID</h2>
+<p><strong>在你读轴之前，先知道每道题现在都能被指回来。</strong></p>
+<table>
+<tr><th>事实</th><th>数</th></tr>
+<tr><td>问题手册</td><td><strong>18 份</strong>（问题索引原称 17 份）</td></tr>
+<tr><td>题目总数</td><td><strong>398 道</strong>（原称 366 道）</td></tr>
+<tr><td>注入锚点</td><td><strong>401 个</strong>（含 3 个被解析器排除的术语清单容器）</td></tr>
+</table>
+<p><strong>稳定 ID 的格式</strong>：<code>&lt;手册代号&gt;-&lt;手册内序号&gt;</code>，例如 <code>SK-3</code>（思考快与慢第 3 题）。</p>
+<p>每道题在它的手册页里有对应锚点 <code>id="q-SK-3"</code>，所以全库任何地方都可以用 <code>思考快与慢-问题手册.html#q-SK-3</code> 直接跳到那一道题。</p>
+<h3>手册代号表</h3>
+<table>
+<tr><th>代号</th><th>手册</th><th>题数</th><th>原编号风格</th></tr>
+<tr><td>ZH</td><td>中国智慧</td><td>35</td><td>A1 式</td></tr>
+<tr><td>LY</td><td>論語</td><td>24</td><td>Q1 式</td></tr>
+<tr><td>WQ</td><td>无穷的开始</td><td>19</td><td>A1 式</td></tr>
+<tr><td>FD</td><td>非对称风险</td><td>24</td><td>A1 式</td></tr>
+<tr><td>HX</td><td>当呼吸化为空气</td><td>15</td><td>「问题 01」式</td></tr>
+<tr><td>SK</td><td>思考快与慢</td><td>22</td><td>A1 式</td></tr>
+<tr><td>MZ</td><td>Dawkins_盲眼钟表匠</td><td>21</td><td>A1 式</td></tr>
+<tr><td>XX</td><td>MacKay_信息论</td><td>22</td><td>A1 式</td></tr>
+<tr><td>ZS</td><td>置身事内</td><td>15</td><td>纯数字</td></tr>
+<tr><td>QP</td><td>枪炮病菌与钢铁</td><td>16</td><td>A1 式</td></tr>
+<tr><td>SJ</td><td>视觉</td><td>15</td><td>纯数字</td></tr>
+<tr><td>DS</td><td>DiveIntoSystems</td><td>16</td><td>纯数字</td></tr>
+<tr><td>SG</td><td>Sedgewick_Algorithms4</td><td>28</td><td>纯数字</td></tr>
+<tr><td>DL</td><td>动手学深度学习</td><td>20</td><td>纯数字</td></tr>
+<tr><td>OS</td><td>操作系统导论</td><td>40</td><td>A1 式</td></tr>
+<tr><td>IP</td><td>数字图像处理</td><td>27</td><td>A1 式</td></tr>
+<tr><td>FA</td><td>Fromm_爱的艺术</td><td>18</td><td>纯数字</td></tr>
+<tr><td>MI</td><td>Miller_亲密关系</td><td>24</td><td>纯数字</td></tr>
+</table>
+<blockquote><p><strong>为什么要统一编号</strong>：全库有<strong>四代模板</strong>混在一起（<code>q-id</code> / <code>num</code>+<code>txt</code> / <code>n</code>+<code>txt</code> / <code>question-card</code>），编号风格三种（A1 式 247 · 纯数字 136 · 「问题 01」15）。 于是「指回某一题」在这之前只能靠手写，且无法点击验证。</p></blockquote>
+<blockquote><p><strong>指回准确性的实测</strong>：核了《问题索引》里 66 处题号指回，命中 61 处。 5 处未命中全是「D3 / 全书」「（第 5 章）」「（15 题全部）」这类<strong>不是题号的表述</strong>。 <strong>结论：索引里手写的题号指回是准确的。</strong></p></blockquote>
+<hr>
+<h2>一 · 五种关系类型（先说判据）</h2>
+<p>一个跨书问题底下，「哪本书给了什么答案」有五种关系。<strong>判错类型 = 编造冲突。</strong></p>
+<table>
+<tr><th>类型</th><th>判据</th><th>处理方式</th></tr>
+<tr><td><strong>Ⅰ 真对立</strong></td><td>同一件事、同一层次，两边都给了<strong>确定的</strong>答案，且不能同真</td><td>必须选一边，或指出第三个可能</td></tr>
+<tr><td><strong>Ⅱ 条件性对立</strong></td><td>结论相反，但各自<strong>成立的条件不同</strong></td><td>不判谁对，判<strong>条件</strong></td></tr>
+<tr><td><strong>Ⅲ 范畴不同</strong></td><td>两边说的是<strong>不同的问题</strong>，只是用了同一个词</td><td>拆词，不判对错</td></tr>
+<tr><td><strong>Ⅳ 虚对立</strong></td><td>看似对立，实则<strong>一方已包含另一方</strong></td><td>说明包含关系</td></tr>
+<tr><td><strong>Ⅴ 层级不同</strong></td><td>一边讲<strong>机制</strong>，一边讲<strong>规范/做法</strong></td><td>两层都留，注明层级</td></tr>
+</table>
+<p><strong>判这条纪律的理由</strong>：一个库里「冲突」的数量不是越多越好。 把 Ⅲ 类误判成 Ⅰ 类，就会造出一个不存在的争点。</p>
+<hr>
+<h2>二 · 十二个跨书问题</h2>
+<h3>Q1 · 怎么判断一个说法是真还是假</h3>
+<p><strong>涉及 7 本书。</strong></p>
+<blockquote><p><strong>★ 这个标题底下其实压着两个不同的问题，必须拆开——</strong> <strong>不拆开就会把一致的地方读成冲突，把真冲突读成呼应。</strong></p><p>| 子问题 | 谁在答 | 关系 | |---|---|---| | <strong>Q1a · 什么算「被检验过」</strong> | 毛选 · 多伊奇 · MacKay | <strong>Ⅳ 虚对立</strong>（其实一致） | | <strong>Q1b · 知识从哪里来</strong> | 毛选 · 多伊奇 | <strong>Ⅰ 真对立</strong> | | <strong>Q1c · 判断时还要过哪几关</strong> | 塔勒布 · 卡尼曼 · 数字图像处理 · 深度学习 | <strong>Ⅴ 层级不同</strong> |</p></blockquote>
+<table>
+<tr><th>书</th><th>题号（稳定 ID）</th><th>它给的判据</th></tr>
+<tr><td>无穷的开始</td><td><code>WQ-A2</code> · <code>WQ-D3</code></td><td>看它<strong>难以改变</strong>（改了细节就垮）。而实验检验不是决定性因素</td></tr>
+<tr><td>毛选·实践论</td><td>（单篇对照文）</td><td><strong>真理的标准只能是社会的实践</strong> —— 看能不能达到预想的结果</td></tr>
+<tr><td>非对称风险</td><td><code>FD-D2</code></td><td>看<strong>说这话的人有没有承担后果</strong>。没有风险共担就没有真知识</td></tr>
+<tr><td>思考，快与慢</td><td><code>SK-C2</code></td><td>先怀疑<strong>你自己的判断</strong> —— 「知道」不等于能消除偏差</td></tr>
+<tr><td>MacKay 信息论</td><td><code>XX-B1</code></td><td>用<strong>概率与证据的强度</strong>衡量，而不是真假二分</td></tr>
+<tr><td>数字图像处理</td><td><code>IP-A3</code> · <code>IP-D4</code></td><td>先分是「增强」还是「复原」—— 说不清「正确结果」时，这件事<strong>没有真假可言</strong></td></tr>
+<tr><td>动手学深度学习</td><td><code>DL-11</code></td><td>看<strong>泛化误差</strong> —— 而书里说它<strong>永远不能准确计算</strong>，只能用独立测试集估计</td></tr>
+</table>
+<h4>Q1a · 什么算「被检验过」—— Ⅳ 虚对立（其实一致）</h4>
+<p><strong>两边的原话</strong>：</p>
+<blockquote><p>「实验检验的本质是，对问题至少有两套看上去可行的理论，它们作出互相矛盾的预测， 可通过实验来甄别。」 —— 多伊奇《无穷的开始》</p></blockquote>
+<blockquote><p>「经验对于科学研究的确是必不可少的，但它的作用却同经验主义者所说的大相径庭。 <strong>它不是推演出理论的源泉，其主要作用是用于挑选已经提出的猜想</strong>，这就是从「从经验中学习」的意义所在。」 —— 同上</p></blockquote>
+<blockquote><p>「<strong>真理的标准只能是社会的实践。</strong>」 —— 毛选《实践论》</p></blockquote>
+<p><strong>判断</strong>：多伊奇说经验<strong>必不可少</strong>、且<strong>用于挑选猜想</strong>； 毛选说实践是<strong>检验</strong>真理的标准。<strong>两者在「经验/实践用来检验」这一点上一致。</strong></p>
+<p><strong>所以这一层是 Ⅳ 虚对立</strong>——看似对立（一个贬低实验、一个抬高实践），实则<strong>一方已包含另一方</strong>。 多伊奇的那句「可检验性不可能是科学革命的决定性因素」容易被读成「他不重视检验」， <strong>但他同时说经验是「必不可少的」，且「可检验的预测一直都普遍存在」</strong>—— 他贬的是把可检验性当成<strong>分界标准</strong>，不是贬低检验本身。</p>
+<h4>Q1b · 知识从哪里来 —— Ⅰ 真对立</h4>
+<p><strong>两边的原话</strong>：</p>
+<blockquote><p>「<strong>一切真知都是从直接经验发源的。</strong>……任何知识的来源， 在于人的肉体感官对客观外界的感觉。」 —— 毛选《实践论》</p></blockquote>
+<blockquote><p>「经验……<strong>不是推演出理论的源泉</strong>，其主要作用是用于挑选已经提出的猜想。」 「发现一种新的解释，<strong>本质上是一种创造性的行为</strong>…… 这样的想法不会自发产生，也无法根据任何事物机械推演而得：<strong>它们必须是猜出来的</strong>。」 —— 多伊奇《无穷的开始》</p></blockquote>
+<p><strong>判断：这是真正的 Ⅰ 真对立。</strong> 同一件事（<strong>知识的来源</strong>）、同一层次（<strong>发生学</strong>）、两边都给了确定答案，<strong>不能同真</strong>。</p>
+<p><strong>而且毛选有一个后续论证，正好落在多伊奇的射程内</strong>：</p>
+<blockquote><p>「但人不能事事直接经验，事实上多数的知识都是间接经验的东西…… 而且在我为间接经验者，在人则仍为直接经验。 <strong>因此，就知识的总体说来，无论何种知识都是不能离开直接经验的。</strong>」</p></blockquote>
+<p>毛选的处理是：<strong>间接经验追溯到某个人的直接经验</strong>，所以「总体上都离不开直接经验」。 <strong>多伊奇否定的正是这个追溯</strong>——他说连「看到光点」这件事， 如果不先有解释性概念（「杯子」还是「红色」），连观察本身都无法形成：</p>
+<blockquote><p>「只有依靠解释，我才能够从自己有关这个魔术的体验中提炼出「杯子和球」的概念， 而不是「红色和蓝色」的概念。」 「自然也不是一本书：人可能耗尽一生……努力「阅读」天空中的光点， 结果还是对它们到底是什么一无所知。」</p></blockquote>
+<p><strong>所以争论的焦点是</strong>：直接经验能不能<strong>独立于已有理论</strong>地成为知识的起点。 毛选说能，多伊奇说不能。</p>
+<h4>Q1c · 判断时还要过哪几关 —— Ⅴ 层级不同</h4>
+<table>
+<tr><th>书</th><th>加的是哪一关</th></tr>
+<tr><td>非对称风险 <code>FD-D2</code></td><td><strong>说者的利害</strong>（没有风险共担就没有真知识）</td></tr>
+<tr><td>思考，快与慢 <code>SK-C2</code></td><td><strong>判断者的偏差</strong>（知道不等于消除）</td></tr>
+<tr><td>MacKay <code>XX-B1</code></td><td><strong>度量的形式</strong>（用概率与强度，不用真假二分）</td></tr>
+<tr><td>数字图像处理 <code>IP-A3</code></td><td><strong>问题是否良定</strong>（说不清正确结果时没有真假可言）</td></tr>
+<tr><td>动手学深度学习 <code>DL-11</code></td><td><strong>可测量的指标</strong>（泛化误差永远不能准确计算）</td></tr>
+</table>
+<p>这五个<strong>互不排斥，也不是对「什么是真」的竞争回答</strong>，而是「判断真假时还必须过哪一关」。 <strong>可以全部成立。</strong></p>
+<p><strong>我信几分</strong></p>
+<table>
+<tr><th>判断</th><th>置信</th><th>理由</th></tr>
+<tr><td>Q1a 是 Ⅳ 虚对立（其实一致）</td><td><strong>高</strong></td><td>两处原话都核过：多伊奇明说经验「必不可少」且「用于挑选」</td></tr>
+<tr><td>Q1b 是 Ⅰ 真对立</td><td><strong>高</strong></td><td>两边各有一句直陈来源的话，且互相排斥（「从直接经验发源」vs「不是源泉」）</td></tr>
+<tr><td>Q1c 是 Ⅴ</td><td><strong>高</strong></td><td>五处各自回答的是附加条件</td></tr>
+<tr><td>我原先的判定（「WQ-A2 vs 毛选是真对立」）</td><td><strong>已撤回</strong></td><td><strong>见文末「轴自己改过的判断」——我把「来源」与「检验」混成了一个争点。</strong></td></tr>
+</table>
+<p><strong>什么能推翻我</strong></p>
+<ul><li>若在多伊奇书里找到他承认「某种经验可以先于任何理论」的段落 → Q1b 降为 Ⅳ</li><li>若毛选那句「从直接经验发源」在上下文里只是修辞、而他的实际主张是 「直接经验与间接经验并重」 → Q1b 降为 Ⅴ（两人其实都在讲不同层面） <strong>—— 这一条我要标为需要注意的：毛选紧接着就说了「人不能事事直接经验」， 所以他那句「发源」可能是在强调「最终可追溯」，而非「每一步都从零开始」。</strong> <strong>我保留 Ⅰ 的判定，但置信不是满的。</strong></li></ul>
+<hr>
+<h3>Q2 · 一个方法在什么时候会失效</h3>
+<p><strong>涉及 10 本书 · 23 题 —— 题量最大的一栏。</strong> 理由很实际：<strong>技术书必须写清适用范围，思想书必须写清边界</strong>，两类书在这里汇合。</p>
+<table>
+<tr><th>书</th><th>稳定 ID</th><th>失效的条件</th></tr>
+<tr><td>数字图像处理</td><td><code>IP-C1</code>–<code>IP-C7</code></td><td>分割失效是<strong>判据</strong>错不是算法错；开运算会把细长真实结构一起去掉；维纳滤波要求<strong>功率谱已知</strong>；「越接近理想越振铃」</td></tr>
+<tr><td>无穷的开始</td><td><code>WQ-D3</code> · <code>WQ-F3</code></td><td>「所有的恶是知识不足造成的」—— 改细节仍成立，<strong>按他自己的判据这偏「容易改变」那一侧</strong></td></tr>
+<tr><td>非对称风险</td><td><code>FD-D5</code> · <code>FD-E1</code></td><td>林迪效应与遍历性各自的边界；<code>FD-E1</code> 要求你<strong>自己造一套审查清单</strong>，即把边界工具化</td></tr>
+<tr><td>思考，快与慢</td><td><code>SK-C1</code>–<code>SK-C3</code></td><td>前景理论的参照点替换；<strong>敏感度递减与损失厌恶不是同一件事</strong>（常见混读）</td></tr>
+<tr><td>MacKay 信息论</td><td><code>XX-B1</code></td><td>推断方法的适用前提</td></tr>
+<tr><td>Fromm 爱的艺术</td><td><code>FA</code> 全 18 题</td><td>这本 18 题里 <strong>11 题在 L3/L4</strong> —— 因为它是<strong>规范性</strong>主张，边界问题最多</td></tr>
+<tr><td>Sedgewick / 操作系统导论</td><td><code>SG</code> · <code>OS</code>（L3+ 合计 22 题）</td><td>数据结构与调度策略的<strong>代价</strong></td></tr>
+</table>
+<p><strong>关系类型判定：Ⅴ 层级不同（整体）</strong></p>
+<blockquote><p>这一栏<strong>不是</strong>一组互相冲突的答案，而是<strong>十本书各写各的边界</strong>。 它们之间没有对立关系——<strong>唯一的共同点是「都承认自己有边界」</strong>。 所以把 Q2 称为「冲突」是错的，它是一栏<strong>呼应</strong>（见冲突地图 RS5 的说法）。</p></blockquote>
+<p><strong>但里面藏着一处 Ⅰ 类</strong>：</p>
+<blockquote><p><code>WQ-D3</code> 的「所有的恶是知识不足造成的」——<strong>按多伊奇自己的判据（难以改变）， 这句话属于「容易改变」那一侧</strong>。也就是说：<strong>他的元判据否掉了他自己的一句名言。</strong> 这是本轴标注的第一处「<strong>自我反驳</strong>」，价值高于任何两本书之间的对立。</p></blockquote>
+<p><strong>我信几分</strong></p>
+<table>
+<tr><th>判断</th><th>置信</th></tr>
+<tr><td>Q2 整体是 Ⅴ 而非 Ⅰ</td><td><strong>高</strong>（十本书边界不相交，没有互相否定）</td></tr>
+<tr><td><code>WQ-D3</code> 被多伊奇自己的判据否掉</td><td><strong>中</strong> —— 这是我的读法，不是他的自述</td></tr>
+<tr><td><code>FA</code> 的 11 题在 L3/L4 是「规范性主张导致边界问题多」</td><td><strong>中</strong> —— 也可能是那本书的题目设计如此</td></tr>
+</table>
+<p><strong>什么能推翻我</strong></p>
+<ul><li>若在多伊奇书里找到他把「知识不足」列为<strong>难以改变</strong>的表述 → 自我反驳不成立</li><li>若 <code>FA</code> 的 L3/L4 题实际是在问机制而非规范 → 我那条解释错了</li></ul>
+<hr>
+<h3>Q3 · 错误是怎么产生的（而不是「错误是什么」）</h3>
+<p><strong>涉及 7 本书。</strong> 注意这个问法与 Q1 的差别：<strong>Q1 问怎么判真，Q3 问为什么人会判错。</strong> 前者是标准问题，后者是机制问题。</p>
+<table>
+<tr><th>书</th><th>稳定 ID</th><th>它给的错误来源</th></tr>
+<tr><td>思考，快与慢</td><td><code>SK-C1</code> · <code>SK-C2</code> · <code>SK-E3</code></td><td><strong>系统1的自动运行</strong> —— 即使知道也无法关闭</td></tr>
+<tr><td>非对称风险</td><td><code>FD-A1</code> · <code>FD-C1</code></td><td><strong>后果不必由自己承担</strong> —— 被作者称为认知问题而非道德问题</td></tr>
+<tr><td>盲眼钟表匠</td><td><code>MZ-E5</code></td><td><strong>误读「随机」</strong> —— 把累积选择当成单步骤碰运气</td></tr>
+<tr><td>视觉</td><td><code>SJ-8</code></td><td><strong>欠定</strong> —— 信息本来就不够，必须补入假设；补错了就错</td></tr>
+<tr><td>数字图像处理</td><td><code>IP-D2</code></td><td><strong>以人眼为判据</strong> —— 而马赫带、同时对比证明人眼本身不可靠</td></tr>
+<tr><td>Miller 亲密关系</td><td><code>MI-7</code></td><td><strong>积极错觉</strong> —— 而对伴侣的理想化在小剂量下是<strong>有益</strong>的</td></tr>
+<tr><td>无穷的开始</td><td><code>WQ-D3</code></td><td><strong>证明主义</strong> —— 把对真理的追寻偷换成对确定性（一种感觉）的追寻</td></tr>
+</table>
+<p><strong>关系类型判定：Ⅴ 层级不同，且各占一个机制</strong></p>
+<blockquote><p>七个来源<strong>互不排斥</strong>：自动运行（认知）· 利害不对齐（激励）· 随机性误读（概率）· 信息不足（信息）· 判据本身不可靠（测量）· 有益的错觉（适应）· 目标偷换（元认知）。 <strong>这七条可以同时全部成立。</strong> 所以 Q3 的价值不在「谁对」，而在<strong>这七条合起来是一张错误来源的清单</strong>。</p></blockquote>
+<p><strong>唯一的张力</strong>：</p>
+<blockquote><p><code>MI-7</code> 说「积极错觉<strong>有益</strong>」——这与其余六条把错误当成<strong>要消除的东西</strong>不同。 但这不是对立：其余六条讲的是<strong>判断错误</strong>，<code>MI-7</code> 讲的是<strong>幸福感</strong>。 <strong>范畴不同（Ⅲ）</strong>：一个在认识论层面，一个在生活质量层面。</p></blockquote>
+<p><strong>我信几分</strong></p>
+<table>
+<tr><th>判断</th><th>置信</th></tr>
+<tr><td>七条互不排斥</td><td><strong>高</strong>（机制层面没有互相否定）</td></tr>
+<tr><td><code>MI-7</code> 属 Ⅲ 范畴不同</td><td><strong>中高</strong> —— Miller 自己也没把它与认识论错误对立起来</td></tr>
+</table>
+<p><strong>什么能推翻我</strong></p>
+<ul><li>若 Miller 在别处说「有益的错误在认识上也更好」→ 要与其余六条正面冲突，升为 Ⅰ</li><li>若 <code>IP-D2</code>（人眼不可靠）其实否定了 <code>SJ-8</code>（补入假设）的合法性 → 那两处合并</li></ul>
+<hr>
+<h3>Q4 · 人在多大程度上被环境（和自身）决定</h3>
+<p><strong>涉及 6 本书。</strong> 最古老的一个问题。</p>
+<table>
+<tr><th>书</th><th>稳定 ID</th><th>「决定」指的是什么</th></tr>
+<tr><td>枪炮病菌与钢铁</td><td><code>QP-D1</code></td><td><strong>地理与生物条件</strong>决定历史轨迹。戴蒙德：这些都是终极因</td></tr>
+<tr><td>无穷的开始</td><td><code>WQ-A2</code></td><td>反过来说：<strong>思想有独立的因果力</strong>，只有自然法则是真限制</td></tr>
+<tr><td>思考，快与慢</td><td><code>SK-A2</code></td><td><strong>系统1／系统2</strong> —— 而系统1无法关闭，这就是一种决定</td></tr>
+<tr><td>Miller 亲密关系</td><td><code>MI-5</code></td><td><strong>依恋类型</strong> —— 早年关系决定成年关系模式。<strong>而它可以改变</strong></td></tr>
+<tr><td>Dive Into Systems</td><td><code>DS-2</code> · <code>DS-5</code></td><td><strong>硬件与编译器</strong>决定程序的性能上限。<strong>而你仍可以优化</strong></td></tr>
+<tr><td>毛选·阶级地位</td><td>（单篇对照文）</td><td><strong>阶级地位</strong>决定你能看到什么</td></tr>
+</table>
+<p><strong>关系类型判定：Ⅰ 真对立（限一处）+ Ⅲ 范畴不同（其余）</strong></p>
+<blockquote><p><strong>Ⅰ 真对立</strong>：<code>QP-D1</code> 与 <code>WQ-A2</code>。 戴蒙德说「<strong>地理与生物条件是终极因</strong>」；多伊奇说「<strong>历史是思想的历史， 不是生物地理学的机械影响的历史</strong>」。 <strong>同一件事（历史轨迹的原因）、同一层次（终极因），两边都给了确定答案，不能同真。</strong> （这一处也是冲突地图 CF2/CF9 处理的那一场。）</p></blockquote>
+<blockquote><p><strong>Ⅲ 范畴不同</strong>：<code>SK-A2</code>（认知机制层面的限制）· <code>MI-5</code>（发展心理学的可塑性）· <code>DS-2</code>（工程约束）—— 这三个讲的「决定」是三种不同的东西： 一个是<strong>无法关闭的自动过程</strong>，一个是<strong>早期影响但可改</strong>， 一个是<strong>物理上限但可优化</strong>。共用「决定」一词，问的不是同一件事。</p></blockquote>
+<p><strong>我信几分</strong></p>
+<table>
+<tr><th>判断</th><th>置信</th><th>理由</th></tr>
+<tr><td><code>QP-D1</code> vs <code>WQ-A2</code> 是真对立</td><td><strong>高</strong></td><td>两边都有明确的排他性表述</td></tr>
+<tr><td>其余三处是 Ⅲ</td><td><strong>高</strong></td><td>三处的「决定」在各自书内有明确定义</td></tr>
+<tr><td>「哪一边对」</td><td><strong>低</strong></td><td>见下</td></tr>
+</table>
+<p><strong>什么能推翻我</strong></p>
+<ul><li>若戴蒙德承认「观念可以改变终极因的走向」→ 降为 Ⅳ（其实包含多伊奇）</li><li><strong>尺度反证（已遇到）</strong>：戴蒙德解释<strong>万年与洲际</strong>，多伊奇解释<strong>知识增长</strong>—— 若采这一读法，则两处<strong>尺度不同</strong>，真对立降为 <strong>Ⅴ 层级不同</strong>。 <strong>这一条我自己在《史記 · 地理决定论的检验》里用过（检验⑤的「尺度」结论）， 所以我对「它是 Ⅰ」的置信应当下调。</strong></li></ul>
+<hr>
+<h3>Q5 · 怎么在信息不足时做决定</h3>
+<p><strong>涉及 4 本书。</strong> 以「<strong>逆问题</strong>」这个统一形态出现。</p>
+<table>
+<tr><th>书</th><th>稳定 ID</th><th>它的做法</th></tr>
+<tr><td>数字图像处理</td><td><code>IP-D1</code> · <code>IP-B4</code></td><td><strong>逆问题：正向多对一，所以必须补入假设</strong>。举了四处：复原、分割、压缩、分类</td></tr>
+<tr><td>非对称风险</td><td><code>FD-D3</code> · <code>FD-D4</code></td><td><strong>遍历性</strong> —— 集合概率与时间概率不同，前者不能用于后者</td></tr>
+<tr><td>操作系统导论</td><td><code>OS-B10</code></td><td><strong>完全无法预知任务运行时间</strong>时的调度设计</td></tr>
+<tr><td>Dive Into Systems</td><td><code>DS-6</code> · <code>DS-7</code></td><td>性能不可完全预测时，靠<strong>测量与局部性假设</strong></td></tr>
+</table>
+<p><strong>关系类型判定：Ⅴ 层级不同 —— 且这是全库「呼应最干净」的一栏</strong></p>
+<blockquote><p>四处都在说同一件事的<strong>不同侧面</strong>：<code>IP-D1</code> 给的是<strong>形式定义</strong> （正向多对一 ⇒ 必须补假设）；其余三处给的是<strong>在这个前提下怎么活</strong> （<code>FD-D3</code> 换成时间概率、<code>OS-B10</code> 直接设计成不可预知、<code>DS-6</code> 靠测量）。 <strong>一处给定义，三处给做法。层级不同。</strong></p></blockquote>
+<p><strong>我信几分</strong></p>
+<table>
+<tr><th>判断</th><th>置信</th></tr>
+<tr><td>是 Ⅴ 而非 Ⅰ</td><td><strong>高</strong></td></tr>
+<tr><td><code>IP-D1</code> 是全项目最清晰的一次「逆问题」定义</td><td><strong>高</strong>（它把「为什么必须补假设」推到了数学形式上）</td></tr>
+</table>
+<p><strong>什么能推翻我</strong></p>
+<ul><li>若 <code>OS-B10</code> 的调度设计其实<strong>否定</strong>了「必须补入假设」（例如声称可以完全不假设） → 那要从 Ⅴ 升为 Ⅰ</li></ul>
+<hr>
+<h2>三 · 轴自己改过的判断</h2>
+<p><strong>这一节是轴的核对记录。判错关系类型 = 编造争点，所以每次改动都留痕。</strong></p>
+<h3>改动一 · Q1 从「一处真对立」拆成「两个子问题 + 三种关系」</h3>
+<table>
+<tr><th></th><th>我原来的写法</th><th>核对后</th></tr>
+<tr><td>判定</td><td>「<code>WQ-A2</code> 与毛选是 <strong>Ⅰ 真对立</strong>」，理由是「一个说实验检验不是决定性的，一个说实践是标准」</td><td><strong>拆成 Q1a / Q1b / Q1c</strong></td></tr>
+<tr><td>Q1a 检验</td><td>——（原以为是对立）</td><td><strong>Ⅳ 虚对立</strong>：多伊奇说经验「<strong>必不可少</strong>」且「<strong>用于挑选已经提出的猜想</strong>」，与毛选「实践是检验标准」<strong>一致</strong></td></tr>
+<tr><td>Q1b 来源</td><td>被混在同一个争点里</td><td><strong>Ⅰ 真对立</strong>：毛选「<strong>一切真知都是从直接经验发源的</strong>」vs 多伊奇「<strong>不是推演出理论的源泉</strong>」</td></tr>
+<tr><td>错在哪</td><td><strong>我把「来源」和「检验」混成了一个争点</strong></td><td>——</td></tr>
+</table>
+<p><strong>为什么这是个真错，而不只是措辞问题</strong>： &lt;em&gt;「实验检验不是决定性的」这句话有两个读法—— 读成「检验不重要」会得出与毛选对立；读成「检验是挑选而非来源」则与毛选在检验层一致、 只在来源层对立。<strong>我原来取了第一个读法，而原文支持第二个。</strong>&lt;/em&gt;</p>
+<p><strong>核对用的两句原文</strong>（都已实测命中底本）：</p>
+<blockquote><p>「经验对于科学研究的确是必不可少的，但它的作用却同经验主义者所说的大相径庭。 <strong>它不是推演出理论的源泉，其主要作用是用于挑选已经提出的猜想</strong>」 —— 多伊奇《无穷的开始》</p></blockquote>
+<blockquote><p>「<strong>一切真知都是从直接经验发源的。</strong>」 —— 毛选《实践论》</p></blockquote>
+<h3>改动二 · Q4 的置信下调</h3>
+<p>我在 Q4 保留了「<code>QP-D1</code> vs <code>WQ-A2</code> 是真对立」的判定，但<strong>置信从「高」下调</strong>。 理由写在那一栏的「什么能推翻我」里：</p>
+<blockquote><p>戴蒙德解释<strong>万年与洲际</strong>，多伊奇解释<strong>知识增长</strong>—— 若采「尺度不同」这一读法，真对立降为 <strong>Ⅴ 层级不同</strong>。 <strong>这一条我自己在《史記 · 地理决定论的检验》里用过（检验⑤的「尺度」结论）， 所以对「它是 Ⅰ」的置信应当下调。</strong></p></blockquote>
+<hr>
+<h2>四 · 轴上的「自我反驳」</h2>
+<p><strong>这一类比任何两本书之间的对立更值钱</strong>——因为它是<strong>作者被自己的判据绊倒</strong>。</p>
+<table>
+<tr><th>#</th><th>位置</th><th>怎么被绊倒</th><th>状态</th></tr>
+<tr><td><strong>1</strong></td><td><code>WQ-D3</code>（无穷的开始）</td><td>他说「<strong>所有的恶是知识不足造成的</strong>」。<strong>但按他自己的判据（好解释＝难以改变），这句话是容易改变的</strong>——它不可反驳。</td><td>引文已实测命中（1 处）；<strong>推理是我的，不是他的自述</strong></td></tr>
+<tr><td><strong>2</strong></td><td>待补</td><td>—</td><td>—</td></tr>
+<tr><td><strong>3</strong></td><td>待补</td><td>—</td><td>—</td></tr>
+</table>
+<hr>
+<h2>五 · 这份轴自己的缺口</h2>
+<blockquote><p><strong>《问题索引》自己标出的那个缺口，现在是轴的第一个待办。</strong></p></blockquote>
+<ul><li><strong>Q9「关系和自我怎么构成」</strong>：索引写「<strong>目前无法裁决，要补的话需要引入一本跨文化心理学</strong>」。 → 这是全轴<strong>唯一一处有明确补法的缺口</strong>：补一本跨文化心理学，就能给 Q9 增加一个 与「关系性自我」正面对照的材料。</li></ul>
+<p>其余缺口（尚未定位到具体的书）：</p>
+<ul><li>12 个跨书问题只覆盖 386 道题里的一部分，<strong>覆盖面不全</strong>（索引自己声明过）</li><li><strong>七种关系类型里，Ⅰ 类只判出两处</strong>（Q1 的多伊奇 vs 毛选 · Q4 的戴蒙德 vs 多伊奇）</li><li>轴还<strong>没有反指回</strong>地图、对撞场、问题索引三件产出——这一步未做</li></ul>
+<hr>
+<h2>六 · 这一份的局限</h2>
+<ol><li><strong>关系类型是我判的，不是书里写的。</strong> 每一条都可能有别的读法。</li><li><strong>我只核了题号指回的准确性（66 处核 61 处命中），没核答案摘要是否忠实于原题。</strong> 摘要仍来自《问题索引》，而那份索引是手工挑的。</li><li><strong>12 个跨书问题不是全库问题的全集</strong>——它是手工挑的主干。 398 道题里绝大多数还没有被归到任何一个跨书问题下。</li><li><strong>「我信几分」没有量化的判据</strong>（高/中/低是我的直觉）， 这一栏如果要严格执行，需要给出可比的标准。</li></ol>
+  </main>
+  <footer class="doc">
+    本页由 Markdown 渲染而成 · 原文为 <code>问题轴.md</code>（留在项目内作编辑源，不单独发布）
+  </footer>
+</div>
+</body>
+</html>

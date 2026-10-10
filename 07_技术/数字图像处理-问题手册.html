@@ -138,7 +138,7 @@
 <h2>模块 A · 地基：图像是什么，这本书管什么</h2>
 <div class="s">第 1–2 章。定义与边界 —— 后面所有方法都建立在这几个概念上</div>
 
-<div class="q">
+<div class="q" id="q-IP-1">
   <div class="q-head"><span class="q-id">A1</span><span class="q-lv lv1">L1</span><span class="q-tag">定义</span></div>
   <div class="q-text">用书里的定义说清「数字图像」是什么，并说明为什么
       <strong>「有限」</strong>与<strong>「离散」</strong>这两个词缺一不可。</div>
@@ -177,7 +177,7 @@
   </details>
 </div>
 
-<div class="q">
+<div class="q" id="q-IP-2">
   <div class="q-head"><span class="q-id">A2</span><span class="q-lv lv1">L1</span><span class="q-tag">采样与量化</span></div>
   <div class="q-text">采样与量化分别离散化的是什么？请说明
       <strong>哪一个是空间分辨率、哪一个是灰度分辨率</strong>，并解释
@@ -211,7 +211,7 @@
   </details>
 </div>
 
-<div class="q">
+<div class="q" id="q-IP-3">
   <div class="q-head"><span class="q-id">A3</span><span class="q-lv lv1">L1</span><span class="q-tag">总框架</span></div>
   <div class="q-text">书里把图像处理分成「低级／中级／高级」。
       <strong>划分的判据是什么</strong>？为什么书中说
@@ -250,7 +250,7 @@
   </details>
 </div>
 
-<div class="q">
+<div class="q" id="q-IP-4">
   <div class="q-head"><span class="q-id">A4</span><span class="q-lv lv3">L3</span><span class="q-tag">划界的代价</span></div>
   <div class="q-text">「本书只处理输入输出都是图像的问题，直到识别为止」——
       这条界限<strong>把什么排除在外了</strong>？排除了它们，
@@ -292,7 +292,7 @@
 <h2>模块 B · 核心机制：每个方法在解决什么问题</h2>
 <div class="s">第 3–8 章。这一档最多，也最实用 —— 生活类比并入本模块</div>
 
-<div class="q">
+<div class="q" id="q-IP-5">
   <div class="q-head"><span class="q-id">B1</span><span class="q-lv lv1">L1</span><span class="q-tag">相关与卷积</span></div>
   <div class="q-text">相关与卷积的定义只差一处。请指出这处差别，并说明
       <strong>什么情况下两者结果相同</strong>。</div>
@@ -322,7 +322,7 @@
   </details>
 </div>
 
-<div class="q">
+<div class="q" id="q-IP-6">
   <div class="q-head"><span class="q-id">B2</span><span class="q-lv lv2">L2</span><span class="q-tag">选滤波器</span></div>
   <div class="q-text">同一幅被椒盐噪声污染的图，用<strong>高斯滤波</strong>和用<strong>中值滤波</strong>结果差别很大。
       请说明差别的来源，以及为什么书里说中值滤波「对图像的模糊程度要小得多」。</div>
@@ -363,7 +363,7 @@
   </details>
 </div>
 
-<div class="q">
+<div class="q" id="q-IP-7">
   <div class="q-head"><span class="q-id">B3</span><span class="q-lv lv2">L2</span><span class="q-tag">锐化</span></div>
   <div class="q-text">锐化滤波器的核为什么<strong>系数之和为零</strong>？
       书里说 Sobel 在中心系数上用<strong>权值 2</strong>，理由是什么？</div>
@@ -402,7 +402,7 @@
   </details>
 </div>
 
-<div class="q">
+<div class="q" id="q-IP-8">
   <div class="q-head"><span class="q-id">B4</span><span class="q-lv lv1">L1</span><span class="q-tag">空间 vs 频率</span></div>
   <div class="q-text">「空间域」和「频率域」处理同一个问题，靠什么对应起来？
       请写出这个对应关系，并说明它带来的<strong>实际好处与取舍</strong>。</div>
@@ -436,7 +436,7 @@
   </details>
 </div>
 
-<div class="q">
+<div class="q" id="q-IP-9">
   <div class="q-head"><span class="q-id">B5</span><span class="q-lv lv2">L2</span><span class="q-tag">直方图</span></div>
   <div class="q-text">直方图均衡化「不需要参数」，看起来是免费的午餐。
       请说明它<strong>实际做了什么</strong>，以及为什么它只能产生「近似」均匀的直方图。</div>
@@ -474,7 +474,7 @@
   </details>
 </div>
 
-<div class="q">
+<div class="q" id="q-IP-10">
   <div class="q-head"><span class="q-id">B6</span><span class="q-lv lv2">L2</span><span class="q-tag">频率域滤波</span></div>
   <div class="q-text">频率域滤波的标准步骤里，为什么要用 <code>(−1)^(x+y)</code> 乘图像？
       不做这一步会怎样？</div>
@@ -506,7 +506,7 @@
   </details>
 </div>
 
-<div class="q">
+<div class="q" id="q-IP-11">
   <div class="q-head"><span class="q-id">B7</span><span class="q-lv lv1">L1</span><span class="q-tag">复原</span></div>
   <div class="q-text">图像<strong>增强</strong>与图像<strong>复原</strong>的目标不同。
       请说清这个差别，并写出退化模型。</div>
@@ -536,7 +536,7 @@
   </details>
 </div>
 
-<div class="q">
+<div class="q" id="q-IP-12">
   <div class="q-head"><span class="q-id">B8</span><span class="q-lv lv1">L1</span><span class="q-tag">逆滤波</span></div>
   <div class="q-text">纯逆滤波的公式只有一行，但书里说它「在实际中几乎不可用」。
       请说明原因，并解释维纳滤波<strong>加了什么</strong>来解决它。</div>
@@ -577,7 +577,7 @@
   </details>
 </div>
 
-<div class="q">
+<div class="q" id="q-IP-13">
   <div class="q-head"><span class="q-id">B9</span><span class="q-lv lv1">L1</span><span class="q-tag">形态学</span></div>
   <div class="q-text">写出腐蚀与膨胀的集合定义，并说明<strong>开运算</strong>与<strong>闭运算</strong>
       分别由哪两步组成、各自去掉／补上什么。</div>
@@ -618,7 +618,7 @@
   </details>
 </div>
 
-<div class="q">
+<div class="q" id="q-IP-14">
   <div class="q-head"><span class="q-id">B10</span><span class="q-lv lv1">L1</span><span class="q-tag">压缩</span></div>
   <div class="q-text">图像压缩在去除哪几类冗余？请写出<strong>熵</strong>的定义式，
       并说明它与「实际能压到多小」是什么关系。</div>
@@ -662,7 +662,7 @@
 <h2>模块 C · 边界与反驳：这一档最重要</h2>
 <div class="s">技术书的价值不在「这个方法怎么做」，在「它在什么时候不成立」</div>
 
-<div class="q">
+<div class="q" id="q-IP-15">
   <div class="q-head"><span class="q-id">C1</span><span class="q-lv lv3">L3</span><span class="q-tag">判据的选择</span></div>
   <div class="q-text">分割「难」的理由与「算法不够好」无关。请说明困难的
       <strong>根本性质</strong>，并解释为什么「换一个更好的算法」解决不了它。</div>
@@ -696,7 +696,7 @@
   </details>
 </div>
 
-<div class="q">
+<div class="q" id="q-IP-16">
   <div class="q-head"><span class="q-id">C2</span><span class="q-lv lv3">L3</span><span class="q-tag">形态学的反例</span></div>
   <div class="q-text">开运算用来「去掉小噪点」。请说明
       <strong>它什么时候会把不该去掉的东西去掉</strong>，
@@ -732,7 +732,7 @@
   </details>
 </div>
 
-<div class="q">
+<div class="q" id="q-IP-17">
   <div class="q-head"><span class="q-id">C3</span><span class="q-lv lv3">L3</span><span class="q-tag">振铃</span></div>
   <div class="q-text">「理想低通滤波器」这个名字听起来是最好的，但书里说它会<strong>产生振铃</strong>。
       请说明振铃的来历，以及为什么「更接近理想的滤波器」不一定更好。</div>
@@ -773,7 +773,7 @@
   </details>
 </div>
 
-<div class="q">
+<div class="q" id="q-IP-18">
   <div class="q-head"><span class="q-id">C4</span><span class="q-lv lv3">L3</span><span class="q-tag">度量的边界</span></div>
   <div class="q-text">维纳滤波的目标是最小化<strong>均方误差（MSE）</strong>。
       请说明为什么「MSE 更小」不等于「看起来更好」，
@@ -813,7 +813,7 @@
   </details>
 </div>
 
-<div class="q">
+<div class="q" id="q-IP-19">
   <div class="q-head"><span class="q-id">C5</span><span class="q-lv lv3">L3</span><span class="q-tag">隐藏的前提</span></div>
   <div class="q-text">这本书里有大量「最优」的说法。请举出三处，
       并说明每个「最优」<strong>隐含了什么前提</strong>。</div>
@@ -855,7 +855,7 @@
   </details>
 </div>
 
-<div class="q">
+<div class="q" id="q-IP-20">
   <div class="q-head"><span class="q-id">C6</span><span class="q-lv lv3">L3</span><span class="q-tag">第 12 章的位置</span></div>
   <div class="q-text">第四版把第 12 章扩写为深度学习和卷积神经网络。
       请说明<strong>深度卷积神经网络与本书前十章是什么关系</strong>
@@ -900,7 +900,7 @@
   </details>
 </div>
 
-<div class="q">
+<div class="q" id="q-IP-21">
   <div class="q-head"><span class="q-id">C7</span><span class="q-lv lv2">L2</span><span class="q-tag">任务的定性</span></div>
   <div class="q-text">拿到一个图像处理需求，怎么判断它<strong>属于增强还是复原</strong>？
       这个判断会怎样改变你的工作方式？</div>
@@ -941,7 +941,7 @@
 <h2>模块 D · 综合：把它变成工具</h2>
 <div class="s">跨章的问题 —— 怎么用、什么时候不该用</div>
 
-<div class="q">
+<div class="q" id="q-IP-22">
   <div class="q-head"><span class="q-id">D1</span><span class="q-lv lv2">L2</span><span class="q-tag">逆问题</span></div>
   <div class="q-text">书里有一批问题结构相同：<strong>「已知 A 算 B 容易，已知 B 反推 A 很难」</strong>。
       请举出四处，并说明它们的共同点。</div>
@@ -988,7 +988,7 @@
   </details>
 </div>
 
-<div class="q">
+<div class="q" id="q-IP-23">
   <div class="q-head"><span class="q-id">D2</span><span class="q-lv lv3">L3</span><span class="q-tag">反身</span></div>
   <div class="q-text">第 2 章讲视觉感知，给出了马赫带、同时对比、视错觉三个例子。
       请问：这三个例子对<strong>这本书自己的方法</strong>构成了什么挑战？</div>
@@ -1026,7 +1026,7 @@
   </details>
 </div>
 
-<div class="q">
+<div class="q" id="q-IP-24">
   <div class="q-head"><span class="q-id">D3</span><span class="q-lv lv2">L2</span><span class="q-tag">选路</span></div>
   <div class="q-text">给你一个具体的图像处理任务，<strong>按什么顺序决定用哪些方法</strong>？
       请给出一套可操作的判断顺序。</div>
@@ -1064,7 +1064,7 @@
   </details>
 </div>
 
-<div class="q">
+<div class="q" id="q-IP-25">
   <div class="q-head"><span class="q-id">D4</span><span class="q-lv lv3">L3</span><span class="q-tag">总检</span></div>
   <div class="q-text">最后一问：这本书的哪一类结论<strong>最容易被现实推翻</strong>？
       请把全书结论分成三栏，并说明怎么验证中间那一栏。</div>
@@ -1102,7 +1102,7 @@
   </details>
 </div>
 
-<div class="q">
+<div class="q" id="q-IP-26">
   <div class="q-head"><span class="q-id">D5</span><span class="q-lv lv2">L2</span><span class="q-tag">验收</span></div>
   <div class="q-text">你要验收别人交来的图像处理结果。
       <strong>按什么顺序检查</strong>才能最快发现「方向性错误」而不是「参数没调好」？</div>
@@ -1144,7 +1144,7 @@
 <h2>附 · 自测清单</h2>
 <div class="s">不看上面，只回答。答不出就回到对应编号。</div>
 
-<div class="q">
+<div class="q" id="q-IP-27">
   <div class="q-head"><span class="q-id">S</span><span class="q-lv lv1">L1</span><span class="q-tag">概念</span></div>
   <div class="q-text">以下 14 个概念，你能各用一句话说清吗？</div>
   <details><summary>展开对照</summary>

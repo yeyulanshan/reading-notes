@@ -127,7 +127,7 @@
   <!-- ============ L1 ============ -->
   <div class="section-title">L1 · 基础（3 题）</div>
 
-  <div class="q">
+  <div class="q" id="q-DS-1">
     <div class="q-head"><span class="num">1</span><span class="txt">记忆层级有哪几层？为什么它必须存在？</span><span class="lvtag l1">L1</span></div>
     <div class="q-body">
       <p>从快到慢列出，并说出这个层级存在的根本原因。</p>
@@ -147,7 +147,7 @@
     </div>
   </div>
 
-  <div class="q">
+  <div class="q" id="q-DS-2">
     <div class="q-head"><span class="num">2</span><span class="txt">时间局部性和空间局部性分别是什么？它们各自决定了缓存的什么设计？</span><span class="lvtag l1">L1</span></div>
     <div class="q-body">
       <p>说出两者的定义，并指出它们对应缓存的两个不同决策。</p>
@@ -175,7 +175,7 @@
     </div>
   </div>
 
-  <div class="q">
+  <div class="q" id="q-DS-3">
     <div class="q-head"><span class="num">3</span><span class="txt">一个函数遍历数组求和——它同时利用了两种局部性吗？</span><span class="lvtag l1">L1</span></div>
     <div class="q-body">
       <p>用那个 <code>sum_array</code> 的例子说明哪些变量利用时间局部性、哪些利用空间局部性。</p>
@@ -203,7 +203,7 @@
   <!-- ============ L2 ============ -->
   <div class="section-title">L2 · 理解（6 题）</div>
 
-  <div class="q">
+  <div class="q" id="q-DS-4">
     <div class="q-head"><span class="num">4</span><span class="txt">为什么同一个矩阵遍历，只换索引顺序就快约 5 倍？</span><span class="lvtag l2">L2</span></div>
     <div class="q-body">
       <p>这是全书最重要的一个例子。请解释两个版本在<strong>内存访问层面</strong>的实际差别。</p>
@@ -232,7 +232,7 @@
     </div>
   </div>
 
-  <div class="q">
+  <div class="q" id="q-DS-5">
     <div class="q-head"><span class="num">5</span><span class="txt">直接映射缓存的地址分成哪三段？各决定什么？</span><span class="lvtag l2">L2</span></div>
     <div class="q-body">
       <p>说出三段的名字与各自的作用，并解释"直接映射"这个名字的含义。</p>
@@ -250,7 +250,7 @@
     </div>
   </div>
 
-  <div class="q">
+  <div class="q" id="q-DS-6">
     <div class="q-head"><span class="num">6</span><span class="txt">直接映射、组相联、全相联三者的取舍是什么？</span><span class="lvtag l2">L2</span></div>
     <div class="q-body">
       <p>说出三者的机制差别，以及这个取舍的本质。</p>
@@ -268,7 +268,7 @@
     </div>
   </div>
 
-  <div class="q">
+  <div class="q" id="q-DS-7">
     <div class="q-head"><span class="num">7</span><span class="txt">写回（write-back）和写直达（write-through）的取舍是什么？</span><span class="lvtag l2">L2</span></div>
     <div class="q-body">
       <p>说出两种策略的做法、代价，以及各自适合的场景。</p>
@@ -293,7 +293,7 @@
     </div>
   </div>
 
-  <div class="q">
+  <div class="q" id="q-DS-8">
     <div class="q-head"><span class="num">8</span><span class="txt">为什么硬件用 LRU 淘汰？它和 OSTEP 里的 LRU 是什么关系？</span><span class="lvtag l2">L2</span></div>
     <div class="q-body">
       <p>说出 LRU 的依据，并说明这一域两本书在这个点上的衔接。</p>
@@ -316,7 +316,7 @@
     </div>
   </div>
 
-  <div class="q">
+  <div class="q" id="q-DS-9">
     <div class="q-head"><span class="num">9</span><span class="txt">用 Cachegrind 能量到什么？为什么"可测量"这件事很重要？</span><span class="lvtag l2">L2</span></div>
     <div class="q-body">
       <p>说出这个工具的位置与作用，以及它和 algs4 那个方法论的关系。</p>
@@ -345,7 +345,7 @@
   <!-- ============ L3 ============ -->
   <div class="section-title">L3 · 应用（4 题）</div>
 
-  <div class="q">
+  <div class="q" id="q-DS-10">
     <div class="q-head"><span class="num">10</span><span class="txt">"循环交换"是怎么起作用的？什么情况下不能做？</span><span class="lvtag l3">L3</span></div>
     <div class="q-body">
       <p>说明这个手法的原理、收益，以及它的限制。</p>
@@ -370,7 +370,7 @@
     </div>
   </div>
 
-  <div class="q">
+  <div class="q" id="q-DS-11">
     <div class="q-head"><span class="num">11</span><span class="txt">algs4 说"数组和链表遍历都是 O(N)"，这本书会怎么补这句话？</span><span class="lvtag l3">L3</span></div>
     <div class="q-body">
       <p>说出两者的真实差距、原因，以及在什么情况下这个差距会消失。</p>
@@ -399,7 +399,7 @@
     </div>
   </div>
 
-  <div class="q">
+  <div class="q" id="q-DS-12">
     <div class="q-head"><span class="num">12</span><span class="txt">为什么 B 树在磁盘上重要，而在内存里没那么重要？</span><span class="lvtag l3">L3</span></div>
     <div class="q-body">
       <p>用记忆层级的框架回答，并指出一个现代的转折。</p>
@@ -419,7 +419,7 @@
     </div>
   </div>
 
-  <div class="q">
+  <div class="q" id="q-DS-13">
     <div class="q-head"><span class="num">13</span><span class="txt">多核下为什么"复杂度分析"更不够用了？</span><span class="lvtag l3">L3</span></div>
     <div class="q-body">
       <p>说出第 14 章揭示的三类新代价。</p>
@@ -445,7 +445,7 @@
   <!-- ============ L4 ============ -->
   <div class="section-title">L4 · 批判（3 题）</div>
 
-  <div class="q">
+  <div class="q" id="q-DS-14">
     <div class="q-head"><span class="num">14</span><span class="txt">这本书的结论在什么条件下会失效？</span><span class="lvtag l4">L4</span></div>
     <div class="q-body">
       <p>给出三个具体的失效场景。</p>
@@ -472,7 +472,7 @@
     </div>
   </div>
 
-  <div class="q">
+  <div class="q" id="q-DS-15">
     <div class="q-head"><span class="num">15</span><span class="txt">"用过去预测未来"这个策略什么时候会错？</span><span class="lvtag l4">L4</span></div>
     <div class="q-body">
       <p>说出 LRU 类策略的失效情形，以及这说明了什么。</p>
@@ -490,7 +490,7 @@
     </div>
   </div>
 
-  <div class="q">
+  <div class="q" id="q-DS-16">
     <div class="q-head"><span class="num">16</span><span class="txt">algs4 + 这本书合起来，你对"程序为什么快或慢"的认识完整了吗？</span><span class="lvtag l4">L4</span></div>
     <div class="q-body">
       <p>说出三块合起来的完整性，以及仍然缺的部分。</p>
