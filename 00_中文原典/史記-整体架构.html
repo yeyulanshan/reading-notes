@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>史記 · 整体架构 · 底层</title>
+<meta name="description" content="《史記》的整体架构：五体分工、130 篇的目录与作者自述理由、与「底层」十个域的接口、以及它作为「另一种史学样本」的方法。">
+<meta name="theme-color" content="#f2f8fc">
+<style>
+  :root{
+    --paper:#f2f8fc; --card:#ffffff; --card-2:#e9f4fb;
+    --edge:#cfe0ec; --edge-lit:#a4c6dd;
+    --ink:#12232e; --ink-2:#627480; --ink-3:#587286;
+    --accent:#2c7ea2; --gold:#84744a;
+    --quote-bg:#fbf8ef; --quote-edge:#d8cba4; --quote-ink:#5f5527;
+    --warn:#a85035; --warn-soft:#fcf1ec;
+    --my:#2f7a5c; --my-soft:#eef8f3;
+    --core:#1d5c86; --core-soft:#eef6fb;
+    --shiji:#7a4f96; --shiji-soft:#f4eef8;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--paper); color:var(--ink); line-height:1.9;
+    -webkit-font-smoothing:antialiased; padding:32px 16px 60px;}
+  ::selection{background:rgba(63,180,232,.26); color:#0d2430;}
+  .wrap{max-width:950px; margin:0 auto;}
+  header.doc{background:var(--card); border:1px solid var(--edge);
+    border-top:4px solid var(--accent); border-radius:10px;
+    padding:34px 34px 28px; margin-bottom:22px;}
+  header.doc h1{font-size:27px; font-weight:800; line-height:1.4; margin-bottom:12px;
+    background:linear-gradient(135deg,#1d4a68,#2c7ea2 55%,#377972);
+    -webkit-background-clip:text; background-clip:text; color:transparent;}
+  header.doc .sub{font-size:14.6px; color:var(--ink-2); line-height:1.95;}
+  header.doc .src{margin-top:16px; padding-top:14px; border-top:1px dashed var(--edge);
+    font-size:12.6px; color:var(--ink-3); line-height:1.95;}
+  h2{font-size:19.5px; font-weight:700; margin:42px 0 6px; padding-left:12px;
+    border-left:4px solid var(--gold); line-height:1.55;}
+  .s{color:var(--ink-3); font-size:12.9px; margin:0 0 16px 16px; line-height:1.85;}
+  h3{font-size:16.5px; font-weight:700; margin:28px 0 10px;}
+  h4{font-size:15.2px; font-weight:700; color:var(--core); margin:22px 0 9px;
+    padding-left:10px; border-left:3px solid rgba(63,180,232,.45); line-height:1.6;}
+  p{font-size:14.5px; color:var(--ink-2); margin-bottom:12px; text-wrap:pretty;}
+  p strong{color:var(--ink);}
+  code{font-family:ui-monospace,Consolas,monospace; font-size:12.7px;
+    background:var(--card-2); border:1px solid var(--edge); border-radius:4px;
+    padding:1px 6px; color:var(--core); word-break:break-all;}
+  a{color:var(--accent); text-decoration:none; border-bottom:1px solid #cfe4f0;}
+  blockquote{margin:12px 0; padding:13px 18px; background:var(--quote-bg);
+    border:1px solid #e8dfc4; border-left:3px solid var(--quote-edge);
+    border-radius:5px; font-size:14.4px; color:var(--quote-ink); line-height:2.0;}
+  blockquote p{margin-bottom:7px; color:inherit; font-size:inherit;}
+  blockquote p:last-child{margin-bottom:0;}
+  blockquote .who{display:block; margin-top:7px; font-size:12px;
+    color:#8a7a52; text-align:right;}
+  blockquote strong{color:#8a6a24;}
+  .box{background:var(--card); border:1px solid var(--edge); border-radius:9px;
+    padding:18px 21px; margin:15px 0; font-size:14px; color:var(--ink-2);}
+  .box .h{font-weight:700; color:var(--gold); margin-bottom:9px; font-size:13.5px;}
+  .box p+p{margin-top:8px;} .box strong{color:var(--ink);}
+  .box.core{background:var(--core-soft); border-color:#cfe4f0;}
+  .box.core .h{color:var(--core);}
+  .box.warn{background:var(--warn-soft); border-color:#e8cfc4;}
+  .box.warn .h{color:var(--warn);}
+  .box.my{background:var(--my-soft); border-color:#cfe6dc;}
+  .box.my .h{color:var(--my);}
+  .box.shiji{background:var(--shiji-soft); border-color:#dcc9e8;}
+  .box.shiji .h{color:var(--shiji);}
+  table{width:100%; border-collapse:collapse; margin:14px 0; font-size:13.2px;}
+  th,td{padding:9px 11px; border:1px solid var(--edge); text-align:left;
+    vertical-align:top; line-height:1.78;}
+  th{background:var(--card-2); color:var(--core); font-weight:700; font-size:12.6px;}
+  td{color:var(--ink-2);} td strong{color:var(--ink);}
+  td.n{text-align:right; font-variant-numeric:tabular-nums;
+    font-family:ui-monospace,Consolas,monospace; font-size:12.5px;}
+  ul,ol{margin:10px 0 13px 22px;}
+  li{font-size:14.4px; color:var(--ink-2); margin-bottom:7px; line-height:1.9;}
+  li strong{color:var(--ink);}
+  hr{border:none; border-top:1px dashed var(--edge); margin:32px 0;}
+  .k{display:inline-block; font-size:11.4px; font-weight:700; padding:1px 8px;
+    border-radius:999px; margin-right:5px;}
+  .k-yes{background:#eef8f3; color:var(--my); border:1px solid #cfe6dc;}
+  .k-part{background:#f7f0dd; color:#8a6a24; border:1px solid #e3d3a8;}
+  .k-no{background:#fcf1ec; color:var(--warn); border:1px solid #e8cfc4;}
+  footer.doc{margin-top:32px; padding-top:20px; border-top:1px solid var(--edge);
+    font-size:12.4px; color:var(--ink-3); line-height:2; text-align:center;}
+  @media(max-width:760px){
+    body{padding:16px 10px 40px;} header.doc{padding:24px 20px 20px;}
+    header.doc h1{font-size:21px;} h2{font-size:17.5px;}
+    table{font-size:12px;} th,td{padding:6px 7px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="doc">
+  <h1>史記 · 整体架构</h1>
+  <p class="sub">一本史书自己写的目录 —— 《太史公自序》里的 130 篇、以及司马迁给每一篇的理由</p>
+  <p class="src">
+    <strong>底本</strong>：<code>00_中文原典/史記_司馬遷.txt</code>（<strong>512,628 汉字</strong>）<br>
+    <strong>实测</strong>：12 本紀 · 10 表 · 8 書 · 30 世家 · <strong>69 列傳</strong>（自序自述作 130 篇，逐篇编号到 129——见第一节末）·
+    「太史公曰」<strong>137 处</strong> · 各篇末附「索隱述贊」<br>
+    <strong>引文均逐句核对底本</strong>，照原样写（繁体）。<br>
+    配套：<a href="史記-地理决定论的检验.html">史記 · 地理决定论的检验</a>（第一份产出）·
+    <a href="../对撞场.html">对撞场</a> · <a href="../冲突与呼应地图.html">冲突与呼应地图</a>
+  </p>
+</header>
+
+<div class="box shiji">
+  <div class="h">◆ 这份文件的根据：一个「作者自己的目录」</div>
+  <p><strong>《史記》有一篇别的史书很少有的东西</strong>：<em>《太史公自序》里，
+  司马迁<strong>逐篇列出了 130 篇的名字，并且给每一篇写了一句「作这一篇的理由」</strong>。</em></p>
+  <blockquote>維禹浚川，九州攸寧；爰及宣防，決瀆通溝。<strong>作河渠書第七</strong>。
+  <span class="who">太史公自序</span></blockquote>
+  <p><strong>这给了一个别处问不出来的问题</strong>：
+  <em>司马迁把哪些题目<strong>单独列为一篇</strong>，又把哪些题目合在一起？
+  ——因为「单独列一篇」意味着他认为那件事有独立的因果作用。</em></p>
+  <p><strong>而他自己的总账也写在这一篇里</strong>：
+  <em>「凡百三十篇，<strong>五十二萬六千五百字</strong>，為太史公書。」
+  ——与今本 512,628 汉字相符。</em></p>
+</div>
+
+<!-- ============================================================ -->
+<h2>一 · 五体：同一件事的五种记法</h2>
+<div class="s">这是《史記》能被当「检验材料」而不是「史料堆」的原因</div>
+
+<table>
+  <tr><th style="width:11%">体</th><th style="width:8%">篇数</th>
+    <th style="width:30%">它记什么</th><th>为什么要有它</th></tr>
+  <tr><td><strong>本紀</strong></td><td class="n">12</td>
+    <td><em>以帝王为纲的时间主线</em>，从五帝到今上（汉武帝）</td>
+    <td><em>给出<strong>纵向时间轴</strong></em></td></tr>
+  <tr><td><strong>表</strong></td><td class="n">10</td>
+    <td><em>把并时异世的事件排成网格</em>：三代世表 · 十二诸侯年表 · 六国年表 ·
+    秦楚之际月表 · 汉兴以来诸侯年表 …… 汉兴以来将相名臣年表</td>
+    <td><strong>给出横向同期比较</strong>——
+    <em>这是「跨国同期对照」的最早形态，也是全书方法上最被低估的一部分</em></td></tr>
+  <tr><td><strong>書</strong></td><td class="n">8</td>
+    <td><strong>制度专史</strong>：禮 · 樂 · 律 · 曆 · 天官 · 封禪 · <strong>河渠</strong> · <strong>平準</strong></td>
+    <td><strong>把「制度」当成独立的叙述对象</strong>——
+    <em>其中河渠（水利）与平準（财政经济）是两份最早的专科史</em></td></tr>
+  <tr><td><strong>世家</strong></td><td class="n">30</td>
+    <td><em>诸侯与重要家族的兴衰</em>，从吴太伯到三王</td>
+    <td><em>以「家」而非「国」为单位——
+    它承认<strong>政治实体可以是家族</strong></em></td></tr>
+  <tr><td><strong>列傳</strong></td><td class="n">69</td>
+    <td><em>人物 · 边疆（匈奴 · 南越 · 东越 · 朝鲜 · 西南夷 · 大宛）·
+    <strong>经济（貨殖）</strong> · 制度（循吏 · 酷吏）· 社会（游侠 · 佞幸 · 滑稽 · 日者 · 龟策）</em></td>
+    <td><em>以「人」为单位，而且<strong>为不居高位的人立传</strong>
+    （刺客 · 游侠 · 滑稽 · 日者 · 龟策）</em></td></tr>
+</table>
+
+<div class="box warn">
+  <div class="h">⚠️ 一处必须先说清的数目：自序自述 130，编号到 129</div>
+  <p><strong>《太史公自序》的总账写</strong>：</p>
+  <blockquote>著十二本紀……<strong>作十表</strong>。……<strong>作八書</strong>。……<strong>作三十世家</strong>。
+  ……<strong>作七十列傳</strong>。<strong>凡百三十篇，五十二萬六千五百字</strong>，為太史公書。
+  <span class="who">太史公自序</span></blockquote>
+  <p><strong>而按逐篇编号数下来是 129 篇</strong>：
+  <em>本紀 1–12 · 表 1–10 · 書 1–8 · 世家 1–30 · <strong>列傳 1–69</strong></em>。
+  列傳编号止于「<strong>作貨殖列傳第六十九</strong>」，而总账说「作七十列傳」。</p>
+  <p><strong>所以差的这一篇在底本的自序里没有出现编号。</strong>
+  <em>这可能是（甲）抄刻过程中掉了那一句，（乙）自序的「七十」是举成数，
+  或（丙）本语料所据的版本有缺。我没有更多材料来判断是哪一种——
+  <strong>所以只报告这个观察，不下结论。</strong></em></p>
+  <p><strong>另需说明</strong>：<em>本页先前的草稿曾在世家与列傳上各少数 2 篇，
+  原因是我的检索正则只匹配「作XX<strong>第</strong>N」，
+  而底本里有两处写作「作外戚世家<strong>十九</strong>」「作楚元王世家<strong>二十</strong>」（无「第」字），
+  另有一处「作春申君列傳第十八」后无句号、与下句粘连。
+  <strong>三处都是我的方法漏了，不是底本缺篇。</strong></em></p>
+</div>
+
+<div class="box core">
+  <div class="h">◆ 五体的实际作用：同一事件的五个视角</div>
+  <p><strong>拿「秦为什么能统一」这件事看</strong>：
+  <em>本紀从秦的制度与君主序列讲（秦本紀·始皇本紀）；
+  表把它放进六国的同期网格里比（六國年表）；
+  世家从六国各自的兴衰讲；列傳从商鞅、张仪、白起、李斯这些人的作为讲；
+  而平準書从财政与资源讲。</em></p>
+  <p><strong>五种记法互相不能替代</strong>——<em>这正是它在
+  <a href="史記-地理决定论的检验.html">地理决定论的检验</a>里能当「可对照材料」用的原因：
+  任何一个单因解释，都要先过这五道记法的交叉检验。</em></p>
+</div>
+
+<!-- ============================================================ -->
+<h2>二 · 八書：把「制度」单列的那八篇</h2>
+<div class="s">篇数最少的一体，但它决定了《史記》不只是一部人物史</div>
+
+<p><strong>八書的篇名与司马迁给的理由</strong>（照底本）：</p>
+
+<table>
+  <tr><th style="width:10%">篇</th><th style="width:34%">司马迁的理由（原文）</th><th>它在问什么</th></tr>
+  <tr><td><strong>禮書</strong></td>
+    <td>維三代之禮，所損益各殊務，然要以近性情，通王道，故禮因人質為之節文，略協古今之變。</td>
+    <td><em>礼在三代之间<strong>损益</strong>了什么——
+    制度不是固定的，是随人情调整的</em></td></tr>
+  <tr><td><strong>樂書</strong></td>
+    <td>樂者，所以移風易俗也。……人情之所感，遠俗則懷。</td>
+    <td><em>音乐如何改变风俗</em></td></tr>
+  <tr><td><strong>律書</strong></td>
+    <td>非兵不彊，非德不昌，黃帝、湯、武以興，桀、紂、二世以崩，可不慎歟？</td>
+    <td><strong>兵与德的关系</strong>——<em>四个例证排成两组对照</em></td></tr>
+  <tr><td><strong>曆書</strong></td>
+    <td>律居陰而治陽，曆居陽而治陰，律曆更相治，間不容翲忽。</td>
+    <td><em>历法是统治工具，精度是政治问题</em></td></tr>
+  <tr><td><strong>天官書</strong></td>
+    <td>星氣之書，多雜禨祥，不經；推其文，考其應，不殊。</td>
+    <td><strong>天文与占验的边界</strong>——
+    <em>「多雜禨祥，不經」是他对流行占星书的判语，但他仍要「推其文，考其應」</em></td></tr>
+  <tr><td><strong>封禪書</strong></td>
+    <td>受命而王，封禪之符罕用，用則萬靈罔不禋祀。追本諸神名山大川禮。</td>
+    <td><em>祭祀制度的源流</em></td></tr>
+  <tr><td><strong>河渠書</strong></td>
+    <td>維禹浚川，九州攸寧；爰及宣防，決瀆通溝。</td>
+    <td><strong>水利作为国家能力的指标</strong>（详见检验③）</td></tr>
+  <tr><td><strong>平準書</strong></td>
+    <td>維幣之行，以通農商；其極則玩巧，並兼茲殖，爭於機利，去本趨末。作平準書以觀事變。</td>
+    <td><strong>货币与财政如何自我演化</strong>——
+    <em>「以觀事變」四个字说明了它的意图：看制度怎么变</em></td></tr>
+</table>
+
+<div class="box shiji">
+  <div class="h">◆ 一个值得注意的编排</div>
+  <p><strong>八書的顺序是</strong>：<em>礼 → 乐 → 律 → 历 → 天官 → 封禅 → 河渠 → 平准。</em></p>
+  <p><strong>从「礼」到「平准」，是从规范到物质</strong>：
+  <em>礼乐是价值秩序，历与天官是时间秩序，封禅是合法性秩序，
+  而最后两篇——河渠与平准——是最物质的两件事：<strong>水与钱</strong>。</em></p>
+  <p><strong>把水与钱放在制度专史的最后两位，是一个判断</strong>：
+  <em>它等于说<strong>水利和财政是制度的落脚处</strong>。
+  这与「制度由观念决定」的读法相反。</em></p>
+</div>
+
+<!-- ============================================================ -->
+<h2>三 · 一个实质发现：目录里的褒奖词「嘉」</h2>
+<div class="s">从 125 条自述理由里统计出来的</div>
+
+<p><strong>司马迁给每篇写理由时，会用不同的动词起首。而统计下来，只有一个判断词被反复使用：</strong></p>
+
+<table>
+  <tr><th style="width:12%">起首词</th><th style="width:12%">出现</th><th>作用</th><th>例</th></tr>
+  <tr><td><strong>嘉</strong></td><td class="n">15 次</td>
+    <td><strong>褒奖</strong>——指出这一篇里<strong>值得称赞的那件事</strong></td>
+    <td><em>「<strong>嘉</strong>伯之讓」→ 作吳世家第一；
+    「<strong>嘉</strong>參不伐功矜能」→ 作曹相國世家</em></td></tr>
+  <tr><td>維</td><td class="n">3 次</td><td>陈述（发语词，无判断）</td>
+    <td><em>「維禹之功，九州攸同」</em></td></tr>
+  <tr><td>喜</td><td class="n">3 次</td><td><em>需逐个看：多数不是判断词</em></td>
+    <td><em>「喜<strong>士</strong>」（好客）、「<strong>喜</strong>彼康誥」（引《康诰》）</em></td></tr>
+</table>
+
+<p><strong>15 次「嘉」的完整清单</strong>（照底本）：</p>
+<table>
+  <tr><th style="width:20%">篇</th><th>褒奖的对象</th></tr>
+  <tr><td>吳世家</td><td>嘉伯之讓 <em>（太伯让位）</em></td></tr>
+  <tr><td>齊太公世家</td><td>嘉父之謀 <em>（姜太公之谋）</em></td></tr>
+  <tr><td>周公世家</td><td>嘉旦金縢 <em>（周公旦藏策于金縢）</em></td></tr>
+  <tr><td>燕世家</td><td>嘉甘棠之詩 <em>（召公）</em></td></tr>
+  <tr><td>管蔡世家</td><td>嘉仲悔過 <em>（蔡仲改过）</em></td></tr>
+  <tr><td>晉世家</td><td>嘉文公錫珪鬯 <em>（晋文公受封）</em></td></tr>
+  <tr><td>楚世家</td><td>嘉莊王之義 <em>（楚庄王）</em></td></tr>
+  <tr><td>鄭世家</td><td>嘉厲公納惠王</td></tr>
+  <tr><td>趙世家</td><td>嘉鞅討周亂 <em>（赵鞅）</em></td></tr>
+  <tr><td>魏世家</td><td>嘉武佐晉文申霸道</td></tr>
+  <tr><td>韓世家</td><td>嘉厥輔晉匡周天子之賦</td></tr>
+  <tr><td>田敬仲完世家</td><td>嘉威、宣能撥濁世而獨宗周</td></tr>
+  <tr><td>齊悼惠王世家</td><td>嘉肥股肱</td></tr>
+  <tr><td>曹相國世家</td><td>嘉參不伐功矜能 <em>（曹参不夸功）</em></td></tr>
+  <tr><td>梁孝王世家</td><td>嘉其能距吳楚</td></tr>
+</table>
+
+<div class="box my">
+  <div class="h">◆ 这个发现的意思：目录本身带着评价</div>
+  <p><strong>一般的史书目录是中性的</strong>（「卷三十七 · 某某传」）。
+  而《史記》的目录里，<strong>世家这 30 篇有 15 篇带着一个「嘉」字，点出这一篇里值得称赞的是哪件事</strong>。</p>
+  <p><em>注意它褒的是什么：<strong>让位、不夸功、悔过、守义、辅佐、屏藩</strong>——
+  几乎全是「克制自己」这一类的德，而不是开疆拓土或权谋取胜。</em>
+  <strong>这是一个可以从统计里读出来的立场，而不是从哪一句名言里读出来的。</strong></p>
+  <p><strong>★ 而「贬」几乎不用。</strong>
+  <em>《史記》的批评是通过「实录」做的——把事情写下来，让读者自己判断。
+  这一点与它被称为「实录」（班固语）是一致的：
+  <strong>褒是明写的，贬是隐含在叙事里的。</strong></em></p>
+</div>
+
+<div class="box warn">
+  <div class="h">⚠️ 这一节的方法说明（我在这里犯过错，记下来）</div>
+  <p><strong>我第一次统计时，把 5 处「非」当成了贬义词</strong>，列出一张表。
+  逐条核对后发现<strong>全都不是</strong>：</p>
+  <table style="margin:10px 0;">
+    <tr><th style="width:38%">我误标为「贬」的</th><th>实际用法</th></tr>
+    <tr><td>「誅嬰背懷，天下<strong>非</strong>之」（項羽本紀）</td>
+      <td><em>叙述项羽被人非议，<strong>不是司马迁的贬词</strong></em></td></tr>
+    <tr><td>「韓<strong>非</strong>揣事情」（老子韓非列傳）</td><td><strong>人名</strong></td></tr>
+    <tr><td>「<strong>非</strong>獨鞭策」（樊酈列傳）</td><td>否定词</td></tr>
+    <tr><td>「不可以<strong>非</strong>理撓」（田叔列傳）</td><td>否定词</td></tr>
+    <tr><td>「<strong>非</strong>獨色愛」（佞幸列傳）</td><td>否定词</td></tr>
+  </table>
+  <p><strong>教训：统计词频得到的是候选，不是结论。</strong>
+  <em>「非」字的 5 次命中里 0 次是判断词——如果我只跑统计不看上下文，
+  这一节就会写成一个错误的发现。</em></p>
+</div>
+
+<!-- ============================================================ -->
+<h2>四 · 与「底层」十个域的接口</h2>
+<div class="s">逐条给：那个域的问题 → 《史記》能提供什么 → 状态</div>
+
+<table>
+  <tr><th style="width:16%">域</th><th style="width:32%">那个域的问题</th>
+    <th style="width:34%">《史記》能提供什么</th><th>状态</th></tr>
+  <tr><td><strong>05 历史与地理</strong></td>
+    <td>为什么世界长成现在这个样子</td>
+    <td><strong>地理决定论的检验</strong>（五条，已做）+
+    <em>农牧分界与边疆战略（匈奴 · 大宛 · 南越 · 朝鲜 · 西南夷）</em></td>
+    <td><span class="k k-part">部分已做</span></td></tr>
+  <tr><td><strong>04 社会与制度</strong></td>
+    <td>人与人之间那些不由感情决定的关系</td>
+    <td><strong>八書</strong>：制度如何自我演化（平準書的「事勢之流，相激使然」）·
+    <em>循吏 vs 酷吏两种治理风格 · 封禪書的合法性生产</em></td>
+    <td><span class="k k-no">未做</span></td></tr>
+  <tr><td><strong>01 哲学与思维地基</strong></td>
+    <td>认识本身怎么才可能、会在哪里出错</td>
+    <td><strong>《太史公自序》里的六家要指</strong>——
+    <em>司马谈对阴阳 · 儒 · 墨 · 名 · 法 · 道德六家的逐个评断（「博而寡要，勞而少功」这类）</em></td>
+    <td><span class="k k-no">未做</span></td></tr>
+  <tr><td><strong>02 心智与认知</strong></td>
+    <td>「我以为的世界」和「实际的世界」之间隔着什么</td>
+    <td><em>「或曰」那处处理——
+    <strong>把「我自己的判断」与「当时流行的说法」分开标注</strong>。
+    这是最早的一种认知自省形态</em></td>
+    <td><span class="k k-part">已在检验⑤提及</span></td></tr>
+  <tr><td><strong>06 文学与生命书写</strong></td>
+    <td>那些无法被机制化的部分</td>
+    <td><em>列传的写法：<strong>给不居高位的人立传</strong>
+    （刺客 · 游侠 · 滑稽 · 日者 · 龟策）；
+    以及「太史公曰」137 处的评语体裁</em></td>
+    <td><span class="k k-no">未做</span></td></tr>
+  <tr><td><strong>03 自然与数学</strong></td>
+    <td>世界在人类出现之前是什么样</td>
+    <td><em>天官書的星象记录 · 曆書的历法精度问题</em>
+    ——<em>但这两篇的价值在「制度」而非「自然」，接口最弱</em></td>
+    <td><span class="k k-no">未做</span></td></tr>
+  <tr><td><strong>00 中国智慧</strong></td>
+    <td>自我是独立的个体，还是关系的产物</td>
+    <td><strong>世家这一体本身就是答案</strong>——
+    <em>它把「家」当成政治与历史的基本单位；
+    而《太史公自序》里的「嘉」有相当一部分褒的是<strong>关系中的德</strong>
+    （让、辅佐、屏藩、不伐功）</em></td>
+    <td><span class="k k-part">本页给了线索</span></td></tr>
+</table>
+
+<div class="box shiji">
+  <div class="h">◆ 最值得先做的一条：04 域的「制度如何自我演化」</div>
+  <p><strong>理由</strong>：<em>《平準書》整篇就是这个问题，而且它有完整的因果链
+  （放开铸钱 → 地方势力坐大 → 叛乱 → 禁铸钱 → 卖爵 → 用兵 → 兴利之臣）。
+  本项目的 04 域现在只有《置身事内》一本，
+  <strong>而平準书记的是同一类问题的两千年前版本</strong>。</em></p>
+  <p><strong>更关键的是两边可以对照</strong>：
+  <em>《置身事内》用的是「激励」框架（把一切折成奖惩）；
+  司马迁用的是「事勢之流，相激使然」（正反馈环）。
+  <strong>一个把因果拆成层级，一个承认找不到头。</strong>
+  这个差别与 <a href="../对撞场.html">对撞场</a>第⑦场是同一个问题。</em></p>
+</div>
+
+<!-- ============================================================ -->
+<h2>五 · 它作为「另一种史学的样本」：三个写法</h2>
+<div class="s">这不是文笔评价，是三条可迁移的方法</div>
+
+<h3>写法一 · 把「作者的判断」与「流行的说法」分开标注</h3>
+<blockquote>秦始小國僻遠，諸夏賓之，比於戎翟，至獻公之後常雄諸侯。
+<strong>論秦之德義不如魯衛之暴戾者，量秦之兵不如三晉之彊也，然卒並天下，
+非必險固便形埶利也，蓋若天所助焉。</strong>
+<strong>或曰</strong>「東方物所始生，西方物之成孰」。夫作事者必於東南，收功實者常於西北。
+故禹興於西羌，湯起於亳，周之王也以豐鎬伐殷，秦之帝用雍州興，漢之興自蜀漢。
+<span class="who">六國年表 · 序</span></blockquote>
+<p><strong>他先按材料得到自己的判断</strong>（地形说不通，于是给「天」），
+<strong>然后用「或曰」引出另一套说法</strong>，把五个例子排出来，<em>不下结论</em>。</p>
+<p><em>这个写法的作用是：<strong>读者能看到哪句是作者、哪句是别人的说法</strong>。
+它使文本可以被反驳——你可以反对他的判断，也可以反对他转述的那一派。</em></p>
+
+<h3>写法二 · 给「不居高位的人」立传</h3>
+<p><strong>列傳六十九篇里，有一组人的身份是这样的</strong>：
+<em>刺客（曹沫 · 专诸 · 豫让 · 聂政 · 荆轲）· 游侠 · 滑稽（优旃 · 优孟）·
+日者（卜者）· 龟策（占卜）· 貨殖（商人）。</em></p>
+<p><strong>而在《太史公自序》里，他给这些篇写的理由是</strong>：
+<em>「布衣匹夫之人，不害於政，不妨百姓，取與以時而息財富，智者有採焉。作貨殖列傳第六十九。」</em>
+——<strong>「布衣匹夫之人」也可以被写进史书，理由是他们「取與以時」，
+这一点值得「智者有採」。</strong></p>
+<p><em>这与本项目的立场相关：<strong>什么算值得记录的事，是写作者在定的。</strong>
+司马迁把商人、刺客、占卜者都收进来了——这是一个明确的取舍，而不是遗漏。</em></p>
+
+<h3>写法三 · 在否定一个解释之后，明确说自己解释不了</h3>
+<p><strong>还是那一句</strong>：<em>「非必險固便形埶利也，<strong>蓋若天所助焉</strong>」。</em></p>
+<p><em>他排除了地形（地理）、德义、兵力三个候选，然后写「大概像是天在帮它」——
+<strong>这不是一个解释，是他承认自己没有解释。</strong></em></p>
+<p><strong>这一点在方法上很要紧</strong>：<em>按本项目的判据
+（<a href="史記-地理决定论的检验.html">检验⑤</a>里讨论过），「天所助」是不可反驳的，
+所以它不是一个好解释。<strong>但它也不是一个伪装成解释的坏解释——他明说了这是不确定的
+（「蓋若」）。</strong></em></p>
+<p><strong>对照做法</strong>：<em>换一个作者，可能会把「天」写成「天命所归」，
+于是窟窿被填上，问题消失了。<strong>司马迁留着那个窟窿。</strong></em></p>
+
+<!-- ============================================================ -->
+<h2>六 · 这一份自己的局限</h2>
+
+<div class="box warn">
+  <div class="h">⚠️ 三条</div>
+  <p><strong>① 我用的是白文底本，无注疏。</strong>
+  <em>《史記》有三家注（集解 · 索隐 · 正义）两千年的注解史，而底本里只有原文
+  和各篇末的「索隱述贊」（四言韵语的总评，不是逐句注解）。
+  凡涉及断句与词义的地方，我的读法都可能有别的读法。</em></p>
+  <p><strong>② 篇数：自序自述 130，逐篇编号到 129（列傳止于 69）。</strong>
+  <em>这一处我已查到底：不是我的检索漏了，而是底本自序里列傳的编号确实只到「第六十九」，
+  而总账写「作七十列傳」。差的那一篇在自序里没有编号。
+  <strong>原因可能是抄刻、也可能是「七十」为成数——我没有材料判断，所以只报告观察。</strong>
+  详见第一节末的说明。</em></p>
+  <p><strong>③ 我只精读了五篇正文</strong>（河渠書 · 貨殖列傳 · 平準書 · 六國年表 · 太史公自序）
+  <em>加自序里的 125 条篇目理由。全书 130 篇 · 512,628 汉字，
+  其余部分（尤其匈奴列傳的边疆材料、秦始皇本紀的制度记载）
+  只是检索确认存在，没有进入精读。所以这是<strong>抽样</strong>。</em></p>
+</div>
+
+<footer class="doc">
+  底层 · 05 历史与地理 · 史記 · 整体架构<br>
+  <em>底本：史記_司馬遷.txt（512,628 汉字 · 实测 12 本紀 / 10 表 / 8 書 / 30 世家 / 69 列傳 · 太史公曰 137 处）；<br>
+  骨架取自《太史公自序》里 125 条「作XX第N」的自述理由；<br>
+  引文均逐句核对底本，照原样写（繁体）；这一份的局限见文末</em>
+</footer>
+
+</div>
+</body>
+</html>
