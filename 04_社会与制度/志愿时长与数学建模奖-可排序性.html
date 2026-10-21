@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>为什么志愿时长能被排序，而「数学建模国家二等奖」不能</title>
+<style>
+  :root{
+    --paper:#f7f4ed;
+    --card:#fffdf8;
+    --edge:#ded6c8;
+    --ink:#2b2721;
+    --ink-mid:#5c5449;
+    --ink-soft:#8c8175;
+    --teal:#166060;
+    --teal-soft:#e6efee;
+    --rust:#b1442a;
+    --rust-soft:#f7e9e4;
+    --gold:#9a7420;
+    --gold-soft:#f5eeda;
+    --sage:#55703c;
+    --sage-soft:#ecf0e2;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--paper);color:var(--ink);padding:36px 20px 48px;line-height:1.88;
+    -webkit-font-smoothing:antialiased;
+  }
+  .container{max-width:920px;margin:0 auto;}
+
+  .header{
+    text-align:center;margin-bottom:30px;padding:44px 24px 40px;
+    background:var(--card);border:1px solid var(--edge);border-top:5px solid var(--teal);
+    border-radius:4px;
+  }
+  .header h1{font-size:27px;color:var(--ink);margin-bottom:12px;letter-spacing:.5px;}
+  .header .subtitle{font-size:14.5px;color:var(--ink-mid);}
+  .header .author{margin-top:16px;font-size:12.5px;color:var(--ink-soft);letter-spacing:.5px;}
+
+  main{
+    background:var(--card);border:1px solid var(--edge);border-radius:4px;
+    padding:34px 38px;
+  }
+
+  h1{font-size:23px;color:var(--ink);margin:8px 0 18px;}
+  h2{
+    font-size:20px;color:var(--ink);margin:40px 0 16px;
+    padding-left:13px;border-left:4px solid var(--teal);letter-spacing:.3px;
+  }
+  h2:first-child{margin-top:0;}
+  h3{font-size:16.5px;color:var(--teal);margin:28px 0 12px;font-weight:700;}
+  h4{font-size:15px;color:var(--ink-mid);margin:18px 0 8px;}
+
+  p{color:var(--ink-mid);font-size:14.5px;margin-bottom:12px;}
+  strong{color:var(--ink);}
+  em{color:var(--rust);font-style:normal;font-weight:600;}
+
+  ul,ol{margin:8px 0 14px 24px;}
+  li{color:var(--ink-mid);font-size:14.5px;margin-bottom:6px;}
+
+  hr{border:none;border-top:1px solid var(--edge);margin:26px 0;}
+
+  table{width:100%;border-collapse:collapse;margin:14px 0 18px;font-size:13.5px;}
+  th,td{padding:10px 12px;border:1px solid var(--edge);text-align:left;vertical-align:top;}
+  th{background:var(--teal-soft);color:var(--teal);font-weight:700;}
+  td{color:var(--ink-mid);}
+
+  blockquote{
+    background:var(--gold-soft);border:1px solid #e6dcc0;border-left:4px solid var(--gold);
+    border-radius:0 3px 3px 0;padding:16px 20px;margin:14px 0;
+  }
+  blockquote p{color:#6d5011;font-size:14px;font-style:italic;margin-bottom:8px;}
+  blockquote p:last-child{margin-bottom:0;}
+  blockquote strong{color:#5a420d;}
+
+  code{
+    background:var(--paper);padding:1.5px 6px;border-radius:3px;
+    font-family:Consolas,Monaco,monospace;font-size:13px;color:var(--teal);
+  }
+  pre{
+    background:var(--paper);border:1px solid var(--edge);border-radius:3px;
+    padding:14px 16px;overflow-x:auto;margin:12px 0 16px;
+  }
+  pre code{background:none;padding:0;line-height:1.65;}
+
+  /* 专业问题标题 */
+  .q-title{
+    background:var(--teal-soft);border-left:4px solid var(--teal);
+    border-radius:0 3px 3px 0;padding:13px 18px;margin:28px 0 12px;
+    color:var(--ink);font-size:15.5px;font-weight:700;line-height:1.7;
+  }
+
+  .footer{
+    text-align:center;margin-top:38px;padding:20px;color:var(--ink-soft);font-size:12.5px;line-height:1.9;
+  }
+
+  @media(max-width:640px){
+    .header h1{font-size:20px;}
+    h2{font-size:17.5px;}
+    body{padding:20px 14px 32px;}
+    main{padding:22px 18px;}
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <h1>为什么志愿时长能被排序，而「数学建模国家二等奖」不能</h1>
+    <div class="subtitle">用《国家的视角》和《学会提问》拆一个奖学金评价问题</div>
+    <div class="author">两本书合写 · 引文逐页核 PDF · 含生活例子与自测</div>
+  </div>
+
+  <main>
+<p><strong>副题</strong>：用《国家的视角》和《学会提问》拆一个奖学金评价问题</p>
+<p><strong>读法</strong>：先读「五分钟版」，再读正文；每节都有一个生活例子。目标是让你能用一句话解释给朋友听。</p>
+<hr>
+<h2>五分钟版</h2>
+<p><strong>志愿时长能被排序，不是因为它更重要，是因为它已经被做成了一把统一的尺子：有单位（小时）、有记录（签到/认定）、有累加规则、可复核。</strong></p>
+<p><strong>数学建模国家二等奖不能排序，不是因为它不重要，是因为它是一件「厚」的成就：证书能看见，但「这个奖意味着什么」取决于竞赛层级、题目、评审、队伍分工、获奖率、学校认定目录——没有一个公开的统一单位把它换算成可比较的分数。</strong></p>
+<p><strong>所以真正的区别不是「价值高低」，是「可读性」：一个已经被制度读成数字，一个还需要人来读。</strong></p>
+<blockquote>
+<p>现代国家机器的基本特征就是简单化</p>
+<p>——《国家的视角》p.22</p>
+</blockquote>
+<hr>
+<h2>一 · 一个比喻：尺子与手工艺品</h2>
+<p>想象两样东西放在桌上：</p>
+<ul>
+<li>一把<strong>尺子</strong>：有刻度、有单位、谁拿起来量都一样。</li>
+<li>一件<strong>手工艺品</strong>：你能看出它好，但说不清它比另一件好多少；要看工艺、材料、用途、谁做的、在什么场合用。</li>
+</ul>
+<p><strong>志愿时长是尺子。</strong></p>
+<p><strong>数学建模国家二等奖是手工艺品。</strong></p>
+<p>这不是说手工艺品不如尺子。是说：<strong>尺子能被放进表格，手工艺品不能——除非你为它专门造一把尺。</strong></p>
+<hr>
+<h2>二 · 什么叫「能排序」</h2>
+<p>先把这个词说清。<strong>能排序</strong>，至少要满足四个条件：</p>
+<table><thead><tr><th>条件</th><th>问什么</th><th>志愿时长</th><th>数学建模国家二等奖</th></tr></thead><tbody>
+<tr><td><strong>共同单位</strong></td><td>大家用的是同一个单位吗？</td><td>小时</td><td>无（“国家二等奖”是等级，不是单位）</td></tr>
+<tr><td><strong>稳定记录</strong></td><td>有可查的记录吗？</td><td>签到/认定系统</td><td>证书</td></tr>
+<tr><td><strong>公开换算</strong></td><td>有公开规则把它变成分数吗？</td><td>有（累加）</td><td>没有统一规则；学校认定目录是政策</td></tr>
+<tr><td><strong>可复核</strong></td><td>别人能核对吗？</td><td>能（记录可查）</td><td>证书能查；“含金量”难核</td></tr>
+</tbody></table>
+<p><strong>四个都满足，才能排。</strong></p>
+<p>缺一个，你最多能<strong>分类</strong>（A/B/C），不能<strong>排序</strong>（1/2/3）。</p>
+<blockquote>
+<p>分类是“你属于哪一类”；排序是“你比谁高”。</p>
+<p><strong>分类可以是客观的；排序一定要有一个换算规则，而规则是人定的。</strong></p>
+</blockquote>
+<hr>
+<h2>三 · 志愿时长为什么能排</h2>
+<p>因为它已经被<strong>做成</strong>了一个可读的指标：</p>
+<ol>
+<li><strong>单位统一</strong>：小时。</li>
+<li><strong>记录稳定</strong>：签到、盖章、系统认定。</li>
+<li><strong>规则简单</strong>：累加。</li>
+<li><strong>可复核</strong>：记录能查。</li>
+</ol>
+<p>所以它能被排序。<strong>但它测的是什么？</strong></p>
+<p>它测的是<strong>投入的时间</strong>，不是<strong>帮助的质量</strong>。</p>
+<p>一个学生每周陪老人两小时，另一个学生组织了一次能帮 200 人的活动——前者时长更多，后者贡献可能更大。</p>
+<p><strong>时长能排序，不等于时长能代表贡献。</strong></p>
+<blockquote>
+<p>某些类型的知识和统治需要缩小视野</p>
+<p>——《国家的视角》p.29</p>
+</blockquote>
+<p><strong>缩小视野不是错。</strong> 错在把“视野里看见的”当成“全部”。</p>
+<hr>
+<h2>四 · 数学建模奖为什么不能排</h2>
+<p>因为它是一件<strong>厚的成就</strong>，不是一個<strong>薄的单位</strong>。</p>
+<p>“国家二等奖”这五个字，背后至少有几层：</p>
+<ul>
+<li><strong>竞赛层级</strong>：谁主办的？全国大学生数学建模竞赛，还是某个学会/协会的赛事？</li>
+<li><strong>题目与赛道</strong>：本科组/专科组？A/B/C 题？开放题还是封闭题？</li>
+<li><strong>评审</strong>：谁评的？有没有公开的评分标准？获奖率多少？</li>
+<li><strong>队伍分工</strong>：三个人，谁建模、谁编程、谁写作？个人贡献怎么算？</li>
+<li><strong>年份与竞争度</strong>：今年有多少队？获奖比例是多少？</li>
+<li><strong>学校认定目录</strong>：学校把它算作哪一档？算不算“国家级”？</li>
+</ul>
+<p><strong>证书能证明“你得过这个奖”；不能证明“这个奖在你的能力/贡献里占多少”。</strong></p>
+<p>所以它能被<strong>分类</strong>（国家级/二等奖），但不能被<strong>排序</strong>（比另一个奖高多少），除非学校先定一个<strong>换算规则</strong>。</p>
+<blockquote>
+<p>国家的简单化就像一张简略的地图</p>
+<p>——《国家的视角》p.22</p>
+</blockquote>
+<p><strong>认定目录就是那张地图。</strong></p>
+<p>地图上有格子，就能算分；地图上没有格子，就不算分。</p>
+<p><strong>不是奖不存在，是地图上没有它的格子。</strong></p>
+<hr>
+<h2>五 · 国家的视角：制度为什么偏爱能排的东西</h2>
+<p>斯科特整本书讲一件事：<strong>国家为了管理，必须把社会变“可读”。</strong></p>
+<ul>
+<li>统一度量衡：把地方性的“一斗”“一亩”变成全国单位。</li>
+<li>地籍图：把土地变成可登记、可征税的格子。</li>
+<li>姓氏/语言：把人群变成可分类、可追踪的单位。</li>
+<li>规划网格：把城市变成可通行、可管理的秩序。</li>
+</ul>
+<blockquote>
+<p>清晰性是国家机器的中心问题</p>
+<p>——《国家的视角》p.21</p>
+</blockquote>
+<p><strong>这不是因为国家“喜欢数字”，是因为国家要处理成千上万人。</strong></p>
+<p>它必须用低成本、可比较、可审计的方式看人。</p>
+<p>志愿时长恰好满足这三个条件；数学建模奖只满足“可审计”（证书可查），不满足“可比较”（含金量没有统一刻度）。</p>
+<p><strong>所以学校选择志愿时长，不是因为它更真，是因为它更“可管理”。</strong></p>
+<p>这就是“国家的视角”：<strong>不是善恶，是管理成本。</strong></p>
+<blockquote>
+<p>括号之外的整个世界反过来阻碍这种技术观点的实现</p>
+<p>——《国家的视角》p.40</p>
+</blockquote>
+<p>“括号之外”的，就是那些无法被读成数字的东西：帮助的质量、团队里的个人贡献、竞赛的难度、评审的公正。</p>
+<p><strong>它们不是不存在，是表格里没有格子。</strong></p>
+<hr>
+<h2>六 · 学会提问：怎么追问一个排名</h2>
+<p>现在换《学会提问》的工具。不要问“公不公平”，先问这十个问题：</p>
+<table><thead><tr><th>#</th><th>问题</th><th>在这个案例里</th></tr></thead><tbody>
+<tr><td>1</td><td>论题是什么？</td><td>描述性：两者能不能用同一把尺排？规定性：应不应该只按能排的尺分配？</td></tr>
+<tr><td>2</td><td>结论是什么？</td><td>“志愿时长可以排序，数学建模奖不能”——这是描述，还是政策？</td></tr>
+<tr><td>3</td><td>关键词有没有歧义？</td><td>“排序”“含金量”“国家二等奖”“志愿”</td></tr>
+<tr><td>4</td><td>理由是什么？</td><td>“时长有记录”“奖项没有统一标准”</td></tr>
+<tr><td>5</td><td>价值观假设是什么？</td><td>可量化=公平；投入时间=贡献；统一=公正</td></tr>
+<tr><td>6</td><td>描述性假设是什么？</td><td>时长能代表贡献；奖项等级能代表能力；评委有时间读材料</td></tr>
+<tr><td>7</td><td>证据够不够？</td><td>规则文本、评分表、获奖率、认定目录、往年数据</td></tr>
+<tr><td>8</td><td>有没有替代原因？</td><td>时长多可能是空闲多；获奖可能是团队强</td></tr>
+<tr><td>9</td><td>有没有省略信息？</td><td>细则、权重、裁量空间、例外通道</td></tr>
+<tr><td>10</td><td>有没有多种结论？</td><td>分档、分类、作品评审、例外说明、双轨制</td></tr>
+</tbody></table>
+<p><strong>最关键的是第 5、6 条：假设。</strong></p>
+<blockquote>
+<p>价值观假设，就是在特定情形下没有明说出来的喜欢一种价值观超过另一种价值观的偏向</p>
+<p>——《学会提问》p.109</p>
+<p>描述性假设就是没有说出来的关于世界过去、现在和将来是怎么样的一种看法</p>
+<p>——《学会提问》p.122</p>
+</blockquote>
+<p>“志愿时长能排序”这句话，偷偷假设了：</p>
+<ul>
+<li><strong>时长 = 贡献</strong>（描述性假设）；</li>
+<li><strong>可量化 = 公平</strong>（价值观假设）。</li>
+</ul>
+<p>这两个假设都可以被质疑：</p>
+<ul>
+<li>时长可能只代表“有空”；</li>
+<li>可量化可能只代表“好管理”，不代表“更公平”。</li>
+</ul>
+<p><strong>但质疑假设，不等于否定规则。</strong></p>
+<p>它只是让你把问题从“你为什么不认我的奖”换成“<strong>你这个规则预设了什么，能不能补一个格子</strong>”。</p>
+<hr>
+<h2>七 · 六个生活例子</h2>
+<h3>1. 高考分数 vs 综合素质</h3>
+<p>分数能排序：单位统一、记录稳定、规则公开。</p>
+<p>“综合素质”不能直接排序：它是一堆维度（品德、实践、特长、面试），除非先定权重和评分标准。</p>
+<p><strong>所以“综合素质评价”一落地，最后往往还是变成一张打分表——不是因为它想量化，是因为不量化就没法排序。</strong></p>
+<h3>2. 体重 vs 健康</h3>
+<p>体重能排序：一个数字。</p>
+<p>健康不能排序：血压、血糖、睡眠、心肺、心理，维度太多。</p>
+<p><strong>体重秤能告诉你“重了几斤”，不能告诉你“更健康了”。</strong></p>
+<h3>3. 微信步数 vs 运动质量</h3>
+<p>步数能排序：每天一个数。</p>
+<p>运动质量不能排序：动作、心率、恢复、快乐。</p>
+<p><strong>步数可以刷；运动质量刷不了。</strong></p>
+<h3>4. 工时 vs 成果</h3>
+<p>工时能排序：打卡。</p>
+<p>成果不能排序：质量、影响、创新、协作。</p>
+<p><strong>所以“996”能用工时考核，但工时考核会奖励“表演性加班”。</strong></p>
+<h3>5. 餐厅星级 vs 好吃</h3>
+<p>星级能排序：五星/四星。</p>
+<p>好吃不能排序：口味是主观的、情境的。</p>
+<p><strong>但星级一旦成为标准，餐厅会开始“为星级做菜”，不是“为好吃做菜”。</strong></p>
+<h3>6. 论文篇数 vs 学术贡献</h3>
+<p>篇数能排序：数数。</p>
+<p>贡献不能排序：想法、指导、失败经验、长期影响。</p>
+<p><strong>所以“唯论文”会出现：篇数上去了，贡献没上去。</strong></p>
+<p><strong>这六个例子是同一个结构：</strong></p>
+<p><strong>能排序的，是已经被做成单位的；不能排序的，是还没有被做成单位的。</strong></p>
+<p><strong>而“做成单位”这件事，本身就是一个制度选择。</strong></p>
+<hr>
+<h2>八 · 一张总表</h2>
+<table><thead><tr><th>维度</th><th>志愿时长</th><th>数学建模国家二等奖</th></tr></thead><tbody>
+<tr><td>单位</td><td>小时</td><td>无</td></tr>
+<tr><td>记录</td><td>签到/认定系统</td><td>证书</td></tr>
+<tr><td>可比性</td><td>高（同单位）</td><td>低（不同竞赛/队伍/年份）</td></tr>
+<tr><td>可复核</td><td>高</td><td>中（证书可查，含金量难查）</td></tr>
+<tr><td>测的是什么</td><td>投入时间</td><td>综合能力信号</td></tr>
+<tr><td>不能测什么</td><td>帮助质量、持续性、对方受益</td><td>个人贡献、真实能力、评审质量</td></tr>
+<tr><td>排序后果</td><td>可能奖励“刷时长”</td><td>可能奖励“挂名/强队”</td></tr>
+<tr><td>怎么补</td><td>加质量评价/案例</td><td>加认定目录/面试/作品</td></tr>
+</tbody></table>
+<hr>
+<h2>九 · 如果你是被评价的人</h2>
+<p><strong>不要先说“我的奖更厉害”。</strong> 这句话在“可排序性”的战场上，是打不赢的。</p>
+<p>换成三步：</p>
+<h3>第一步 · 问规则</h3>
+<blockquote>
+<p>“这次评审用的是哪几个指标？权重是多少？我的材料对应哪一项？”</p>
+</blockquote>
+<h3>第二步 · 问换算</h3>
+<blockquote>
+<p>“数学建模国家二等奖在学校的认定目录里对应哪一档？如果没有，能不能走作品/面试评审？”</p>
+</blockquote>
+<h3>第三步 · 给证据</h3>
+<p>不要只交证书。交：</p>
+<ul>
+<li>竞赛层级/主办方/获奖率；</li>
+<li>题目与你的具体贡献；</li>
+<li>队伍分工；</li>
+<li>评审标准（如果有）；</li>
+<li>作品/论文/代码。</li>
+</ul>
+<p><strong>把“厚”的成就，尽量做成“可读”的材料。</strong></p>
+<p>这不是妥协，是<strong>降低对方的阅读成本</strong>。</p>
+<h3>如果对方拒绝</h3>
+<p>把口头变成书面：</p>
+<ul>
+<li>要求书面答复；</li>
+<li>把“规定原文”和“实际做法”并排；</li>
+<li>问“谁举证”：是对方证明按规则办了，不是你证明自己更优秀。</li>
+</ul>
+<p>这就是《维权复盘》的“把问题从人拉回尺”。</p>
+<hr>
+<h2>十 · 如果你是设计规则的人</h2>
+<p>五步：</p>
+<ol>
+<li><strong>先定目的</strong>：这个奖/这个评价，到底想奖励什么？是参与、能力、贡献，还是公平？</li>
+<li><strong>分轨</strong>：把“投入/参与”指标（时长）和“成就/能力”判断（奖项/作品）分开，不要混成一个分。</li>
+<li><strong>分档，不追求假精确</strong>：A/B/C 比 0.1 分差更诚实。</li>
+<li><strong>公开换算</strong>：认定目录、权重、例外通道，全部写出来。</li>
+<li><strong>留反馈</strong>：申诉、复核、盲区审计；每年问一次“这个指标漏掉了什么”。</li>
+</ol>
+<p><strong>最重要的</strong>：不要让指标变成目的。</p>
+<p><strong>指标是地图，目的是地形。</strong></p>
+<hr>
+<h2>十一 · 五分钟版 / 三十分钟版 / 自测</h2>
+<h3>五分钟版（背这三句）</h3>
+<ol>
+<li><strong>志愿时长能排序，是因为它已经被做成统一单位；不是因为它更重要。</strong></li>
+<li><strong>数学建模奖不能排序，是因为它是一件厚成就，没有公开换算规则；不是因为它没价值。</strong></li>
+<li><strong>可排序是一种制度成就，不是事物本身的等级；排序之前先问“我要它代表什么”。</strong></li>
+</ol>
+<h3>三十分钟版（读这几节）</h3>
+<ul>
+<li>第二节：四个条件</li>
+<li>第三、四节：两个案例</li>
+<li>第五节：国家视角</li>
+<li>第六节：提问框架</li>
+<li>第八节：总表</li>
+</ul>
+<h3>自测 8 题</h3>
+<ul>
+<li>[ ] 我能说出“能排序”的四个条件。</li>
+<li>[ ] 我能说出志愿时长测的是什么、不能测什么。</li>
+<li>[ ] 我能说出数学建模奖为什么是“厚成就”。</li>
+<li>[ ] 我能区分“分类”和“排序”。</li>
+<li>[ ] 我能说出“可排序 ≠ 更重要”。</li>
+<li>[ ] 我能说出一个“指标杀死它测量的东西”的生活例子。</li>
+<li>[ ] 我能用“论题/结论/假设/证据”拆一个排名规则。</li>
+<li>[ ] 我能说出如果我是评委，我会怎么补这个规则。</li>
+</ul>
+<hr>
+<h2>十二 · 收尾</h2>
+<p><strong>志愿时长和数学建模奖的差别，不是“一个真一个假”，是“一个已经被做成可读的单位，一个还是一件需要人读的手工艺品”。</strong></p>
+<p><strong>地图不是地形。</strong></p>
+<p><strong>但当地图带着权力落地，它会改造地形。</strong></p>
+<p><strong>所以下次你看到“这个能算分、那个不能算分”，不要先问“公不公平”。</strong></p>
+<p>先问：</p>
+<p><strong>这把尺子测的是什么？它漏了什么？谁有权力定义它？</strong></p>
+<p><strong>看懂了这三问，你就看懂了“可排序性”。</strong></p>
+  </main>
+
+  <div class="footer">
+    为什么志愿时长能被排序，而「数学建模国家二等奖」不能<br>
+    先自己回答，再看解答 —— 能讲成"通俗解释"那个样子，才算真的懂了
+  </div>
+
+</div>
+</body>
+</html>

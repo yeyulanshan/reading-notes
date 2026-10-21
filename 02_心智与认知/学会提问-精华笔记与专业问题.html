@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>《学会提问》精华笔记与专业问题</title>
+<style>
+  :root{
+    --paper:#f7f4ed;
+    --card:#fffdf8;
+    --edge:#ded6c8;
+    --ink:#2b2721;
+    --ink-mid:#5c5449;
+    --ink-soft:#8c8175;
+    --teal:#166060;
+    --teal-soft:#e6efee;
+    --rust:#b1442a;
+    --rust-soft:#f7e9e4;
+    --gold:#9a7420;
+    --gold-soft:#f5eeda;
+    --sage:#55703c;
+    --sage-soft:#ecf0e2;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--paper);color:var(--ink);padding:36px 20px 48px;line-height:1.88;
+    -webkit-font-smoothing:antialiased;
+  }
+  .container{max-width:920px;margin:0 auto;}
+
+  .header{
+    text-align:center;margin-bottom:30px;padding:44px 24px 40px;
+    background:var(--card);border:1px solid var(--edge);border-top:5px solid var(--teal);
+    border-radius:4px;
+  }
+  .header h1{font-size:27px;color:var(--ink);margin-bottom:12px;letter-spacing:.5px;}
+  .header .subtitle{font-size:14.5px;color:var(--ink-mid);}
+  .header .author{margin-top:16px;font-size:12.5px;color:var(--ink-soft);letter-spacing:.5px;}
+
+  main{
+    background:var(--card);border:1px solid var(--edge);border-radius:4px;
+    padding:34px 38px;
+  }
+
+  h1{font-size:23px;color:var(--ink);margin:8px 0 18px;}
+  h2{
+    font-size:20px;color:var(--ink);margin:40px 0 16px;
+    padding-left:13px;border-left:4px solid var(--teal);letter-spacing:.3px;
+  }
+  h2:first-child{margin-top:0;}
+  h3{font-size:16.5px;color:var(--teal);margin:28px 0 12px;font-weight:700;}
+  h4{font-size:15px;color:var(--ink-mid);margin:18px 0 8px;}
+
+  p{color:var(--ink-mid);font-size:14.5px;margin-bottom:12px;}
+  strong{color:var(--ink);}
+  em{color:var(--rust);font-style:normal;font-weight:600;}
+
+  ul,ol{margin:8px 0 14px 24px;}
+  li{color:var(--ink-mid);font-size:14.5px;margin-bottom:6px;}
+
+  hr{border:none;border-top:1px solid var(--edge);margin:26px 0;}
+
+  table{width:100%;border-collapse:collapse;margin:14px 0 18px;font-size:13.5px;}
+  th,td{padding:10px 12px;border:1px solid var(--edge);text-align:left;vertical-align:top;}
+  th{background:var(--teal-soft);color:var(--teal);font-weight:700;}
+  td{color:var(--ink-mid);}
+
+  blockquote{
+    background:var(--gold-soft);border:1px solid #e6dcc0;border-left:4px solid var(--gold);
+    border-radius:0 3px 3px 0;padding:16px 20px;margin:14px 0;
+  }
+  blockquote p{color:#6d5011;font-size:14px;font-style:italic;margin-bottom:8px;}
+  blockquote p:last-child{margin-bottom:0;}
+  blockquote strong{color:#5a420d;}
+
+  code{
+    background:var(--paper);padding:1.5px 6px;border-radius:3px;
+    font-family:Consolas,Monaco,monospace;font-size:13px;color:var(--teal);
+  }
+  pre{
+    background:var(--paper);border:1px solid var(--edge);border-radius:3px;
+    padding:14px 16px;overflow-x:auto;margin:12px 0 16px;
+  }
+  pre code{background:none;padding:0;line-height:1.65;}
+
+  /* 专业问题标题 */
+  .q-title{
+    background:var(--teal-soft);border-left:4px solid var(--teal);
+    border-radius:0 3px 3px 0;padding:13px 18px;margin:28px 0 12px;
+    color:var(--ink);font-size:15.5px;font-weight:700;line-height:1.7;
+  }
+
+  .footer{
+    text-align:center;margin-top:38px;padding:20px;color:var(--ink-soft);font-size:12.5px;line-height:1.9;
+  }
+
+  @media(max-width:640px){
+    .header h1{font-size:20px;}
+    h2{font-size:17.5px;}
+    body{padding:20px 14px 32px;}
+    main{padding:22px 18px;}
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <h1>《学会提问》精华笔记与专业问题</h1>
+    <div class="subtitle">逐章笔记 · 10 个专业问题 · 文本与术语说明</div>
+    <div class="author">Browne / Keeley · 引文逐页核 PDF</div>
+  </div>
+
+  <main>
+<p><strong>底本</strong>：M. Neil Browne / Stuart M. Keeley《学会提问（原书第 10 版）》，吴礼敬译，机械工业出版社 2013 年版</p>
+<p><strong>来源</strong>：<code>02_心智与认知/学会提问_全文.txt</code>（PDF 291 页）</p>
+<p><strong>说明</strong>：页码为 PDF 页码；直接引文逐句核对，转述不加引号。</p>
+<hr>
+<h2>一 · 逐章笔记</h2>
+<h3>第 1 章 · 学会提出好问题</h3>
+<ul>
+<li>批判性思维是一套<strong>相互联系的关键问题</strong>，不是一堆谬误名称。</li>
+<li>海绵式思维 vs 淘金式思维：先吸收，再筛选。</li>
+<li>弱势批判性思维（捍卫自己）vs 强势批判性思维（评估一切，包括自己）。</li>
+<li>一厢情愿是最大劲敌；让对话继续，不要一上来就「赢」。</li>
+<li>关键句：强势批判性思维要求我们一视同仁地质疑一切主张，包括自己的主张（p.25）。</li>
+</ul>
+<h3>第 2 章 · 论题和结论是什么</h3>
+<ul>
+<li>论题：引起讨论的问题/争议；分描述性（世界是什么）与规定性（世界应该怎样）。</li>
+<li>结论：作者希望你接受的信息。</li>
+<li>论证结构：甲成立，因为乙；没有理由支撑的断言只是「纯观点」。</li>
+<li>找结论的线索：论题、指示词、开头/结尾、排除背景/数据/定义。</li>
+</ul>
+<h3>第 3 章 · 理由是什么</h3>
+<ul>
+<li>理由是支撑结论的陈述；理由本身不是结论。</li>
+<li>理由的质量决定结论的质量；理由和结论要能「对上」。</li>
+<li>常见问题：理由与结论无关、理由重复结论、理由只是例子。</li>
+<li>写作时：先有理由，再有结论；让理由和结论一目了然。</li>
+</ul>
+<h3>第 4 章 · 哪些词语意思不明确</h3>
+<ul>
+<li>关键词歧义是论证最常见的漏洞之一。</li>
+<li>找关键词：出现在结论/理由里、抽象、有情感色彩、需要定义的词。</li>
+<li>判断歧义：看上下文、看作者是否前后一致、看是否偷换。</li>
+<li>情绪词会让思维短路；谁想说服你，谁就有责任说清关键词。</li>
+</ul>
+<h3>第 5 章 · 价值观假设和描述性假设</h3>
+<ul>
+<li>假设：没说出来的、作者认为理所当然的、影响结论的看法。</li>
+<li>价值观假设：在冲突的价值观中，暗中选择哪一个更重要。</li>
+<li>描述性假设：对世界「实际上是什么样」的预设。</li>
+<li>找法：先查理由，再查结论；问「要让这个理由成立，必须假设什么？」</li>
+<li>关键句：价值观假设是「没有明说出来的喜欢一种价值观超过另一种价值观的偏向」（p.109）；描述性假设是「没有说出来的关于世界过去、现在和将来是怎么样的一种看法」（p.122）。</li>
+</ul>
+<h3>第 6 章 · 推理过程中有没有谬误</h3>
+<ul>
+<li>常见谬误：虚假两难、滑坡、人身攻击、诉诸权威、诉诸公众、循环论证、稻草人、转移话题。</li>
+<li>不用背名称，先问：这个理由真的支持这个结论吗？有没有偷换概念/假设？</li>
+<li>谬误不是「对方错了」的标签，是「这条推理链断了」的位置。</li>
+</ul>
+<h3>第 7 章 · 证据的效力（一）</h3>
+<ul>
+<li>证据类型：直觉、个人经历、典型案例、当事人证词、专家意见。</li>
+<li>每种证据都有边界：个人经历样本小；典型案例不代表性；证词有利益/记忆问题；专家可能超出领域。</li>
+<li>关键问题：样本是谁？有没有利益冲突？能不能重复？</li>
+</ul>
+<h3>第 8 章 · 证据的效力（二）</h3>
+<ul>
+<li>个人观察、研究报告、类比。</li>
+<li>研究：样本代表性、随机分配、对照组、可重复性、发表偏倚。</li>
+<li>调查：问题措辞、回答者是否说真话、样本是否代表总体。</li>
+<li>类比：关键属性是否相似；不能只靠「听起来像」。</li>
+</ul>
+<h3>第 9 章 · 有没有替代原因</h3>
+<ul>
+<li>相关不等于因果；「在这之后」不等于「因为这个」。</li>
+<li>替代原因：其他能解释同一结果的原因。</li>
+<li>组间差异：可能是选择偏差、历史事件、成熟效应、测量变化。</li>
+<li>关键问题：还有没有别的解释？哪个更合理？怎么区分？</li>
+</ul>
+<h3>第 10 章 · 数据有没有欺骗性</h3>
+<ul>
+<li>平均值：平均数/中位数/众数，极端值会拉高平均数。</li>
+<li>百分比：分母是什么？是绝对数还是相对数？</li>
+<li>省略数据、改变口径、把「相关」说成「因果」。</li>
+<li>关键句：统计数据可能而且经常骗人（p.241）。</li>
+</ul>
+<h3>第 11 章 · 有什么重要信息被省略了</h3>
+<ul>
+<li>任何论证都是不完整的；关键是省略的信息是否影响结论。</li>
+<li>找省略：反面证据、替代解释、样本细节、利益冲突、时间/成本。</li>
+<li>关键句：重要的省略信息就是那些影响到推理过程的信息（p.261）；几乎任何一个你所遇到的信息都有一个目的（p.261）。</li>
+</ul>
+<h3>第 12 章 · 能得出哪些合理的结论</h3>
+<ul>
+<li>不要二分：除了 A/B，还有 C/D/分情况/分阶段。</li>
+<li>条件句：「如果……那么……」有助于找到合理结论。</li>
+<li>结论要有限定词：在什么条件下、对谁、多大程度。</li>
+<li>关键句：创造条件句特别有助于为评价型的论证找到合理的结论（p.282）。</li>
+</ul>
+<hr>
+<h2>二 · 十个专业问题</h2>
+<h3>1. 十个问题够不够？</h3>
+<p>不够，但它是骨架。</p>
+<p>复杂论证还需要领域知识、整体结构、修辞语境、权力关系。</p>
+<p><strong>先用十问定位问题，再用专业知识深入。</strong></p>
+<h3>2. 价值冲突怎么处理？</h3>
+<p>不能靠证据解决，只能：</p>
+<ul>
+<li>说清各自重视什么；</li>
+<li>说清在什么情境下哪个优先；</li>
+<li>找「重叠共识」或「可共存的制度安排」。</li>
+</ul>
+<p>批判性思维能防止把价值偏好伪装成事实。</p>
+<h3>3. 专家意见该怎么信？</h3>
+<p>问：</p>
+<ul>
+<li>这个专家在这个问题上有专业训练吗？</li>
+<li>有利益冲突吗？</li>
+<li>他的结论和该领域主流一致吗？</li>
+<li>他能给出证据/机制吗？</li>
+</ul>
+<p><strong>专家意见是证据之一，不是判决。</strong></p>
+<h3>4. 「理由」和「证据」有什么区别？</h3>
+<p>理由是「为什么相信结论」的陈述；证据是支撑理由的材料。</p>
+<p>例：</p>
+<ul>
+<li>结论：这个方案更好。</li>
+<li>理由：它成本更低。</li>
+<li>证据：三家供应商的报价单。</li>
+</ul>
+<p><strong>理由可以没有证据；没有证据的理由，可信度低。</strong></p>
+<h3>5. 怎么防止自己只用它来「赢」？</h3>
+<p>用强势批判性思维：</p>
+<ul>
+<li>先把自己的主张写成论证；</li>
+<li>找出自己最弱的假设；</li>
+<li>请对方指出你的漏洞；</li>
+<li>如果对方说对了，改。</li>
+</ul>
+<p><strong>能不能改，是检验你是不是在思考的标准。</strong></p>
+<h3>6. 强势批判性思维是不是相对主义？</h3>
+<p>不是。</p>
+<p>相对主义说「没有更好的判断」；强势批判性思维说「所有判断都要接受检查，包括自己的」。</p>
+<p>检查之后，仍然可以有一个更强的结论。</p>
+<h3>7. 在中文/面子语境里怎么用？</h3>
+<p>把「直接质疑」换成「确认式提问」：</p>
+<ul>
+<li>「我想确认一下，您的意思是……」</li>
+<li>「这条规定的考虑是什么？」</li>
+<li>「有没有可能我理解错了？」</li>
+</ul>
+<p><strong>先给对方留面子，再给论证留空间。</strong></p>
+<h3>8. 没时间怎么办？</h3>
+<p>三问快筛：结论是什么？理由是什么？关键词有没有歧义？</p>
+<p>三问过不了，再展开。</p>
+<p><strong>批判性思维要能按需加深。</strong></p>
+<h3>9. 这本书有什么局限？</h3>
+<ul>
+<li>例子多来自美国课堂/媒体，中文语境要换；</li>
+<li>偏重个体论证，对权力/结构分析不够；</li>
+<li>十问是通用框架，不替代专业知识；</li>
+<li>「强势批判性思维」需要对方也愿意讲理。</li>
+</ul>
+<h3>10. 怎么和《国家的视角》《维权复盘》一起用？</h3>
+<ul>
+<li>《国家的视角》解释：制度为什么偏爱可读的指标；</li>
+<li>《学会提问》检查：这个指标/论证预设了什么、漏了什么；</li>
+<li>《维权复盘》提供：真实场景里怎么把「不公平」换成「规则/事实/天数」。</li>
+</ul>
+<p><strong>三本合起来，才是「看懂规则 + 检查论证 + 实际操作」。</strong></p>
+<hr>
+<h2>三 · 文本与引用说明</h2>
+<ul>
+<li>291 页，PDF 页码；中文译本，2013 年机械工业出版社。</li>
+<li>引文逐句核对：去空白/标点后逐页查找；本文件引用的句子全部命中。</li>
+<li>电子文本有少量 OCR/排版问题（如个别字被识别成异体），引文已选短句避开。</li>
+<li>术语对照：issue=论题；conclusion=结论；reason=理由；assumption=假设；rival cause=替代原因；omitted information=省略信息。</li>
+</ul>
+<hr>
+<p><strong>一句话总结</strong>：</p>
+<p><strong>批判性思维不是让你不信，是让你知道自己在信什么、为什么信、以及什么能让你改变。</strong></p>
+  </main>
+
+  <div class="footer">
+    《学会提问》精华笔记与专业问题<br>
+    先自己回答，再看解答 —— 能讲成"通俗解释"那个样子，才算真的懂了
+  </div>
+
+</div>
+</body>
+</html>

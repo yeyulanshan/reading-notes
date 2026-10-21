@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>《国家的视角》助人手册</title>
+<style>
+  :root{
+    --paper:#f7f4ed;
+    --card:#fffdf8;
+    --edge:#ded6c8;
+    --ink:#2b2721;
+    --ink-mid:#5c5449;
+    --ink-soft:#8c8175;
+    --teal:#166060;
+    --teal-soft:#e6efee;
+    --rust:#b1442a;
+    --rust-soft:#f7e9e4;
+    --gold:#9a7420;
+    --gold-soft:#f5eeda;
+    --sage:#55703c;
+    --sage-soft:#ecf0e2;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--paper);color:var(--ink);padding:36px 20px 48px;line-height:1.88;
+    -webkit-font-smoothing:antialiased;
+  }
+  .container{max-width:920px;margin:0 auto;}
+
+  .header{
+    text-align:center;margin-bottom:30px;padding:44px 24px 40px;
+    background:var(--card);border:1px solid var(--edge);border-top:5px solid var(--teal);
+    border-radius:4px;
+  }
+  .header h1{font-size:27px;color:var(--ink);margin-bottom:12px;letter-spacing:.5px;}
+  .header .subtitle{font-size:14.5px;color:var(--ink-mid);}
+  .header .author{margin-top:16px;font-size:12.5px;color:var(--ink-soft);letter-spacing:.5px;}
+
+  main{
+    background:var(--card);border:1px solid var(--edge);border-radius:4px;
+    padding:34px 38px;
+  }
+
+  h1{font-size:23px;color:var(--ink);margin:8px 0 18px;}
+  h2{
+    font-size:20px;color:var(--ink);margin:40px 0 16px;
+    padding-left:13px;border-left:4px solid var(--teal);letter-spacing:.3px;
+  }
+  h2:first-child{margin-top:0;}
+  h3{font-size:16.5px;color:var(--teal);margin:28px 0 12px;font-weight:700;}
+  h4{font-size:15px;color:var(--ink-mid);margin:18px 0 8px;}
+
+  p{color:var(--ink-mid);font-size:14.5px;margin-bottom:12px;}
+  strong{color:var(--ink);}
+  em{color:var(--rust);font-style:normal;font-weight:600;}
+
+  ul,ol{margin:8px 0 14px 24px;}
+  li{color:var(--ink-mid);font-size:14.5px;margin-bottom:6px;}
+
+  hr{border:none;border-top:1px solid var(--edge);margin:26px 0;}
+
+  table{width:100%;border-collapse:collapse;margin:14px 0 18px;font-size:13.5px;}
+  th,td{padding:10px 12px;border:1px solid var(--edge);text-align:left;vertical-align:top;}
+  th{background:var(--teal-soft);color:var(--teal);font-weight:700;}
+  td{color:var(--ink-mid);}
+
+  blockquote{
+    background:var(--gold-soft);border:1px solid #e6dcc0;border-left:4px solid var(--gold);
+    border-radius:0 3px 3px 0;padding:16px 20px;margin:14px 0;
+  }
+  blockquote p{color:#6d5011;font-size:14px;font-style:italic;margin-bottom:8px;}
+  blockquote p:last-child{margin-bottom:0;}
+  blockquote strong{color:#5a420d;}
+
+  code{
+    background:var(--paper);padding:1.5px 6px;border-radius:3px;
+    font-family:Consolas,Monaco,monospace;font-size:13px;color:var(--teal);
+  }
+  pre{
+    background:var(--paper);border:1px solid var(--edge);border-radius:3px;
+    padding:14px 16px;overflow-x:auto;margin:12px 0 16px;
+  }
+  pre code{background:none;padding:0;line-height:1.65;}
+
+  /* 专业问题标题 */
+  .q-title{
+    background:var(--teal-soft);border-left:4px solid var(--teal);
+    border-radius:0 3px 3px 0;padding:13px 18px;margin:28px 0 12px;
+    color:var(--ink);font-size:15.5px;font-weight:700;line-height:1.7;
+  }
+
+  .footer{
+    text-align:center;margin-top:38px;padding:20px;color:var(--ink-soft);font-size:12.5px;line-height:1.9;
+  }
+
+  @media(max-width:640px){
+    .header h1{font-size:20px;}
+    h2{font-size:17.5px;}
+    body{padding:20px 14px 32px;}
+    main{padding:22px 18px;}
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <h1>《国家的视角》助人手册</h1>
+    <div class="subtitle">当一个人被指标卡住时，怎么把问题从「谁对谁错」拉回「这把尺子」</div>
+    <div class="author">James C. Scott · 引文逐页核 PDF</div>
+  </div>
+
+  <main>
+<p><strong>用途</strong>：当你或别人被一个指标、台账、评比、规划卡住时，用这本书的视角把问题从「谁对谁错」拉回「这把尺子测了什么、漏了什么」。</p>
+<p><strong>底本</strong>：<code>04_社会与制度/国家的视角_全文.txt</code>（PDF 533 页）。引文页码为 PDF 页码。</p>
+<hr>
+<h2>〇 · 什么时候用</h2>
+<p>出现下面任何一种情况，就适合拿出来：</p>
+<ul>
+<li>对方说「这是规定/系统/表格，改不了」；</li>
+<li>你觉得自己做的事很重要，但在评比里「不算数」；</li>
+<li>一个指标越抓越好，但实际效果越来越差；</li>
+<li>一线的人都在「变通」，因为按规矩办根本办不成；</li>
+<li>一个规划/系统上线后，出现了设计者完全没预料到的副作用。</li>
+</ul>
+<p><strong>不适合用</strong>：对方只是想要一个情绪安慰，或者你只是想证明「我比制度聪明」。</p>
+<hr>
+<h2>一 · 三条原则</h2>
+<h3>原则 1 · 先问目的，再问指标</h3>
+<p>不要一上来就说「这个指标不合理」。先问：</p>
+<p><strong>这个指标最初想服务什么目的？现在还在服务那个目的吗？</strong></p>
+<p>指标是手段，目的是那个「为什么要有这个指标」。</p>
+<p>手段用久了会变成目的——这就是「指标杀死它测量的东西」的起点。</p>
+<h3>原则 2 · 找盲区，不要找坏人</h3>
+<blockquote>
+<p>现代国家机器的基本特征就是简单化</p>
+<p>——p.22</p>
+</blockquote>
+<p>任何指标都是简化的。问题不是「谁故意漏掉」，是<strong>这张表本来就没有那个格子</strong>。</p>
+<p>所以对话的重点不是「你不公平」，是「这个表把什么放进了括号」。</p>
+<h3>原则 3 · 先做小试验，不要先掀桌子</h3>
+<blockquote>
+<p>括号之外的整个世界反过来阻碍这种技术观点的实现</p>
+<p>——p.40</p>
+</blockquote>
+<p>你直接说「整个系统错了」，对方只会防御。</p>
+<p>更有效的是：<strong>找一个具体的、可核对的小例子，让盲区自己显形</strong>，再问「能不能先在这个小范围里试一种补法」。</p>
+<hr>
+<h2>二 · 五步对话法</h2>
+<h3>第 1 步 · 把目的说清</h3>
+<p>问对方，也问自己：</p>
+<ul>
+<li>这个评比/指标，最终想让什么发生？</li>
+<li>是「选出最合适的人」，还是「让所有人都有动力」？</li>
+<li>是「控制成本」，还是「提高质量」？</li>
+</ul>
+<p><strong>话术</strong>：</p>
+<blockquote>
+<p>「我想先确认一下，这个指标最终是为了解决什么问题？这样我才知道该怎么准备材料。」</p>
+</blockquote>
+<h3>第 2 步 · 把「可见/不可见」摊开</h3>
+<p>拿一张纸，画两栏：</p>
+<table><thead><tr><th>这个指标能看见</th><th>这个指标看不见</th></tr></thead><tbody>
+<tr><td>志愿时长</td><td>帮助的质量、持续性、对方真实受益</td></tr>
+<tr><td>获奖等级</td><td>团队分工、题目难度、评审质量、个人贡献</td></tr>
+<tr><td>工时</td><td>深度工作、创造性、隐性协作</td></tr>
+</tbody></table>
+<p><strong>话术</strong>：</p>
+<blockquote>
+<p>「我理解这个指标看的是 X。那像 Y 这类东西，在这个评价里一般怎么处理？」</p>
+</blockquote>
+<h3>第 3 步 · 问「谁承担代价」</h3>
+<blockquote>
+<p>清晰性是国家机器的中心问题</p>
+<p>——p.21</p>
+</blockquote>
+<p>清晰化有受益者，也有承担者。</p>
+<p>问：</p>
+<ul>
+<li>这个指标让谁更容易被看见？</li>
+<li>让谁更容易被漏掉？</li>
+<li>漏掉的代价由谁承担？</li>
+</ul>
+<p><strong>话术</strong>：</p>
+<blockquote>
+<p>「如果这类贡献不在表里，长期看会不会让大家都去做表里那件事？」</p>
+</blockquote>
+<h3>第 4 步 · 找「例外」，不要找「漏洞」</h3>
+<p>例外不是噪音，是信息。</p>
+<ul>
+<li>哪些情况按规矩办反而办不成？</li>
+<li>一线的人通常怎么变通？</li>
+<li>这些变通里，哪些是必要的判断，哪些是钻空子？</li>
+</ul>
+<blockquote>
+<p>正式制度在很大程度上总是寄生于非正规过程</p>
+<p>——p.412</p>
+</blockquote>
+<p><strong>话术</strong>：</p>
+<blockquote>
+<p>「有没有一些情况，按现在的表办反而会出问题？这些情况现在是怎么处理的？」</p>
+</blockquote>
+<h3>第 5 步 · 提一个「小补丁」，不是「大重构」</h3>
+<p>不要一上来要求改整个制度。提一个<strong>可试点、可撤回、可比较</strong>的小改动：</p>
+<ul>
+<li>增加一个「作品/案例」附件；</li>
+<li>允许一类奖项按「等级 + 面试」折算；</li>
+<li>给一线一个「例外说明」栏；</li>
+<li>把「时长」和「质量评价」分开记，不混成一个分。</li>
+</ul>
+<p><strong>话术</strong>：</p>
+<blockquote>
+<p>「能不能先在一个小范围里试一下：时长照旧，另外加一页说明实际做了什么？如果没用，再撤掉也不迟。」</p>
+</blockquote>
+<hr>
+<h2>三 · 十二个日常场景</h2>
+<table><thead><tr><th>场景</th><th>指标看见了什么</th><th>漏掉了什么</th><th>可以怎么问</th></tr></thead><tbody>
+<tr><td>学校评奖学金</td><td>志愿时长、奖项等级</td><td>帮助质量、团队贡献、竞赛难度</td><td>「奖项的折算规则在哪？有没有作品/面试的补充材料？」</td></tr>
+<tr><td>公司 KPI</td><td>产量、销售额、工时</td><td>质量、协作、长期客户关系</td><td>「这个数字是怎么定义的？有没有不看数字的评审环节？」</td></tr>
+<tr><td>社区登记</td><td>户籍、住房、收入</td><td>实际居住、非正式互助、流动人口</td><td>「登记不上的人，平时怎么被服务到？」</td></tr>
+<tr><td>扶贫台账</td><td>收入数字、项目数</td><td>可持续性、尊严、地方知识</td><td>「项目结束后，谁来维护？当地人参与了吗？」</td></tr>
+<tr><td>城市规划</td><td>道路宽度、容积率</td><td>街边小生意、邻里网络、历史层次</td><td>「这条街原来的人去哪了？新规划给他们留位置了吗？」</td></tr>
+<tr><td>医院考核</td><td>手术量、周转率</td><td>沟通质量、疑难病例、患者体验</td><td>「复杂病人会不会被推来推去？」</td></tr>
+<tr><td>公益项目</td><td>服务人次、活动场次</td><td>深度改变、受益者主体性</td><td>「除了人次，有没有跟踪一个人的变化？」</td></tr>
+<tr><td>家庭记账</td><td>支出金额</td><td>时间、情绪、关系成本</td><td>「这笔钱省了，但谁多花了时间？」</td></tr>
+<tr><td>健身 App</td><td>步数、卡路里</td><td>动作质量、恢复、快乐</td><td>「步数够了，但膝盖还好吗？」</td></tr>
+<tr><td>论文/项目评审</td><td>篇数、经费额</td><td>想法质量、指导、失败经验</td><td>「能不能看一篇代表作，而不是数篇数？」</td></tr>
+<tr><td>学校排名</td><td>分数、升学率</td><td>生源、教师投入、学生多样性</td><td>「入口和出口比了吗？还是只比出口？」</td></tr>
+<tr><td>招聘筛选</td><td>学校、证书</td><td>实际能力、动机、团队匹配</td><td>「这个证书和岗位能力之间的关系，有证据吗？」</td></tr>
+</tbody></table>
+<hr>
+<h2>四 · 话术模板：把「不公平」换成「这把尺子」</h2>
+<table><thead><tr><th>不要这样说</th><th>换成这样说</th></tr></thead><tbody>
+<tr><td>「这不公平。」</td><td>「我想确认一下，这个评价用的是哪几个指标、权重是多少？」</td></tr>
+<tr><td>「我的奖更厉害。」</td><td>「这个奖在今年的认定目录里对应哪一档？如果没有，能不能走作品评审？」</td></tr>
+<tr><td>「你们只看数字。」</td><td>「数字我理解。除了数字，有没有补充材料的位置？」</td></tr>
+<tr><td>「一线的人都在乱来。」</td><td>「一线有哪些情况按规矩办不成？他们现在怎么处理？」</td></tr>
+<tr><td>「这个系统太蠢了。」</td><td>「这个系统假设了哪几种情况？哪种情况它没覆盖？」</td></tr>
+</tbody></table>
+<p><strong>核心</strong>：<strong>不要辩论价值观，先核对事实；不要问「为什么不是我」，先问「你们用什么尺」。</strong></p>
+<hr>
+<h2>五 · 边界：不要把这本手册用成三种东西</h2>
+<ol>
+<li><strong>不要用成「反指标」</strong>：没有指标，组织连基本公平都做不到。</li>
+<li><strong>不要用成「地方知识万岁」</strong>：地方知识也会压迫人、排斥外人、垄断资源。</li>
+<li><strong>不要用成「失败都怪清晰化」</strong>：执行能力、激励、腐败、运气，都可能是原因。</li>
+</ol>
+<blockquote>
+<p>米提斯不是民主分配的</p>
+<p>——p.439</p>
+</blockquote>
+<p><strong>正确姿势</strong>：把这本书当成<strong>检查表</strong>，不是<strong>判决书</strong>。</p>
+<hr>
+<h2>六 · 自测</h2>
+<ul>
+<li>[ ] 我能用一句话说清「这个指标想服务什么目的」。</li>
+<li>[ ] 我能列出这个指标「看见/看不见」各三项。</li>
+<li>[ ] 我能说出谁在这个指标里受益、谁承担代价。</li>
+<li>[ ] 我能举出一个「按规矩办反而办不成」的例子。</li>
+<li>[ ] 我能提出一个可试点、可撤回的小补丁。</li>
+<li>[ ] 我不会一上来就说「这不公平」。</li>
+<li>[ ] 我不会把「地方知识」当成万能药。</li>
+<li>[ ] 我知道这本书的解释边界。</li>
+</ul>
+  </main>
+
+  <div class="footer">
+    《国家的视角》助人手册<br>
+    先自己回答，再看解答 —— 能讲成"通俗解释"那个样子，才算真的懂了
+  </div>
+
+</div>
+</body>
+</html>

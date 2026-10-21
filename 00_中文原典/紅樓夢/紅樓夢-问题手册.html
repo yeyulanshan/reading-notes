@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>《紅樓夢》问题手册</title>
+<style>
+  :root{
+    --paper: #fbf8f3;
+    --card: #fffdfb;
+    --edge: #e6dcd2;
+    --ink: #2e2a28;
+    --ink-mid: #5f5752;
+    --ink-soft: #8f857c;
+    --teal: #4f6f68;
+    --teal-soft: #eaf1ee;
+    --rust: #a34a4a;
+    --rust-soft: #f7e9e6;
+    --gold: #9a7b3f;
+    --gold-soft: #f6efdf;
+    --sage: #5f7a5a;
+    --sage-soft: #eef2e8;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--paper);color:var(--ink);padding:36px 20px 48px;line-height:1.88;
+    -webkit-font-smoothing:antialiased;
+  }
+  .container{max-width:920px;margin:0 auto;}
+
+  .header{
+    text-align:center;margin-bottom:30px;padding:44px 24px 40px;
+    background:var(--card);border:1px solid var(--edge);border-top:5px solid var(--teal);
+    border-radius:4px;
+  }
+  .header h1{font-size:27px;color:var(--ink);margin-bottom:12px;letter-spacing:.5px;}
+  .header .subtitle{font-size:14.5px;color:var(--ink-mid);}
+  .header .author{margin-top:16px;font-size:12.5px;color:var(--ink-soft);letter-spacing:.5px;}
+
+  main{
+    background:var(--card);border:1px solid var(--edge);border-radius:4px;
+    padding:34px 38px;
+  }
+
+  h1{font-size:23px;color:var(--ink);margin:8px 0 18px;}
+  h2{
+    font-size:20px;color:var(--ink);margin:40px 0 16px;
+    padding-left:13px;border-left:4px solid var(--teal);letter-spacing:.3px;
+  }
+  h2:first-child{margin-top:0;}
+  h3{font-size:16.5px;color:var(--teal);margin:28px 0 12px;font-weight:700;}
+  h4{font-size:15px;color:var(--ink-mid);margin:18px 0 8px;}
+
+  p{color:var(--ink-mid);font-size:14.5px;margin-bottom:12px;}
+  strong{color:var(--ink);}
+  em{color:var(--rust);font-style:normal;font-weight:600;}
+
+  ul,ol{margin:8px 0 14px 24px;}
+  li{color:var(--ink-mid);font-size:14.5px;margin-bottom:6px;}
+
+  hr{border:none;border-top:1px solid var(--edge);margin:26px 0;}
+
+  table{width:100%;border-collapse:collapse;margin:14px 0 18px;font-size:13.5px;}
+  th,td{padding:10px 12px;border:1px solid var(--edge);text-align:left;vertical-align:top;}
+  th{background:var(--teal-soft);color:var(--teal);font-weight:700;}
+  td{color:var(--ink-mid);}
+
+  blockquote{
+    background:var(--gold-soft);border:1px solid #e6dcc0;border-left:4px solid var(--gold);
+    border-radius:0 3px 3px 0;padding:16px 20px;margin:14px 0;
+  }
+  blockquote p{color:#6d5011;font-size:14px;font-style:italic;margin-bottom:8px;}
+  blockquote p:last-child{margin-bottom:0;}
+  blockquote strong{color:#5a420d;}
+
+  code{
+    background:var(--paper);padding:1.5px 6px;border-radius:3px;
+    font-family:Consolas,Monaco,monospace;font-size:13px;color:var(--teal);
+  }
+  pre{
+    background:var(--paper);border:1px solid var(--edge);border-radius:3px;
+    padding:14px 16px;overflow-x:auto;margin:12px 0 16px;
+  }
+  pre code{background:none;padding:0;line-height:1.65;}
+
+  /* 专业问题标题 */
+  .q-title{
+    background:var(--teal-soft);border-left:4px solid var(--teal);
+    border-radius:0 3px 3px 0;padding:13px 18px;margin:28px 0 12px;
+    color:var(--ink);font-size:15.5px;font-weight:700;line-height:1.7;
+  }
+
+  .footer{
+    text-align:center;margin-top:38px;padding:20px;color:var(--ink-soft);font-size:12.5px;line-height:1.9;
+  }
+
+  @media(max-width:640px){
+    .header h1{font-size:20px;}
+    h2{font-size:17.5px;}
+    body{padding:20px 14px 32px;}
+    main{padding:22px 18px;}
+  }
+
+  .nav{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:0 0 22px;}
+  .nav a{background:var(--card);border:1px solid var(--edge);border-radius:20px;
+    padding:6px 14px;font-size:13px;color:var(--teal);text-decoration:none;}
+  .nav a:hover{border-color:var(--teal);}
+  .qcard{background:var(--card);border:1px solid var(--edge);border-radius:6px;
+    padding:22px 26px;margin:18px 0;}
+  .qhead{display:flex;align-items:baseline;gap:10px;margin-bottom:8px;}
+  .qnum{background:var(--teal);color:#fff;font-family:Consolas,monospace;
+    font-size:12px;font-weight:700;padding:2px 9px;border-radius:3px;}
+  .qlv{font-size:12px;color:var(--rust);letter-spacing:.5px;}
+  .qtitle{font-size:17px;color:var(--ink);margin:0 0 10px;line-height:1.6;}
+  .qask{background:var(--teal-soft);border-left:3px solid var(--teal);
+    padding:10px 14px;border-radius:0 4px 4px 0;font-size:14px;color:var(--ink-mid);margin-bottom:12px;}
+  details{border:1px dashed var(--edge);border-radius:5px;padding:10px 14px;background:#fffefc;}
+  summary{cursor:pointer;font-size:13.5px;color:var(--teal);font-weight:700;}
+  .qans{margin-top:12px;}
+  .qans p{font-size:14px;color:var(--ink-mid);margin-bottom:11px;}
+  .qans blockquote{margin:12px 0;padding:10px 14px;background:var(--gold-soft);
+    border-left:3px solid var(--gold);font-size:13.8px;color:#5f5527;}
+  .qans blockquote p{margin:0;color:inherit;font-size:inherit;}
+  .qmis{margin-top:14px;padding:10px 14px;background:var(--rust-soft);
+    border-left:3px solid var(--rust);border-radius:0 4px 4px 0;font-size:13.4px;color:#6b4545;}
+  .qmis b{color:var(--rust);}
+  .qsrc{margin-top:9px;font-size:12.2px;color:var(--ink-soft);}
+  .selftest{background:var(--card);border:1px solid var(--edge);border-radius:6px;
+    padding:22px 26px;margin-top:22px;}
+  .selftest li{margin-bottom:8px;}
+  @media(max-width:680px){.qcard{padding:16px 15px;} .qtitle{font-size:15.5px;}}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="nav">
+    <a href="紅樓夢-整体架构.html">整体架构</a>
+    <a href="紅樓夢-问题手册.html">问题手册</a>
+    <a href="紅樓夢-底本考订.html">底本考订</a>
+    <a href="../README.md">00 中文原典</a>
+  </div>
+  <div class="header">
+    <h1>《紅樓夢》问题手册</h1>
+    <div class="subtitle">24 题 · 四层 · 先自己答，再展开</div>
+    <div class="author">底本 120 回 ｜ 724,631 汉字 ｜ 引文逐句核对</div>
+  </div>
+  <main>
+<h2>结构层 · 这本书是怎么搭起来的</h2>
+<article class="qcard" id="q1"><div class="qhead"><span class="qnum">Q1</span><span class="qlv">结构 · L1</span></div><h3 class="qtitle">为什么说主角不是贾宝玉，而是贾府这张关系网？</h3><div class="qask">如果主角是宝玉，这本书应该围绕他的成长、选择、爱情来组织。它实际是怎么组织的？</div><details><summary>展开参考答案</summary><div class="qans"><p>看场景的单位。全书最重要的场面——省亲、祭宗祠、诗社、宴席、抄检、查抄——都不是「一个人做了一件事」，而是<strong>一群人重新排位</strong>。每一次排位，都同时改动好几条关系：母女、婆媳、嫡庶、主仆、亲戚。</p>
+<p>宝玉在这些场面里通常是<strong>观察点</strong>，不是决定者。他挨打（第 33 回）时，真正收紧的是贾政的前途焦虑、王夫人的护子、贾母的溺爱、贾环的告状、薛蟠的流言；他不能控制其中任何一条。</p>
+<p>所以「主角是网」的意思是：<strong>结果由位置和关系合力产生</strong>。宝玉是网最敏感的读数器，不是网的中心。</p>
+<blockquote>
+<p>必須先從家里自殺自滅起來，才能一敗涂地</p>
+<p>——第七十四回</p>
+</blockquote></div></details><div class="qmis"><b>常见误读</b>　<p>把「主角是网」读成「宝玉不重要」。恰恰相反——正因为他是读数器，网的每一次变化都要通过他显形；不理解网，就读不懂他。</p></div><div class="qsrc">原文：第七十四回，探春论抄检。</div></article>
+<article class="qcard" id="q2"><div class="qhead"><span class="qnum">Q2</span><span class="qlv">结构 · L1</span></div><h3 class="qtitle">石头和「通灵宝玉」在叙事里起什么作用？</h3><div class="qask">为什么整本书要套一个「石头下凡」的框架？直接写贾府不行吗？</div><details><summary>展开参考答案</summary><div class="qans"><p>石头至少做三件事。</p>
+<p>第一，它是<strong>受限的叙述者</strong>。故事是它「亲自经历」的，所以它不能全知；它只能看见自己看见的，理解自己理解的。这就解释了全书大量的「宝玉不解」。</p>
+<p>第二，它是<strong>观察位置</strong>。石头没有补天的资格，所以它对人间的关系格外敏感——它天然站在「局外/局内」之间。</p>
+<p>第三，它是<strong>真假框架的支点</strong>。石头是「假」的（幻形入世），但它记录的事是「真」的；太虚幻境是「假」的，但它是现实层的索引。</p>
+<blockquote>
+<p>無材可去補蒼天，枉入紅塵若許年</p>
+<p>——第一回</p>
+<p>因曾歷過一番夢幻之后，故將真事隱去</p>
+<p>——第一回</p>
+</blockquote></div></details><div class="qmis"><b>常见误读</b>　<p>把石头当曹雪芹自况。石头是叙述装置，不是作者身份证。</p></div><div class="qsrc">原文：第一回。</div></article>
+<article class="qcard" id="q3"><div class="qhead"><span class="qnum">Q3</span><span class="qlv">结构 · L2</span></div><h3 class="qtitle">大观园为什么必须建起来，又必须被抄检？</h3><div class="qask">园子是全书最亮的部分。它为什么不能一直存在？</div><details><summary>展开参考答案</summary><div class="qans"><p>园子是为<strong>一次皇权仪式</strong>建的：元妃省亲。牌坊上的字是「省親別墅」，不是「大观园」；「大观园」是元妃题诗里的名字。也就是说，园子的第一属性是<strong>皇权/家族的展示工程</strong>，不是少女的乌托邦。</p>
+<p>但它一建成，就发生了功能漂移：少女、丫鬟、诗社、宴席被集中进一个封闭空间，家族等级暂时被「诗」和「玩」遮住。<strong>这是全书唯一一段关系网低摩擦运转的时间。</strong></p>
+<p>第 74 回抄检把实验终止。拆园子的不是外敌，是贾府自己人；探春说「必須先從家里自殺自滅起來」，说的就是这件事。</p>
+<blockquote>
+<p>省親別墅</p>
+<p>——第十八回</p>
+</blockquote></div></details><div class="qmis"><b>常见误读</b>　<p>把大观园当纯乌托邦。它是实验场，不是避难所；实验结束的方式，正是这本书对「关系能不能暂时悬置」的回答。</p></div><div class="qsrc">原文：第十八回、第七十四回。</div></article>
+<article class="qcard" id="q4"><div class="qhead"><span class="qnum">Q4</span><span class="qlv">结构 · L2</span></div><h3 class="qtitle">第五回的判词和曲，为什么把结局先说了？</h3><div class="qask">提前告诉读者结局，不会破坏悬念吗？</div><details><summary>展开参考答案</summary><div class="qans"><p>它破坏的是「后来会怎样」的悬念，建立的是另一种悬念：<strong>怎样走到那里</strong>。</p>
+<p>第五回的判词和曲，把主要人物的结局写成索引。读者第一次读就知道：黛玉会死，宝钗会嫁，凤姐会败，贾府会空。但读者不知道<strong>这些结局如何由关系网一步步生产出来</strong>。</p>
+<p>这就是关系网小说的读法：<strong>结局是结构的结果，过程才是对象。</strong></p>
+<blockquote>
+<p>可歎停机德，堪怜詠絮才</p>
+<p>——第五回</p>
+<p>好一似食盡鳥投林，落了片白茫茫大地真干淨</p>
+<p>——第五回</p>
+</blockquote></div></details><div class="qmis"><b>常见误读</b>　<p>把预叙读成宿命论。判词不是「命运的命令」，是「结构的索引」；它说的是「在这张网里，这样的位置会走到这样的结局」，不是「无论怎样都会这样」。</p></div><div class="qsrc">原文：第五回。</div></article>
+<article class="qcard" id="q5"><div class="qhead"><span class="qnum">Q5</span><span class="qlv">结构 · L2</span></div><h3 class="qtitle">刘姥姥三进荣国府，为什么是结构性的？</h3><div class="qask">一个乡下亲戚，为什么值得写三次？</div><details><summary>展开参考答案</summary><div class="qans"><p>因为她是<strong>外部视角</strong>。贾府里的人看不见自己的位置，刘姥姥看得见；她每次进来，都把这家人所处的阶段照出来。</p>
+<ul>
+<li>第一次（第 6 回）：贾府还在盛期，她来打秋风，看见的是「架子」；</li>
+<li>第二次（第 39–42 回）：她进大观园，被当作笑料，看见的是「奢」；</li>
+<li>第三次（第 113 回）：贾府败落，她来救巧姐，看见的是「败」。</li>
+</ul>
+<p><strong>同一个外部人，三次进入，三次照出不同的贾府。</strong> 这不是插科打诨，是结构性的对照。</p>
+<blockquote>
+<p>劉姥姥一進榮國府</p>
+<p>——第六回</p>
+</blockquote></div></details><div class="qmis"><b>常见误读</b>　<p>把刘姥姥当纯喜剧角色。她的笑料是贾府给她的位置；她最后一次进来，位置反过来了。</p></div><div class="qsrc">原文：第六回回目。</div></article>
+<article class="qcard" id="q6"><div class="qhead"><span class="qnum">Q6</span><span class="qlv">结构 · L2</span></div><h3 class="qtitle">诗社、宴席、灯谜为什么占这么大篇幅？</h3><div class="qask">这些「闲笔」删掉，主线不是更清楚吗？</div><details><summary>展开参考答案</summary><div class="qans"><p>它们不是闲笔，是<strong>关系网的低摩擦运行样本</strong>。</p>
+<p>诗社（第 37–38 回）让少女们暂时绕开家族等级，按「诗」重新排位；宴席（第 40、53、63 回）让全族按辈分、亲疏、面子重新排位；灯谜（第 22 回）把人物的结局写成谜面，是预叙的另一种形式。</p>
+<p><strong>没有这些场面，关系网就只剩冲突和算计，看不出它平时怎么运转。</strong> 而「平时怎么运转」恰恰是这本书最独有的部分。</p>
+<blockquote>
+<p>敏探春興利除宿弊</p>
+<p>——第五十六回</p>
+</blockquote></div></details><div class="qmis"><b>常见误读</b>　<p>把诗社当作者炫学。诗是人物关系的另一种语言：谁和谁联句、谁评谁的诗、谁不参加，都是位置信息。</p></div><div class="qsrc">原文：第三十七回、第五十六回回目。</div></article>
+<h2>矛盾层 · 哪里是真的冲突</h2>
+<article class="qcard" id="q7"><div class="qhead"><span class="qnum">Q7</span><span class="qlv">矛盾 · L3</span></div><h3 class="qtitle">宝玉说「女儿是水作的骨肉」，这是尊重女性还是另一种物化？</h3><div class="qask">这句话常被当作「尊重女性」的证据。它站得住吗？</div><details><summary>展开参考答案</summary><div class="qans"><p>两件事同时成立。</p>
+<p>它<strong>反转了官方等级</strong>：在一个以男性为中心的家族里，宝玉说女儿清爽、男子浊臭，这是对「男尊女卑」的正面颠倒。</p>
+<p>但它仍然是<strong>以「纯洁」定义女性</strong>：女儿被说成「水作的」，是因为她们被想象成未被污染的；一旦嫁人、变老、进入经济关系，这套定义就失效。<strong>它尊重的不是具体的人，是一个位置。</strong></p>
+<p>所以这句话是<strong>真实的尊重 + 有限的框架</strong>。宝玉对晴雯、黛玉、平儿的好是真的；但他理解她们的方式，仍然带着「女儿/妇人」的二分。</p>
+<blockquote>
+<p>女儿是水作的骨肉，男人是泥作的骨肉</p>
+<p>——第二回</p>
+<p>我見了女儿，我便清爽</p>
+<p>——第二回</p>
+</blockquote></div></details><div class="qmis"><b>常见误读</b>　<p>把这句话读成曹雪芹的女性主义宣言。它比当时的官方话语进步，但它不是现代意义上的性别平等。</p></div><div class="qsrc">原文：第二回。</div></article>
+<article class="qcard" id="q8"><div class="qhead"><span class="qnum">Q8</span><span class="qlv">矛盾 · L3</span></div><h3 class="qtitle">黛玉和宝钗，是对立还是互补？</h3><div class="qask">「拥黛贬钗」或「拥钗贬黛」，为什么都读窄了？</div><details><summary>展开参考答案</summary><div class="qans"><p>她们不是「好女人/坏女人」的对立，是<strong>两种关系原则</strong>的对立：</p>
+<table><thead><tr><th></th><th>黛玉</th><th>宝钗</th></tr></thead><tbody>
+<tr><td>关系如何成立</td><td>前定的、无条件的「木石前盟」</td><td>现实的、可计算的「金玉良姻」</td></tr>
+<tr><td>依靠什么</td><td>情、诗、默契</td><td>礼、家族、人情</td></tr>
+<tr><td>在网里的位置</td><td>亲戚、寄居者、可替换</td><td>正室候选人、家族联盟的节点</td></tr>
+</tbody></table>
+<p>宝玉「只念」前盟，但他活在金玉的世界里。<strong>这不是选谁的问题，是两种关系逻辑不能同时成立的问题。</strong></p>
+<p>所以更准确的判断是 <strong>Ⅱ 条件性对立</strong>：在「情」的条件里黛玉对，在「家族存续」的条件里宝钗对；两个条件不能同时满足。</p>
+<blockquote>
+<p>都道是金玉良姻，俺只念木石前盟</p>
+<p>——第五回</p>
+</blockquote></div></details><div class="qmis"><b>常见误读</b>　<p>把宝钗读成反派。她不是坏人，她是这张网里最懂规则的人；她的悲剧是「懂规则的人也只能被规则安排」。</p></div><div class="qsrc">原文：第五回。</div></article>
+<article class="qcard" id="q9"><div class="qhead"><span class="qnum">Q9</span><span class="qlv">矛盾 · L3</span></div><h3 class="qtitle">「情」与「礼」的冲突，究竟在哪一层？</h3><div class="qask">说「这本书写爱情与礼教的冲突」，为什么太粗？</div><details><summary>展开参考答案</summary><div class="qans"><p>因为「礼」不是一套抽象观念，是这张网的<strong>操作系统</strong>：它规定谁先坐、谁给谁磕头、谁的钱怎么花、谁的女儿嫁给谁。离开这些具体操作，「礼」什么都不是。</p>
+<p>「情」则是这套系统<strong>排不进日程的剩余</strong>：它不产生名分，不产生财产，不产生可交换的位置。所以情一出现，系统就不知道怎么处理它。</p>
+<p>书里的三个出口，正好对应三种处理方式：</p>
+<ul>
+<li>黛玉：把情写成诗，最后烧掉（第 97 回）；</li>
+<li>宝钗：把情纳入礼，成为「齊眉舉案」；</li>
+<li>宝玉：把情变成出家，退出系统（第 119 回）。</li>
+</ul>
+<p><strong>冲突不在「情与礼」的口号层，在「情能不能被排进这张网」的操作层。</strong></p>
+<blockquote>
+<p>質本洁來還洁去，強于污淖陷渠溝</p>
+<p>——第二十七回</p>
+</blockquote></div></details><div class="qmis"><b>常见误读</b>　<p>把「礼」当成单纯的压迫。礼也是这张网得以运转的东西；没有礼，贾府一天都转不下去。</p></div><div class="qsrc">原文：第二十七回。</div></article>
+<article class="qcard" id="q10"><div class="qhead"><span class="qnum">Q10</span><span class="qlv">矛盾 · L3</span></div><h3 class="qtitle">贾府的衰败，是外部抄家还是内部腐烂？</h3><div class="qask">第 105 回「錦衣軍查抄宁國府」看起来是决定性的。它是原因吗？</div><details><summary>展开参考答案</summary><div class="qans"><p>它是<strong>执行</strong>，不是原因。</p>
+<p>内部腐烂的证据，早在抄家之前就写满了：秦可卿托梦（第 13 回）给出财政预案，没人执行；冷子兴说「百足之虫，死而不僵」，但「內囊卻也盡上來了」（第 2 回）；探春抄检时说「必須先從家里自殺自滅起來」（第 74 回）。</p>
+<p>外部的查抄只是把一张已经松掉的网剪断。<strong>结构先坏，外力才推得倒。</strong></p>
+<blockquote>
+<p>樹倒猢猻散</p>
+<p>——第十三回</p>
+<p>錦衣軍查抄宁國府</p>
+<p>——第一零五回</p>
+</blockquote></div></details><div class="qmis"><b>常见误读</b>　<p>把抄家当根本原因。如果贾府财政、人事、礼法都还稳，一次查抄不会让它一败涂地；反过来，如果内部已经空了，没有查抄也会以别的方式倒。</p></div><div class="qsrc">原文：第十三回、第七十四回、第一零五回。</div></article>
+<article class="qcard" id="q11"><div class="qhead"><span class="qnum">Q11</span><span class="qlv">矛盾 · L3</span></div><h3 class="qtitle">王熙凤是能臣还是蛀虫？</h3><div class="qask">她管家有一套，但也贪、也狠。该怎么判？</div><details><summary>展开参考答案</summary><div class="qans"><p>两个都是，而且不是「功过相抵」这种算法。</p>
+<p>她是这张网里<strong>最强的操作者</strong>：协理宁国府、操办省亲、放贷、压人，都是把关系用到极致。没有她，贾府的日常运转会更早出问题。</p>
+<p>但她也是<strong>最大的泄漏点</strong>：她的权力来自贾母和王夫人，不对下负责；她的收益来自灰色地带，不进公账。她越能干，网的漏洞越大。</p>
+<p>所以「能臣/蛀虫」这个二选一本身是错的。<strong>她是这张网的运作方式的人格化</strong>：网靠她转，也因她漏。</p>
+<blockquote>
+<p>机關算盡太聰明，反算了卿卿性命</p>
+<p>——第五回</p>
+</blockquote></div></details><div class="qmis"><b>常见误读</b>　<p>把凤姐读成单一反派，或读成「女强人」。她不是道德剧角色，是结构位置。</p></div><div class="qsrc">原文：第五回。</div></article>
+<article class="qcard" id="q12"><div class="qhead"><span class="qnum">Q12</span><span class="qlv">矛盾 · L3</span></div><h3 class="qtitle">探春理家为什么救不了贾府？</h3><div class="qask">探春有能力、有担当，第 56 回的改革也有效。为什么还是失败？</div><details><summary>展开参考答案</summary><div class="qans"><p>因为她能改<strong>规则内的效率</strong>，不能改<strong>规则本身</strong>。</p>
+<p>她理家做的事——免重复开支、包产到人、约束下人——都是在现有权力结构里做优化。但她的权力来自王夫人临时授权，不是制度位置；她的改革动不到「嫡庶」「长房二房」「主子奴才」这些根本关系。</p>
+<p>第 74 回她骂抄检，说「必須先從家里自殺自滅起來」，说明她<strong>看得见结构</strong>。但看见不等于能改：她是这张网里最清醒的人之一，也是最无力的人之一。</p>
+<blockquote>
+<p>敏探春興利除宿弊</p>
+<p>——第五十六回</p>
+</blockquote></div></details><div class="qmis"><b>常见误读</b>　<p>把失败归因于「能力不够」或「庶出身份」。庶出是限制，但根本限制是：<strong>改革者没有改规则的授权。</strong></p></div><div class="qsrc">原文：第五十六回回目。</div></article>
+<h2>边界层 · 这本书解释不了什么</h2>
+<article class="qcard" id="q13"><div class="qhead"><span class="qnum">Q13</span><span class="qlv">边界 · L4</span></div><h3 class="qtitle">后 40 回与前 80 回是同一本书吗？</h3><div class="qask">120 回读下来很顺，为什么还有这个问题？</div><details><summary>展开参考答案</summary><div class="qans"><p>先分清两件事：<strong>文本形态</strong>和<strong>价值方向</strong>。</p>
+<p>文本形态上，这个底本是 120 回，没有分界标记、没有序跋；<strong>从文件本身无法判定前 80/后 40 的分界</strong>。所以「是不是同一本书」不能靠这个底本回答。</p>
+<p>价值方向上，有缝：第 5 回收尾说「落了片白茫茫大地真干淨」，第 120 回说「蘭桂齊芳，家道复初」。一个是「空」，一个是「复」。</p>
+<p><strong>可以这样处理</strong>：把 120 回当一个整体读；但做价值判断时，说明自己用的是哪一层。<strong>不要把「后 40 回」一棍子打死，也不要把 120 回当成无缝的整体。</strong></p>
+<blockquote>
+<p>蘭桂齊芳，家道复初</p>
+<p>——第一二零回</p>
+</blockquote></div></details><div class="qmis"><b>常见误读</b>　<p>用「后 40 回是续书」解释一切读不顺的地方。那是版本学判断，不是文本内的万能解释。</p></div><div class="qsrc">原文：第五回、第一二零回。</div></article>
+<article class="qcard" id="q14"><div class="qhead"><span class="qnum">Q14</span><span class="qlv">边界 · L4</span></div><h3 class="qtitle">曹雪芹的「本意」能复原吗？</h3><div class="qask">读这本书，要不要追求「作者到底想说什么」？</div><details><summary>展开参考答案</summary><div class="qans"><p>不能复原，而且不该把「本意」当裁决标准。</p>
+<p>这个底本没有序跋、没有作者手稿、没有批语；「曹雪芹的本意」在文本之外，只能靠版本学、史料、批语去逼近。<strong>把「本意」当答案，等于用一个文本给不了的东西做裁决。</strong></p>
+<p>更稳的做法是：<strong>看文本能支持哪些读法，以及每种读法的边界。</strong> 这就是这份手册每条都写「常见误读」和「原文」的原因。</p>
+<blockquote>
+<p>因曾歷過一番夢幻之后，故將真事隱去</p>
+<p>——第一回</p>
+</blockquote></div></details><div class="qmis"><b>常见误读</b>　<p>把「作者本意」当成比文本更高的权威。文本一旦写成，它的意义就不再只由作者控制。</p></div><div class="qsrc">原文：第一回。</div></article>
+<article class="qcard" id="q15"><div class="qhead"><span class="qnum">Q15</span><span class="qlv">边界 · L4</span></div><h3 class="qtitle">判词式的预叙，会不会取消悬念？</h3><div class="qask">结局都知道了，读下去还有什么意思？</div><details><summary>展开参考答案</summary><div class="qans"><p>悬念被换掉了，不是被取消了。</p>
+<p>判词给的是<strong>终点</strong>，不是<strong>路径</strong>。读者知道黛玉会死，但不知道怎么死；知道贾府会败，但不知道哪一根梁先断。<strong>路径由关系网生产，而关系网的运转是读者猜不到的。</strong></p>
+<p>另外，判词本身是<strong>看不懂的</strong>：宝玉在第 5 回看了判词「仍不解」。读者第一次读也不解。于是形成一种双重错位：读者知道有结局，但不知道结局指什么；宝玉身在局中，也不知道。</p>
+<blockquote>
+<p>可歎停机德，堪怜詠絮才</p>
+<p>——第五回</p>
+</blockquote></div></details><div class="qmis"><b>常见误读</b>　<p>把预叙当剧透。剧透取消的是「后来会怎样」；预叙建立的是「为什么会这样」。</p></div><div class="qsrc">原文：第五回。</div></article>
+<article class="qcard" id="q16"><div class="qhead"><span class="qnum">Q16</span><span class="qlv">边界 · L4</span></div><h3 class="qtitle">「关系性自我」能解释紅樓夢吗？它的边界在哪？</h3><div class="qask">`00_中文原典` 的「关系性自我」这条轴，能不能直接拿来读这本书？</div><details><summary>展开参考答案</summary><div class="qans"><p>能解释一大半，但不能解释全部。</p>
+<p>它能解释：宝玉的自我是在贾母、王夫人、黛玉、宝钗、袭人这些关系里被定义的；他的每一次「疯」「病」「出家」，都是关系网变动的反应；贾府里的人没有一个是「先有完整自我，再进入关系」的。</p>
+<p>它不能解释：为什么偏偏是宝玉、黛玉、探春这些人？为什么同样的位置，不同的人反应不同？<strong>网构成他们，但不完全解释他们。</strong></p>
+<p>所以这本书对「关系性自我」的价值，不是提供一个证明，是提供一个<strong>边界案例</strong>：关系性自我能解释位置，不能解释个人。</p></div></details><div class="qmis"><b>常见误读</b>　<p>把「关系性自我」当成万能钥匙，读什么都能套。那样会把这本书读成社会学案例，丢掉它的文学性。 ---</p></div><div class="qsrc">原文：</div></article>
+<article class="qcard" id="q17"><div class="qhead"><span class="qnum">Q17</span><span class="qlv">边界 · L4</span></div><h3 class="qtitle">把紅樓夢当「封建社会百科全书」读，会漏掉什么？</h3><div class="qask">书里确实有大量制度、经济、礼俗材料。这样读有什么问题？</div><details><summary>展开参考答案</summary><div class="qans"><p>会漏掉三样东西。</p>
+<p>第一，<strong>叙事语法</strong>：这本书为什么用石头叙事、为什么预叙、为什么把诗社和抄检并置——这些不是「材料」，是写法。</p>
+<p>第二，<strong>关系网的因果力</strong>：制度材料是静态的，网是动态的；同样的制度，在不同的关系配置下结果完全不同。</p>
+<p>第三，<strong>个人的不可还原性</strong>：把人物当「阶层/性别/家族」的样本，就会漏掉黛玉的诗、宝玉的梦、探春的那句话。</p>
+<p><strong>这本书不是社会学报告，它是一部用关系网写的小说。</strong> 材料是骨架，写法才是它作为文学的地方。</p>
+<blockquote>
+<p>假作真時真亦假，無為有處有還無</p>
+<p>——第一回</p>
+</blockquote></div></details><div class="qmis"><b>常见误读</b>　<p>把「百科全书」当褒奖。它确实是百科全书式的，但百科全书不会告诉你「位置如何决定命运」。</p></div><div class="qsrc">原文：第一回。</div></article>
+<article class="qcard" id="q18"><div class="qhead"><span class="qnum">Q18</span><span class="qlv">边界 · L4</span></div><h3 class="qtitle">「真假/梦幻」是主题，还是叙事借口？</h3><div class="qask">石头、太虚幻境、判词、梦——这些框架是不是作者用来逃避现实解释的？</div><details><summary>展开参考答案</summary><div class="qans"><p>不是借口，是<strong>认识论装置</strong>。</p>
+<p>「假作真時真亦假」不是「一切都是假的」，而是：<strong>真假不是两个世界，是同一个世界的两种读法。</strong> 太虚幻境是现实层的索引；大观园是现实层的实验；石头是现实层的观察点。</p>
+<p>如果把这些框架拿掉，这本书仍然可以讲一个家族衰败的故事，但它会变成一部社会小说；加上这些框架，它才变成一部<strong>关于「关系网如何被看见」的小说</strong>。</p>
+<blockquote>
+<p>假作真時真亦假，無為有處有還無</p>
+<p>——第一回</p>
+</blockquote></div></details><div class="qmis"><b>常见误读</b>　<p>把「梦幻」读成虚无主义。书里的梦不是「什么都不算」，是「换一个位置看」。</p></div><div class="qsrc">原文：第一回。</div></article>
+<h2>对照层 · 和库里别的书对读</h2>
+<article class="qcard" id="q19"><div class="qhead"><span class="qnum">Q19</span><span class="qlv">对照 · L4</span></div><h3 class="qtitle">与《論語》对读：贾府是儒家的成功还是失败？</h3><div class="qask">贾府礼法繁密、孝道森严。它算儒家秩序的成功样本吗？</div><details><summary>展开参考答案</summary><div class="qans"><p><strong>结构上是成功，内容上是失败。</strong></p>
+<p>结构上：贾府有完整的礼法、祠堂、辈分、丧葬、婚配程序；没有这套东西，这张网一天都转不下去。这是儒家秩序在家族层面的成功。</p>
+<p>内容上：礼变成了权力技术。贾母的偏爱、王夫人的护子、贾政的严厉，都可以用「礼」来包装；礼越繁密，越能遮住利益。探春理家动不了规则，正说明礼已经从「成人」变成了「排位」。</p>
+<p><strong>所以贾府不是「儒家失败」的简单证据，是「礼的形式还在、礼的内容空了」的样本。</strong> 这和《論語》里「礼」的理想，正好构成一对需要分开看的层次。</p></div></details><div class="qmis"><b>常见误读</b>　<p>把这本书读成「反儒」。它反的不是礼，是礼的空壳化。 ---</p></div><div class="qsrc">原文：</div></article>
+<article class="qcard" id="q20"><div class="qhead"><span class="qnum">Q20</span><span class="qlv">对照 · L4</span></div><h3 class="qtitle">与《枪炮病菌与钢铁》对读：地理决定与关系网</h3><div class="qask">戴蒙德用地理和生物条件解释历史，紅樓夢用关系网解释家族。两者冲突吗？</div><details><summary>展开参考答案</summary><div class="qans"><p>不冲突，<strong>尺度不同</strong>。</p>
+<p>戴蒙德解释的是<strong>万年、洲际</strong>尺度的轨迹：为什么某些大陆先有粮食生产、病菌、钢铁。紅樓夢解释的是<strong>百年、家族</strong>尺度的结果：为什么这个位置上的这个人会走到这一步。</p>
+<p>把戴蒙德的「终极因」直接套到贾府，会得出「贾府败于地理」这种笑话；把紅樓夢的「关系网」直接套到洲际史，会得出「历史由人情决定」这种空话。</p>
+<p><strong>两者是不同尺度的解释，不是同一个问题的两个答案。</strong> 这也正是冲突地图 CF1 判「Ⅱ 条件性对立」的理由。</p></div></details><div class="qmis"><b>常见误读</b>　<p>把「地理决定」和「关系决定」当成两种世界观去选边。它们回答的不是同一个问题。 ---</p></div><div class="qsrc">原文：</div></article>
+<article class="qcard" id="q21"><div class="qhead"><span class="qnum">Q21</span><span class="qlv">对照 · L4</span></div><h3 class="qtitle">与 米勒《亲密关系》对读：依恋/交换与木石前盟</h3><div class="qask">米勒 用依恋类型、相互依赖、交换来解释亲密关系。它能解释宝黛吗？</div><details><summary>展开参考答案</summary><div class="qans"><p>能解释一部分，但不能解释「前盟」。</p>
+<p>米勒的框架能解释：黛玉的不安全感、宝玉的回避/焦虑、两人求近反而疏远的互动模式；这些在心理学层面是成立的。</p>
+<p>但「木石前盟」不是经验变量，是<strong>规范性/神话性的关系设定</strong>：它说这段关系在出生之前就定了，不靠交换、不靠经营。米勒的框架里没有这个东西。</p>
+<p><strong>所以这是 Ⅲ 范畴不同</strong>：米勒 解释「关系如何运作」，紅樓夢设定「关系为什么必须是这样」。一个给机制，一个给意义。</p></div></details><div class="qmis"><b>常见误读</b>　<p>用依恋类型给宝黛贴标签，然后说「你看，心理学早就解释了」。贴标签能解释互动，解释不了「前盟」这个设定。 ---</p></div><div class="qsrc">原文：</div></article>
+<article class="qcard" id="q22"><div class="qhead"><span class="qnum">Q22</span><span class="qlv">对照 · L4</span></div><h3 class="qtitle">与《无穷的开始》对读：好解释与叙事</h3><div class="qask">多伊奇说好解释是「难以改变」的。紅樓夢的叙事经得起这个判据吗？</div><details><summary>展开参考答案</summary><div class="qans"><p>经不起，而且它不打算经起。</p>
+<p>多伊奇的判据是<strong>解释的硬度</strong>：改一个细节，整个解释会不会垮。紅樓夢的叙事恰恰是<strong>多义的</strong>：判词可以多种读法，人物可以多种评价，结局可以两层收束。它不是「好解释」，它是「好叙事」。</p>
+<p>但这不是说它「坏」。<strong>好解释和好叙事是两种不同的东西</strong>：一个好解释要排他，一个好叙事要容纳。用多伊奇的判据去判小说，是拿尺子量重量。</p>
+<p><strong>所以这是 Ⅲ 范畴不同</strong>：一个问「哪个解释更真」，一个问「哪种叙事更能装下人的处境」。</p></div></details><div class="qmis"><b>常见误读</b>　<p>把「难以改变」当成评价一切文本的标准。那样会把所有文学都判成「坏解释」。 ---</p></div><div class="qsrc">原文：</div></article>
+<article class="qcard" id="q23"><div class="qhead"><span class="qnum">Q23</span><span class="qlv">对照 · L4</span></div><h3 class="qtitle">与《置身事内》对读：家族财政与地方政府</h3><div class="qask">贾府的财政危机，和地方政府的债务问题，是同一个结构吗？</div><details><summary>展开参考答案</summary><div class="qans"><p>有相似，但不是同一个。</p>
+<p>相似处：都是<strong>收入与责任不匹配</strong>——贾府的收入（地租、赏赐）越来越撑不住排场、人情、祭祀；地方政府的收入（税收、土地）撑不住基建、民生、债务。两边都有「内囊尽上来了」的时刻。</p>
+<p>不同处：贾府是<strong>家族</strong>，没有破产程序、没有上级救助、没有货币主权；地方政府是<strong>政权单位</strong>，有转移支付、债务置换、中央兜底。两者的退出机制完全不同。</p>
+<p><strong>所以这是 Ⅴ 层级不同 / Ⅱ 条件性对立</strong>：结构相似，条件不同；可以互相照亮，不能直接套用。</p></div></details><div class="qmis"><b>常见误读</b>　<p>把贾府当「地方政府」的寓言。类比能启发，不能当证据。 ---</p></div><div class="qsrc">原文：</div></article>
+<article class="qcard" id="q24"><div class="qhead"><span class="qnum">Q24</span><span class="qlv">对照 · L4</span></div><h3 class="qtitle">最后一问：你读的是谁的结局？</h3><div class="qask">这本书有贾府的结局、宝玉的结局、黛玉的结局、你的结局。你读的是哪一个？</div><details><summary>展开参考答案</summary><div class="qans"></div></details><div class="qmis"><b>常见误读</b>　</div><div class="qsrc">原文：</div></article>
+<div class="selftest"><h2 style="margin-top:0;">自测清单</h2><p>能全部说「是」，才算读进去了：</p>
+<ul>
+<li>[ ] 我能说出「主角是网」和「主角是宝玉」两种读法的差别，以及各自漏掉什么。</li>
+<li>[ ] 我能解释石头为什么是「受限叙述者」，而不是作者自况。</li>
+<li>[ ] 我能说出大观园建立和抄检是同一结构的两端。</li>
+<li>[ ] 我能解释预叙为什么不是剧透。</li>
+<li>[ ] 我能说出刘姥姥三次进府分别照出贾府的什么阶段。</li>
+<li>[ ] 我能说出诗社/宴席在结构上的功能，而不只是「闲笔」。</li>
+<li>[ ] 我能说出宝玉女儿观的两面：反转等级 + 仍然物化。</li>
+<li>[ ] 我能把钗黛之争判成「条件性对立」，而不是「好人/坏人」。</li>
+<li>[ ] 我能说出「情/礼」冲突的操作层，而不只是口号层。</li>
+<li>[ ] 我能用三条内部证据说明贾府衰败先于抄家。</li>
+<li>[ ] 我能说出王熙凤「能臣/蛀虫」二选一为什么是错的。</li>
+<li>[ ] 我能说出探春改革失败的结构原因。</li>
+<li>[ ] 我能说出后 40 回「文本形态」和「价值方向」的区别。</li>
+<li>[ ] 我能说出「作者本意」为什么不能当裁决标准。</li>
+<li>[ ] 我能说出「关系性自我」能解释什么、不能解释什么。</li>
+<li>[ ] 我能说出这本书至少一处「我读不懂」的地方，并知道下一步查什么。</li>
+</ul></div>
+  </main>
+  <div class="footer">《紅樓夢》问题手册<br>先自己答，再展开；答案不是标准答案，是可以站住的读法 + 它的边界</div>
+</div>
+</body>
+</html>

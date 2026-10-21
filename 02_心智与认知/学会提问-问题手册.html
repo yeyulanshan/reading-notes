@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>《学会提问》问题手册</title>
+<style>
+  :root{
+    --paper:#f7f4ed;
+    --card:#fffdf8;
+    --edge:#ded6c8;
+    --ink:#2b2721;
+    --ink-mid:#5c5449;
+    --ink-soft:#8c8175;
+    --teal:#166060;
+    --teal-soft:#e6efee;
+    --rust:#b1442a;
+    --rust-soft:#f7e9e4;
+    --gold:#9a7420;
+    --gold-soft:#f5eeda;
+    --sage:#55703c;
+    --sage-soft:#ecf0e2;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--paper);color:var(--ink);padding:36px 20px 48px;line-height:1.88;
+    -webkit-font-smoothing:antialiased;
+  }
+  .container{max-width:920px;margin:0 auto;}
+
+  .header{
+    text-align:center;margin-bottom:30px;padding:44px 24px 40px;
+    background:var(--card);border:1px solid var(--edge);border-top:5px solid var(--teal);
+    border-radius:4px;
+  }
+  .header h1{font-size:27px;color:var(--ink);margin-bottom:12px;letter-spacing:.5px;}
+  .header .subtitle{font-size:14.5px;color:var(--ink-mid);}
+  .header .author{margin-top:16px;font-size:12.5px;color:var(--ink-soft);letter-spacing:.5px;}
+
+  main{
+    background:var(--card);border:1px solid var(--edge);border-radius:4px;
+    padding:34px 38px;
+  }
+
+  h1{font-size:23px;color:var(--ink);margin:8px 0 18px;}
+  h2{
+    font-size:20px;color:var(--ink);margin:40px 0 16px;
+    padding-left:13px;border-left:4px solid var(--teal);letter-spacing:.3px;
+  }
+  h2:first-child{margin-top:0;}
+  h3{font-size:16.5px;color:var(--teal);margin:28px 0 12px;font-weight:700;}
+  h4{font-size:15px;color:var(--ink-mid);margin:18px 0 8px;}
+
+  p{color:var(--ink-mid);font-size:14.5px;margin-bottom:12px;}
+  strong{color:var(--ink);}
+  em{color:var(--rust);font-style:normal;font-weight:600;}
+
+  ul,ol{margin:8px 0 14px 24px;}
+  li{color:var(--ink-mid);font-size:14.5px;margin-bottom:6px;}
+
+  hr{border:none;border-top:1px solid var(--edge);margin:26px 0;}
+
+  table{width:100%;border-collapse:collapse;margin:14px 0 18px;font-size:13.5px;}
+  th,td{padding:10px 12px;border:1px solid var(--edge);text-align:left;vertical-align:top;}
+  th{background:var(--teal-soft);color:var(--teal);font-weight:700;}
+  td{color:var(--ink-mid);}
+
+  blockquote{
+    background:var(--gold-soft);border:1px solid #e6dcc0;border-left:4px solid var(--gold);
+    border-radius:0 3px 3px 0;padding:16px 20px;margin:14px 0;
+  }
+  blockquote p{color:#6d5011;font-size:14px;font-style:italic;margin-bottom:8px;}
+  blockquote p:last-child{margin-bottom:0;}
+  blockquote strong{color:#5a420d;}
+
+  code{
+    background:var(--paper);padding:1.5px 6px;border-radius:3px;
+    font-family:Consolas,Monaco,monospace;font-size:13px;color:var(--teal);
+  }
+  pre{
+    background:var(--paper);border:1px solid var(--edge);border-radius:3px;
+    padding:14px 16px;overflow-x:auto;margin:12px 0 16px;
+  }
+  pre code{background:none;padding:0;line-height:1.65;}
+
+  /* 专业问题标题 */
+  .q-title{
+    background:var(--teal-soft);border-left:4px solid var(--teal);
+    border-radius:0 3px 3px 0;padding:13px 18px;margin:28px 0 12px;
+    color:var(--ink);font-size:15.5px;font-weight:700;line-height:1.7;
+  }
+
+  .footer{
+    text-align:center;margin-top:38px;padding:20px;color:var(--ink-soft);font-size:12.5px;line-height:1.9;
+  }
+
+  @media(max-width:640px){
+    .header h1{font-size:20px;}
+    h2{font-size:17.5px;}
+    body{padding:20px 14px 32px;}
+    main{padding:22px 18px;}
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <h1>《学会提问》问题手册</h1>
+    <div class="subtitle">20 题 · 四层 · 先自己答，再看参考</div>
+    <div class="author">Browne / Keeley · 引文逐页核 PDF</div>
+  </div>
+
+  <main>
+<p><strong>20 题 · 四层</strong>：结构 5 · 矛盾 5 · 边界 5 · 对照 5</p>
+<p><strong>用法</strong>：先自己答，再看参考。答案不是标准答案，是「可以站住的读法 + 它的边界」。</p>
+<p><strong>底本</strong>：<code>02_心智与认知/学会提问_全文.txt</code>（PDF 291 页）。引文页码为 PDF 页码。</p>
+<hr>
+<h2>结构层 · 这套方法怎么搭起来</h2>
+<h3>Q1 · 批判性思维到底是什么？</h3>
+<p><strong>层</strong>：结构 · L1</p>
+<p><strong>问</strong>：是「多问为什么」，还是「怀疑一切」？</p>
+<p><strong>答</strong>：</p>
+<p>都不是。它是一套<strong>相互联系的关键问题</strong>：论题是什么、结论是什么、理由是什么、词有没有歧义、假设是什么、证据够不够、有没有替代原因、数据有没有骗人、漏了什么。</p>
+<p>它的目的不是把别人问倒，是<strong>在决定信什么/做什么之前，先检查论证的骨架</strong>。</p>
+<p><strong>常见误读</strong>：把批判性思维当成「挑刺」或「抬杠」。挑刺只需要否定，批判性思维要能<strong>重建</strong>一个更好的论证。</p>
+<hr>
+<h3>Q2 · 海绵式思维和淘金式思维，哪个更好？</h3>
+<p><strong>层</strong>：结构 · L1</p>
+<p><strong>问</strong>：读书到底是「全盘吸收」还是「处处质疑」？</p>
+<p><strong>答</strong>：</p>
+<p>不是二选一，是<strong>顺序</strong>。</p>
+<p>海绵式：吸收快、打底、建立知识量；缺点是<strong>没有取舍标准</strong>，读什么信什么。</p>
+<p>淘金式：带着问题读、随时辩驳；缺点是<strong>要先有一点知识</strong>，否则淘不出东西。</p>
+<blockquote>
+<p>海绵式思维强调单纯的知识获取结果</p>
+<p>——p.17</p>
+<p>淘金式思维则重视在获取知识的过程中与知识展开积极互动</p>
+<p>——p.17</p>
+</blockquote>
+<p><strong>正确顺序</strong>：先海绵打底，再淘金盘筛。</p>
+<hr>
+<h3>Q3 · 弱势批判性思维和强势批判性思维，差在哪？</h3>
+<p><strong>层</strong>：结构 · L1</p>
+<p><strong>问</strong>：都是「质疑」，为什么还要分强弱？</p>
+<p><strong>答</strong>：</p>
+<p>差在<strong>质疑谁</strong>。</p>
+<blockquote>
+<p>弱势批判性思维是利用批判性思维来捍卫自己现有的立场和看法</p>
+<p>——p.25</p>
+<p>强势批判性思维是利用批判性思维来评估所有断言和看法，尤其是自己的看法</p>
+<p>——p.25</p>
+</blockquote>
+<p>弱势：用问题打别人，保护自己。</p>
+<p>强势：用同一套问题问所有人，<strong>包括自己</strong>。</p>
+<p><strong>这是全书最重要的一条纪律</strong>，也是「志愿时长 vs 数学建模奖」争论里最容易被跳过的一步：你质疑规则，也要质疑自己的主张。</p>
+<hr>
+<h3>Q4 · 论题、结论、理由，怎么分？</h3>
+<p><strong>层</strong>：结构 · L2</p>
+<p><strong>问</strong>：一段话里，哪个是论题，哪个是结论，哪个是理由？</p>
+<p><strong>答</strong>：</p>
+<ul>
+<li><strong>论题</strong>：引起讨论的问题/争议。</li>
+<li><strong>结论</strong>：作者希望你接受的那句话。</li>
+<li><strong>理由</strong>：支持结论的其他陈述。</li>
+</ul>
+<blockquote>
+<p>论题就是引起对话或讨论的问题抑或争议</p>
+<p>——p.45</p>
+<p>结论，即作者或演说者希望你接受的信息</p>
+<p>——p.49</p>
+</blockquote>
+<p>结构是「甲成立，因为乙」：甲=结论，乙=理由。</p>
+<p><strong>没有理由支撑的断言，只是「纯观点」，不是结论。</strong></p>
+<p><strong>常见误读</strong>：把「背景信息」当理由，把「重复结论」当理由。</p>
+<hr>
+<h3>Q5 · 为什么「词义」和「假设」是隐形的骨架？</h3>
+<p><strong>层</strong>：结构 · L2</p>
+<p><strong>问</strong>：论证看起来都挺有道理，为什么一追问就散？</p>
+<p><strong>答</strong>：</p>
+<p>因为关键词没定义，论证就是空的；因为假设没说出来，理由和结论之间就缺一块。</p>
+<ul>
+<li><strong>歧义</strong>：「排序」「含金量」「国家二等奖」「志愿」——每个词都能换一种解释。</li>
+<li><strong>价值观假设</strong>：什么更重要？公平、效率、统一、个体差异？</li>
+<li><strong>描述性假设</strong>：世界实际上是什么样？时长能代表贡献吗？奖项能代表能力吗？</li>
+</ul>
+<blockquote>
+<p>价值观假设，就是在特定情形下没有明说出来的喜欢一种价值观超过另一种价值观的偏向</p>
+<p>——p.109</p>
+<p>描述性假设就是没有说出来的关于世界过去、现在和将来是怎么样的一种看法</p>
+<p>——p.122</p>
+</blockquote>
+<p><strong>常见误读</strong>：只查逻辑，不查词义和假设。很多论证不是「推错」，是「词换了」。</p>
+<hr>
+<h2>矛盾层 · 哪里会打架</h2>
+<h3>Q6 · 批判性思维会不会变成「只会挑刺」？</h3>
+<p><strong>层</strong>：矛盾 · L3</p>
+<p><strong>问</strong>：如果每句话都要问证据，人会不会变得很讨厌？</p>
+<p><strong>答</strong>：</p>
+<p>会，如果只做「否定」这一半。</p>
+<p>完整的批判性思维包括：</p>
+<ol>
+<li>找出论证结构；</li>
+<li>检查证据/假设；</li>
+<li><strong>给出替代解释或更好的结论</strong>。</li>
+</ol>
+<p>只做 1-2，是挑刺；做到 3，才是思考。</p>
+<p><strong>常见误读</strong>：把「问倒对方」当目标。问倒很容易，重建很难。</p>
+<hr>
+<h3>Q7 · 我能用这套方法质疑自己的主张吗？</h3>
+<p><strong>层</strong>：矛盾 · L3</p>
+<p><strong>问</strong>：我明明觉得自己是对的，为什么还要质疑自己？</p>
+<p><strong>答</strong>：</p>
+<p>因为<strong>强势批判性思维</strong>的要求就是「一视同仁」，包括自己。</p>
+<p>具体做法：</p>
+<ul>
+<li>把我的主张写成「论题 + 结论 + 三条理由」；</li>
+<li>问：这三条理由，对方会怎么反驳？</li>
+<li>问：我有没有把「价值偏好」当成「事实」？</li>
+<li>问：如果我是评委，我会怎么挑这个论证的毛病？</li>
+</ul>
+<p><strong>这不是自我否定，是提前发现漏洞。</strong></p>
+<hr>
+<h3>Q8 · 价值观是相对的，那还怎么讲道理？</h3>
+<p><strong>层</strong>：矛盾 · L3</p>
+<p><strong>问</strong>：你说你的价值观，我说我的，谁也说服不了谁，怎么办？</p>
+<p><strong>答</strong>：</p>
+<p>先把「价值冲突」和「事实冲突」分开。</p>
+<ul>
+<li><strong>事实冲突</strong>：可以用证据、数据、逻辑解决。</li>
+<li><strong>价值冲突</strong>：不能靠证据解决，只能靠<strong>说清取舍</strong>：你要公平还是效率？统一还是个体差异？</li>
+</ul>
+<p>批判性思维不能替你做价值选择，但能帮你<strong>看清自己在选什么</strong>，以及<strong>对方的论证偷偷预设了哪种价值</strong>。</p>
+<p><strong>常见误读</strong>：用「价值观不同」逃避事实核查；或者用「事实如此」掩盖价值选择。</p>
+<hr>
+<h3>Q9 · 所有主张都必须有证据吗？</h3>
+<p><strong>层</strong>：矛盾 · L3</p>
+<p><strong>问</strong>：有些话是常识/价值/信仰，也要证据吗？</p>
+<p><strong>答</strong>：</p>
+<p>分三类：</p>
+<ul>
+<li><strong>事实断言</strong>：需要证据。</li>
+<li><strong>价值断言</strong>：不需要证据，但需要说明「你为什么这样排序」。</li>
+<li><strong>定义/概念</strong>：不需要证据，但需要说清「你指的是什么」。</li>
+</ul>
+<p><strong>常见误读</strong>：把价值断言当事实断言（「不按时长排就是不公平」），或者把事实断言当价值断言（「数据不会骗人」）。</p>
+<hr>
+<h3>Q10 · 批判性思维有没有「过度」的时候？</h3>
+<p><strong>层</strong>：矛盾 · L3</p>
+<p><strong>问</strong>：什么时候该停止追问？</p>
+<p><strong>答</strong>：</p>
+<p>三个停止条件：</p>
+<ol>
+<li><strong>代价大于收益</strong>：这个决定不重要，追问的成本超过错误成本。</li>
+<li><strong>对方没有能力/意愿回答</strong>：继续追问只会变成消耗。</li>
+<li><strong>你已经能做出「足够好」的决定</strong>：不需要无限证据。</li>
+</ol>
+<p>批判性思维是<strong>工具</strong>，不是<strong>义务</strong>。它的目的是更好地决定，不是永远不决定。</p>
+<hr>
+<h2>边界层 · 这套方法解释不了什么</h2>
+<h3>Q11 · 十个问题够用吗？</h3>
+<p><strong>层</strong>：边界 · L4</p>
+<p><strong>问</strong>：复杂的论证，用这十个问题会不会太简单？</p>
+<p><strong>答</strong>：</p>
+<p>十个问题是<strong>骨架</strong>，不是<strong>全部</strong>。</p>
+<p>复杂论证还需要：</p>
+<ul>
+<li>领域知识（不懂统计，就看不出数据问题）；</li>
+<li>论证的整体结构（不是逐句挑错）；</li>
+<li>修辞/语境（对方为什么现在说这句话）；</li>
+<li>权力关系（谁有资格定义问题）。</li>
+</ul>
+<p><strong>这本书给的是「通用检查表」，不是「专业判断」。</strong></p>
+<hr>
+<h3>Q12 · 这套方法是不是忽略了情绪和权力？</h3>
+<p><strong>层</strong>：边界 · L4</p>
+<p><strong>问</strong>：人不是纯逻辑动物，讲道理有用吗？</p>
+<p><strong>答</strong>：</p>
+<p>有用，但有限。</p>
+<ul>
+<li><strong>情绪</strong>：会影响人接受什么证据；先处理情绪，再讲论证。</li>
+<li><strong>权力</strong>：有权的人可以不回答、不提供信息、不改规则；这时候问题不是「论证对不对」，是「谁有义务回答」。</li>
+</ul>
+<p><strong>所以</strong>：批判性思维适合「愿意讲理」的场景；遇到「不讲理但有权力」的场景，要换工具（证据固定、书面询问、申诉、止损）。</p>
+<hr>
+<h3>Q13 · 这套方法在中国/中文语境里能用吗？</h3>
+<p><strong>层</strong>：边界 · L4</p>
+<p><strong>问</strong>：书里的例子都是美国的，会不会水土不服？</p>
+<p><strong>答</strong>：</p>
+<p>骨架能用，例子要换。</p>
+<p>中文语境的特殊处：</p>
+<ul>
+<li>很多论证不写在文章里，写在「关系/场合/暗示」里；</li>
+<li>「给面子」会让真实理由不露面；</li>
+<li>规则文本和实际执行可能两张皮。</li>
+</ul>
+<p><strong>用法</strong>：把「论题/结论/理由」的问法，换成更委婉的「我想确认一下，您的意思是……」「这条规定的考虑是什么？」</p>
+<hr>
+<h3>Q14 · 对方根本不回答，怎么办？</h3>
+<p><strong>层</strong>：边界 · L4</p>
+<p><strong>问</strong>：我问了关键问题，对方说「就是这样/你不懂」，还能怎么办？</p>
+<p><strong>答</strong>：</p>
+<p>把「口头追问」换成「书面留痕」：</p>
+<ul>
+<li>把问题写成一条条，要求书面答复；</li>
+<li>把「规定原文」和「实际做法」并排；</li>
+<li>把「谁举证」说清：是对方证明自己按规则做了，不是你证明自己更优秀。</li>
+</ul>
+<p><strong>这不是批判性思维的失败，是场景切换</strong>：从「论证评估」切到「举证责任」。</p>
+<hr>
+<h3>Q15 · 我没时间做完整分析，怎么办？</h3>
+<p><strong>层</strong>：边界 · L4</p>
+<p><strong>问</strong>：每件事都按十问走，太累了。</p>
+<p><strong>答</strong>：</p>
+<p>用「三问快筛」：</p>
+<ol>
+<li><strong>结论是什么？</strong>（先找准靶子）</li>
+<li><strong>理由是什么？</strong>（有没有支撑）</li>
+<li><strong>有没有关键词没定义？</strong>（防止偷换概念）</li>
+</ol>
+<p>三问过不了，再展开十问。</p>
+<p><strong>批判性思维要能「按需加深」，不是每次全量运行。</strong></p>
+<hr>
+<h2>对照层 · 和别的书对读</h2>
+<h3>Q16 · 与《国家的视角》对读：清晰化与批判性思维</h3>
+<p><strong>层</strong>：对照 · L4</p>
+<p><strong>问</strong>：一本讲国家，一本讲论证，怎么接？</p>
+<p><strong>答</strong>：</p>
+<p>《国家的视角》讲<strong>制度为什么偏爱可读的指标</strong>；《学会提问》讲<strong>怎么检查一个指标/论证的假设</strong>。</p>
+<p>合起来：</p>
+<ul>
+<li>国家视角解释「为什么志愿时长会被选中」；</li>
+<li>提问框架追问「这个选择预设了什么价值、漏了什么、有没有替代方案」。</li>
+</ul>
+<p><strong>一个给机制，一个给检查表。</strong></p>
+<hr>
+<h3>Q17 · 与《思考快与慢》对读：系统 1/2 与批判性思维</h3>
+<p><strong>层</strong>：对照 · L4</p>
+<p><strong>问</strong>：批判性思维是不是就是「多用系统 2」？</p>
+<p><strong>答</strong>：</p>
+<p>部分是，但不全是。</p>
+<p>系统 2 是慢、费力、可控制的加工；批判性思维需要它，但还需要<strong>知识 + 纪律 + 愿意质疑自己</strong>。</p>
+<p>系统 1 也不全是坏事：专家的直觉（米提斯）可以很快、很准。</p>
+<p><strong>关键不是「压制系统 1」，是知道什么时候该慢下来。</strong></p>
+<hr>
+<h3>Q18 · 与《维权复盘》对读：把问题从人拉回尺</h3>
+<p><strong>层</strong>：对照 · L4</p>
+<p><strong>问</strong>：维权复盘里的「举证责任陷阱」，用这本书怎么拆？</p>
+<p><strong>答</strong>：</p>
+<p>对方把论题从「你们用什么标准」换成「谁不如他」。</p>
+<p>用《学会提问》的话说：</p>
+<ul>
+<li><strong>论题被偷换了</strong>：从规定性（规则应该是什么）换成描述性/人际比较（谁更强）。</li>
+<li><strong>举证责任被颠倒了</strong>：本来该对方证明「按规则办了」，变成你证明「你更强」。</li>
+<li><strong>关键词没定义</strong>：「优秀」「综合素质」「谁不如谁」。</li>
+</ul>
+<p><strong>破法</strong>：把论题拉回「规则/标准」，要求对方举证。</p>
+<hr>
+<h3>Q19 · 与《枪炮病菌与钢铁》对读：替代原因</h3>
+<p><strong>层</strong>：对照 · L4</p>
+<p><strong>问</strong>：戴蒙德的历史解释，用这本书怎么检验？</p>
+<p><strong>答</strong>：</p>
+<p>用「替代原因」：</p>
+<ul>
+<li>地理/生态是戴蒙德的解释；</li>
+<li>制度、技术、文化、偶然事件，是替代原因；</li>
+<li>问：这些替代原因，能不能解释同样的结果？有没有被排除？</li>
+</ul>
+<p><strong>这不是否定戴蒙德，是要求他把「竞争解释」逐一排除。</strong></p>
+<hr>
+<h3>Q20 · 与《紅樓夢》对读：多义与证据</h3>
+<p><strong>层</strong>：对照 · L4</p>
+<p><strong>问</strong>：小说是多义的，批判性思维会不会把它读死？</p>
+<p><strong>答</strong>：</p>
+<p>不会，如果分清「事实断言」和「解释」。</p>
+<ul>
+<li>「黛玉焚稿在第 97 回」是事实断言，要证据。</li>
+<li>「焚稿代表什么」是解释，允许多种读法，但要看<strong>文本支持</strong>和<strong>是否排除其他读法</strong>。</li>
+</ul>
+<p><strong>批判性思维不是给小说一个标准答案，是让解释变得更可讨论。</strong></p>
+<hr>
+<h2>自测清单</h2>
+<ul>
+<li>[ ] 我能分清「论题」和「结论」。</li>
+<li>[ ] 我能把一段话拆成「结论 + 理由」。</li>
+<li>[ ] 我能找出一个关键词的两种定义。</li>
+<li>[ ] 我能说出一个论证的价值观假设。</li>
+<li>[ ] 我能说出一个论证的描述性假设。</li>
+<li>[ ] 我能区分「事实断言」和「价值断言」。</li>
+<li>[ ] 我能为一个结果想出两个替代原因。</li>
+<li>[ ] 我能看出一个平均值/百分比的可疑之处。</li>
+<li>[ ] 我能说出一个论证省略了哪些重要信息。</li>
+<li>[ ] 我能为一个争论给出三种以上合理结论。</li>
+<li>[ ] 我能用同一套问题质疑自己的主张。</li>
+<li>[ ] 我知道什么时候该停止追问。</li>
+</ul>
+  </main>
+
+  <div class="footer">
+    《学会提问》问题手册<br>
+    先自己回答，再看解答 —— 能讲成"通俗解释"那个样子，才算真的懂了
+  </div>
+
+</div>
+</body>
+</html>

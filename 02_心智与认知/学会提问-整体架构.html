@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>《学会提问》整体架构</title>
+<style>
+  :root{
+    --paper:#f7f4ed;
+    --card:#fffdf8;
+    --edge:#ded6c8;
+    --ink:#2b2721;
+    --ink-mid:#5c5449;
+    --ink-soft:#8c8175;
+    --teal:#166060;
+    --teal-soft:#e6efee;
+    --rust:#b1442a;
+    --rust-soft:#f7e9e4;
+    --gold:#9a7420;
+    --gold-soft:#f5eeda;
+    --sage:#55703c;
+    --sage-soft:#ecf0e2;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--paper);color:var(--ink);padding:36px 20px 48px;line-height:1.88;
+    -webkit-font-smoothing:antialiased;
+  }
+  .container{max-width:920px;margin:0 auto;}
+
+  .header{
+    text-align:center;margin-bottom:30px;padding:44px 24px 40px;
+    background:var(--card);border:1px solid var(--edge);border-top:5px solid var(--teal);
+    border-radius:4px;
+  }
+  .header h1{font-size:27px;color:var(--ink);margin-bottom:12px;letter-spacing:.5px;}
+  .header .subtitle{font-size:14.5px;color:var(--ink-mid);}
+  .header .author{margin-top:16px;font-size:12.5px;color:var(--ink-soft);letter-spacing:.5px;}
+
+  main{
+    background:var(--card);border:1px solid var(--edge);border-radius:4px;
+    padding:34px 38px;
+  }
+
+  h1{font-size:23px;color:var(--ink);margin:8px 0 18px;}
+  h2{
+    font-size:20px;color:var(--ink);margin:40px 0 16px;
+    padding-left:13px;border-left:4px solid var(--teal);letter-spacing:.3px;
+  }
+  h2:first-child{margin-top:0;}
+  h3{font-size:16.5px;color:var(--teal);margin:28px 0 12px;font-weight:700;}
+  h4{font-size:15px;color:var(--ink-mid);margin:18px 0 8px;}
+
+  p{color:var(--ink-mid);font-size:14.5px;margin-bottom:12px;}
+  strong{color:var(--ink);}
+  em{color:var(--rust);font-style:normal;font-weight:600;}
+
+  ul,ol{margin:8px 0 14px 24px;}
+  li{color:var(--ink-mid);font-size:14.5px;margin-bottom:6px;}
+
+  hr{border:none;border-top:1px solid var(--edge);margin:26px 0;}
+
+  table{width:100%;border-collapse:collapse;margin:14px 0 18px;font-size:13.5px;}
+  th,td{padding:10px 12px;border:1px solid var(--edge);text-align:left;vertical-align:top;}
+  th{background:var(--teal-soft);color:var(--teal);font-weight:700;}
+  td{color:var(--ink-mid);}
+
+  blockquote{
+    background:var(--gold-soft);border:1px solid #e6dcc0;border-left:4px solid var(--gold);
+    border-radius:0 3px 3px 0;padding:16px 20px;margin:14px 0;
+  }
+  blockquote p{color:#6d5011;font-size:14px;font-style:italic;margin-bottom:8px;}
+  blockquote p:last-child{margin-bottom:0;}
+  blockquote strong{color:#5a420d;}
+
+  code{
+    background:var(--paper);padding:1.5px 6px;border-radius:3px;
+    font-family:Consolas,Monaco,monospace;font-size:13px;color:var(--teal);
+  }
+  pre{
+    background:var(--paper);border:1px solid var(--edge);border-radius:3px;
+    padding:14px 16px;overflow-x:auto;margin:12px 0 16px;
+  }
+  pre code{background:none;padding:0;line-height:1.65;}
+
+  /* 专业问题标题 */
+  .q-title{
+    background:var(--teal-soft);border-left:4px solid var(--teal);
+    border-radius:0 3px 3px 0;padding:13px 18px;margin:28px 0 12px;
+    color:var(--ink);font-size:15.5px;font-weight:700;line-height:1.7;
+  }
+
+  .footer{
+    text-align:center;margin-top:38px;padding:20px;color:var(--ink-soft);font-size:12.5px;line-height:1.9;
+  }
+
+  @media(max-width:640px){
+    .header h1{font-size:20px;}
+    h2{font-size:17.5px;}
+    body{padding:20px 14px 32px;}
+    main{padding:22px 18px;}
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <h1>《学会提问》整体架构</h1>
+    <div class="subtitle">一套可以重复使用的关键问题，而不是一堆谬误名称</div>
+    <div class="author">Browne / Keeley · 机械工业出版社 2013 · 引文逐页核 PDF</div>
+  </div>
+
+  <main>
+<p><strong>底本</strong>：M. Neil Browne / Stuart M. Keeley《学会提问（原书第 10 版）》，吴礼敬译，机械工业出版社 2013 年版</p>
+<p><strong>来源</strong>：<code>02_心智与认知/学会提问_全文.txt</code>（PDF 291 页）</p>
+<p><strong>说明</strong>：引文页码为 PDF 页码；引文逐句核对，未改原文。</p>
+<hr>
+<h2>〇 · 一句话</h2>
+<p><strong>批判性思维不是「挑刺」，是一串可以重复使用的问题。</strong></p>
+<p>它的目标不是把别人问倒，是<strong>在决定信什么、做什么之前，先检查这个论证的骨架</strong>：</p>
+<p>论题是什么、结论是什么、理由是什么、词有没有歧义、假设是什么、证据够不够、有没有别的原因、漏了什么。</p>
+<hr>
+<h2>一 · 两种读书方式：海绵 vs 淘金</h2>
+<blockquote>
+<p>海绵式思维强调单纯的知识获取结果</p>
+<p>——p.17</p>
+<p>淘金式思维则重视在获取知识的过程中与知识展开积极互动</p>
+<p>——p.17</p>
+</blockquote>
+<p>海绵式：吸收快、轻松、适合打底；缺点是<strong>没有取舍标准</strong>，读到什么信什么。</p>
+<p>淘金式：带着问题读、随时准备辩驳；缺点是<strong>需要先有一点知识</strong>，否则淘不出东西。</p>
+<p><strong>两者不是对立，是顺序</strong>：先用海绵打底，再用淘金盘筛。</p>
+<hr>
+<h2>二 · 弱势 vs 强势批判性思维</h2>
+<blockquote>
+<p>弱势批判性思维是利用批判性思维来捍卫自己现有的立场和看法</p>
+<p>——p.25</p>
+<p>强势批判性思维是利用批判性思维来评估所有断言和看法，尤其是自己的看法</p>
+<p>——p.25</p>
+</blockquote>
+<p>这是全书最重要的一条纪律。</p>
+<ul>
+<li><strong>弱势</strong>：用批判性思维打别人，保护自己。</li>
+<li><strong>强势</strong>：用同一套问题问所有人，<strong>包括自己</strong>。</li>
+</ul>
+<p>在「志愿时长 vs 数学建模奖」的争论里，弱势用法是：</p>
+<p>「我的奖更厉害，你们不识货。」</p>
+<p>强势用法是：</p>
+<p>「我认为我的奖应该被算分——这个主张的论题、结论、理由、假设、证据是什么？对方的规则又基于什么假设？」</p>
+<hr>
+<h2>三 · 论证的骨架：论题、结论、理由</h2>
+<blockquote>
+<p>论题就是引起对话或讨论的问题抑或争议</p>
+<p>——p.45</p>
+<p>结论，即作者或演说者希望你接受的信息</p>
+<p>——p.49</p>
+</blockquote>
+<p>论证的基本结构是：<strong>甲成立，因为乙</strong>。</p>
+<p>「甲」是结论，「乙」是理由。</p>
+<p>论题分两类：</p>
+<table><thead><tr><th>类型</th><th>问什么</th><th>例子</th></tr></thead><tbody>
+<tr><td><strong>描述性论题</strong></td><td>世界是什么样</td><td>志愿时长和帮助质量有关系吗？</td></tr>
+<tr><td><strong>规定性论题</strong></td><td>世界应该什么样</td><td>奖学金应不应该按志愿时长排序？</td></tr>
+</tbody></table>
+<p><strong>很多争论吵不清，是因为把这两类论题混在一起。</strong></p>
+<p>「志愿时长能不能排序」是描述性问题；「应不应该只按它排序」是规定性问题。</p>
+<p>前者可以查规则/数据，后者要谈价值观。</p>
+<hr>
+<h2>四 · 歧义与假设：论证的隐形骨架</h2>
+<h3>4.1 歧义</h3>
+<p>关键词没定义，论证就是空的。</p>
+<ul>
+<li>「排序」：是按一个分数排，还是分档？</li>
+<li>「含金量」：是评审难度、获奖率，还是能力信号？</li>
+<li>「国家二等奖」：哪个竞赛、哪一年、什么赛道、团队还是个人？</li>
+<li>「志愿」：是服务时长，还是服务效果？</li>
+</ul>
+<p><strong>规则</strong>：谁想说服你，谁就有责任把关键词说清。</p>
+<h3>4.2 价值观假设</h3>
+<blockquote>
+<p>价值观假设，就是在特定情形下没有明说出来的喜欢一种价值观超过另一种价值观的偏向</p>
+<p>——p.109</p>
+</blockquote>
+<p>例子：</p>
+<ul>
+<li>「可量化比不可量化更公平」；</li>
+<li>「投入时间比一次高光成果更能说明品德」；</li>
+<li>「统一标准比个体差异更重要」。</li>
+</ul>
+<p>这些不是事实，是<strong>价值排序</strong>。它们可以被讨论，但不能被伪装成「客观规定」。</p>
+<h3>4.3 描述性假设</h3>
+<blockquote>
+<p>描述性假设就是没有说出来的关于世界过去、现在和将来是怎么样的一种看法</p>
+<p>——p.122</p>
+</blockquote>
+<p>例子：</p>
+<ul>
+<li>「志愿时长能代表服务贡献」；</li>
+<li>「所有国家二等奖的含金量差不多」；</li>
+<li>「获奖等级能代表个人能力」；</li>
+<li>「评委有时间读完所有材料」。</li>
+</ul>
+<p><strong>描述性假设是可以用证据检验的</strong>；价值观假设不能，只能谈取舍。</p>
+<hr>
+<h2>五 · 证据、替代原因、数据、省略信息</h2>
+<h3>5.1 证据的等级</h3>
+<p>不是所有「有证据」都一样。书里按证据类型逐一问：</p>
+<p>直觉、个人经历、典型案例、当事人证词、专家意见、个人观察、研究报告、类比。</p>
+<p><strong>关键问题</strong>：</p>
+<ul>
+<li>样本是谁？有多大？</li>
+<li>研究是可重复的吗？</li>
+<li>专家在这个问题上有利益冲突吗？</li>
+<li>类比在关键属性上真的相似吗？</li>
+</ul>
+<h3>5.2 替代原因</h3>
+<blockquote>
+<p>替代原因是指一个言之成理的替代解释</p>
+<p>——p.217</p>
+</blockquote>
+<p>「志愿时长多」可能有别的原因：</p>
+<ul>
+<li>他有更多空闲时间；</li>
+<li>他家离服务点更近；</li>
+<li>他有组织资源/信息；</li>
+<li>他更会「刷时长」。</li>
+</ul>
+<p>「数学建模获奖」也可能有别的原因：</p>
+<ul>
+<li>队友很强；</li>
+<li>指导老师很强；</li>
+<li>题目恰好熟悉；</li>
+<li>当年获奖率很高。</li>
+</ul>
+<p><strong>找到替代原因，不是否定成就，是防止把一个原因当成唯一原因。</strong></p>
+<h3>5.3 数据</h3>
+<blockquote>
+<p>统计数据可能而且经常骗人</p>
+<p>——p.241</p>
+</blockquote>
+<p>要问：</p>
+<ul>
+<li>这个数字是怎么定义的？</li>
+<li>平均值是中位数还是平均数？被极端值拉高了吗？</li>
+<li>分母是什么？</li>
+<li>数据来源是谁？有利益冲突吗？</li>
+<li>省略了哪些数据？</li>
+</ul>
+<h3>5.4 省略信息</h3>
+<blockquote>
+<p>重要的省略信息就是那些影响到推理过程的信息</p>
+<p>——p.261</p>
+<p>几乎任何一个你所遇到的信息都有一个目的</p>
+<p>——p.261</p>
+</blockquote>
+<p>评审规则给你看的，是<strong>规则文本</strong>；它没给你看的，可能是：</p>
+<ul>
+<li>细则/评分表；</li>
+<li>奖项认定目录；</li>
+<li>每个指标的权重；</li>
+<li>评委的裁量空间；</li>
+<li>往年的实际做法。</li>
+</ul>
+<p><strong>不是所有省略都是欺骗</strong>，但<strong>影响结论的省略</strong>必须追问。</p>
+<hr>
+<h2>六 · 不要二分：寻找多种合理结论</h2>
+<blockquote>
+<p>创造条件句特别有助于为评价型的论证找到合理的结论</p>
+<p>——p.282</p>
+</blockquote>
+<p>很多争论被压成「要么按志愿时长，要么按奖项」。</p>
+<p>但合理的结论可能有很多：</p>
+<ul>
+<li>志愿时长只作为「参与度」指标，不单独决定；</li>
+<li>奖项按「等级 + 面试/作品」折算；</li>
+<li>两类分开评，各占一定名额；</li>
+<li>设置「特殊情况说明」，允许例外；</li>
+<li>用分档代替精确排序。</li>
+</ul>
+<p><strong>批判性思维不是选一边，是把选项打开。</strong></p>
+<hr>
+<h2>七 · 用这套框架拆「志愿时长 vs 数学建模奖」</h2>
+<table><thead><tr><th>关键问题</th><th>在这个争论里</th></tr></thead><tbody>
+<tr><td>论题是什么</td><td>描述性：两者能不能用同一把尺子排？规定性：应不应该只按能排的那把尺子分配？</td></tr>
+<tr><td>结论是什么</td><td>「志愿时长可以排序，数学建模奖不能」——这是一个描述性结论，还是一个规定性结论？</td></tr>
+<tr><td>关键词有没有歧义</td><td>「排序」「含金量」「国家二等奖」「志愿」</td></tr>
+<tr><td>理由是什么</td><td>「时长有记录」「奖项没有统一标准」</td></tr>
+<tr><td>价值观假设</td><td>可量化=公平；投入时间=贡献；统一标准=公正</td></tr>
+<tr><td>描述性假设</td><td>时长能代表贡献；奖项等级能代表能力；评委有时间读材料</td></tr>
+<tr><td>证据够不够</td><td>规则文本、评分表、获奖率、认定目录、往年数据</td></tr>
+<tr><td>有没有替代原因</td><td>时长多可能是空闲多；获奖可能是团队强</td></tr>
+<tr><td>有没有省略信息</td><td>细则、权重、裁量空间、例外通道</td></tr>
+<tr><td>有没有多种结论</td><td>分档、分类、作品评审、例外说明、双轨制</td></tr>
+</tbody></table>
+<p><strong>这张表就是《可排序性》总解答的骨架。</strong></p>
+<hr>
+<h2>八 · 一页表：十个关键问题</h2>
+<table><thead><tr><th>#</th><th>问题</th><th>用途</th></tr></thead><tbody>
+<tr><td>1</td><td>论题和结论是什么？</td><td>先找准争点</td></tr>
+<tr><td>2</td><td>理由是什么？</td><td>看结论有没有支撑</td></tr>
+<tr><td>3</td><td>哪些词有歧义？</td><td>防止偷换概念</td></tr>
+<tr><td>4</td><td>有没有价值观假设？</td><td>看见价值排序</td></tr>
+<tr><td>5</td><td>有没有描述性假设？</td><td>看见对世界的预设</td></tr>
+<tr><td>6</td><td>推理有没有谬误？</td><td>查逻辑漏洞</td></tr>
+<tr><td>7</td><td>证据的效力如何？</td><td>查证据质量</td></tr>
+<tr><td>8</td><td>有没有替代原因？</td><td>防止单一归因</td></tr>
+<tr><td>9</td><td>数据有没有欺骗性？</td><td>查数字的定义与分母</td></tr>
+<tr><td>10</td><td>有什么重要信息被省略？</td><td>查缺失的拼图</td></tr>
+</tbody></table>
+<hr>
+<h2>九 · 五个常见误用</h2>
+<ol>
+<li><strong>把批判性思维当抬杠</strong>：只问问题，不给替代解释。</li>
+<li><strong>只质疑别人，不质疑自己</strong>：这是弱势批判性思维。</li>
+<li><strong>把假设当事实</strong>：「时长能代表贡献」是假设，不是事实。</li>
+<li><strong>用证据的数量代替质量</strong>：十个轶事不如一个可重复研究。</li>
+<li><strong>二分法</strong>：把「要么 A，要么 B」当成全部选项。</li>
+</ol>
+<hr>
+<p><strong>一句话收尾</strong>：</p>
+<p><strong>好的提问不是让你更愤世嫉俗，是让你在信什么、争什么、改什么之前，先看清这张论证的地图。</strong></p>
+  </main>
+
+  <div class="footer">
+    《学会提问》整体架构<br>
+    先自己回答，再看解答 —— 能讲成"通俗解释"那个样子，才算真的懂了
+  </div>
+
+</div>
+</body>
+</html>

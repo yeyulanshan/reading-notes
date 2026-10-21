@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>《紅樓夢》整体架构</title>
+<style>
+  :root{
+    --paper: #fbf8f3;
+    --card: #fffdfb;
+    --edge: #e6dcd2;
+    --ink: #2e2a28;
+    --ink-mid: #5f5752;
+    --ink-soft: #8f857c;
+    --teal: #4f6f68;
+    --teal-soft: #eaf1ee;
+    --rust: #a34a4a;
+    --rust-soft: #f7e9e6;
+    --gold: #9a7b3f;
+    --gold-soft: #f6efdf;
+    --sage: #5f7a5a;
+    --sage-soft: #eef2e8;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--paper);color:var(--ink);padding:36px 20px 48px;line-height:1.88;
+    -webkit-font-smoothing:antialiased;
+  }
+  .container{max-width:920px;margin:0 auto;}
+
+  .header{
+    text-align:center;margin-bottom:30px;padding:44px 24px 40px;
+    background:var(--card);border:1px solid var(--edge);border-top:5px solid var(--teal);
+    border-radius:4px;
+  }
+  .header h1{font-size:27px;color:var(--ink);margin-bottom:12px;letter-spacing:.5px;}
+  .header .subtitle{font-size:14.5px;color:var(--ink-mid);}
+  .header .author{margin-top:16px;font-size:12.5px;color:var(--ink-soft);letter-spacing:.5px;}
+
+  main{
+    background:var(--card);border:1px solid var(--edge);border-radius:4px;
+    padding:34px 38px;
+  }
+
+  h1{font-size:23px;color:var(--ink);margin:8px 0 18px;}
+  h2{
+    font-size:20px;color:var(--ink);margin:40px 0 16px;
+    padding-left:13px;border-left:4px solid var(--teal);letter-spacing:.3px;
+  }
+  h2:first-child{margin-top:0;}
+  h3{font-size:16.5px;color:var(--teal);margin:28px 0 12px;font-weight:700;}
+  h4{font-size:15px;color:var(--ink-mid);margin:18px 0 8px;}
+
+  p{color:var(--ink-mid);font-size:14.5px;margin-bottom:12px;}
+  strong{color:var(--ink);}
+  em{color:var(--rust);font-style:normal;font-weight:600;}
+
+  ul,ol{margin:8px 0 14px 24px;}
+  li{color:var(--ink-mid);font-size:14.5px;margin-bottom:6px;}
+
+  hr{border:none;border-top:1px solid var(--edge);margin:26px 0;}
+
+  table{width:100%;border-collapse:collapse;margin:14px 0 18px;font-size:13.5px;}
+  th,td{padding:10px 12px;border:1px solid var(--edge);text-align:left;vertical-align:top;}
+  th{background:var(--teal-soft);color:var(--teal);font-weight:700;}
+  td{color:var(--ink-mid);}
+
+  blockquote{
+    background:var(--gold-soft);border:1px solid #e6dcc0;border-left:4px solid var(--gold);
+    border-radius:0 3px 3px 0;padding:16px 20px;margin:14px 0;
+  }
+  blockquote p{color:#6d5011;font-size:14px;font-style:italic;margin-bottom:8px;}
+  blockquote p:last-child{margin-bottom:0;}
+  blockquote strong{color:#5a420d;}
+
+  code{
+    background:var(--paper);padding:1.5px 6px;border-radius:3px;
+    font-family:Consolas,Monaco,monospace;font-size:13px;color:var(--teal);
+  }
+  pre{
+    background:var(--paper);border:1px solid var(--edge);border-radius:3px;
+    padding:14px 16px;overflow-x:auto;margin:12px 0 16px;
+  }
+  pre code{background:none;padding:0;line-height:1.65;}
+
+  /* 专业问题标题 */
+  .q-title{
+    background:var(--teal-soft);border-left:4px solid var(--teal);
+    border-radius:0 3px 3px 0;padding:13px 18px;margin:28px 0 12px;
+    color:var(--ink);font-size:15.5px;font-weight:700;line-height:1.7;
+  }
+
+  .footer{
+    text-align:center;margin-top:38px;padding:20px;color:var(--ink-soft);font-size:12.5px;line-height:1.9;
+  }
+
+  @media(max-width:640px){
+    .header h1{font-size:20px;}
+    h2{font-size:17.5px;}
+    body{padding:20px 14px 32px;}
+    main{padding:22px 18px;}
+  }
+
+  .nav{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:0 0 22px;}
+  .nav a{background:var(--card);border:1px solid var(--edge);border-radius:20px;
+    padding:6px 14px;font-size:13px;color:var(--teal);text-decoration:none;}
+  .nav a:hover{border-color:var(--teal);}
+  .qcard{background:var(--card);border:1px solid var(--edge);border-radius:6px;
+    padding:22px 26px;margin:18px 0;}
+  .qhead{display:flex;align-items:baseline;gap:10px;margin-bottom:8px;}
+  .qnum{background:var(--teal);color:#fff;font-family:Consolas,monospace;
+    font-size:12px;font-weight:700;padding:2px 9px;border-radius:3px;}
+  .qlv{font-size:12px;color:var(--rust);letter-spacing:.5px;}
+  .qtitle{font-size:17px;color:var(--ink);margin:0 0 10px;line-height:1.6;}
+  .qask{background:var(--teal-soft);border-left:3px solid var(--teal);
+    padding:10px 14px;border-radius:0 4px 4px 0;font-size:14px;color:var(--ink-mid);margin-bottom:12px;}
+  details{border:1px dashed var(--edge);border-radius:5px;padding:10px 14px;background:#fffefc;}
+  summary{cursor:pointer;font-size:13.5px;color:var(--teal);font-weight:700;}
+  .qans{margin-top:12px;}
+  .qans p{font-size:14px;color:var(--ink-mid);margin-bottom:11px;}
+  .qans blockquote{margin:12px 0;padding:10px 14px;background:var(--gold-soft);
+    border-left:3px solid var(--gold);font-size:13.8px;color:#5f5527;}
+  .qans blockquote p{margin:0;color:inherit;font-size:inherit;}
+  .qmis{margin-top:14px;padding:10px 14px;background:var(--rust-soft);
+    border-left:3px solid var(--rust);border-radius:0 4px 4px 0;font-size:13.4px;color:#6b4545;}
+  .qmis b{color:var(--rust);}
+  .qsrc{margin-top:9px;font-size:12.2px;color:var(--ink-soft);}
+  .selftest{background:var(--card);border:1px solid var(--edge);border-radius:6px;
+    padding:22px 26px;margin-top:22px;}
+  .selftest li{margin-bottom:8px;}
+  @media(max-width:680px){.qcard{padding:16px 15px;} .qtitle{font-size:15.5px;}}
+
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <h1>《紅樓夢》整体架构</h1>
+    <div class="subtitle">一部把关系网当主角的小说</div>
+    <div class="author">底本：Project Gutenberg #24264 ｜ 120 回 ｜ 724,631 汉字 ｜ 引文逐句核对</div>
+  </div>
+
+  <div class="nav"><a href="紅樓夢-整体架构.html">整体架构</a><a href="紅樓夢-问题手册.html">问题手册</a><a href="紅樓夢-底本考订.html">底本考订</a><a href="../README.md">00 中文原典</a></div>
+  <main>
+<p><strong>底本</strong>：<code>紅樓夢.txt</code>（Project Gutenberg #24264，120 回，724,631 汉字）</p>
+<p><strong>这份文档回答</strong>：它为什么能补 <code>06_文学与生命书写</code> 的「东方叙事」缺口？</p>
+<hr>
+<h2>〇 · 一句话</h2>
+<p><strong>它的主角不是贾宝玉，是贾府这张关系网。</strong></p>
+<p>宝玉是这张网最敏感的一根线——网的每一次收紧，都先在他身上显形；</p>
+<p>但网的中心不在他那里。把宝玉当主角，会读成一部成长小说或爱情小说；</p>
+<p>把网当主角，才读得出这本书真正在写的东西：<strong>位置如何决定命运，个人如何穿行其中。</strong></p>
+<hr>
+<h2>一 · 底本与规模</h2>
+<table><thead><tr><th>项</th><th>数</th><th>口径</th></tr></thead><tbody>
+<tr><td>回数</td><td>120</td><td>第 1 回至第 120 回</td></tr>
+<tr><td>汉字</td><td>724,631</td><td>U+4E00–U+9FFF 纯计数</td></tr>
+<tr><td>总字符</td><td>925,317</td><td>含标点、拉丁字母、项目符号</td></tr>
+<tr><td>主要人物提及</td><td>寶玉 3,832 · 鳳姐／王熙鳳 1,698 · 賈母 1,616 · 黛玉 1,321 · 寶釵 1,051</td><td>精确子串计数，不合并异体</td></tr>
+<tr><td>空间词</td><td>大觀園 49 · 榮國府 34 · 宁國府 27</td><td>精确子串计数</td></tr>
+<tr><td>缺字 <code>□</code></td><td>392</td><td>底本抽取遗留，详见《底本考订》</td></tr>
+</tbody></table>
+<p><strong>这些数字不是「文学成就」的度量，只是让后面的判断有一个可复算的底。</strong></p>
+<p>比如「主角是网」这句话，不能靠人物提及数证明——宝玉仍然是提及最多的人。</p>
+<p>它靠的是<strong>场景的组织方式</strong>，下一节说。</p>
+<hr>
+<h2>二 · 三层世界</h2>
+<table><thead><tr><th>层</th><th>空间</th><th>时间</th><th>叙事功能</th></tr></thead><tbody>
+<tr><td><strong>神话层</strong></td><td>大荒山、太虚幻境</td><td>几世几劫</td><td>给现实层一个「结局已经写好」的框架</td></tr>
+<tr><td><strong>现实层</strong></td><td>榮國府、宁國府</td><td>百年望族</td><td>关系网的实际运转：婚姻、财产、礼法、人情</td></tr>
+<tr><td><strong>园中层</strong></td><td>大观园</td><td>数年</td><td>把关系网集中、纯化，然后再拆掉</td></tr>
+</tbody></table>
+<p>三层不是并列的三个故事，是<strong>同一件事的三个投影</strong>：</p>
+<p>神话层给索引，现实层给运转，园中层给实验。</p>
+<blockquote>
+<p>無材可去補蒼天，枉入紅塵若許年</p>
+<p>——第一回</p>
+</blockquote>
+<p>这块石头不是「主角」，是一个<strong>被带入人间的观察点</strong>。它没有补天的资格，</p>
+<p>所以它对人间的关系格外敏感——这是全书叙述视角的起点。</p>
+<blockquote>
+<p>滿紙荒唐言，一把辛酸淚</p>
+<p>——第一回</p>
+</blockquote>
+<p>「荒唐」不是自谦，是<strong>叙事声明</strong>：这本书不打算按「大贤大忠」的史传写法写，</p>
+<p>它要写的是几个「或情或痴，或小才微善」的女子，以及她们所在的那张网。</p>
+<hr>
+<h2>三 · 主角是网，不是人</h2>
+<h3>3.1 场景的单位是「关系场」，不是「情节拍」</h3>
+<p>全书最重要的场景，几乎都不是「一个人做了一件事」，而是<strong>一群人重新排位</strong>：</p>
+<table><thead><tr><th>场景</th><th>回</th><th>重新排的是什么</th></tr></thead><tbody>
+<tr><td>元妃省亲</td><td>17–18</td><td>皇权／家族／母女／姐弟，四条关系同时被拉到台前</td></tr>
+<tr><td>刘姥姥进府</td><td>6 · 39–42 · 113</td><td>外部穷人三次进入，照出贾府的三层时间：盛、奢、败</td></tr>
+<tr><td>海棠社／菊花诗</td><td>37–38</td><td>园中少女结成「诗的关系」，暂时绕开家族等级</td></tr>
+<tr><td>除夕祭宗祠</td><td>53</td><td>礼法把全族按辈分重新排一遍</td></tr>
+<tr><td>抄检大观园</td><td>74</td><td>各房权力重新划线，园中关系被强行拉回现实</td></tr>
+<tr><td>锦衣军查抄</td><td>105</td><td>皇权从外部把整张网剪断</td></tr>
+</tbody></table>
+<p><strong>这些场景的共同点</strong>：没有一个人能单独决定结果。</p>
+<p>贾母不能，凤姐不能，宝玉更不能。<strong>结果由位置和关系合力产生。</strong></p>
+<h3>3.2 宝玉是观察点，不是因果中心</h3>
+<p>宝玉挨打（第 33 回）常被读成「父权压迫」。</p>
+<p>但那一场里同时收紧的，至少有五条关系：贾政对家族前途的焦虑、王夫人对嫡子的保护、</p>
+<p>贾母对孙子的溺爱、贾环的告状、薛蟠的流言。<strong>每一條都不是宝玉能控制的。</strong></p>
+<p>抄检（第 74 回）更明显。探春当场说：</p>
+<blockquote>
+<p>必須先從家里自殺自滅起來，才能一敗涂地</p>
+<p>——第七十四回</p>
+</blockquote>
+<p>这句话不是「预言」，是<strong>结构判断</strong>：外面的力量只能推倒一张已经松掉的网。</p>
+<p>说这句话的人是探春，不是宝玉——这也说明，<strong>看得最清楚的人未必是主角</strong>。</p>
+<h3>3.3 那为什么宝玉仍然是最重要的人？</h3>
+<p>因为他是<strong>网的敏感面</strong>。网的每一次变化，都先在他身上留下反应：</p>
+<p>他吐血、他疯、他摔玉、他出家。他不是网的中心，是网的<strong>读数器</strong>。</p>
+<p>所以「主角是网」不等于「宝玉不重要」——它说的是：</p>
+<p><strong>要理解宝玉，必须先理解他所在的位置；要理解这本书，必须把位置当对象。</strong></p>
+<hr>
+<h2>四 · 叙事机制：石头、判词、限知</h2>
+<h3>4.1 石头叙事</h3>
+<p>故事是石头「亲自经历」的，所以叙述者不是全知。</p>
+<blockquote>
+<p>因曾歷過一番夢幻之后，故將真事隱去</p>
+<p>——第一回</p>
+</blockquote>
+<p>「真事隐去」不是躲审查，是<strong>叙述位置</strong>：叙述者只说他经历过的，不保证他理解。</p>
+<p>于是全书大量出现「宝玉不解」「读者也不解」的错位。</p>
+<h3>4.2 预叙：把结局先说了</h3>
+<p>第五回的判词和曲，把主要人物的结局先写了一遍：</p>
+<blockquote>
+<p>可歎停机德，堪怜詠絮才</p>
+<p>——第五回（钗黛判词）</p>
+<p>机關算盡太聰明，反算了卿卿性命</p>
+<p>——第五回（王熙凤曲）</p>
+<p>好一似食盡鳥投林，落了片白茫茫大地真干淨</p>
+<p>——第五回（收尾·飞鸟各投林）</p>
+</blockquote>
+<p><strong>这不是剧透，是把阅读问题换掉</strong>：从「后来会怎样」换成「怎样走到那里」。</p>
+<p>预叙让读者第一次读就知道结局，但仍然想知道<strong>过程</strong>——这正是关系网小说的读法。</p>
+<h3>4.3 真假框架</h3>
+<blockquote>
+<p>假作真時真亦假，無為有處有還無</p>
+<p>——第一回（太虚幻境联语）</p>
+</blockquote>
+<p>这副对联是阅读总纲：<strong>真假不是两个世界，是同一个世界的两种读法。</strong></p>
+<p>太虚幻境不是「假的」，它是现实层的索引；大观园不是「真的」，它是现实层的实验。</p>
+<hr>
+<h2>五 · 大观园：建起来，再拆掉</h2>
+<p>第 18 回，元妃省亲，牌坊上换成「省親別墅」；元妃题诗说「芳園應錫大觀名」。</p>
+<p>园子是<strong>为一次皇权仪式而建</strong>的，不是为少女们建的。</p>
+<blockquote>
+<p>省親別墅</p>
+<p>——第十八回</p>
+</blockquote>
+<p>但它一建成，就变成了另一件事：一个把少女、丫鬟、诗社、宴席集中起来的封闭空间。</p>
+<p>在这里，家族等级暂时被「诗」和「玩」遮住；一出园，等级立刻回来。</p>
+<p>第 74 回，抄检把园子拆掉。拆它的不是外面的强盗，是<strong>贾府自己人</strong>。</p>
+<p>探春那句话（见 3.2）说透了：园子的结束，和贾府的结束，是同一个过程。</p>
+<p><strong>所以大观园不是乌托邦，是一个「关系实验场」</strong>：</p>
+<p>它让关系网在低摩擦条件下显形，然后再用一次抄检把实验终止。</p>
+<p>没有园，网看不见；没有抄检，园回不到现实。</p>
+<hr>
+<h2>六 · 情的三种形态</h2>
+<h3>6.1 木石前盟与金玉良姻</h3>
+<blockquote>
+<p>都道是金玉良姻，俺只念木石前盟</p>
+<p>——第五回（终身误）</p>
+</blockquote>
+<p>这两句常被读成「两个女人的竞争」。但它更像<strong>两种关系原则的竞争</strong>：</p>
+<table><thead><tr><th>原则</th><th>代表</th><th>关系如何成立</th></tr></thead><tbody>
+<tr><td><strong>木石前盟</strong></td><td>宝玉 · 黛玉</td><td>前定的、无条件的、不靠交换的</td></tr>
+<tr><td><strong>金玉良姻</strong></td><td>宝玉 · 宝钗</td><td>现实的、可计算的、靠家族与礼法确认的</td></tr>
+</tbody></table>
+<p>宝玉「只念」前盟，但他活在金玉的世界里。<strong>这不是选谁的问题，是两种关系逻辑不能同时成立的问题。</strong></p>
+<h3>6.2 葬花：对「位置可替换」的认识</h3>
+<blockquote>
+<p>花謝花飛花滿天，紅消香斷有誰怜</p>
+<p>——第二十七回（葬花吟）</p>
+<p>質本洁來還洁去，強于污淖陷渠溝</p>
+<p>——第二十七回（葬花吟）</p>
+<p>一朝春盡紅顏老，花落人亡兩不知</p>
+<p>——第二十七回（葬花吟）</p>
+</blockquote>
+<p>黛玉葬花不是「自怜」。她做的是把花<strong>埋进一个位置</strong>，并在这个动作里看见：</p>
+<p>明年花还会开，但「明年閨中知有誰」——<strong>位置可以换人，人却不能换位置。</strong></p>
+<p>这就是她比宝玉更早看懂的东西。</p>
+<h3>6.3 出家：情话变成谶语</h3>
+<blockquote>
+<p>你死了，我做和尚！</p>
+<p>——第三十回</p>
+</blockquote>
+<p>第三十回这是一句情急的话；第一一九回「中鄉魁寶玉卻塵緣」，它应验了。</p>
+<p><strong>这不是「爱情失败所以出家」</strong>，是：当关系网整体崩掉之后，宝玉这个「读数器」没有别的去处。</p>
+<p>出家不是胜利，也不是解脱，是<strong>网外唯一剩下的位置</strong>。</p>
+<hr>
+<h2>七 · 衰败的因果：内部腐烂，外部执行</h2>
+<h3>7.1 秦可卿的预案</h3>
+<p>第十三回，秦可卿托梦给凤姐，已经把败落的路径说清楚：</p>
+<blockquote>
+<p>月滿則虧，水滿則溢</p>
+<p>——第十三回</p>
+<p>樹倒猢猻散</p>
+<p>——第十三回</p>
+<p>盛筵必散</p>
+<p>——第十三回</p>
+<p>三春過后諸芳盡，各自須尋各自門</p>
+<p>——第十三回</p>
+</blockquote>
+<p>她给的方案很具体：把祭祀、家塾的钱粮固定下来，败落时子孙有退步。</p>
+<p><strong>但没有人执行。</strong> 这不是「预言不准」，是<strong>预言太准，而组织没有能力执行</strong>。</p>
+<h3>7.2 探春的判断</h3>
+<p>第 74 回抄检，探春说「必須先從家里自殺自滅起來，才能一敗涂地」。</p>
+<p>这句话和冷子兴在第 2 回说的「百足之虫，死而不僵」是同一个判断的两端：</p>
+<p><strong>外面看还站着，里面已经空了。</strong></p>
+<h3>7.3 抄家是执行，不是原因</h3>
+<p>第 105 回「錦衣軍查抄宁國府」是外部力量动手。</p>
+<p>但如果只读这一回，会以为贾府是被抄垮的；把第 13、56、74 回连起来读，</p>
+<p>就知道<strong>抄家只是把已经松掉的网剪断</strong>。外因是触发器，内因是结构。</p>
+<hr>
+<h2>八 · 后 40 回：缝在哪里</h2>
+<p>120 回是通行本形态。这个底本没有序跋、没有作者手稿标记，</p>
+<p><strong>无法从文本内部判定前 80 回与后 40 回的分界</strong>。但结局的<strong>价值方向</strong>有缝：</p>
+<table><thead><tr><th>位置</th><th>收束方式</th><th>关键词</th></tr></thead><tbody>
+<tr><td>第五回（收尾曲）</td><td>一切都空掉</td><td>「落了片白茫茫大地真干淨」</td></tr>
+<tr><td>第一二零回</td><td>家族重新起来</td><td>「蘭桂齊芳，家道复初」</td></tr>
+</tbody></table>
+<blockquote>
+<p>蘭桂齊芳，家道复初</p>
+<p>——第一二零回</p>
+</blockquote>
+<p><strong>这不是说后 40 回一定「坏」</strong>，而是说它换了一次轨：</p>
+<p>前一条是悲剧的「空」，后一条是家族的「复」。两种收束都能成立，</p>
+<p>但不能同时当作这本书的最终答案。<strong>读者必须自己决定把哪一层当结尾。</strong></p>
+<hr>
+<h2>九 · 对 06 域的意义：叙事作为抽象的测试</h2>
+<p><code>06_文学与生命书写</code> 的功能是：<strong>检验抽象是否遗漏了要紧的东西。</strong></p>
+<p>紅樓夢给的，正是一个<strong>反例</strong>：</p>
+<ul>
+<li>任何把人物当独立单位、把情节当个人选择的叙事框架，都会漏掉「位置」的因果力；</li>
+<li>但任何把人物完全化约为「关系」的框架，也会漏掉宝玉、黛玉、探春身上不可还原的个人性。</li>
+</ul>
+<p><strong>网构成他们，但不完全解释他们。</strong> 这句话既是这本书的写法，也是 <code>06</code> 域要守的边界。</p>
+<p>所谓「东方叙事」，不是「中国故事」，是<strong>一种把关系网当主角的叙事语法</strong>：</p>
+<ul>
+<li>主角可以是一个位置，而不是一个人；</li>
+<li>结局可以预先写好，阅读的悬念在「过程」；</li>
+<li>个人的悲剧可以同时是结构的悲剧，但两者不能互相抵消。</li>
+</ul>
+<hr>
+<h2>十 · 一页表：四种读法</h2>
+<table><thead><tr><th>读法</th><th>主角</th><th>看到的故事</th><th>漏掉的东西</th></tr></thead><tbody>
+<tr><td>成长小说</td><td>宝玉</td><td>一个少年从叛逆到出家</td><td>贾府的位置结构</td></tr>
+<tr><td>爱情小说</td><td>宝黛</td><td>木石前盟被金玉良姻击败</td><td>礼、势、家族的因果</td></tr>
+<tr><td>家族史</td><td>贾府</td><td>百年望族的衰败</td><td>个人的不可还原性</td></tr>
+<tr><td><strong>关系网</strong></td><td><strong>贾府这张网</strong></td><td><strong>位置如何决定命运，个人如何穿行其中</strong></td><td><strong>仍未解释：为什么是这些人</strong></td></tr>
+</tbody></table>
+<p><strong>最后一行不是谦辞。</strong> 这本书能解释「位置如何起作用」，但不能解释「为什么偏偏是这些人、这些事」。</p>
+<p>那个「为什么」留给了读者，也留给了 <code>06</code> 域的下一本书。</p>
+<hr>
+<p><strong>引文说明</strong>：本文所有直接引文均逐句核对 <code>紅樓夢.txt</code>，章回为底本回目。</p>
+<p>底本的缺字、简繁混排、回目格式问题，见同目录《底本考订》。</p>
+  </main>
+
+  <div class="footer">
+    《紅樓夢》整体架构 · 引文逐句核 紅樓夢.txt · 底本问题见《底本考订》<br>
+    
+  </div>
+
+</div>
+</body>
+</html>

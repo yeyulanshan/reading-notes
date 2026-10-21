@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>《学会提问》助人手册</title>
+<style>
+  :root{
+    --paper:#f7f4ed;
+    --card:#fffdf8;
+    --edge:#ded6c8;
+    --ink:#2b2721;
+    --ink-mid:#5c5449;
+    --ink-soft:#8c8175;
+    --teal:#166060;
+    --teal-soft:#e6efee;
+    --rust:#b1442a;
+    --rust-soft:#f7e9e4;
+    --gold:#9a7420;
+    --gold-soft:#f5eeda;
+    --sage:#55703c;
+    --sage-soft:#ecf0e2;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--paper);color:var(--ink);padding:36px 20px 48px;line-height:1.88;
+    -webkit-font-smoothing:antialiased;
+  }
+  .container{max-width:920px;margin:0 auto;}
+
+  .header{
+    text-align:center;margin-bottom:30px;padding:44px 24px 40px;
+    background:var(--card);border:1px solid var(--edge);border-top:5px solid var(--teal);
+    border-radius:4px;
+  }
+  .header h1{font-size:27px;color:var(--ink);margin-bottom:12px;letter-spacing:.5px;}
+  .header .subtitle{font-size:14.5px;color:var(--ink-mid);}
+  .header .author{margin-top:16px;font-size:12.5px;color:var(--ink-soft);letter-spacing:.5px;}
+
+  main{
+    background:var(--card);border:1px solid var(--edge);border-radius:4px;
+    padding:34px 38px;
+  }
+
+  h1{font-size:23px;color:var(--ink);margin:8px 0 18px;}
+  h2{
+    font-size:20px;color:var(--ink);margin:40px 0 16px;
+    padding-left:13px;border-left:4px solid var(--teal);letter-spacing:.3px;
+  }
+  h2:first-child{margin-top:0;}
+  h3{font-size:16.5px;color:var(--teal);margin:28px 0 12px;font-weight:700;}
+  h4{font-size:15px;color:var(--ink-mid);margin:18px 0 8px;}
+
+  p{color:var(--ink-mid);font-size:14.5px;margin-bottom:12px;}
+  strong{color:var(--ink);}
+  em{color:var(--rust);font-style:normal;font-weight:600;}
+
+  ul,ol{margin:8px 0 14px 24px;}
+  li{color:var(--ink-mid);font-size:14.5px;margin-bottom:6px;}
+
+  hr{border:none;border-top:1px solid var(--edge);margin:26px 0;}
+
+  table{width:100%;border-collapse:collapse;margin:14px 0 18px;font-size:13.5px;}
+  th,td{padding:10px 12px;border:1px solid var(--edge);text-align:left;vertical-align:top;}
+  th{background:var(--teal-soft);color:var(--teal);font-weight:700;}
+  td{color:var(--ink-mid);}
+
+  blockquote{
+    background:var(--gold-soft);border:1px solid #e6dcc0;border-left:4px solid var(--gold);
+    border-radius:0 3px 3px 0;padding:16px 20px;margin:14px 0;
+  }
+  blockquote p{color:#6d5011;font-size:14px;font-style:italic;margin-bottom:8px;}
+  blockquote p:last-child{margin-bottom:0;}
+  blockquote strong{color:#5a420d;}
+
+  code{
+    background:var(--paper);padding:1.5px 6px;border-radius:3px;
+    font-family:Consolas,Monaco,monospace;font-size:13px;color:var(--teal);
+  }
+  pre{
+    background:var(--paper);border:1px solid var(--edge);border-radius:3px;
+    padding:14px 16px;overflow-x:auto;margin:12px 0 16px;
+  }
+  pre code{background:none;padding:0;line-height:1.65;}
+
+  /* 专业问题标题 */
+  .q-title{
+    background:var(--teal-soft);border-left:4px solid var(--teal);
+    border-radius:0 3px 3px 0;padding:13px 18px;margin:28px 0 12px;
+    color:var(--ink);font-size:15.5px;font-weight:700;line-height:1.7;
+  }
+
+  .footer{
+    text-align:center;margin-top:38px;padding:20px;color:var(--ink-soft);font-size:12.5px;line-height:1.9;
+  }
+
+  @media(max-width:640px){
+    .header h1{font-size:20px;}
+    h2{font-size:17.5px;}
+    body{padding:20px 14px 32px;}
+    main{padding:22px 18px;}
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <h1>《学会提问》助人手册</h1>
+    <div class="subtitle">当别人被一个说法卡住时，怎么帮他把论证拆开</div>
+    <div class="author">Browne / Keeley · 引文逐页核 PDF</div>
+  </div>
+
+  <main>
+<p><strong>用途</strong>：当别人（或你自己）被一个说法卡住时，用这套问题帮他把论证拆开，而不是替他做决定。</p>
+<p><strong>底本</strong>：<code>02_心智与认知/学会提问_全文.txt</code>（PDF 291 页）。引文页码为 PDF 页码。</p>
+<hr>
+<h2>〇 · 什么时候用</h2>
+<p>适合：</p>
+<ul>
+<li>朋友说「这个专业没前途」「这个人不值得」；</li>
+<li>同事说「数据证明我们的方案最好」；</li>
+<li>家人转来一篇文章，让你「看看人家说的」；</li>
+<li>你在做一个人生决定，脑子里有好几个声音；</li>
+<li>你要写询问函/申诉材料，需要把「我觉得不公平」变成「哪条规则、哪个事实」。</li>
+</ul>
+<p><strong>不适合</strong>：对方只是需要情绪安慰；或者你只是想赢。</p>
+<hr>
+<h2>一 · 三条原则</h2>
+<h3>原则 1 · 先复述，再提问</h3>
+<p>不要一上来就说「你这个论证有问题」。</p>
+<p>先说：「我确认一下，你的意思是……对吗？」</p>
+<p><strong>复述对方的结论</strong>，是最高效的「先建立同盟」：他会知道你在听，而不是在准备反驳。</p>
+<h3>原则 2 · 把事实问题和价值问题分开</h3>
+<ul>
+<li>事实问题：可以用证据/数据/逻辑解决。</li>
+<li>价值问题：不能靠证据解决，只能谈取舍。</li>
+</ul>
+<p><strong>话术</strong>：</p>
+<blockquote>
+<p>「我们先分开看：哪些是事实，哪些是你觉得更重要？」</p>
+</blockquote>
+<h3>原则 3 · 强势批判性思维：也问自己</h3>
+<blockquote>
+<p>强势批判性思维是利用批判性思维来评估所有断言和看法，尤其是自己的看法</p>
+<p>——p.25</p>
+</blockquote>
+<p>帮别人拆论证时，也问自己：</p>
+<p><strong>我是不是也在用一套没检查过的假设？</strong></p>
+<hr>
+<h2>二 · 六步对话法</h2>
+<h3>第 1 步 · 找到论题和结论</h3>
+<p>问：</p>
+<ul>
+<li>你真正想回答的问题是什么？</li>
+<li>你希望我相信的那句话是什么？</li>
+</ul>
+<p><strong>话术</strong>：</p>
+<blockquote>
+<p>「如果只用一句话说你的结论，是哪句？」</p>
+</blockquote>
+<h3>第 2 步 · 找理由</h3>
+<p>问：</p>
+<ul>
+<li>你为什么相信它？</li>
+<li>有没有例子/数据/经验？</li>
+<li>这些理由里，哪一条最关键？</li>
+</ul>
+<p><strong>话术</strong>：</p>
+<blockquote>
+<p>「支撑这个结论的，最主要的三条理由是什么？」</p>
+</blockquote>
+<h3>第 3 步 · 定义关键词</h3>
+<p>问：</p>
+<ul>
+<li>「没前途」具体指什么？收入、稳定、成长、意义？</li>
+<li>「值得」是对谁值得？短期还是长期？</li>
+<li>「数据证明」是什么数据？样本是谁？</li>
+</ul>
+<p><strong>话术</strong>：</p>
+<blockquote>
+<p>「这个词你具体指什么？我们把它说清，后面就不容易吵偏。」</p>
+</blockquote>
+<h3>第 4 步 · 找假设</h3>
+<p>问：</p>
+<ul>
+<li>这个结论依赖什么没说出来的前提？</li>
+<li>这个前提是事实，还是价值偏好？</li>
+</ul>
+<p><strong>话术</strong>：</p>
+<blockquote>
+<p>「要让这个理由成立，我们是不是得先假设……？」</p>
+</blockquote>
+<h3>第 5 步 · 查证据与替代原因</h3>
+<p>问：</p>
+<ul>
+<li>证据是什么类型？样本多大？能重复吗？</li>
+<li>有没有别的解释？</li>
+<li>如果反过来，什么证据能推翻它？</li>
+</ul>
+<p><strong>话术</strong>：</p>
+<blockquote>
+<p>「除了这个解释，还有没有别的可能？我们怎么区分？」</p>
+</blockquote>
+<h3>第 6 步 · 给出多种结论</h3>
+<p>不要逼对方「选一边」。问：</p>
+<ul>
+<li>除了「去/不去」「对/错」，还有没有第三种？</li>
+<li>在什么条件下 A 成立，什么条件下 B 成立？</li>
+<li>能不能先做一个小试验？</li>
+</ul>
+<p><strong>话术</strong>：</p>
+<blockquote>
+<p>「有没有可能不是二选一，而是分情况/分阶段？」</p>
+</blockquote>
+<hr>
+<h2>三 · 十张问题卡</h2>
+<table><thead><tr><th>#</th><th>问题</th><th>什么时候用</th></tr></thead><tbody>
+<tr><td>1</td><td>你的结论是什么？</td><td>一开始</td></tr>
+<tr><td>2</td><td>你的理由是什么？</td><td>结论之后</td></tr>
+<tr><td>3</td><td>这个词具体指什么？</td><td>出现大词/抽象词</td></tr>
+<tr><td>4</td><td>你假设了什么？</td><td>理由和结论之间缺一块</td></tr>
+<tr><td>5</td><td>这是事实还是价值？</td><td>争论变成价值观对撞</td></tr>
+<tr><td>6</td><td>证据是什么类型？</td><td>对方说「有数据/研究表明」</td></tr>
+<tr><td>7</td><td>样本是谁？多大？</td><td>数据/研究</td></tr>
+<tr><td>8</td><td>还有没有别的原因？</td><td>单一归因</td></tr>
+<tr><td>9</td><td>漏了什么重要信息？</td><td>信息不完整</td></tr>
+<tr><td>10</td><td>除了 A/B，还有别的结论吗？</td><td>二选一</td></tr>
+</tbody></table>
+<hr>
+<h2>四 · 六个场景的话术</h2>
+<h3>场景 1 · 朋友说「这个专业没前途」</h3>
+<p>不要争论「有没有前途」，先定义：</p>
+<blockquote>
+<p>「你说的『没前途』是指收入、稳定、成长空间，还是你个人不喜欢？这四个是不同的题。」</p>
+</blockquote>
+<h3>场景 2 · 同事说「数据证明我们的方案最好」</h3>
+<blockquote>
+<p>「数据我看看：样本是谁？对照是什么？这个『最好』是哪个指标的最好？」</p>
+</blockquote>
+<h3>场景 3 · 家人转来一篇文章</h3>
+<blockquote>
+<p>「这篇文章的结论是什么？它给的证据是什么？有没有提到反方数据？」</p>
+</blockquote>
+<h3>场景 4 · 情侣/家庭争吵</h3>
+<p>先处理情绪，再处理论证：</p>
+<blockquote>
+<p>「我先不听谁对谁错。你最在意的是哪件事？我有没有误会你的意思？」</p>
+</blockquote>
+<h3>场景 5 · 奖学金/评优申诉</h3>
+<blockquote>
+<p>「我不说公不公平。我想确认：这次评审用的是哪几个指标、权重多少、我的材料对应哪一项？」</p>
+</blockquote>
+<h3>场景 6 · 你自己的决定</h3>
+<p>把脑子里的声音写成三条：</p>
+<blockquote>
+<p>「支持 A 的三条理由是什么？支持 B 的三条理由是什么？我有没有漏掉第三种？」</p>
+</blockquote>
+<hr>
+<h2>五 · 边界：不要把这套方法用成三种东西</h2>
+<ol>
+<li><strong>不要用成「辩论赛」</strong>：目的是理解/决定，不是赢。</li>
+<li><strong>不要用成「情绪审问」</strong>：对方在难过时，先接住情绪，再谈论证。</li>
+<li><strong>不要用成「权力对抗」</strong>：对方不回答、不改规则时，批判性思维不够，要换证据固定/书面询问/申诉/止损。</li>
+</ol>
+<hr>
+<h2>六 · 自测</h2>
+<ul>
+<li>[ ] 我能先复述对方的结论，再提问。</li>
+<li>[ ] 我能把「事实问题」和「价值问题」分开。</li>
+<li>[ ] 我能让一个大词变得可定义。</li>
+<li>[ ] 我能说出一个论证的隐藏假设。</li>
+<li>[ ] 我能为一个结果想出两个替代原因。</li>
+<li>[ ] 我能给出三种以上合理结论。</li>
+<li>[ ] 我不会用这套方法去「赢」对方。</li>
+<li>[ ] 我知道什么时候该停止追问。</li>
+</ul>
+  </main>
+
+  <div class="footer">
+    《学会提问》助人手册<br>
+    先自己回答，再看解答 —— 能讲成"通俗解释"那个样子，才算真的懂了
+  </div>
+
+</div>
+</body>
+</html>

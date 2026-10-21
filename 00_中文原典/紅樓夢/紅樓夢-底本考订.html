@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>《紅樓夢》底本考订</title>
+<style>
+  :root{
+    --paper: #fbf8f3;
+    --card: #fffdfb;
+    --edge: #e6dcd2;
+    --ink: #2e2a28;
+    --ink-mid: #5f5752;
+    --ink-soft: #8f857c;
+    --teal: #4f6f68;
+    --teal-soft: #eaf1ee;
+    --rust: #a34a4a;
+    --rust-soft: #f7e9e6;
+    --gold: #9a7b3f;
+    --gold-soft: #f6efdf;
+    --sage: #5f7a5a;
+    --sage-soft: #eef2e8;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--paper);color:var(--ink);padding:36px 20px 48px;line-height:1.88;
+    -webkit-font-smoothing:antialiased;
+  }
+  .container{max-width:920px;margin:0 auto;}
+
+  .header{
+    text-align:center;margin-bottom:30px;padding:44px 24px 40px;
+    background:var(--card);border:1px solid var(--edge);border-top:5px solid var(--teal);
+    border-radius:4px;
+  }
+  .header h1{font-size:27px;color:var(--ink);margin-bottom:12px;letter-spacing:.5px;}
+  .header .subtitle{font-size:14.5px;color:var(--ink-mid);}
+  .header .author{margin-top:16px;font-size:12.5px;color:var(--ink-soft);letter-spacing:.5px;}
+
+  main{
+    background:var(--card);border:1px solid var(--edge);border-radius:4px;
+    padding:34px 38px;
+  }
+
+  h1{font-size:23px;color:var(--ink);margin:8px 0 18px;}
+  h2{
+    font-size:20px;color:var(--ink);margin:40px 0 16px;
+    padding-left:13px;border-left:4px solid var(--teal);letter-spacing:.3px;
+  }
+  h2:first-child{margin-top:0;}
+  h3{font-size:16.5px;color:var(--teal);margin:28px 0 12px;font-weight:700;}
+  h4{font-size:15px;color:var(--ink-mid);margin:18px 0 8px;}
+
+  p{color:var(--ink-mid);font-size:14.5px;margin-bottom:12px;}
+  strong{color:var(--ink);}
+  em{color:var(--rust);font-style:normal;font-weight:600;}
+
+  ul,ol{margin:8px 0 14px 24px;}
+  li{color:var(--ink-mid);font-size:14.5px;margin-bottom:6px;}
+
+  hr{border:none;border-top:1px solid var(--edge);margin:26px 0;}
+
+  table{width:100%;border-collapse:collapse;margin:14px 0 18px;font-size:13.5px;}
+  th,td{padding:10px 12px;border:1px solid var(--edge);text-align:left;vertical-align:top;}
+  th{background:var(--teal-soft);color:var(--teal);font-weight:700;}
+  td{color:var(--ink-mid);}
+
+  blockquote{
+    background:var(--gold-soft);border:1px solid #e6dcc0;border-left:4px solid var(--gold);
+    border-radius:0 3px 3px 0;padding:16px 20px;margin:14px 0;
+  }
+  blockquote p{color:#6d5011;font-size:14px;font-style:italic;margin-bottom:8px;}
+  blockquote p:last-child{margin-bottom:0;}
+  blockquote strong{color:#5a420d;}
+
+  code{
+    background:var(--paper);padding:1.5px 6px;border-radius:3px;
+    font-family:Consolas,Monaco,monospace;font-size:13px;color:var(--teal);
+  }
+  pre{
+    background:var(--paper);border:1px solid var(--edge);border-radius:3px;
+    padding:14px 16px;overflow-x:auto;margin:12px 0 16px;
+  }
+  pre code{background:none;padding:0;line-height:1.65;}
+
+  /* 专业问题标题 */
+  .q-title{
+    background:var(--teal-soft);border-left:4px solid var(--teal);
+    border-radius:0 3px 3px 0;padding:13px 18px;margin:28px 0 12px;
+    color:var(--ink);font-size:15.5px;font-weight:700;line-height:1.7;
+  }
+
+  .footer{
+    text-align:center;margin-top:38px;padding:20px;color:var(--ink-soft);font-size:12.5px;line-height:1.9;
+  }
+
+  @media(max-width:640px){
+    .header h1{font-size:20px;}
+    h2{font-size:17.5px;}
+    body{padding:20px 14px 32px;}
+    main{padding:22px 18px;}
+  }
+
+  .nav{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:0 0 22px;}
+  .nav a{background:var(--card);border:1px solid var(--edge);border-radius:20px;
+    padding:6px 14px;font-size:13px;color:var(--teal);text-decoration:none;}
+  .nav a:hover{border-color:var(--teal);}
+  .qcard{background:var(--card);border:1px solid var(--edge);border-radius:6px;
+    padding:22px 26px;margin:18px 0;}
+  .qhead{display:flex;align-items:baseline;gap:10px;margin-bottom:8px;}
+  .qnum{background:var(--teal);color:#fff;font-family:Consolas,monospace;
+    font-size:12px;font-weight:700;padding:2px 9px;border-radius:3px;}
+  .qlv{font-size:12px;color:var(--rust);letter-spacing:.5px;}
+  .qtitle{font-size:17px;color:var(--ink);margin:0 0 10px;line-height:1.6;}
+  .qask{background:var(--teal-soft);border-left:3px solid var(--teal);
+    padding:10px 14px;border-radius:0 4px 4px 0;font-size:14px;color:var(--ink-mid);margin-bottom:12px;}
+  details{border:1px dashed var(--edge);border-radius:5px;padding:10px 14px;background:#fffefc;}
+  summary{cursor:pointer;font-size:13.5px;color:var(--teal);font-weight:700;}
+  .qans{margin-top:12px;}
+  .qans p{font-size:14px;color:var(--ink-mid);margin-bottom:11px;}
+  .qans blockquote{margin:12px 0;padding:10px 14px;background:var(--gold-soft);
+    border-left:3px solid var(--gold);font-size:13.8px;color:#5f5527;}
+  .qans blockquote p{margin:0;color:inherit;font-size:inherit;}
+  .qmis{margin-top:14px;padding:10px 14px;background:var(--rust-soft);
+    border-left:3px solid var(--rust);border-radius:0 4px 4px 0;font-size:13.4px;color:#6b4545;}
+  .qmis b{color:var(--rust);}
+  .qsrc{margin-top:9px;font-size:12.2px;color:var(--ink-soft);}
+  .selftest{background:var(--card);border:1px solid var(--edge);border-radius:6px;
+    padding:22px 26px;margin-top:22px;}
+  .selftest li{margin-bottom:8px;}
+  @media(max-width:680px){.qcard{padding:16px 15px;} .qtitle{font-size:15.5px;}}
+
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <h1>《紅樓夢》底本考订</h1>
+    <div class="subtitle">120 回通行本电子文本的形态、硬伤与使用边界</div>
+    <div class="author">120 回 ｜ 724,631 汉字 ｜ 392 个缺字 ｜ 引文逐句核对</div>
+  </div>
+
+  <div class="nav"><a href="紅樓夢-整体架构.html">整体架构</a><a href="紅樓夢-问题手册.html">问题手册</a><a href="紅樓夢-底本考订.html">底本考订</a><a href="../README.md">00 中文原典</a></div>
+  <main>
+<p><strong>底本文件</strong>：<code>00_中文原典/紅樓夢.txt</code></p>
+<p><strong>来源</strong>：Project Gutenberg eBook #24264</p>
+<p><strong>发布</strong>：2008-01-12；最近更新 2021-12-22</p>
+<p><strong>制作者</strong>：Wei-yi Kao</p>
+<p><strong>语言标记</strong>：Chinese</p>
+<p><strong>形态</strong>：120 回，无批语，无序跋，无出版说明</p>
+<hr>
+<h2>一 · 为什么先读这一份</h2>
+<p><strong>这本书的引文，不能凭记忆写。</strong></p>
+<p>不是「记得不准」的问题，是这个底本本身有三类硬伤：</p>
+<ol>
+<li><strong>392 个 <code>□</code> 缺字</strong>；</li>
+<li><strong>简繁混排</strong>，同一段里「說」和「说」、「個」和「个」可能同时出现；</li>
+<li><strong>回目格式不统一</strong>，有的回目在下一行，有的回目和正文粘在同一行。</li>
+</ol>
+<p><strong>不先知道这三件事，就会出现两种错</strong>：</p>
+<p>把缺字当成原文（引出一个带 <code>□</code> 的句子），或者把简体写法当成「错字」去改。</p>
+<p><strong>本文的立场是：不改原文一个字；所有引文按底本原样引，缺字就标缺字。</strong></p>
+<hr>
+<h2>二 · 规模与口径</h2>
+<table><thead><tr><th>项</th><th>数</th><th>说明</th></tr></thead><tbody>
+<tr><td>文件总字符</td><td>925,317</td><td>含 Gutenberg 头尾</td></tr>
+<tr><td>文件汉字</td><td>724,631</td><td>U+4E00–U+9FFF；含头尾 9 字</td></tr>
+<tr><td>正文汉字</td><td>724,622</td><td>从「第一回」到 Gutenberg 尾之前</td></tr>
+<tr><td>正文总字符</td><td>906,095</td><td>不含 Gutenberg 尾</td></tr>
+<tr><td>回数</td><td>120</td><td>第 1 回至第 120 回</td></tr>
+<tr><td><code>□</code> 缺字</td><td>392</td><td>精确计数</td></tr>
+<tr><td>回目标题在下一行</td><td>9 回</td><td>第 3–11 回</td></tr>
+</tbody></table>
+<p><strong>口径说明</strong>：汉字只数 U+4E00–U+9FFF，不剥离页眉、不合并异体、不做繁简转换。</p>
+<p>所以「724,631」和「724,622」的差是 9 个 Gutenberg 头尾汉字，不是版本差异。</p>
+<hr>
+<h2>三 · 三类硬伤</h2>
+<h3>3.1 缺字：392 个 □</h3>
+<p>这不是零星现象。第 3 回写黛玉进府，服饰、器物、眉眼描写里连续出现：</p>
+<ul>
+<li>第 3 回「窄□襖」</li>
+<li>第 3 回「一雙似喜非喜含情目．態生兩□之愁」</li>
+<li>第 13 回「自己孤□」</li>
+<li>第 27 回「一□淨土掩風流」</li>
+<li>第 78 回「冰鮫□」</li>
+</ul>
+<p><strong>处理方式</strong>：</p>
+<ul>
+<li>引文尽量避开带 <code>□</code> 的句子；</li>
+<li>必须引时，原样保留 <code>□</code>，并在旁边标「底本缺字」；</li>
+<li><strong>不猜字、不补字</strong>。补一个字看似方便，实际上是把「底本不知道」改成了「我以为」。</li>
+</ul>
+<h3>3.2 简繁混排</h3>
+<p>这个底本不是纯繁体，也不是纯简体，是<strong>混合形态</strong>。实测：</p>
+<table><thead><tr><th>简体形</th><th>次数</th><th>繁体形</th><th>次数</th></tr></thead><tbody>
+<tr><td>怀</td><td>118</td><td>懷</td><td>0</td></tr>
+<tr><td>复</td><td>194</td><td>復</td><td>0</td></tr>
+<tr><td>宁</td><td>185</td><td>寧</td><td>0</td></tr>
+<tr><td>洁</td><td>30</td><td>潔</td><td>0</td></tr>
+<tr><td>机</td><td>87</td><td>機</td><td>0</td></tr>
+<tr><td>怜</td><td>135</td><td>憐</td><td>0</td></tr>
+<tr><td>女儿</td><td>200</td><td>女兒</td><td>0</td></tr>
+<tr><td>说</td><td>0</td><td>說</td><td>9,624</td></tr>
+<tr><td>个</td><td>0</td><td>個</td><td>5,627</td></tr>
+<tr><td>门</td><td>0</td><td>門</td><td>1,238</td></tr>
+</tbody></table>
+<p><strong>读法</strong>：底本的人物名、叙事文字多用繁体（寶玉、黛玉、劉姥姥、說、個、門），</p>
+<p>但一部分常用字被转成了简体（怀、复、宁、洁、机、怜、女儿）。</p>
+<p><strong>所以「繁体」这个标签只对了一半。</strong> 引用时按底本原样，不要统一成繁体或简体。</p>
+<p><strong>三个具体后果</strong>：</p>
+<ol>
+<li>搜「機關算盡」找不到，底本写的是「机關算盡」；</li>
+<li>搜「女兒是水作的骨肉」找不到，底本写的是「女儿是水作的骨肉」；</li>
+<li>搜「白茫茫大地真乾淨」找不到，底本写的是「真干淨」。</li>
+</ol>
+<p><strong>这不是底本错，是底本的字符选择。</strong> 引文核对必须先按底本，再谈通行本。</p>
+<h3>3.3 回目与标点格式</h3>
+<p><strong>回目</strong>：120 个回目都在，但格式不统一。</p>
+<ul>
+<li>第 3–11 回：回目在「第 X 回」的下一行，中间隔着一条虚线；</li>
+<li>第 104、112 回：回目和正文粘在同一行，回目后面直接接「話說……」；</li>
+<li>其余回目：多数在「第 X 回」同一行，用全角空格分隔上下句。</li>
+</ul>
+<p><strong>标点</strong>：底本以「．」为主（21,285 次），「。」为辅（7,886 次）；</p>
+<p>没有「、」（0 次）；引号以「“」「”」为主。</p>
+<p><strong>这意味着</strong>：按现代标点去搜一个句子，可能搜不到；核对时要按底本标点，或者只搜不含标点的短串。</p>
+<hr>
+<h2>四 · 版本性质：它能做什么，不能做什么</h2>
+<h3>4.1 它是什么</h3>
+<ul>
+<li>一个 <strong>120 回</strong>的通行本电子文本；</li>
+<li>无脂批、无序跋、无「程甲／程乙」标记；</li>
+<li>从回目、人物、情节看，属于<strong>程本系统的 120 回形态</strong>，但底本本身没有版本声明。</li>
+</ul>
+<h3>4.2 它不能做什么</h3>
+<table><thead><tr><th>不能</th><th>原因</th></tr></thead><tbody>
+<tr><td><strong>不能当脂本用</strong></td><td>没有脂砚斋批语，不能做脂批研究</td></tr>
+<tr><td><strong>不能做校勘底本</strong></td><td>有 392 个缺字、简繁混排、标点非原貌</td></tr>
+<tr><td><strong>不能据回目判断版本</strong></td><td>回目格式是电子文本的排版结果，不是版刻原貌</td></tr>
+<tr><td><strong>不能把「前 80 回／后 40 回」当文本内证据</strong></td><td>底本没有分界标记；分界是版本学判断，不是这个文件能给出的</td></tr>
+</tbody></table>
+<h3>4.3 后 40 回：文本内的「价值缝」</h3>
+<p>底本不标分界，但结局的价值方向有缝：</p>
+<table><thead><tr><th>位置</th><th>收束</th><th>关键词</th></tr></thead><tbody>
+<tr><td>第五回（收尾曲）</td><td>空</td><td>「落了片白茫茫大地真干淨」</td></tr>
+<tr><td>第一二零回</td><td>复</td><td>「蘭桂齊芳，家道复初」</td></tr>
+</tbody></table>
+<p><strong>这不是「续书一定坏」</strong>。它说的是：<strong>同一个 120 回文本里，有两套收束逻辑。</strong></p>
+<p>做整体架构时可以把 120 回当一个整体；做价值判断时，必须说明自己用的是哪一层。</p>
+<hr>
+<h2>五 · 引文核对方法</h2>
+<h3>5.1 方法</h3>
+<ol>
+<li>每条引文必须是 <code>紅樓夢.txt</code> 的<strong>精确子串</strong>；</li>
+<li>不做繁简转换、不补缺字、不改标点；</li>
+<li>跨行引文只合并换行，不合并字；</li>
+<li>每条引文记录<strong>首次出现的回次</strong>；同一句在多回出现时，注明「另见第 X 回」；</li>
+<li>核对脚本逐条查找，命中 0 次即判失败。</li>
+</ol>
+<h3>5.2 抽样（本次产出实际引用的句子）</h3>
+<table><thead><tr><th>引文</th><th>回</th><th>核对</th></tr></thead><tbody>
+<tr><td>無材可去補蒼天，枉入紅塵若許年</td><td>1</td><td>✓</td></tr>
+<tr><td>滿紙荒唐言，一把辛酸淚</td><td>1</td><td>✓</td></tr>
+<tr><td>假作真時真亦假，無為有處有還無</td><td>1（另见 5）</td><td>✓</td></tr>
+<tr><td>女儿是水作的骨肉，男人是泥作的骨肉</td><td>2</td><td>✓</td></tr>
+<tr><td>可歎停机德，堪怜詠絮才</td><td>5</td><td>✓</td></tr>
+<tr><td>机關算盡太聰明，反算了卿卿性命</td><td>5</td><td>✓</td></tr>
+<tr><td>好一似食盡鳥投林，落了片白茫茫大地真干淨</td><td>5</td><td>✓</td></tr>
+<tr><td>三春過后諸芳盡，各自須尋各自門</td><td>13</td><td>✓</td></tr>
+<tr><td>樹倒猢猻散</td><td>13</td><td>✓</td></tr>
+<tr><td>花謝花飛花滿天，紅消香斷有誰怜</td><td>27</td><td>✓</td></tr>
+<tr><td>你死了，我做和尚！</td><td>30</td><td>✓</td></tr>
+<tr><td>蘭桂齊芳，家道复初</td><td>120</td><td>✓</td></tr>
+</tbody></table>
+<p><strong>完整引文库</strong>（40 条）见 <code>temp/_hlm_quotebank.json</code>；本文只列抽样。</p>
+<h3>5.3 一处必须说明的「跨行」</h3>
+<p>底本的句子常被硬换行切断。例如：</p>
+<blockquote>
+<p>我見了女儿，我便清爽</p>
+<p>——第二回</p>
+</blockquote>
+<p>后半句「見了男子，便覺濁臭逼人」在下一行，且中间有换行。</p>
+<p><strong>引用时要么只引前半句，要么把换行合并后引整句；不能把换行当成句读。</strong></p>
+<hr>
+<h2>六 · 本次产出对底本做了什么、没做什么</h2>
+<table><thead><tr><th>做了</th><th>没做</th></tr></thead><tbody>
+<tr><td>统计字数、回数、缺字、简繁用字</td><td><strong>没有改原文一个字</strong></td></tr>
+<tr><td>建立 120 回章回索引（位置 + 回目）</td><td>没有补 <code>□</code></td></tr>
+<tr><td>逐条核对 40 条引文</td><td>没有统一繁简</td></tr>
+<tr><td>标出回目格式与标点问题</td><td>没有把底本「整理」成现代标点本</td></tr>
+</tbody></table>
+<p><strong>一句话</strong>：这份底本可以支撑「引文可核对」和「结构分析」，</p>
+<p><strong>不能支撑「版本校勘」和「作者手稿研究」</strong>。后者需要脂本、程甲/程乙本、影印本。</p>
+<hr>
+<h2>七 · 下一步</h2>
+<ol>
+<li><strong>补一部脂评本</strong>（庚辰本或甲戌本）做对读：看批语是否改变对人物关系的读法；</li>
+<li><strong>补程甲本／程乙本</strong>：确认后 40 回的价值缝是版本差异，还是续书差异；</li>
+<li><strong>缺字校补</strong>：只做「标记」，不做「代填」；每条 <code>□</code> 记录上下文与可能字数；</li>
+<li><strong>回目规范化</strong>：把 120 个回目单独建表，保留底本原样，另建「通行回目」对照列。</li>
+</ol>
+<hr>
+<p><strong>核对时间</strong>：2026-10-20</p>
+<p><strong>核对方式</strong>：<code>temp/_hlm_quotebank.py</code> 逐条查找；命中 0 即失败。</p>
+<p><strong>结论</strong>：引文库 40 条全部命中底本；正文引用是其中的子集，引用块 41 段逐段核对，未命中 0 段。</p>
+<p><strong>说明</strong>：正文里的「」主要用于标记概念（如「关系网」「东方叙事」），<strong>不等于直接引文</strong>；</p>
+<p>直接引文一律放在引用块里，按底本原样引。</p>
+  </main>
+
+  <div class="footer">
+    《紅樓夢》底本考订 · 不改原文一个字 · 40 条引文库逐条命中<br>
+    
+  </div>
+
+</div>
+</body>
+</html>
