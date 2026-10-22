@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>判断卡 · 底层学习方法</title>
+<meta name="description" content="判断卡：一个问题、两个以上相反主张、关系类型、证据等级、置信、可反驳条件、行动与复盘。">
+<style>
+:root{
+  --paper:#f6f2e7;
+  --sheet:#fffdf7;
+  --ink:#25322d;
+  --muted:#68766f;
+  --accent:#2f6570;
+  --red:#a6533f;
+  --line:#d2d8cd;
+  --soft:#e9eee7;
+  --serif:"Songti SC","Noto Serif CJK SC","Source Han Serif SC","SimSun",serif;
+  --sans:"Microsoft YaHei","PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.7}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:1120px;margin:0 auto;padding:42px 34px 70px}
+.topline{font-size:12.5px;color:var(--muted);margin-bottom:26px}
+.topline a{color:var(--muted)}
+.topline span{margin:0 7px;color:#a9b4ac}
+h1,h2,h3,.serif{font-family:var(--serif);font-weight:600}
+h1{font-size:clamp(44px,7vw,78px);line-height:1.02;letter-spacing:-.03em;margin:0 0 16px}
+.lede{font-family:var(--serif);font-size:21px;line-height:1.6;margin:0 0 14px;max-width:760px}
+.creed{margin:24px 0 0;padding:14px 0 14px 18px;border-left:3px solid var(--accent);font-size:14px;color:#40504a;max-width:820px}
+.creed b{font-weight:600;color:var(--ink)}
+.topnav{display:flex;gap:18px;flex-wrap:wrap;font-size:13px;margin:26px 0 0;color:var(--muted)}
+.topnav a{color:var(--muted)}
+.loop{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:40px 0 10px;font-family:var(--serif);font-size:15px;color:var(--accent)}
+.loop span{white-space:nowrap}
+.loop i{font-style:normal;color:#a9b6ae;font-family:var(--sans);font-size:12px}
+.loop-note{font-size:12.5px;color:var(--muted);margin:0 0 30px}
+.intro{display:grid;grid-template-columns:1fr 1fr;gap:36px;margin:26px 0 34px}
+.intro h2{font-size:21px;margin:0 0 8px}
+.intro p{margin:0 0 10px;font-size:14px}
+.intro ul{margin:6px 0 0;padding-left:18px}
+.intro li{font-size:13.5px;margin:4px 0}
+.sheet{background:var(--sheet);border-top:3px solid var(--ink);padding:30px 34px 28px;margin:26px 0}
+.sheet-head{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:20px}
+.sheet-head h2{font-size:26px;line-height:1.25;margin:4px 0 0}
+.sheet-label{font-size:12px;color:var(--muted);margin:0}
+.sample-mark{display:inline-block;font-size:12px;color:var(--red);border:1px solid var(--red);padding:2px 8px;transform:rotate(-1.5deg);white-space:nowrap}
+.meta{font-size:12.5px;color:var(--muted);margin:6px 0 0}
+.grid{display:grid;grid-template-columns:132px minmax(0,1fr);gap:14px 22px;margin:0}
+.grid dt{font-size:12px;color:var(--muted);padding-top:3px}
+.grid dd{margin:0;font-size:14.5px;line-height:1.8}
+.grid dd p{margin:0 0 6px}
+.cite{display:block;font-size:12px;color:var(--muted);margin-top:4px}
+.tag{display:inline-block;background:var(--soft);padding:1px 7px;font-size:12px;color:#40504a;margin-right:6px}
+.strong{font-weight:600;color:var(--ink)}
+.note{font-size:13px;color:#4d5d55;background:var(--soft);padding:10px 12px;margin:18px 0 0}
+.sample-foot{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;align-items:center;border-top:1px solid var(--line);margin-top:20px;padding-top:12px;font-size:12.5px;color:var(--muted)}
+.sample-foot a{margin-right:14px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px 20px}
+.field{display:flex;flex-direction:column;gap:5px;min-width:0}
+.field.full{grid-column:1 / -1}
+.field label{font-size:12px;color:var(--muted)}
+.field input,.field textarea,.field select{
+  width:100%;font:inherit;font-size:14px;line-height:1.65;color:var(--ink);
+  background:#fff;border:1px solid var(--line);border-radius:0;padding:9px 10px;
+}
+.field textarea{resize:vertical;min-height:74px}
+.field input:focus,.field textarea:focus,.field select:focus{outline:2px solid #9cc3c4;outline-offset:1px;border-color:var(--accent)}
+.hint{font-size:11.5px;color:#87938b;margin:0}
+.actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:18px}
+.actions button{
+  font:inherit;font-size:13px;border:0;padding:9px 14px;cursor:pointer;border-radius:0;
+  background:var(--ink);color:var(--sheet)
+}
+.actions button.secondary{background:transparent;color:var(--accent);padding-left:0;padding-right:0;text-decoration:underline}
+.actions button:hover{opacity:.86}
+.status{font-size:12px;color:var(--muted);margin-left:4px}
+.footer{border-top:1px solid var(--line);margin-top:44px;padding-top:18px;font-size:12px;color:var(--muted)}
+.footer p{margin:4px 0}
+@media(max-width:760px){
+  .wrap{padding:30px 20px 50px}
+  h1{font-size:46px}
+  .lede{font-size:19px}
+  .intro{grid-template-columns:1fr;gap:22px}
+  .sheet{padding:22px 20px}
+  .sheet-head{display:block}
+  .sample-mark{margin-bottom:8px}
+  .grid{grid-template-columns:1fr;gap:6px 0}
+  .grid dt{margin-top:10px;color:#7b8880}
+  .grid dd{font-size:14px}
+  .form-grid{grid-template-columns:1fr}
+  .field.full{grid-column:auto}
+}
+@media print{
+  body{background:#fff;font-size:12px}
+  .wrap{max-width:none;padding:0}
+  .topline,.topnav,.loop,.loop-note,.intro,.actions,.footer{display:none}
+  h1{font-size:36px}
+  .lede{font-size:16px}
+  .creed{font-size:11px}
+  .sheet{border-top:1px solid #999;padding:16px 0;margin:14px 0;break-inside:avoid;background:#fff}
+  .sheet-head h2{font-size:20px}
+  .grid{grid-template-columns:100px 1fr;gap:8px 14px}
+  .grid dd{font-size:11.5px}
+  .note{background:#f2f2f2}
+  .field input,.field textarea,.field select{border:1px solid #bbb;background:#fff}
+  textarea{min-height:58px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="topline"><a href="index.html">底层</a><span>/</span>学习方法<span>/</span>判断卡</div>
+
+  <h1>判断卡</h1>
+  <p class="lede">不是把书读完，是把一个判断拆到能修正。</p>
+  <p class="creed"><b>一张卡 = 一个真实问题 + 两个以上相反主张 + 关系类型 + 证据等级 + 我的置信 + 什么能推翻我 + 一个行动 + 一次复盘。</b><br>
+  读完一章不算闭环；一个判断被修正，才算。</p>
+
+  <nav class="topnav">
+    <a href="index.html">回首页</a>
+    <a href="生态地图.html">知识地形图</a>
+    <a href="问题轴.html">问题轴</a>
+    <a href="冲突与呼应地图.html">冲突地图</a>
+    <a href="精读四章.html">深读章节</a>
+  </nav>
+
+  <div class="loop">
+    <span>问题</span><i>→</i><span>碰撞</span><i>→</i><span>边界</span><i>→</i><span>行动</span><i>→</i><span>复盘</span>
+  </div>
+  <p class="loop-note">不用从「我要学什么」开始；从一个你正在做的判断开始。</p>
+
+  <section class="intro">
+    <div>
+      <h2>它不解决什么</h2>
+      <p>不替你记住事实，不替你读完一本书，也不承诺「二十一天学会」。</p>
+      <p>那些是记忆、理解、熟练度的问题，间隔重复、费曼、刻意练习各有各的用处。</p>
+    </div>
+    <div>
+      <h2>它解决什么</h2>
+      <p>两个都可信的说法打架时，你能判断、能选择、能改。</p>
+      <ul>
+        <li>能说出两边最强版本，而不只是自己那一边；</li>
+        <li>能判关系类型，而不是把所有分歧都说成「各有道理」；</li>
+        <li>能标出证据等级，知道哪句话是原文、哪句是转述；</li>
+        <li>能写下「什么会推翻我」，并在之后回来看。</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="sheet" id="template">
+    <div class="sheet-head">
+      <div>
+        <p class="sheet-label">可填写模板</p>
+        <h2>我的判断卡</h2>
+        <p class="meta">填写后保存在本机浏览器，不上传。可打印成纸，或存成 PDF。</p>
+      </div>
+    </div>
+
+    <form id="cardForm" autocomplete="off">
+      <div class="form-grid">
+        <div class="field full">
+          <label for="question">问题 / 我要做的决定</label>
+          <textarea id="question" data-field="question" rows="3" placeholder="例：晚上学不进去，是不是「意志力用完了」？我该不该用这个解释安排学习？"></textarea>
+        </div>
+
+        <div class="field">
+          <label for="claimA">主张 A（最强版本）</label>
+          <textarea id="claimA" data-field="claimA" rows="4" placeholder="不要写稻草人。写你反对的那一边，最强的那一句。"></textarea>
+        </div>
+        <div class="field">
+          <label for="sourceA">主张 A 的出处</label>
+          <input id="sourceA" data-field="sourceA" type="text" placeholder="书名 / 页码 / 论文 DOI；如果是转述，标「二手」">
+        </div>
+
+        <div class="field">
+          <label for="claimB">主张 B（最强版本）</label>
+          <textarea id="claimB" data-field="claimB" rows="4" placeholder="如果 B 是复现、反例、另一本书，写清它到底否定了什么。"></textarea>
+        </div>
+        <div class="field">
+          <label for="sourceB">主张 B 的出处</label>
+          <input id="sourceB" data-field="sourceB" type="text" placeholder="书名 / 页码 / 论文 DOI；如果是复现，标实验室数与样本量">
+        </div>
+
+        <div class="field">
+          <label for="relation">关系类型</label>
+          <select id="relation" data-field="relation">
+            <option value="">先别急着选</option>
+            <option>Ⅰ 真对立：同一件事、同一层，不能同真</option>
+            <option>Ⅱ 条件性对立：换一个条件，两边都能成立</option>
+            <option>Ⅲ 范畴不同：它们在回答不同的问题</option>
+            <option>Ⅳ 虚对立：看起来相反，其实在说同一件事</option>
+            <option>Ⅴ 层级不同：一个给形式，一个给实例</option>
+            <option>暂不判：证据还不够</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="evidence">证据等级</label>
+          <select id="evidence" data-field="evidence">
+            <option value="">选一个</option>
+            <option>原文：我核过原书 / 论文</option>
+            <option>复现：多实验室、预注册</option>
+            <option>二手：转述、综述、讲课材料</option>
+            <option>单例：一个个案 / 一次观察</option>
+            <option>混合：两边等级不一样</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="confidence">我的置信</label>
+          <select id="confidence" data-field="confidence">
+            <option value="">选一个</option>
+            <option>高：证据方向一致，边界清楚</option>
+            <option>中高：方向清楚，但有一侧未核</option>
+            <option>中：能判，但边界还没找到</option>
+            <option>低：只是暂时倾向</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="confidenceWhy">为什么是这个置信</label>
+          <textarea id="confidenceWhy" data-field="confidenceWhy" rows="3" placeholder="哪一侧证据强？哪一侧还没核？哪一处可能让我降级？"></textarea>
+        </div>
+
+        <div class="field full">
+          <label for="refute">什么能推翻我</label>
+          <textarea id="refute" data-field="refute" rows="3" placeholder="写具体：找到某篇原文 / 出现某个边界条件 / 新的预注册复现 / 对方给出反例。"></textarea>
+        </div>
+
+        <div class="field full">
+          <label for="action">一个行动 / 实验</label>
+          <textarea id="action" data-field="action" rows="3" placeholder="不要写「以后多注意」。写这周能做的一件小事，和你要记录什么。"></textarea>
+        </div>
+
+        <div class="field">
+          <label for="reviewDate">复盘日期</label>
+          <input id="reviewDate" data-field="reviewDate" type="date">
+        </div>
+        <div class="field">
+          <label for="reviewResult">复盘结果（到那天再填）</label>
+          <textarea id="reviewResult" data-field="reviewResult" rows="2" placeholder="判断对了吗？错在证据、关系类型，还是边界？"></textarea>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button type="button" id="saveBtn">保存草稿</button>
+        <button type="button" class="secondary" id="printBtn">打印 / 存 PDF</button>
+        <button type="button" class="secondary" id="clearBtn">清空</button>
+        <span class="status" id="status">尚未保存</span>
+      </div>
+      <p class="hint" style="margin-top:8px">提示：如果两边证据等级不同，不要用「各有道理」抹平；先标出哪边是原文、哪边是转述。</p>
+    </form>
+  </section>
+
+  <section class="sheet sample" id="q13-card">
+    <div class="sheet-head">
+      <div>
+        <div class="sample-mark">样卡 · Q13</div>
+        <h2>「意志力用完了」，是不是一个解释？</h2>
+        <p class="meta">材料级 · 标准范式层面 · 证据偏向复现方</p>
+      </div>
+    </div>
+
+    <dl class="grid">
+      <dt>问题</dt>
+      <dd>晚上学不进去，是不是「意志力用完了」？我该不该用这个解释来安排学习？</dd>
+
+      <dt>主张 A</dt>
+      <dd>自控是有限资源；先耗尽自控，再面对新任务，表现会变差。
+        <span class="cite">《思考，快与慢》第 50 页对 Baumeister 的转述。是二手；Baumeister 1998 原文待补。</span></dd>
+
+      <dt>主张 B</dt>
+      <dd>在标准双任务范式下，没有可检出的自我损耗。Hagger et al. (2016)：24 个实验室，RTV <span class="strong">d = .020</span>、RT <span class="strong">d = -.031</span>，95% CI 跨零。Vohs et al. (2021)：36 个实验室、N = 3,531，确认性检验 <span class="strong">d = 0.06</span>，不显著；贝叶斯约 4:1 偏向零。
+        <span class="cite">Hagger 2016, p.2；Vohs 2021, p.3。</span></dd>
+
+      <dt>关系类型</dt>
+      <dd><span class="tag">Ⅰ 真对立</span>同一件事：自控会不会被前一任务耗尽；同一层：标准双任务范式。答案不相容。</dd>
+
+      <dt>证据等级</dt>
+      <dd>A：二手转述，原文未核。B：两篇多实验室预注册复现。<span class="strong">两边等级不一样，必须标出来。</span></dd>
+
+      <dt>我的置信</dt>
+      <dd>Q13 是 Ⅰ：<span class="strong">中高</span>。标准范式下没有可检出效应：<span class="strong">中高</span>。强模型完全错：<span class="strong">低</span>——边界条件没有穷尽。</dd>
+
+      <dt>什么能推翻我</dt>
+      <dd>找到 Baumeister 1998 原文，证明转述准确／不准确；找到可复现的边界条件（高疲劳、特定任务、特定人群）→ Ⅰ 降 Ⅱ；新的预注册复现出现稳定显著效应 → Ⅰ 松动。</dd>
+
+      <dt>行动 / 实验</dt>
+      <dd>两周内，每次「学不进去」时记三件事：前一晚睡眠、任务难度、手机是否在手边。先做 25 分钟再判断，不把「意志力用完」当解释。</dd>
+
+      <dt>复盘</dt>
+      <dd>两周后回看记录：出现的次数、情境，是否更像疲劳／任务难度／环境干扰，而不是一个统一的「资源」。</dd>
+    </dl>
+
+    <div class="note"><strong>这张卡教什么：</strong>一边是二手转述，一边是多实验室复现——先标证据等级，再判关系类型；不要把「证据强」直接当成「对方全错」。</div>
+
+    <div class="sample-foot">
+      <div>
+        <a href="问题轴.html#q13">回问题轴 Q13</a>
+        <a href="02_心智与认知/意志与自控/自我耗竭_多实验室复现2016.pdf">Hagger 2016 PDF</a>
+        <a href="02_心智与认知/意志与自控/自我耗竭_多站点复现2021.pdf">Vohs 2021 PDF</a>
+      </div>
+      <span>样卡 1 / 3</span>
+    </div>
+  </section>
+
+  <section class="sheet sample" id="q9b-card">
+    <div class="sheet-head">
+      <div>
+        <div class="sample-mark">样卡 · Q9b</div>
+        <h2>「关系性自我」是不是只是 Miller 一本书的说法？</h2>
+        <p class="meta">有独立来源 · 部分裁决 · 不是全裁决</p>
+      </div>
+    </div>
+
+    <dl class="grid">
+      <dt>问题</dt>
+      <dd>我该不该用「关系性自我」解释我和家人的冲突？它是不是只是《亲密关系》作者一个人的说法？</dd>
+
+      <dt>主张 A</dt>
+      <dd>自我构念是文化变量；关系性自我强的人，归因更偏关系／处境，择偶更看重相似，描述爱更常提关系，关系稳定机制也不同。
+        <span class="cite">Miller《亲密关系》的四个预测；这是需要独立检验的一方。</span></dd>
+
+      <dt>主张 B</dt>
+      <dd>Heine（2010）第 37 章：成为自我的过程取决于文化环境；互依自我嵌入更大的社会群体；东亚人比美国人更常把行为归因于情境，FAE 在非西方文化减弱。但这只直接支持「归因落点」一条。
+        <span class="cite">Heine 2010, pp.1428–1444。独立于 Miller，但不是 Miller 四个预测的逐条检验。</span></dd>
+
+      <dt>关系类型</dt>
+      <dd><span class="tag">不是 Ⅰ</span>有独立来源、<span class="strong">部分裁决</span>：① 归因落点有文化层面支持；个体差异层面未验证；②③④ 仍待。</dd>
+
+      <dt>证据等级</dt>
+      <dd>Heine 是独立综述，不是 Miller 的转述链。但它是文化组间比较，不是个体差异量表。<span class="strong">注意：Heine 引的 Miller (1984) 是 Joan Miller，不是 Rowland Miller。</span></dd>
+
+      <dt>我的置信</dt>
+      <dd>循环论证已破：<span class="strong">高</span>。四个预测已全部裁决：<span class="strong">否</span>。只有 ① 有独立证据，②③④ 仍待。</dd>
+
+      <dt>什么能推翻我</dt>
+      <dd>Heine 的归因证据不能外推到「关系性自我强的人」这一层 → ① 退回「仍待」；找到直接测择偶相似、爱情描述、关系稳定性的独立研究 → ②③④ 可升级。</dd>
+
+      <dt>行动 / 实验</dt>
+      <dd>下一次和家人的冲突，先各写一句：「这是他的特质」和「这是他当时的关系位置」。然后问一个关于位置的问题（「你当时夹在谁和谁之间？」），记录对方反应和你的判断变化。</dd>
+
+      <dt>复盘</dt>
+      <dd>一周后回看：用「关系位置」解释，是否比「他就是这种人」多预测出一点东西？如果没多出东西，这张卡就应降级。</dd>
+    </dl>
+
+    <div class="note"><strong>这张卡教什么：</strong>「有独立来源」不等于「四个预测全对」。部分裁决要写到能看出哪一条被支持、哪一条还空着。</div>
+
+    <div class="sample-foot">
+      <div>
+        <a href="问题轴.html#q9b">回问题轴 Q9b</a>
+        <a href="08_性与亲密关系/文化心理学-第37章-对照材料.html">Heine 第37章对照材料</a>
+      </div>
+      <span>样卡 2 / 3</span>
+    </div>
+  </section>
+
+  <section class="sheet sample" id="sortability-card">
+    <div class="sheet-head">
+      <div>
+        <div class="sample-mark">样卡 · 可排序性</div>
+        <h2>志愿时长能排序，数学建模奖不能——我该争什么？</h2>
+        <p class="meta">分类 vs 排序 · 不是价值高低，是可读性</p>
+      </div>
+    </div>
+
+    <dl class="grid">
+      <dt>问题</dt>
+      <dd>评价里志愿时长能排序，数学建模国家二等奖不能。我该争「我的奖更厉害」，还是先问规则是怎么定的？</dd>
+
+      <dt>主张 A</dt>
+      <dd>志愿时长能排序：有统一单位（小时）、稳定记录（签到／认定）、公开累加规则、可复核。但它测的是投入时间，不是帮助质量。
+        <span class="cite">《国家的视角》pp.21–22、29；「能排序」的四个条件。</span></dd>
+
+      <dt>主张 B</dt>
+      <dd>数学建模国家二等奖是「厚」的成就：证书能证明你得过奖，不能证明这个奖在你的能力／贡献里占多少。竞赛层级、题目、评审、队伍分工、获奖率、学校认定目录，都没有统一换算。
+        <span class="cite">《国家的视角》p.22；《学会提问》pp.109、122 的价值观假设与描述性假设。</span></dd>
+
+      <dt>关系类型</dt>
+      <dd><span class="tag">Ⅴ 层级不同</span>不是同一把尺：一个是已经被制度做成单位的指标，一个是还需要人读的厚成就。硬说「我的奖更厉害」，会把它变成一场比大小的争夺。</dd>
+
+      <dt>证据等级</dt>
+      <dd>原文与案例都核过；但具体学校的认定目录是政策文本，不是普遍规律。<span class="strong">“可排序 ≠ 更重要”是高置信；“这所学校会怎么认”是中等置信。</span></dd>
+
+      <dt>我的置信</dt>
+      <dd>可排序是一种制度成就，不是事物本身的等级：<span class="strong">高</span>。具体评价规则会不会改：<span class="strong">中</span>。</dd>
+
+      <dt>什么能推翻我</dt>
+      <dd>学校公布数学建模奖的公开换算规则 → 它变得可排序；志愿时长加入质量权重／案例评价 → 它测的东西变了；出现「不量化也能比较」的稳定机制 → 「必须做成单位」这个说法要降级。</dd>
+
+      <dt>行动 / 实验</dt>
+      <dd>不要先说「我的奖更厉害」。问三个问题：这次用哪几个指标、权重多少？数学建模奖在认定目录里对应哪一档？如果没有，能不能走作品／面试评审？把回答写成一页书面请求。</dd>
+
+      <dt>复盘</dt>
+      <dd>拿到书面答复后回看：对方是在「规则内解释」，还是在「临时改规则」？如果对方拒绝书面答复，问题就从「我的奖值多少」变成「谁有权力定义这把尺」。</dd>
+    </dl>
+
+    <div class="note"><strong>这张卡教什么：</strong>先分清「分类」和「排序」，再问「这把尺测什么、漏了什么、谁有权力定义它」。不要把「不能排序」误当成「没有价值」。</div>
+
+    <div class="sample-foot">
+      <div>
+        <a href="04_社会与制度/志愿时长与数学建模奖-可排序性.html">读完整案例</a>
+        <a href="问题轴.html">回问题轴</a>
+      </div>
+      <span>样卡 3 / 3</span>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>判断卡是学习回路的最小单位，不是课程。课程会把你拉回「按章节学」；这张卡把你拉回「我正在判断什么」。</p>
+    <p>先把一张卡填完，再决定要不要读下一本书。</p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var KEY = 'diceng-judgment-card-v1';
+  var fields = Array.prototype.slice.call(document.querySelectorAll('[data-field]'));
+  var status = document.getElementById('status');
+  var saveBtn = document.getElementById('saveBtn');
+  var printBtn = document.getElementById('printBtn');
+  var clearBtn = document.getElementById('clearBtn');
+
+  function setStatus(t){ if(status) status.textContent = t; }
+  function collect(){
+    var out = {};
+    fields.forEach(function(f){ out[f.dataset.field] = f.value; });
+    return out;
+  }
+  function fill(data){
+    fields.forEach(function(f){
+      if(Object.prototype.hasOwnProperty.call(data, f.dataset.field)){
+        f.value = data[f.dataset.field];
+      }
+    });
+  }
+  function load(){
+    try{
+      var raw = localStorage.getItem(KEY);
+      if(!raw){ setStatus('尚未保存'); return; }
+      fill(JSON.parse(raw));
+      setStatus('已载入上次草稿');
+    }catch(e){ setStatus('浏览器不允许保存，可直接打印'); }
+  }
+  fields.forEach(function(f){
+    f.addEventListener('input', function(){ setStatus('有未保存的修改'); });
+    f.addEventListener('change', function(){ setStatus('有未保存的修改'); });
+  });
+  saveBtn.addEventListener('click', function(){
+    try{
+      localStorage.setItem(KEY, JSON.stringify(collect()));
+      setStatus('已保存到本机浏览器');
+    }catch(e){ setStatus('保存失败：浏览器禁用了本地存储'); }
+  });
+  printBtn.addEventListener('click', function(){ window.print(); });
+  clearBtn.addEventListener('click', function(){
+    if(!confirm('清空这张卡？已保存的草稿也会删掉。')) return;
+    fields.forEach(function(f){ f.value = ''; });
+    try{ localStorage.removeItem(KEY); }catch(e){}
+    setStatus('已清空');
+  });
+  load();
+})();
+</script>
+</body>
+</html>
