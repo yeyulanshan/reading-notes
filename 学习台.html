@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>学习台 · 一章书</title>
+<meta name="description" content="把“读一章”拆成动作：任务地图、执行台、查资料、停车区、收束、复习队列。">
+<style>
+:root{
+  --paper:#f6f2e7; --sheet:#fffdf7; --ink:#25322d; --muted:#68766f;
+  --accent:#2f6570; --red:#a6533f; --line:#d2d8cd; --soft:#e9eee7;
+  --serif:"Songti SC","Noto Serif CJK SC","Source Han Serif SC","SimSun",serif;
+  --sans:"Microsoft YaHei","PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.65}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+button{font:inherit;cursor:pointer}
+.wrap{max-width:1180px;margin:0 auto;padding:38px 30px 64px}
+.topline{font-size:12.5px;color:var(--muted);margin-bottom:22px}
+.topline a{color:var(--muted)}
+.topline span{margin:0 7px;color:#a9b4ac}
+h1,h2,h3,.serif{font-family:var(--serif);font-weight:600}
+h1{font-size:clamp(42px,6vw,68px);line-height:1.02;letter-spacing:-.03em;margin:0 0 12px}
+.lede{font-family:var(--serif);font-size:20px;line-height:1.6;margin:0 0 12px;max-width:760px}
+.sub{font-size:13.5px;color:var(--muted);max-width:720px;margin:0}
+.topnav{display:flex;gap:18px;flex-wrap:wrap;font-size:13px;margin:22px 0 0;color:var(--muted)}
+.topnav a{color:var(--muted)}
+.rail{display:flex;gap:4px;flex-wrap:wrap;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin:30px 0 24px;padding:8px 0}
+.rail button{background:transparent;border:0;color:var(--muted);padding:8px 12px;font-size:12.5px}
+.rail button.active{background:var(--ink);color:var(--sheet)}
+.rail .grow{flex:1}
+.saved{font-size:11.5px;color:var(--muted);align-self:center;padding-right:4px}
+.view{display:none}
+.view.active{display:block}
+.sheet{background:var(--sheet);border-top:3px solid var(--ink);padding:26px 30px 28px;margin:0 0 22px}
+.sheet-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:18px}
+.sheet-head h2{font-size:25px;line-height:1.25;margin:0}
+.meta{font-size:12px;color:var(--muted);margin:5px 0 0}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px 18px}
+.field{display:flex;flex-direction:column;gap:5px;min-width:0;margin-bottom:14px}
+.field label{font-size:12px;color:var(--muted)}
+.field input,.field textarea,.field select{
+  width:100%;font:inherit;font-size:14px;color:var(--ink);background:#fff;
+  border:1px solid var(--line);border-radius:0;padding:9px 10px;line-height:1.6;
+}
+.field textarea{resize:vertical;min-height:68px}
+.field input:focus,.field textarea:focus,.field select:focus{outline:2px solid #9cc3c4;outline-offset:1px;border-color:var(--accent)}
+.hint{font-size:11.5px;color:#87938b;margin:4px 0 0}
+.btn{display:inline-block;background:var(--ink);color:var(--sheet);border:0;padding:9px 15px;font-size:13px}
+.btn:hover{opacity:.86}
+.btn.secondary{background:transparent;color:var(--accent);padding-left:0;padding-right:0;text-decoration:underline}
+.btn.small{padding:6px 10px;font-size:12px}
+.btn.danger{color:var(--red)}
+.action{border:1px solid var(--line);background:#fbf8ef;padding:12px 13px;margin-bottom:10px}
+.action.done{opacity:.62}
+.action.blocked{border-left:3px solid var(--red)}
+.action-top{display:flex;gap:8px;align-items:center}
+.action-top .del{background:transparent;color:var(--red);border:0;padding:3px 7px;font-size:11.5px;flex:0 0 auto}
+.action-top .del:hover{background:#f7e9e4;text-decoration:none}
+.action-title{flex:1;font:inherit;font-size:14px;font-weight:600;border:0;background:transparent;padding:3px 0;color:var(--ink)}
+.action-output{width:100%;font:inherit;font-size:12.5px;border:0;background:transparent;padding:4px 0;color:var(--muted)}
+.action-meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:7px;font-size:12px;color:var(--muted)}
+.action-meta select,.action-meta input[type=number]{font:inherit;font-size:12px;border:1px solid var(--line);background:#fff;padding:3px 5px}
+.action-meta input[type=number]{width:48px}
+.action-meta .btn{font-size:11.5px;padding:4px 8px;background:transparent;color:var(--accent)}
+.action-meta .btn:hover{background:var(--soft);text-decoration:none}
+.action-meta .del{color:var(--red);margin-left:auto}
+.capsule{font-size:11.5px;color:#75847b;margin:8px 0 0;border-left:2px solid var(--line);padding-left:8px}
+.row-actions{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:16px}
+.preflight{background:var(--soft);padding:14px 16px;margin-top:20px}
+.preflight h3{font-size:14px;margin:0 0 8px}
+.preflight label{display:flex;gap:8px;font-size:13px;margin:5px 0;cursor:pointer}
+.preflight input{accent-color:var(--accent);margin-top:4px}
+.grid-side{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:22px;align-items:start}
+.side{position:sticky;top:10px}
+.side-block{background:var(--sheet);padding:18px 18px;margin-bottom:14px;border-top:3px solid var(--ink)}
+.side-block h3{font-size:15px;margin:0 0 8px}
+.side-block p{font-size:12.5px;color:var(--muted);margin:5px 0}
+.side-block textarea,.side-block input{width:100%;font:inherit;font-size:12.5px;border:1px solid var(--line);padding:6px 7px;background:#fff}
+.park-list{list-style:none;padding:0;margin:8px 0}
+.park-list li{font-size:12px;display:flex;justify-content:space-between;gap:8px;padding:5px 0;border-bottom:1px solid var(--line)}
+.park-list button{border:0;background:transparent;color:var(--red);font-size:12px;padding:0}
+.run-label{font-size:12px;color:var(--muted);margin:0}
+.run-title{font-size:30px;line-height:1.3;margin:4px 0 6px}
+.run-output{font-size:13.5px;color:var(--muted);margin:0 0 12px}
+.warn{font-size:12px;color:var(--red);background:#f7e9e4;padding:7px 9px;margin:10px 0}
+.timer{font-family:var(--serif);font-size:clamp(58px,9vw,92px);line-height:1;font-variant-numeric:tabular-nums;margin:20px 0 10px;letter-spacing:.02em}
+.timer-controls{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:16px}
+.timer-controls button{border:1px solid var(--line);background:transparent;color:var(--muted);padding:5px 8px;font-size:12px}
+.timer-controls button.on{background:var(--ink);color:var(--sheet);border-color:var(--ink)}
+.run-actions{display:flex;gap:8px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:14px}
+.run-actions button{border:1px solid var(--line);background:transparent;color:var(--ink);padding:7px 11px;font-size:12.5px}
+.run-actions button.primary{background:var(--ink);color:var(--sheet);border-color:var(--ink)}
+.research{background:var(--soft);padding:14px 16px;margin:16px 0 0}
+.research h3{font-size:14px;margin:0 0 8px}
+.retrieval{border-top:1px solid var(--line);padding:14px 0 0;margin-top:14px}
+.retrieval h3{font-size:15px;margin:0 0 8px}
+.q-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.confidence{display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin:10px 0}
+.confidence select{font:inherit;font-size:13px;border:1px solid var(--line);padding:5px 7px;background:#fff}
+.due-item{display:flex;justify-content:space-between;gap:12px;align-items:center;border-bottom:1px solid var(--line);padding:10px 0;font-size:13px}
+.due-item small{color:var(--muted);font-size:11.5px}
+.empty{font-size:12.5px;color:var(--muted)}
+.modal{position:fixed;inset:0;background:rgba(27,38,33,.42);display:flex;align-items:center;justify-content:center;padding:20px;z-index:20}
+.modal[hidden]{display:none}
+.modal-box{background:var(--sheet);max-width:560px;width:100%;padding:24px;border-top:3px solid var(--ink)}
+.modal-box h3{font-size:20px;margin:0 0 6px}
+.modal-box p{font-size:13px;color:var(--muted)}
+.modal-box textarea{width:100%;font:inherit;font-size:14px;border:1px solid var(--line);padding:9px;min-height:90px;background:#fff}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:14px}
+.modal-actions button{border:0;background:var(--ink);color:var(--sheet);padding:8px 13px;font-size:13px}
+.modal-actions .cancel{background:transparent;color:var(--muted)}
+.footer{border-top:1px solid var(--line);margin-top:34px;padding-top:16px;font-size:12px;color:var(--muted)}
+@media(max-width:900px){
+  .wrap{padding:28px 18px 48px}
+  .grid-side{grid-template-columns:1fr}
+  .side{position:static;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .side-block{margin:0}
+  .grid2{grid-template-columns:1fr}
+  .q-row{grid-template-columns:1fr}
+}
+@media(max-width:600px){
+  h1{font-size:44px}
+  .lede{font-size:18px}
+  .sheet{padding:20px 18px}
+  .side{grid-template-columns:1fr}
+  .action-meta{gap:5px}
+  .run-title{font-size:24px}
+}
+@media print{
+  body{background:#fff}
+  .wrap{max-width:none;padding:0}
+  .topline,.topnav,.rail,.side,.run-actions,.timer-controls,.btn,.footer,.modal{display:none}
+  .sheet{border-top:1px solid #999;padding:12px 0;margin:10px 0}
+  .view{display:none}
+  .view.active{display:block}
+  .action{break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="topline"><a href="index.html">底层</a><span>/</span>学习台<span>/</span>一章书</div>
+  <h1>一章书</h1>
+  <p class="lede">先把“读一章”拆成动作，再开始计时。不是读完，是能复述、能自测、能判断。</p>
+  <p class="sub">读一章不是一件事：预读、提问、扫结构、精读、复述、检索、判断，是不同动作。查资料和切换也有预算。</p>
+  <nav class="topnav">
+    <a href="index.html">回首页</a>
+    <a href="判断卡.html">判断卡</a>
+    <a href="生态地图.html">知识地形图</a>
+    <a href="问题轴.html">问题轴</a>
+  </nav>
+
+  <div class="rail">
+    <button data-view="map" class="active">任务地图</button>
+    <button data-view="run">执行台</button>
+    <button data-view="close">收束</button>
+    <button data-view="review">复习队列</button>
+    <span class="grow"></span>
+    <span class="saved" id="saved">本地保存</span>
+  </div>
+
+  <!-- ===== 任务地图 ===== -->
+  <section class="view active" id="view-map">
+    <div class="sheet">
+      <div class="sheet-head">
+        <div>
+          <h2>任务地图</h2>
+          <p class="meta">先拆到 5–9 个动作；每个动作要有产出。超过 9 个，说明这一章要分两次。</p>
+        </div>
+        <span class="meta" id="totalInfo"></span>
+      </div>
+
+      <div class="grid2">
+        <div class="field"><label for="book">书名</label><input id="book" placeholder="例：国家的视角"></div>
+        <div class="field"><label for="chapter">章节</label><input id="chapter" placeholder="例：第九章 · 米提斯"></div>
+      </div>
+
+      <div class="field"><label for="goal">这次要交付什么</label><textarea id="goal" rows="2"></textarea></div>
+      <div class="field"><label for="finish">完成标准</label><textarea id="finish" rows="2"></textarea></div>
+
+      <div id="actionList"></div>
+      <div class="row-actions">
+        <button class="btn secondary" id="addAction">＋ 加一个动作</button>
+        <button class="btn secondary danger" id="resetAll">重新开始这一章</button>
+      </div>
+
+      <div class="preflight">
+        <h3>开工包</h3>
+        <label><input type="checkbox" data-check="book"> 书 / PDF 已打开</label>
+        <label><input type="checkbox" data-check="notes"> 纸笔或笔记已就位</label>
+        <label><input type="checkbox" data-check="phone"> 手机放到拿不到的地方</label>
+        <label><input type="checkbox" data-check="notif"> 通知、聊天、无关标签页已关</label>
+      </div>
+
+      <div class="row-actions">
+        <button class="btn" id="startRun">开始执行</button>
+        <button class="btn secondary" id="exportBtn">导出这一章</button>
+        <button class="btn secondary" id="printBtn">打印</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 执行台 ===== -->
+  <section class="view" id="view-run">
+    <div class="grid-side">
+      <div class="sheet">
+        <p class="run-label">当前动作</p>
+        <h2 class="run-title" id="runTitle">还没有动作</h2>
+        <p class="run-output" id="runOutput"></p>
+        <div class="warn" id="runWarn" hidden></div>
+
+        <div class="timer" id="timerLabel">25:00</div>
+        <div class="timer-controls" id="timerControls">
+          <button data-min="10">10 分</button>
+          <button data-min="25" class="on">25 分</button>
+          <button data-min="45">45 分</button>
+          <button data-min="90">90 分</button>
+          <button id="toggleTimer">开始</button>
+          <button id="resetTimer">重置</button>
+        </div>
+
+        <div class="run-actions">
+          <button class="primary" id="doneAction">完成这个动作</button>
+          <button id="researchBtn">查资料（10 分钟）</button>
+          <button id="switchBtn">切换动作</button>
+          <button id="distractBtn">走神 / 被打断</button>
+          <button id="parkBtn">放进停车区</button>
+        </div>
+
+        <div class="research" id="researchPanel" hidden>
+          <h3>研究模式 · 只查一个问题</h3>
+          <div class="field"><label for="researchQ">我要查什么</label><input id="researchQ" placeholder="写成一个问题，不要写“查一下”"></div>
+          <div class="field"><label for="researchSource">来源</label><input id="researchSource" placeholder="书名 / 页面 / 链接"></div>
+          <div class="field"><label for="researchA">查到了什么（一句话）</label><textarea id="researchA" rows="2"></textarea></div>
+          <button class="btn small" id="endResearch">结束研究，回到动作</button>
+        </div>
+      </div>
+
+      <aside class="side">
+        <div class="side-block">
+          <h3>这一章</h3>
+          <p id="sideGoal"></p>
+          <p id="sideProgress"></p>
+        </div>
+        <div class="side-block">
+          <h3>停车区</h3>
+          <ul class="park-list" id="parkList"></ul>
+          <input id="parkInput" placeholder="先记下来，不立刻做">
+          <button class="btn small" id="addPark" style="margin-top:6px">放进去</button>
+        </div>
+        <div class="side-block">
+          <h3>时间账</h3>
+          <p id="timeLedger"></p>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ===== 收束 ===== -->
+  <section class="view" id="view-close">
+    <div class="sheet">
+      <div class="sheet-head">
+        <div>
+          <h2>收束：先合上书</h2>
+          <p class="meta">不要重读；先回忆。回忆失败的地方，才是下一次复习的入口。</p>
+        </div>
+      </div>
+
+      <div class="retrieval">
+        <h3>3 个检索问题</h3>
+        <div class="q-row">
+          <div class="field"><label>问题 1</label><input data-q="q1" placeholder="合上书，自己出题"></div>
+          <div class="field"><label>回答 1</label><textarea data-q="a1" rows="2"></textarea></div>
+        </div>
+        <div class="q-row">
+          <div class="field"><label>问题 2</label><input data-q="q2"></div>
+          <div class="field"><label>回答 2</label><textarea data-q="a2" rows="2"></textarea></div>
+        </div>
+        <div class="q-row">
+          <div class="field"><label>问题 3</label><input data-q="q3"></div>
+          <div class="field"><label>回答 3</label><textarea data-q="a3" rows="2"></textarea></div>
+        </div>
+      </div>
+
+      <div class="field"><label for="explanation">自我解释：为什么这一步成立？条件变了还成立吗？</label><textarea id="explanation" rows="3" placeholder="不要复述，写因果和边界。"></textarea></div>
+
+      <div class="confidence">
+        <label>开始前觉得能记住多少
+          <select id="confidenceBefore"><option value="">选</option><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select>
+        </label>
+        <label>现在实际 recall
+          <select id="confidenceAfter"><option value="">选</option><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select>
+        </label>
+      </div>
+
+      <div class="field"><label for="cardDraft">这次要带走的判断（判断卡草稿）</label><textarea id="cardDraft" rows="3" placeholder="主张 A / 主张 B / 关系 / 证据 / 置信 / 什么能推翻"></textarea></div>
+
+      <div class="row-actions">
+        <button class="btn" id="finishBtn">完成这次学习</button>
+        <a class="btn secondary" href="判断卡.html">去判断卡</a>
+        <button class="btn secondary" id="printClose">打印</button>
+      </div>
+      <p class="hint" id="finishMsg"></p>
+    </div>
+  </section>
+
+  <!-- ===== 复习 ===== -->
+  <section class="view" id="view-review">
+    <div class="sheet">
+      <div class="sheet-head">
+        <div>
+          <h2>复习队列</h2>
+          <p class="meta">到期先回忆，不先重读。回忆失败就缩短间隔；回忆成功就拉长。</p>
+        </div>
+      </div>
+      <div id="dueList"></div>
+      <div class="research" id="reviewBox" hidden>
+        <h3 id="reviewTitle">复习</h3>
+        <div id="reviewQuestions"></div>
+        <div class="row-actions">
+          <button class="btn" data-rate="forgot">忘了</button>
+          <button class="btn secondary" data-rate="fuzzy">模糊</button>
+          <button class="btn secondary" data-rate="remembered">记得</button>
+          <button class="btn secondary" id="closeReview">先不复习</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>一章书 = 一个工作包，不是一件事。先拆、先备料、再执行；查资料是子任务，切换有成本。</p>
+    <p>数据只存在本机浏览器。换设备前先导出。</p>
+  </footer>
+</div>
+
+<!-- 上下文胶囊 -->
+<div class="modal" id="capsuleModal" hidden>
+  <div class="modal-box">
+    <h3>完成这个动作前，留一句上下文</h3>
+    <p>不是总结，是给下一次的自己留入口。</p>
+    <textarea id="capsuleText" placeholder="我做到哪了：&#10;下一步是什么："></textarea>
+    <div class="modal-actions">
+      <button class="cancel" id="capsuleCancel">取消</button>
+      <button id="capsuleSave">保存并完成</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var KEY='diceng-study-desk-v1';
+  var HIST='diceng-study-history-v1';
+
+  function uid(){return 'a'+Math.random().toString(36).slice(2,9)}
+  function clone(o){return JSON.parse(JSON.stringify(o))}
+  function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+  function today(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+  function addDays(n){var d=new Date();d.setDate(d.getDate()+n);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+
+  var DEFAULT={
+    book:'', chapter:'',
+    goal:'读完这一章，能用自己的话讲出：它在回答什么、怎么论证、哪里不成立。',
+    finish:'200 字复述 + 3 个自测问题 + 1 张判断卡',
+    actions:[
+      {id:uid(),title:'预读：看标题、小节、图表、首尾段',output:'一句话：这一章在回答什么',need:'够',minutes:10,status:'todo',capsule:''},
+      {id:uid(),title:'提问：写 3 个我想让这一章回答的问题',output:'3 个问题',need:'够',minutes:5,status:'todo',capsule:''},
+      {id:uid(),title:'扫读结构：列出小节与论证顺序',output:'一张结构清单',need:'够',minutes:10,status:'todo',capsule:''},
+      {id:uid(),title:'精读：读核心段，标主张/证据/例子/转折',output:'3 条摘记（不是抄）',need:'够',minutes:25,status:'todo',capsule:''},
+      {id:uid(),title:'复述：合上书，用自己的话讲一遍',output:'200 字复述',need:'够',minutes:10,status:'todo',capsule:''},
+      {id:uid(),title:'检索：写 3 个自测问题并合书回答',output:'3 问 3 答',need:'够',minutes:10,status:'todo',capsule:''},
+      {id:uid(),title:'判断：和我的旧看法/另一本书撞一下',output:'判断卡：关系/证据/置信/可推翻',need:'够',minutes:15,status:'todo',capsule:''}
+    ],
+    parking:[],
+    checks:{book:false,notes:false,phone:false,notif:false},
+    currentId:null,
+    retrieval:{q1:'',a1:'',q2:'',a2:'',q3:'',a3:''},
+    explanation:'',confidenceBefore:'',confidenceAfter:'',cardDraft:'',
+    research:[],
+    metrics:{startedAt:null,researchSeconds:0,switches:0,distractions:0,completed:0}
+  };
+
+  function load(){
+    try{
+      var raw=localStorage.getItem(KEY);
+      if(!raw){var d=clone(DEFAULT);d.currentId=d.actions[0].id;return d}
+      var s=JSON.parse(raw);
+      var d=clone(DEFAULT);
+      Object.keys(d).forEach(function(k){if(s[k]!==undefined)d[k]=s[k]});
+      if(!d.actions||!d.actions.length)d.actions=clone(DEFAULT.actions);
+      if(!d.checks)d.checks={book:false,notes:false,phone:false,notif:false};
+      if(!d.metrics)d.metrics={startedAt:null,researchSeconds:0,switches:0,distractions:0,completed:0};
+      if(!d.currentId||!d.actions.some(function(a){return a.id===d.currentId}))d.currentId=d.actions[0].id;
+      return d;
+    }catch(e){var d=clone(DEFAULT);d.currentId=d.actions[0].id;return d}
+  }
+
+  var state=load();
+  var history=loadHistory();
+  var view='map';
+  var timer={total:25*60,remaining:25*60,running:false,interval:null,mode:'action',startedAt:0};
+
+  function loadHistory(){try{return JSON.parse(localStorage.getItem(HIST)||'[]')}catch(e){return []}}
+  function saveHistory(){try{localStorage.setItem(HIST,JSON.stringify(history))}catch(e){}}
+  function save(){
+    try{localStorage.setItem(KEY,JSON.stringify(state));setSaved('已保存 '+new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'}))}
+    catch(e){setSaved('浏览器不允许保存')}
+  }
+  function setSaved(t){var el=document.getElementById('saved');if(el)el.textContent=t}
+
+  function $(id){return document.getElementById(id)}
+  function current(){
+    var a=state.actions.find(function(a){return a.id===state.currentId});
+    if(a&&a.status!=='done')return a;
+    return state.actions.find(function(a){return a.status!=='done'})||null;
+  }
+  function nextTodo(afterId){
+    var i=state.actions.findIndex(function(a){return a.id===afterId});
+    for(var j=i+1;j<state.actions.length;j++){if(state.actions[j].status!=='done')return state.actions[j]}
+    return state.actions.find(function(a){return a.status!=='done'})||null;
+  }
+  function totalMin(){return state.actions.reduce(function(s,a){return s+(Number(a.minutes)||0)},0)}
+  function doneCount(){return state.actions.filter(function(a){return a.status==='done'}).length}
+
+  function renderMap(){
+    $('book').value=state.book;
+    $('chapter').value=state.chapter;
+    $('goal').value=state.goal;
+    $('finish').value=state.finish;
+    $('totalInfo').textContent=state.actions.length+' 个动作 · 预计 '+totalMin()+' 分钟';
+    var wrap=$('actionList');
+    wrap.innerHTML=state.actions.map(function(a){
+      return '<div class="action '+a.status+'" data-id="'+a.id+'">'
+        +'<div class="action-top"><input class="action-title" data-k="title" value="'+esc(a.title)+'" placeholder="动词 + 产出"><button class="btn del" data-del="'+a.id+'" title="删除">删</button></div>'
+        +'<input class="action-output" data-k="output" value="'+esc(a.output)+'" placeholder="完成标准：做出什么才算完成">'
+        +'<div class="action-meta">'
+        +'<select data-k="need"><option'+(a.need==='够'?' selected':'')+'>够</option><option'+(a.need==='缺'?' selected':'')+'>缺</option><option'+(a.need==='待定'?' selected':'')+'>待定</option></select>'
+        +'<label>预计 <input type="number" min="1" max="180" data-k="minutes" value="'+(Number(a.minutes)||0)+'"> 分</label>'
+        +'<button class="btn" data-start="'+a.id+'">开始</button>'
+        +'<button class="btn" data-block="'+a.id+'">'+(a.status==='blocked'?'解除阻塞':'阻塞')+'</button>'
+        +(a.status==='done'?'<span>已完成</span>':'')
+        +'</div>'
+        +(a.capsule?'<p class="capsule">上次停在这里：'+esc(a.capsule)+'</p>':'')
+        +'</div>';
+    }).join('');
+    Object.keys(state.checks).forEach(function(k){
+      var el=document.querySelector('[data-check="'+k+'"]');
+      if(el)el.checked=!!state.checks[k];
+    });
+  }
+
+  function renderRun(){
+    var a=current();
+    var title=$('runTitle'), out=$('runOutput'), warn=$('runWarn');
+    if(!a){title.textContent='这一章的动作都完成了';out.textContent='去收束：合上书，做 3 个检索问题。';warn.hidden=true;return}
+    title.textContent=a.title||'未命名动作';
+    out.textContent=a.output?('完成标准：'+a.output):'还没有写完成标准';
+    if(a.need==='缺'){warn.hidden=false;warn.textContent='这个动作还缺信息。先查资料（10 分钟），或把它标成阻塞，换一个能做的。'}else{warn.hidden=true}
+    $('sideGoal').textContent=state.goal||'（还没写这一章要交付什么）';
+    $('sideProgress').textContent=doneCount()+' / '+state.actions.length+' 个动作完成 · 当前预计 '+(a.minutes||0)+' 分钟';
+    paintTimer();
+    renderParking();
+    paintLedger();
+  }
+
+  function paintTimer(){
+    var s=Math.max(0,timer.remaining);
+    var m=Math.floor(s/60), sec=s%60;
+    $('timerLabel').textContent=String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0');
+    $('toggleTimer').textContent=timer.running?'暂停':'开始';
+    document.querySelectorAll('#timerControls [data-min]').forEach(function(b){
+      b.classList.toggle('on',Number(b.dataset.min)*60===timer.total);
+    });
+  }
+  function paintLedger(){
+    var m=Math.round((state.metrics.researchSeconds||0)/60);
+    $('timeLedger').textContent='完成 '+doneCount()+' / '+state.actions.length+' · 研究 '+m+' 分钟 · 切换 '+(state.metrics.switches||0)+' 次 · 走神 '+(state.metrics.distractions||0)+' 次';
+  }
+  function renderParking(){
+    var ul=$('parkList');
+    ul.innerHTML=state.parking.map(function(p){
+      return '<li><span>'+esc(p.text)+'</span><button data-unpark="'+p.id+'">×</button></li>';
+    }).join('')||'<li class="empty">还没有。想到别的事，先放这里。</li>';
+  }
+
+  function showView(name){
+    view=name;
+    document.querySelectorAll('.view').forEach(function(v){v.classList.remove('active')});
+    var el=$('view-'+name); if(el)el.classList.add('active');
+    document.querySelectorAll('.rail [data-view]').forEach(function(b){b.classList.toggle('active',b.dataset.view===name)});
+    if(name==='map')renderMap();
+    if(name==='run')renderRun();
+    if(name==='close')renderClose();
+    if(name==='review')renderDue();
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  // 任务地图事件
+  ['book','chapter','goal','finish'].forEach(function(k){
+    $(k).addEventListener('input',function(){state[k]=this.value;save()});
+  });
+  $('actionList').addEventListener('input',function(e){
+    var row=e.target.closest('.action'); if(!row)return;
+    var a=state.actions.find(function(x){return x.id===row.dataset.id}); if(!a)return;
+    var k=e.target.dataset.k; if(!k)return;
+    a[k]=k==='minutes'?Number(e.target.value)||0:e.target.value;
+    if(k==='title'||k==='output'||k==='minutes'){save();$('totalInfo').textContent=state.actions.length+' 个动作 · 预计 '+totalMin()+' 分钟'}
+  });
+  $('actionList').addEventListener('change',function(e){
+    var row=e.target.closest('.action'); if(!row)return;
+    var a=state.actions.find(function(x){return x.id===row.dataset.id}); if(!a)return;
+    if(e.target.dataset.k==='need'){a.need=e.target.value;save();renderMap()}
+  });
+  $('actionList').addEventListener('click',function(e){
+    var start=e.target.closest('[data-start]'), del=e.target.closest('[data-del]'), block=e.target.closest('[data-block]');
+    if(start){state.currentId=start.dataset.start;save();showView('run');startTimerForCurrent();return}
+    if(block){var a=state.actions.find(function(x){return x.id===block.dataset.block});if(a){a.status=a.status==='blocked'?'todo':'blocked';save();renderMap()}return}
+    if(del){var id=del.dataset.del;if(!confirm('删掉这个动作？'))return;state.actions=state.actions.filter(function(x){return x.id!==id});if(!state.actions.length)state.actions=[{id:uid(),title:'',output:'',need:'够',minutes:25,status:'todo',capsule:''}];if(state.currentId===id)state.currentId=state.actions[0].id;save();renderMap();return}
+  });
+  $('addAction').addEventListener('click',function(){
+    state.actions.push({id:uid(),title:'',output:'',need:'够',minutes:10,status:'todo',capsule:''});save();renderMap();
+  });
+  $('resetAll').addEventListener('click',function(){
+    if(!confirm('清空这一章的动作和收束内容？复习历史保留。'))return;
+    var d=clone(DEFAULT);d.currentId=d.actions[0].id;state=d;save();renderMap();showView('map');
+  });
+  document.querySelectorAll('[data-check]').forEach(function(el){
+    el.addEventListener('change',function(){state.checks[el.dataset.check]=el.checked;save()});
+  });
+  $('startRun').addEventListener('click',function(){
+    if(!current()){state.currentId=state.actions[0]&&state.actions[0].id;save()}
+    showView('run');startTimerForCurrent();
+  });
+
+  // 计时器
+  function startTimerForCurrent(){
+    if(timer.running)return;
+    timer.mode='action';timer.running=true;timer.startedAt=Date.now();
+    clearInterval(timer.interval);
+    timer.interval=setInterval(tick,1000);
+    paintTimer();
+  }
+  function tick(){
+    if(!timer.running)return;
+    timer.remaining--;
+    if(timer.remaining<=0){
+      timer.remaining=0;timer.running=false;clearInterval(timer.interval);
+      paintTimer();
+      if(timer.mode==='research'){$('researchPanel').hidden=false}
+    }else paintTimer();
+  }
+  $('toggleTimer').addEventListener('click',function(){
+    if(timer.running){timer.running=false;clearInterval(timer.interval);paintTimer();return}
+    timer.running=true;timer.startedAt=Date.now();clearInterval(timer.interval);timer.interval=setInterval(tick,1000);paintTimer();
+  });
+  $('resetTimer').addEventListener('click',function(){
+    timer.running=false;clearInterval(timer.interval);timer.remaining=timer.total;paintTimer();
+  });
+  document.querySelectorAll('#timerControls [data-min]').forEach(function(b){
+    b.addEventListener('click',function(){
+      timer.total=Number(b.dataset.min)*60;timer.remaining=timer.total;timer.running=false;clearInterval(timer.interval);paintTimer();
+    });
+  });
+
+  // 执行台
+  $('doneAction').addEventListener('click',function(){
+    var a=current();if(!a){showView('close');return}
+    $('capsuleText').value=a.capsule||'';
+    $('capsuleModal').hidden=false;
+    $('capsuleText').focus();
+  });
+  $('capsuleCancel').addEventListener('click',function(){$('capsuleModal').hidden=true});
+  $('capsuleSave').addEventListener('click',function(){
+    var a=current();if(!a)return;
+    a.capsule=$('capsuleText').value.trim();a.status='done';state.metrics.completed=(state.metrics.completed||0)+1;
+    var n=nextTodo(a.id);if(n)state.currentId=n.id;
+    $('capsuleModal').hidden=true;save();renderRun();paintLedger();
+    if(!n)setTimeout(function(){showView('close')},250);
+  });
+  $('researchBtn').addEventListener('click',function(){
+    timer.mode='research';timer.total=10*60;timer.remaining=10*60;timer.running=true;timer.startedAt=Date.now();
+    clearInterval(timer.interval);timer.interval=setInterval(tick,1000);
+    $('researchPanel').hidden=false;paintTimer();
+  });
+  $('endResearch').addEventListener('click',function(){
+    var q=$('researchQ').value.trim(),src=$('researchSource').value.trim(),a=$('researchA').value.trim();
+    if(q||src||a){state.research.push({q:q,source:src,a:a,at:new Date().toISOString()});}
+    if(timer.mode==='research'&&timer.startedAt){state.metrics.researchSeconds=(state.metrics.researchSeconds||0)+Math.round((Date.now()-timer.startedAt)/1000)}
+    timer.running=false;clearInterval(timer.interval);timer.mode='action';timer.total=25*60;timer.remaining=25*60;
+    $('researchQ').value='';$('researchSource').value='';$('researchA').value='';
+    $('researchPanel').hidden=true;save();paintTimer();paintLedger();
+  });
+  $('switchBtn').addEventListener('click',function(){
+    var a=current();if(!a)return;
+    var reason=prompt('为什么切换？（查资料 / 等依赖 / 卡住 / 外部打断）');
+    if(reason===null)return;
+    state.metrics.switches=(state.metrics.switches||0)+1;
+    var n=nextTodo(a.id);if(n)state.currentId=n.id;
+    save();renderRun();paintLedger();
+  });
+  $('distractBtn').addEventListener('click',function(){
+    state.metrics.distractions=(state.metrics.distractions||0)+1;
+    save();paintLedger();
+    var el=this;el.textContent='已记下，回来继续';setTimeout(function(){el.textContent='走神 / 被打断'},1600);
+  });
+  $('parkBtn').addEventListener('click',function(){
+    $('parkInput').focus();
+    $('parkInput').scrollIntoView({behavior:'smooth',block:'center'});
+  });
+  function addPark(){
+    var v=$('parkInput').value.trim();if(!v)return;
+    state.parking.push({id:uid(),text:v});$('parkInput').value='';save();renderParking();
+  }
+  $('addPark').addEventListener('click',addPark);
+  $('parkInput').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();addPark()}});
+  $('parkList').addEventListener('click',function(e){
+    var b=e.target.closest('[data-unpark]');if(!b)return;
+    state.parking=state.parking.filter(function(p){return p.id!==b.dataset.unpark});save();renderParking();
+  });
+
+  // 收束
+  function renderClose(){
+    $('explanation').value=state.explanation;
+    $('cardDraft').value=state.cardDraft;
+    $('confidenceBefore').value=state.confidenceBefore;
+    $('confidenceAfter').value=state.confidenceAfter;
+    document.querySelectorAll('[data-q]').forEach(function(el){el.value=state.retrieval[el.dataset.q]||''});
+  }
+  document.querySelectorAll('[data-q]').forEach(function(el){
+    el.addEventListener('input',function(){state.retrieval[el.dataset.q]=el.value;save()});
+  });
+  $('explanation').addEventListener('input',function(){state.explanation=this.value;save()});
+  $('cardDraft').addEventListener('input',function(){state.cardDraft=this.value;save()});
+  $('confidenceBefore').addEventListener('change',function(){state.confidenceBefore=this.value;save()});
+  $('confidenceAfter').addEventListener('change',function(){state.confidenceAfter=this.value;save()});
+
+  $('finishBtn').addEventListener('click',function(){
+    var qs=[state.retrieval.q1,state.retrieval.q2,state.retrieval.q3];
+    if(qs.filter(function(x){return x.trim()}).length<1){$('finishMsg').textContent='至少写一个检索问题，再收束。';return}
+    var rec={
+      id:uid(),date:today(),book:state.book,chapter:state.chapter,goal:state.goal,
+      questions:qs,answers:[state.retrieval.a1,state.retrieval.a2,state.retrieval.a3],
+      explanation:state.explanation,confidenceBefore:state.confidenceBefore,confidenceAfter:state.confidenceAfter,
+      cardDraft:state.cardDraft,research:state.research,
+      reviewDates:[addDays(1),addDays(3),addDays(7),addDays(14)],nextDue:addDays(1),reviewed:[]
+    };
+    history.push(rec);saveHistory();
+    $('finishMsg').textContent='已收束。下次复习：'+rec.reviewDates.join(' / ');
+    renderDue();
+  });
+  $('printBtn').addEventListener('click',function(){window.print()});
+  $('printClose').addEventListener('click',function(){window.print()});
+
+  // 复习
+  function renderDue(){
+    var list=$('dueList');if(!list)return;
+    var due=history.filter(function(h){return h.nextDue&&h.nextDue<=today()});
+    if(!due.length){list.innerHTML='<p class="empty">今天没有到期复习。完成一次收束后，这里会出现 1 / 3 / 7 / 14 天的队列。</p>';return}
+    list.innerHTML=due.map(function(h){
+      return '<div class="due-item"><div><strong>'+esc(h.chapter||h.book||'未命名')+'</strong><br><small>上次 '+h.date+' · 到期 '+h.nextDue+' · '+h.questions.filter(function(x){return x&&x.trim()}).length+' 个问题</small></div><button class="btn small" data-review="'+h.id+'">开始复习</button></div>';
+    }).join('');
+  }
+  $('dueList').addEventListener('click',function(e){
+    var b=e.target.closest('[data-review]');if(!b)return;
+    var h=history.find(function(x){return x.id===b.dataset.review});if(!h)return;
+    $('reviewTitle').textContent=(h.chapter||h.book||'复习')+' · '+h.date;
+    $('reviewQuestions').innerHTML=h.questions.map(function(q,i){
+      if(!q||!q.trim())return '';
+      return '<div class="field"><label>问题 '+(i+1)+'</label><p>' +esc(q)+ '</p><label>凭记忆回答</label><textarea rows="2" data-review-a="'+i+'"></textarea></div>';
+    }).join('');
+    $('reviewBox').hidden=false;$('reviewBox').dataset.id=h.id;
+  });
+  $('closeReview').addEventListener('click',function(){$('reviewBox').hidden=true});
+  document.querySelectorAll('[data-rate]').forEach(function(b){
+    b.addEventListener('click',function(){
+      var id=$('reviewBox').dataset.id;var h=history.find(function(x){return x.id===id});if(!h)return;
+      var q=b.dataset.rate;var d=q==='forgot'?1:(q==='fuzzy'?3:7);
+      h.reviewed=h.reviewed||[];h.reviewed.push({date:today(),quality:q});
+      h.nextDue=addDays(d);saveHistory();$('reviewBox').hidden=true;renderDue();
+    });
+  });
+
+  // 导出
+  $('exportBtn').addEventListener('click',function(){
+    var lines=[];
+    lines.push('# 学习台 · 一章书');lines.push('');
+    lines.push('书名：'+(state.book||'—'));lines.push('章节：'+(state.chapter||'—'));lines.push('');
+    lines.push('## 目标');lines.push(state.goal||'—');lines.push('');
+    lines.push('## 完成标准');lines.push(state.finish||'—');lines.push('');
+    lines.push('## 任务地图');
+    state.actions.forEach(function(a,i){lines.push((i+1)+'. '+a.title+' ｜ 产出：'+(a.output||'—')+' ｜ '+a.need+' ｜ '+a.minutes+' 分 ｜ '+a.status)});
+    lines.push('');
+    lines.push('## 检索问题');
+    [1,2,3].forEach(function(i){lines.push('Q'+i+'：'+(state.retrieval['q'+i]||'—'));lines.push('A'+i+'：'+(state.retrieval['a'+i]||'—'))});
+    lines.push('');
+    lines.push('## 自我解释');lines.push(state.explanation||'—');lines.push('');
+    lines.push('## 置信');lines.push('开始前：'+(state.confidenceBefore||'—')+' / 现在：'+(state.confidenceAfter||'—'));lines.push('');
+    lines.push('## 判断卡草稿');lines.push(state.cardDraft||'—');lines.push('');
+    lines.push('## 查资料记录');
+    state.research.forEach(function(r){lines.push('- 问题：'+r.q+' ｜ 来源：'+r.source+' ｜ 答案：'+r.a)});
+    var blob=new Blob([lines.join('\n')],{type:'text/markdown;charset=utf-8'});
+    var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='学习台-一章书-'+(state.chapter||today())+'.md';a.click();URL.revokeObjectURL(a.href);
+  });
+
+  // 初始化
+  document.querySelectorAll('.rail [data-view]').forEach(function(b){
+    b.addEventListener('click',function(){showView(b.dataset.view)});
+  });
+  renderMap();
+  renderRun();
+  renderClose();
+  renderDue();
+  showView('map');
+  setSaved('本地保存');
+})();
+</script>
+</body>
+</html>
