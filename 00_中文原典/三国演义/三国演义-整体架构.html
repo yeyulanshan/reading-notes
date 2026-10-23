@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>《三国演义》整体架构</title>
+<style>
+  :root{
+    --paper:#f7f4ed;
+    --card:#fffdf8;
+    --edge:#ded6c8;
+    --ink:#2b2721;
+    --ink-mid:#5c5449;
+    --ink-soft:#8c8175;
+    --teal:#166060;
+    --teal-soft:#e6efee;
+    --rust:#b1442a;
+    --rust-soft:#f7e9e4;
+    --gold:#9a7420;
+    --gold-soft:#f5eeda;
+    --sage:#55703c;
+    --sage-soft:#ecf0e2;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--paper);color:var(--ink);padding:36px 20px 48px;line-height:1.88;
+    -webkit-font-smoothing:antialiased;
+  }
+  .container{max-width:920px;margin:0 auto;}
+
+  .header{
+    text-align:center;margin-bottom:30px;padding:44px 24px 40px;
+    background:var(--card);border:1px solid var(--edge);border-top:5px solid var(--teal);
+    border-radius:4px;
+  }
+  .header h1{font-size:27px;color:var(--ink);margin-bottom:12px;letter-spacing:.5px;}
+  .header .subtitle{font-size:14.5px;color:var(--ink-mid);}
+  .header .author{margin-top:16px;font-size:12.5px;color:var(--ink-soft);letter-spacing:.5px;}
+
+  main{
+    background:var(--card);border:1px solid var(--edge);border-radius:4px;
+    padding:34px 38px;
+  }
+
+  h1{font-size:23px;color:var(--ink);margin:8px 0 18px;}
+  h2{
+    font-size:20px;color:var(--ink);margin:40px 0 16px;
+    padding-left:13px;border-left:4px solid var(--teal);letter-spacing:.3px;
+  }
+  h2:first-child{margin-top:0;}
+  h3{font-size:16.5px;color:var(--teal);margin:28px 0 12px;font-weight:700;}
+  h4{font-size:15px;color:var(--ink-mid);margin:18px 0 8px;}
+
+  p{color:var(--ink-mid);font-size:14.5px;margin-bottom:12px;}
+  strong{color:var(--ink);}
+  em{color:var(--rust);font-style:normal;font-weight:600;}
+
+  ul,ol{margin:8px 0 14px 24px;}
+  li{color:var(--ink-mid);font-size:14.5px;margin-bottom:6px;}
+
+  hr{border:none;border-top:1px solid var(--edge);margin:26px 0;}
+
+  table{width:100%;border-collapse:collapse;margin:14px 0 18px;font-size:13.5px;}
+  th,td{padding:10px 12px;border:1px solid var(--edge);text-align:left;vertical-align:top;}
+  th{background:var(--teal-soft);color:var(--teal);font-weight:700;}
+  td{color:var(--ink-mid);}
+
+  blockquote{
+    background:var(--gold-soft);border:1px solid #e6dcc0;border-left:4px solid var(--gold);
+    border-radius:0 3px 3px 0;padding:16px 20px;margin:14px 0;
+  }
+  blockquote p{color:#6d5011;font-size:14px;font-style:italic;margin-bottom:8px;}
+  blockquote p:last-child{margin-bottom:0;}
+  blockquote strong{color:#5a420d;}
+
+  code{
+    background:var(--paper);padding:1.5px 6px;border-radius:3px;
+    font-family:Consolas,Monaco,monospace;font-size:13px;color:var(--teal);
+  }
+  pre{
+    background:var(--paper);border:1px solid var(--edge);border-radius:3px;
+    padding:14px 16px;overflow-x:auto;margin:12px 0 16px;
+  }
+  pre code{background:none;padding:0;line-height:1.65;}
+
+  /* 专业问题标题 */
+  .q-title{
+    background:var(--teal-soft);border-left:4px solid var(--teal);
+    border-radius:0 3px 3px 0;padding:13px 18px;margin:28px 0 12px;
+    color:var(--ink);font-size:15.5px;font-weight:700;line-height:1.7;
+  }
+
+  .footer{
+    text-align:center;margin-top:38px;padding:20px;color:var(--ink-soft);font-size:12.5px;line-height:1.9;
+  }
+
+  @media(max-width:640px){
+    .header h1{font-size:20px;}
+    h2{font-size:17.5px;}
+    body{padding:20px 14px 32px;}
+    main{padding:22px 18px;}
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <h1>《三国演义》整体架构</h1>
+    <div class="subtitle">三本账：名分、实力、联盟</div>
+    <div class="author">底本：Project Gutenberg #23950 ｜ 120 回 ｜ 484,892 汉字 ｜ 引文用简体工作本</div>
+  </div>
+
+  <div class="nav"><a href="三国演义-整体架构.html">整体架构</a><a href="三国演义-问题手册.html">问题手册</a><a href="三国演义-底本考订.html">底本考订</a><a href="../README.md">00 中文原典</a></div>
+  <main>
+<p><strong>底本</strong>：<code>00_中文原典/三国演义/三国演义_简体.txt</code>（据 Project Gutenberg #23950 繁转简）</p>
+<p><strong>规模</strong>：120 回 · 484,892 汉字 · 61 处 OCR 造字注记</p>
+<p><strong>这份文档回答</strong>：它为什么不是「英雄+权谋」的故事，而是一部关于<strong>合法性如何折算</strong>的书？</p>
+<hr>
+<h2>〇 · 一句话</h2>
+<p><strong>《三国演义》的主角不是曹操、刘备、诸葛亮，而是三本账的错位：名分账、实力账、联盟账。</strong></p>
+<p>谁能在三本账之间找到暂时的平衡，谁就能占一时；谁把其中一本当成全部，谁就败。</p>
+<p>三国的悲剧不在于「好人没好报」，而在于：<strong>三本账没有一本能单独结清。</strong></p>
+<hr>
+<h2>一 · 底本与规模</h2>
+<table><thead><tr><th>项</th><th>数</th><th>口径</th></tr></thead><tbody>
+<tr><td>回数</td><td>120</td><td>第一回至第一二○回</td></tr>
+<tr><td>汉字</td><td>484,892</td><td>U+4E00–U+9FFF，含 Gutenberg 头尾</td></tr>
+<tr><td>总字符</td><td>641,313</td><td>含标点、拉丁字母、空白</td></tr>
+<tr><td><code>□</code> 缺字</td><td>0</td><td>底本无缺字占位</td></tr>
+<tr><td>OCR 造字注记</td><td>61</td><td><code>（左…右…）</code>、<code>（上…下…）</code> 等</td></tr>
+</tbody></table>
+<p>数字不是「文学成就」的度量，只是让后面的判断有一个可复算的底。</p>
+<p>底本形态、回目写法和引文核对，见《三国演义-底本考订》。</p>
+<hr>
+<h2>二 · 三本账</h2>
+<table><thead><tr><th>账</th><th>内容</th><th>谁最会用</th><th>它解决什么</th><th>它解决不了什么</th></tr></thead><tbody>
+<tr><td><strong>名分账</strong></td><td>汉室、正统、皇叔、衣带诏、禅让、封爵</td><td>刘备、曹操（借）、孙权（受封）</td><td>把权力说成「有资格」</td><td>不能当兵、不能当粮</td></tr>
+<tr><td><strong>实力账</strong></td><td>地盘、兵、粮、人才、地理</td><td>曹操、孙权、司马</td><td>打得赢、守得住</td><td>不能自动变成「正统」</td></tr>
+<tr><td><strong>联盟账</strong></td><td>盟誓、婚姻、人质、共同敌人、信用</td><td>孙权、诸葛亮</td><td>把两家的实力临时相加</td><td>信用会贬值，盟友会反手</td></tr>
+</tbody></table>
+<p>三本账不是并列的三个主题，是<strong>互相折算</strong>的三种资本：</p>
+<ul>
+<li>名分可以换联盟（刘备的皇叔身份、汉室旗号）；</li>
+<li>实力可以换名分（曹操挟天子、受九锡、封魏王）；</li>
+<li>联盟可以换生存（孙权联刘抗曹、又背盟袭荆州）；</li>
+<li>但任何一本账都不能无限透支。</li>
+</ul>
+<p><strong>三国的每一次大战，都是三本账的一次结算。</strong></p>
+<hr>
+<h2>三 · 三段结构</h2>
+<table><thead><tr><th>段</th><th>回</th><th>主线</th><th>三本账的变化</th></tr></thead><tbody>
+<tr><td><strong>群雄段</strong></td><td>1–37</td><td>汉室失序，群雄并起</td><td>名分还在汉室手里，实力分散，联盟临时</td></tr>
+<tr><td><strong>三分段</strong></td><td>38–85</td><td>隆中对、赤壁、入川、荆州、夷陵</td><td>三本账各自找到代理人：曹魏实力、蜀汉名分、东吴联盟</td></tr>
+<tr><td><strong>归晋段</strong></td><td>86–120</td><td>北伐、司马篡魏、灭蜀、平吴</td><td>实力账吞并名分账与联盟账，最后用「禅让/封爵」补一张名分收据</td></tr>
+</tbody></table>
+<h3>3.1 为什么从「讨董」开始</h3>
+<p>第一回先写「天下大势，分久必合，合久必分」，然后从桓、灵二帝写起。</p>
+<p>这不是历史课的「背景介绍」，是<strong>名分账的破产现场</strong>：</p>
+<blockquote>
+<p>话说天下大势，分久必合，合久必分。</p>
+<p>——第一回</p>
+</blockquote>
+<p>汉室还在，但已经不能单独结账。群雄讨董，打的是「勤王」旗号；董卓挟天子，用的是「名分」；曹操后来「挟天子以令诸侯」，还是同一本账。</p>
+<p><strong>谁都知道名分不值钱，但谁都要抢着用它。</strong></p>
+<h3>3.2 为什么中段是「隆中对」</h3>
+<p>第三十八回，诸葛亮给刘备的不是一场战役的计划，是一张<strong>三本账的预算表</strong>：</p>
+<blockquote>
+<p>今操已拥百万之众，挟天子以令诸侯，此诚不可与争锋。孙权据有江东，已历三世，国险而民附，此可用为援，而不可图也。</p>
+<p>——第三十八回</p>
+</blockquote>
+<p>这段话把曹操、孙权、刘备三家的账一次算清：</p>
+<ul>
+<li>曹操：实力强 + 名分工具，不能硬碰；</li>
+<li>孙权：实力次强 + 地理优势，只能联合，不能吞并；</li>
+<li>刘备：名分资本（帝室之胄、信义） + 没有地盘，所以要先取荆益。</li>
+</ul>
+<p>接着是执行方案：</p>
+<blockquote>
+<p>若跨有荆益，保其岩阻，西和诸戎，南抚彝越，外结孙权，内修政理。</p>
+<p>——第三十八回</p>
+<p>诚如是，则大业可成，汉室可兴矣。</p>
+<p>——第三十八回</p>
+</blockquote>
+<p>注意：<strong>隆中对不是「预言」，是「条件句」</strong>。它把成败写成一组前提：跨有荆益、外结孙权、内修政理。</p>
+<p>后来关羽失荆州、刘备伐吴、联盟破裂——不是诸葛亮算错了，是<strong>条件被逐个删掉</strong>。</p>
+<h3>3.3 为什么结尾是「归晋」</h3>
+<p>第一百二十回的回目是：</p>
+<blockquote>
+<p>荐杜预老将献新谋，降孙皓三分归一统。</p>
+<p>——第一二○回</p>
+</blockquote>
+<p>「三分归一统」不是「正义终于胜利」，是<strong>实力账把另外两本账一起并了</strong>。</p>
+<p>司马氏没有刘备的名分，也没有孙权的联盟信用；它有的是地盘、兵、粮、时间。</p>
+<p>最后它用「禅让」给自己补了一张名分收据，用「封爵」给降者留了体面。</p>
+<p><strong>名分没有赢，但统一需要名分来包装。</strong> 这就是三国的最后一笔账。</p>
+<hr>
+<h2>四 · 人物是位置的承担者</h2>
+<h3>4.1 曹操：借名分，做实力</h3>
+<p>曹操最著名的一句话，是把「宁我负人」说成了处世哲学：</p>
+<blockquote>
+<p>宁教我负天下人，休教天下人负我。</p>
+<p>——第四回</p>
+</blockquote>
+<p>这句话常被当成「奸雄」的证据。但它更像一个<strong>成本声明</strong>：在名分与实力冲突时，他选择先保自己。</p>
+<p>曹操一生不称帝，不是不想，是<strong>名分账还没到期</strong>；他把「挟天子」用到了极致，把「称帝」留给儿子。</p>
+<p><strong>他借名分，但不让名分绑住自己。</strong></p>
+<h3>4.2 刘备：用名分补实力</h3>
+<p>刘备的资本不是兵，是「皇叔」「仁义」「信义著于四海」。</p>
+<p>他知道名分不能打仗，所以三顾茅庐找实力；他也知道名分能换联盟，所以到处以「汉室」为旗号。</p>
+<p>但名分账有它的极限。第十五回，张飞失徐州，刘备说：</p>
+<blockquote>
+<p>兄弟如手足，妻子如衣服。</p>
+<p>——第十五回</p>
+</blockquote>
+<p>这句话常被读成「重兄弟、轻妻子」。放在三本账里看，它其实是在<strong>用名分/义气给失败找解释</strong>：城池可以再取，兄弟不能散。</p>
+<p>到了夷陵，刘备为关羽伐吴，还是同一本账：<strong>义气压过联盟，名分压过战略</strong>。结果是被陆逊火烧连营。</p>
+<p><strong>刘备的失败，不是仁义失败，是把名分账当成了可以单独结清的账。</strong></p>
+<h3>4.3 孙权：用联盟补实力</h3>
+<p>孙权没有曹操的实力，也没有刘备的名分；他的资本是江东三世、地理、和对联盟的冷静使用。</p>
+<p>联刘抗曹，是为了活；背盟袭荆州，是为了利；夷陵之后又和蜀汉复盟，是为了平衡。</p>
+<p><strong>联盟对孙权不是信仰，是工具。</strong> 这正是他能活得比蜀汉久的原因。</p>
+<h3>4.4 诸葛亮：把三本账写成表</h3>
+<p>诸葛亮的特殊性，不是「神机妙算」，是<strong>他把三本账写成了可执行的战略表</strong>。</p>
+<p>隆中对是表，出师表是预算，六出祁山是现金流。</p>
+<p>但他能管账，不能改账：</p>
+<blockquote>
+<p>臣鞠躬尽瘁，死而后已。</p>
+<p>——第九十七回</p>
+</blockquote>
+<p>这句话常被读成「忠诚」。放在结构里，它也是一个<strong>项目经理的结算声明</strong>：条件已经不在我手里，我只能把剩下的资源用完。</p>
+<p><strong>诸葛亮不是败给司马懿，是败给「跨有荆益、外结孙权」这两个前提已经不存在。</strong></p>
+<h3>4.5 关羽：名分账的极端</h3>
+<p>关羽是「义」的人格化。他的强，是名分账的强；他的弱，也是名分账的弱。</p>
+<p>他守荆州，靠的是威名与义气；他失荆州，是因为联盟账已经透支（孙权要联姻，他拒；东吴要荆州，他不让）。</p>
+<p><strong>关羽不是「大意」，是名分账拒绝折算。</strong></p>
+<h3>4.6 司马：只认实力账</h3>
+<p>司马懿、司马师、司马昭、司马炎，四代人做同一件事：<strong>把实力账做成唯一账本</strong>。</p>
+<p>他们不急着称帝，先掌兵、先执政、先封公封王；等名分账自己烂掉，再让曹奂「禅让」。</p>
+<p><strong>司马氏不创造合法性，他们收购合法性。</strong></p>
+<hr>
+<h2>五 · 叙事机制：为什么读者会站蜀汉</h2>
+<p>《三国演义》的叙事立场，常被概括为「拥刘反曹」。</p>
+<p>但更准确地说：<strong>它让读者在情感上站蜀汉，在结构上看着蜀汉败。</strong></p>
+<ul>
+<li>情感上：刘备仁义、关羽忠义、诸葛亮鞠躬尽瘁；曹操奸、孙权滑、司马阴。</li>
+<li>结构上：蜀汉的名分账最漂亮，实力账最薄；联盟账最需要维护，却最先破裂。</li>
+<li>于是读者得到一种<strong>历史悲剧</strong>的体验：不是「好人必胜」，是「好人也有账要还」。</li>
+</ul>
+<p>这就是章回体的作用：每一回留一个「且听下回分解」，把读者绑在<strong>下一笔账</strong>上。</p>
+<p>它不让你停下来问「谁正义」，它让你一直看到<strong>谁先透支</strong>。</p>
+<hr>
+<h2>六 · 怎么读</h2>
+<ol>
+<li><strong>先看战前，不看战场</strong>：这一仗打之前，三家的名分、实力、联盟各是什么状态？</li>
+<li><strong>把每一场大战当结算</strong>：官渡结算袁绍的实力账，赤壁结算曹操的名分账，夷陵结算刘备的联盟账。</li>
+<li><strong>不要用「忠/奸」当最终判据</strong>：忠奸是道德账，三国还有实力账和联盟账；三本账一起看，人物才立体。</li>
+<li><strong>把隆中对当条件句</strong>：不是「诸葛亮预言三分」，是「如果这三个条件成立，三分成立」；条件删掉，战略就失效。</li>
+<li><strong>结尾不要读成「晋朝统一天下」</strong>：读成「实力账收购了名分账，并给自己开了一张收据」。</li>
+</ol>
+<hr>
+<h2>七 · 常见误读与边界</h2>
+<table><thead><tr><th>误读</th><th>为什么不对</th></tr></thead><tbody>
+<tr><td><strong>把《三国演义》当历史</strong></td><td>它是演义，不是《三国志》；「七实三虚」不是精确比例，具体人物、时间、战役要回史书</td></tr>
+<tr><td><strong>把曹操读成纯反派</strong></td><td>曹操是「借名分做实力」的政治家；他的选择有成本，不是单纯恶</td></tr>
+<tr><td><strong>把刘备读成纯仁义</strong></td><td>刘备的仁义是名分资本，也是战略工具；夷陵说明它不能单独结账</td></tr>
+<tr><td><strong>把诸葛亮读成神</strong></td><td>隆中对是条件句；条件失效，神机妙算也救不了</td></tr>
+<tr><td><strong>把三国读成权谋成功学</strong></td><td>权谋只能解释局部；三本账的错位才是结构</td></tr>
+<tr><td><strong>把「拥刘反曹」当作者结论</strong></td><td>它是情感立场，不是结构结论；结构让蜀汉败</td></tr>
+</tbody></table>
+<p><strong>一句话</strong>：</p>
+<p><strong>《三国演义》不是「谁赢了」的故事，是「三种合法性如何互相折算、最后谁把账本合并」的故事。</strong></p>
+<hr>
+<p><strong>引文核对</strong>：本文件引用 11 条，均逐条命中简体工作本；回目按底本写法。</p>
+<p><strong>未做</strong>：与《三国志》的逐条史实比对、版本异文汇校——这些是下一步，不是这一份能替代的。</p>
+  </main>
+
+  <div class="footer">
+    《三国演义》整体架构 · 引文逐条核 三国演义_简体.txt · 底本问题见《底本考订》<br>
+    
+  </div>
+
+</div>
+</body>
+</html>

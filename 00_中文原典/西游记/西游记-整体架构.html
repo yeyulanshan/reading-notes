@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>《西游记》整体架构</title>
+<style>
+  :root{
+    --paper:#f7f4ed;
+    --card:#fffdf8;
+    --edge:#ded6c8;
+    --ink:#2b2721;
+    --ink-mid:#5c5449;
+    --ink-soft:#8c8175;
+    --teal:#166060;
+    --teal-soft:#e6efee;
+    --rust:#b1442a;
+    --rust-soft:#f7e9e4;
+    --gold:#9a7420;
+    --gold-soft:#f5eeda;
+    --sage:#55703c;
+    --sage-soft:#ecf0e2;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--paper);color:var(--ink);padding:36px 20px 48px;line-height:1.88;
+    -webkit-font-smoothing:antialiased;
+  }
+  .container{max-width:920px;margin:0 auto;}
+
+  .header{
+    text-align:center;margin-bottom:30px;padding:44px 24px 40px;
+    background:var(--card);border:1px solid var(--edge);border-top:5px solid var(--teal);
+    border-radius:4px;
+  }
+  .header h1{font-size:27px;color:var(--ink);margin-bottom:12px;letter-spacing:.5px;}
+  .header .subtitle{font-size:14.5px;color:var(--ink-mid);}
+  .header .author{margin-top:16px;font-size:12.5px;color:var(--ink-soft);letter-spacing:.5px;}
+
+  main{
+    background:var(--card);border:1px solid var(--edge);border-radius:4px;
+    padding:34px 38px;
+  }
+
+  h1{font-size:23px;color:var(--ink);margin:8px 0 18px;}
+  h2{
+    font-size:20px;color:var(--ink);margin:40px 0 16px;
+    padding-left:13px;border-left:4px solid var(--teal);letter-spacing:.3px;
+  }
+  h2:first-child{margin-top:0;}
+  h3{font-size:16.5px;color:var(--teal);margin:28px 0 12px;font-weight:700;}
+  h4{font-size:15px;color:var(--ink-mid);margin:18px 0 8px;}
+
+  p{color:var(--ink-mid);font-size:14.5px;margin-bottom:12px;}
+  strong{color:var(--ink);}
+  em{color:var(--rust);font-style:normal;font-weight:600;}
+
+  ul,ol{margin:8px 0 14px 24px;}
+  li{color:var(--ink-mid);font-size:14.5px;margin-bottom:6px;}
+
+  hr{border:none;border-top:1px solid var(--edge);margin:26px 0;}
+
+  table{width:100%;border-collapse:collapse;margin:14px 0 18px;font-size:13.5px;}
+  th,td{padding:10px 12px;border:1px solid var(--edge);text-align:left;vertical-align:top;}
+  th{background:var(--teal-soft);color:var(--teal);font-weight:700;}
+  td{color:var(--ink-mid);}
+
+  blockquote{
+    background:var(--gold-soft);border:1px solid #e6dcc0;border-left:4px solid var(--gold);
+    border-radius:0 3px 3px 0;padding:16px 20px;margin:14px 0;
+  }
+  blockquote p{color:#6d5011;font-size:14px;font-style:italic;margin-bottom:8px;}
+  blockquote p:last-child{margin-bottom:0;}
+  blockquote strong{color:#5a420d;}
+
+  code{
+    background:var(--paper);padding:1.5px 6px;border-radius:3px;
+    font-family:Consolas,Monaco,monospace;font-size:13px;color:var(--teal);
+  }
+  pre{
+    background:var(--paper);border:1px solid var(--edge);border-radius:3px;
+    padding:14px 16px;overflow-x:auto;margin:12px 0 16px;
+  }
+  pre code{background:none;padding:0;line-height:1.65;}
+
+  /* 专业问题标题 */
+  .q-title{
+    background:var(--teal-soft);border-left:4px solid var(--teal);
+    border-radius:0 3px 3px 0;padding:13px 18px;margin:28px 0 12px;
+    color:var(--ink);font-size:15.5px;font-weight:700;line-height:1.7;
+  }
+
+  .footer{
+    text-align:center;margin-top:38px;padding:20px;color:var(--ink-soft);font-size:12.5px;line-height:1.9;
+  }
+
+  @media(max-width:640px){
+    .header h1{font-size:20px;}
+    h2{font-size:17.5px;}
+    body{padding:20px 14px 32px;}
+    main{padding:22px 18px;}
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <h1>《西游记》整体架构</h1>
+    <div class="subtitle">一个把异端编入秩序的项目</div>
+    <div class="author">底本：Project Gutenberg #23962 ｜ 100 回 ｜ 588,720 汉字 ｜ 引文用简体工作本</div>
+  </div>
+
+  <div class="nav"><a href="西游记-整体架构.html">整体架构</a><a href="西游记-问题手册.html">问题手册</a><a href="西游记-底本考订.html">底本考订</a><a href="../README.md">00 中文原典</a></div>
+  <main>
+<p><strong>底本</strong>：<code>00_中文原典/西游记/西游记_简体.txt</code>（据 Project Gutenberg #23962 繁转简）</p>
+<p><strong>规模</strong>：100 回 · 588,720 汉字 · 3 处 OCR 造字注记</p>
+<p><strong>这份文档回答</strong>：它为什么不是「打怪升级」，而是一个<strong>把最强的异端编入秩序</strong>的项目？</p>
+<hr>
+<h2>〇 · 一句话</h2>
+<p><strong>取经不是去拿一本书，是把一个不服管的能力，编进一套合法的流程。</strong></p>
+<p>孙悟空从「齐天大圣」到「斗战胜佛」，不是「变乖了」，是<strong>被收编了</strong>。</p>
+<p>八十一难不是「考验」，是<strong>审批与审计</strong>；真经不是「知识」，是<strong>授权</strong>；紧箍咒不是「惩罚」，是<strong>控制接口</strong>。</p>
+<p>《西游记》写的不是「佛比道厉害」，是<strong>一个体制如何把最强的异端变成自己的执行者</strong>。</p>
+<hr>
+<h2>一 · 底本与规模</h2>
+<table><thead><tr><th>项</th><th>数</th><th>口径</th></tr></thead><tbody>
+<tr><td>回数</td><td>100</td><td>第一回至第一○○回</td></tr>
+<tr><td>汉字</td><td>588,720</td><td>U+4E00–U+9FFF，含 Gutenberg 头尾</td></tr>
+<tr><td>总字符</td><td>777,372</td><td>含标点、拉丁字母、空白</td></tr>
+<tr><td><code>□</code> 缺字</td><td>0</td><td>底本无缺字占位</td></tr>
+<tr><td>OCR 造字注记</td><td>3</td><td>括号描述字形</td></tr>
+</tbody></table>
+<p>底本形态、回目写法、引文核对，见《西游记-底本考订》。</p>
+<hr>
+<h2>二 · 四层世界</h2>
+<table><thead><tr><th>层</th><th>谁在管</th><th>规则</th><th>叙事功能</th></tr></thead><tbody>
+<tr><td><strong>天庭层</strong></td><td>玉帝、老君、众神</td><td>官僚等级、面子、招安</td><td>展示「秩序」的常态：能收编就收编，收编不了就镇压</td></tr>
+<tr><td><strong>佛界层</strong></td><td>如来、观音、阿傩伽叶</td><td>经、愿、因果、人事</td><td>提供「更高合法性」，但也不是免费</td></tr>
+<tr><td><strong>人间层</strong></td><td>唐王、百官、百姓</td><td>王权、通关文牒、赋税</td><td>取经的「项目法人」和现实入口</td></tr>
+<tr><td><strong>队伍层</strong></td><td>唐僧、悟空、八戒、沙僧、白龙马</td><td>师徒名分、紧箍咒、分工</td><td>一个最小项目组：名义、能力、欲望、执行、基础设施</td></tr>
+</tbody></table>
+<p>四层不是四个独立故事，是<strong>同一个项目的四个审批层级</strong>。</p>
+<p>取经队伍每过一国，要盖一次印；每遇一难，要过一次审计；最后到雷音寺，还要过一次「人事」。</p>
+<hr>
+<h2>三 · 取经是一个项目</h2>
+<h3>3.1 谁发起</h3>
+<p>不是唐僧发起，是如来发起、观音执行。</p>
+<p>第八回，如来给观音五件宝贝，其中三个箍儿说得很清楚：</p>
+<blockquote>
+<p>此宝唤做紧箍儿，虽是一样三个，但只是用各不同。</p>
+<p>——第八回</p>
+<p>他若不伏使唤，可将此箍儿与他戴在头上，自然见肉生根。</p>
+<p>——第八回</p>
+</blockquote>
+<p>这两句话是整本书的<strong>控制协议</strong>：</p>
+<ul>
+<li>取经不是「请」一个高手，是「收」一个高手；</li>
+<li>收编不是靠说服，是靠一个<strong>可穿戴的控制接口</strong>；</li>
+<li>三个箍儿，对应三种「不伏使唤」的处理方式。</li>
+</ul>
+<h3>3.2 谁执行</h3>
+<p>唐僧是项目法人：他有「取经人」的身份、唐王的通关文牒、如来的法旨。</p>
+<p>但他没有战斗力。他的作用是<strong>让项目合法</strong>：一个有名分、没能力的人，带着一个有能力、没名分的人。</p>
+<p>悟空是能力：七十二变、筋斗云、金箍棒。</p>
+<p>八戒是欲望：贪吃、贪睡、贪色，也是团队里最像人的那个。</p>
+<p>沙僧是执行：挑担、牵马、少说话。</p>
+<p>白龙马是基础设施：平时是脚力，关键时刻能出手。</p>
+<p><strong>这五个位置，缺一个项目就转不起来。</strong></p>
+<p>不是「师徒四人+一匹马」的冒险组合，是一个<strong>最小可运行组织</strong>。</p>
+<h3>3.3 谁审计</h3>
+<p>观音。</p>
+<p>她不是「救苦救难」的背景板，她是<strong>项目经理+审计</strong>：给任务、给资源、给控制接口、中途抽查、最后验收。</p>
+<p>第九十九回，观音查难簿：</p>
+<blockquote>
+<p>九九数完魔灭尽，三三行满道归根。</p>
+<p>——第九十九回</p>
+</blockquote>
+<p>「九九数完」不是「打够了八十一只怪」，是<strong>流程走完了</strong>。</p>
+<p>难簿是审计底稿；少一难，项目不能结项。</p>
+<hr>
+<h2>四 · 孙悟空：从齐天大圣到斗战胜佛</h2>
+<h3>4.1 齐天大圣：不接受名分，只要名号</h3>
+<p>第四回的回目是：</p>
+<blockquote>
+<p>官封弼马心何足，名注齐天意未宁。</p>
+<p>——第四回</p>
+</blockquote>
+<p>「弼马温」是一个<strong>没有品级的职位</strong>；「齐天大圣」是一个<strong>没有实权的名号</strong>。</p>
+<p>天庭处理他的方式，是典型的官僚收编：先给一个最低职位，压不住，再给一个空头名号。</p>
+<p>悟空两次都不服，因为他要的不是「位置」，是<strong>被承认</strong>。</p>
+<h3>4.2 大闹天宫：能力对秩序的越界</h3>
+<p>第七回，悟空说：</p>
+<blockquote>
+<p>皇帝轮流做，明年到我家。</p>
+<p>——第七回</p>
+</blockquote>
+<p>这句话不是「民主宣言」，是<strong>能力对名分的直接挑战</strong>：既然玉帝的位置是「修来的」，我也可以修。</p>
+<p>如来的回答不是「你不配」，是<strong>打赌</strong>：你若翻出我的手掌，天宫让你。</p>
+<p>结果是被压在五行山下。</p>
+<p><strong>秩序没有说服他，只是把他关起来了。</strong></p>
+<h3>4.3 取经：把「不服」变成「可用」</h3>
+<p>五行山之后，悟空没有变「善」，是变「可用」了。</p>
+<p>紧箍咒不是让他信佛，是让他<strong>在成本约束下行动</strong>：不听话会痛，痛了就会算。</p>
+<p>他到西天，不是「觉悟了」，是<strong>项目完成了</strong>；「斗战胜佛」是一个<strong>编制</strong>，不是一种人格。</p>
+<p><strong>从齐天大圣到斗战胜佛，变的是位置，不是性格。</strong></p>
+<hr>
+<h2>五 · 八十一难：流程，不是打怪</h2>
+<h3>5.1 难是「审批节点」</h3>
+<p>八十一难里，很多难不是「妖怪很强」，是「流程要求」：</p>
+<ul>
+<li>要有通关文牒，才能过国；</li>
+<li>要有国王的印，才能证明「合法」；</li>
+<li>要有观音的批准，才能调用资源；</li>
+<li>要有「人事」，才能拿到有字真经。</li>
+</ul>
+<p><strong>难不是随机降临的，是项目必须经过的节点。</strong></p>
+<h3>5.2 妖怪的「后台」</h3>
+<p>《西游记》最冷静的一点：<strong>有后台的妖怪被收走，没后台的被打死。</strong></p>
+<ul>
+<li>青牛精是老君的人，最后被老君收走；</li>
+<li>金角银角是老君的童子，被收走；</li>
+<li>大鹏是如来的亲戚，被收走；</li>
+<li>白骨夫人没有后台，被打死。</li>
+</ul>
+<p>这不是「佛道黑暗」，是<strong>组织现实</strong>：处理一个妖怪，不只看它做了什么，还看它<strong>是谁的人</strong>。</p>
+<p><strong>八十一难不是「善恶审判」，是「关系清算」。</strong></p>
+<h3>5.3 真经：授权，不是知识</h3>
+<p>第九十八回，阿傩、伽叶带唐僧取经，先给了<strong>无字经</strong>。</p>
+<p>悟空告状，如来说：</p>
+<blockquote>
+<p>经不可轻传，亦不可以空取。</p>
+<p>——第九十八回</p>
+<p>白本者，乃无字真经，倒也是好的。</p>
+<p>——第九十八回</p>
+</blockquote>
+<p>这两句话把「真经」的性质说穿了：</p>
+<ul>
+<li>经不是「读一读就能懂」的知识，是<strong>授权</strong>；</li>
+<li>授权不能空取，要有「人事」；</li>
+<li>无字经也是真经，但东土众生「愚迷不悟」，只配「有字」的。</li>
+</ul>
+<p>最后，唐僧交出唐王赐的紫金钵盂：</p>
+<blockquote>
+<p>三藏无物奉承，即命沙僧取出紫金钵盂，双手奉上。</p>
+<p>——第九十八回</p>
+</blockquote>
+<p><strong>神圣流程也有成本；「人事」不是bug，是系统的一部分。</strong></p>
+<hr>
+<h2>六 · 叙事机制：为什么是「单元剧」</h2>
+<p>《西游记》的结构，是<strong>章回体+单元剧</strong>：</p>
+<ul>
+<li>每一难是一个相对独立的单元；</li>
+<li>单元之间用「取经队伍」这条线串起来；</li>
+<li>妖怪、国王、神仙、法宝，反复换皮；</li>
+<li>读者看的不是「结局」，是<strong>这一难怎么被处理</strong>。</li>
+</ul>
+<p>这跟《三国演义》相反：</p>
+<ul>
+<li>三国是<strong>连续的历史</strong>，每一回都在结算前一回；</li>
+<li>西游是<strong>重复的流程</strong>，每一难都在重演同一套结构。</li>
+</ul>
+<p>所以西游适合「抽出来看」：把一难当一个小型组织案例，看谁出面、谁背书、谁被收编、谁被消灭。</p>
+<p><strong>它不是「打怪升级」，是「同一套流程的八十一次运行」。</strong></p>
+<hr>
+<h2>七 · 怎么读</h2>
+<ol>
+<li><strong>把每一难当审批案例</strong>：谁提出的问题？谁有权限处理？谁背书？谁被收编？谁被消灭？</li>
+<li><strong>把悟空当「能力」</strong>：他的战斗力不是重点，重点是<strong>能力如何被控制接口约束</strong>。</li>
+<li><strong>把唐僧当「合法性」</strong>：他没有能力，但他有名义；没有他，项目不合法。</li>
+<li><strong>把八戒当「人性」</strong>：他不是反面角色，是团队里最真实的成本——欲望、偷懒、退缩。</li>
+<li><strong>把真经当「授权」</strong>：不要问「经里写了什么」，问「谁有资格发经、谁有资格取经、取经要付什么」。</li>
+<li><strong>把「有后台/没后台」当组织分析</strong>：这不是阴谋论，是资源与关系的清算方式。</li>
+</ol>
+<hr>
+<h2>八 · 常见误读与边界</h2>
+<table><thead><tr><th>误读</th><th>为什么不对</th></tr></thead><tbody>
+<tr><td><strong>把《西游记》当儿童故事</strong></td><td>儿童读得懂「打妖怪」，成人要读「谁收编谁、谁背书、谁付人事」</td></tr>
+<tr><td><strong>把它当佛教宣传</strong></td><td>它借佛道术语，但写的是组织与权力；阿傩伽叶要「人事」，不是佛教教义的正面表述</td></tr>
+<tr><td><strong>把它当职场成功学</strong></td><td>悟空不是「会来事」才成佛，是项目完成、编制到位；成功学把它读浅了</td></tr>
+<tr><td><strong>把八十一难当打怪升级</strong></td><td>难是流程节点，不是经验值；很多难靠关系解决，不靠打</td></tr>
+<tr><td><strong>把悟空当纯反抗者</strong></td><td>他最后接受了编制；反抗是真的，收编也是真的</td></tr>
+<tr><td><strong>把唐僧当废物</strong></td><td>他的功能是合法性；没有他，悟空再强也只是妖</td></tr>
+</tbody></table>
+<p><strong>一句话</strong>：</p>
+<p><strong>《西游记》不是「佛道斗法」，是一个体制如何把最强的异端，变成自己项目里的执行者。</strong></p>
+<hr>
+<p><strong>引文核对</strong>：本文件引用 9 条，均逐条命中简体工作本；回目按底本写法。</p>
+<p><strong>未做</strong>：佛道术语的逐条教义比对、版本异文汇校——这些是下一步，不是这一份能替代的。</p>
+  </main>
+
+  <div class="footer">
+    《西游记》整体架构 · 引文逐条核 西游记_简体.txt · 底本问题见《底本考订》<br>
+    
+  </div>
+
+</div>
+</body>
+</html>

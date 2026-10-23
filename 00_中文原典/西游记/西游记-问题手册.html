@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>《西游记》问题手册</title>
+<style>
+  :root{
+    --paper:#f7f4ed;
+    --card:#fffdf8;
+    --edge:#ded6c8;
+    --ink:#2b2721;
+    --ink-mid:#5c5449;
+    --ink-soft:#8c8175;
+    --teal:#166060;
+    --teal-soft:#e6efee;
+    --rust:#b1442a;
+    --rust-soft:#f7e9e4;
+    --gold:#9a7420;
+    --gold-soft:#f5eeda;
+    --sage:#55703c;
+    --sage-soft:#ecf0e2;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--paper);color:var(--ink);padding:36px 20px 48px;line-height:1.88;
+    -webkit-font-smoothing:antialiased;
+  }
+  .container{max-width:920px;margin:0 auto;}
+
+  .header{
+    text-align:center;margin-bottom:30px;padding:44px 24px 40px;
+    background:var(--card);border:1px solid var(--edge);border-top:5px solid var(--teal);
+    border-radius:4px;
+  }
+  .header h1{font-size:27px;color:var(--ink);margin-bottom:12px;letter-spacing:.5px;}
+  .header .subtitle{font-size:14.5px;color:var(--ink-mid);}
+  .header .author{margin-top:16px;font-size:12.5px;color:var(--ink-soft);letter-spacing:.5px;}
+
+  main{
+    background:var(--card);border:1px solid var(--edge);border-radius:4px;
+    padding:34px 38px;
+  }
+
+  h1{font-size:23px;color:var(--ink);margin:8px 0 18px;}
+  h2{
+    font-size:20px;color:var(--ink);margin:40px 0 16px;
+    padding-left:13px;border-left:4px solid var(--teal);letter-spacing:.3px;
+  }
+  h2:first-child{margin-top:0;}
+  h3{font-size:16.5px;color:var(--teal);margin:28px 0 12px;font-weight:700;}
+  h4{font-size:15px;color:var(--ink-mid);margin:18px 0 8px;}
+
+  p{color:var(--ink-mid);font-size:14.5px;margin-bottom:12px;}
+  strong{color:var(--ink);}
+  em{color:var(--rust);font-style:normal;font-weight:600;}
+
+  ul,ol{margin:8px 0 14px 24px;}
+  li{color:var(--ink-mid);font-size:14.5px;margin-bottom:6px;}
+
+  hr{border:none;border-top:1px solid var(--edge);margin:26px 0;}
+
+  table{width:100%;border-collapse:collapse;margin:14px 0 18px;font-size:13.5px;}
+  th,td{padding:10px 12px;border:1px solid var(--edge);text-align:left;vertical-align:top;}
+  th{background:var(--teal-soft);color:var(--teal);font-weight:700;}
+  td{color:var(--ink-mid);}
+
+  blockquote{
+    background:var(--gold-soft);border:1px solid #e6dcc0;border-left:4px solid var(--gold);
+    border-radius:0 3px 3px 0;padding:16px 20px;margin:14px 0;
+  }
+  blockquote p{color:#6d5011;font-size:14px;font-style:italic;margin-bottom:8px;}
+  blockquote p:last-child{margin-bottom:0;}
+  blockquote strong{color:#5a420d;}
+
+  code{
+    background:var(--paper);padding:1.5px 6px;border-radius:3px;
+    font-family:Consolas,Monaco,monospace;font-size:13px;color:var(--teal);
+  }
+  pre{
+    background:var(--paper);border:1px solid var(--edge);border-radius:3px;
+    padding:14px 16px;overflow-x:auto;margin:12px 0 16px;
+  }
+  pre code{background:none;padding:0;line-height:1.65;}
+
+  /* 专业问题标题 */
+  .q-title{
+    background:var(--teal-soft);border-left:4px solid var(--teal);
+    border-radius:0 3px 3px 0;padding:13px 18px;margin:28px 0 12px;
+    color:var(--ink);font-size:15.5px;font-weight:700;line-height:1.7;
+  }
+
+  .footer{
+    text-align:center;margin-top:38px;padding:20px;color:var(--ink-soft);font-size:12.5px;line-height:1.9;
+  }
+
+  @media(max-width:640px){
+    .header h1{font-size:20px;}
+    h2{font-size:17.5px;}
+    body{padding:20px 14px 32px;}
+    main{padding:22px 18px;}
+  }
+
+  .nav{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:0 0 22px;}
+  .nav a{background:var(--card);border:1px solid var(--edge);border-radius:20px;
+    padding:6px 14px;font-size:13px;color:var(--teal);text-decoration:none;}
+  .nav a:hover{border-color:var(--teal);}
+  .qcard{background:var(--card);border:1px solid var(--edge);border-radius:6px;
+    padding:22px 26px;margin:18px 0;}
+  .qhead{display:flex;align-items:baseline;gap:10px;margin-bottom:8px;}
+  .qnum{background:var(--teal);color:#fff;font-family:Consolas,monospace;
+    font-size:12px;font-weight:700;padding:2px 9px;border-radius:3px;}
+  .qlv{font-size:12px;color:var(--rust);letter-spacing:.5px;}
+  .qtitle{font-size:17px;color:var(--ink);margin:0 0 10px;line-height:1.6;}
+  .qask{background:var(--teal-soft);border-left:3px solid var(--teal);
+    padding:10px 14px;border-radius:0 4px 4px 0;font-size:14px;color:var(--ink-mid);margin-bottom:12px;}
+  details{border:1px dashed var(--edge);border-radius:5px;padding:10px 14px;background:#fffefc;}
+  summary{cursor:pointer;font-size:13.5px;color:var(--teal);font-weight:700;}
+  .qans{margin-top:12px;}
+  .qans p{font-size:14px;color:var(--ink-mid);margin-bottom:11px;}
+  .qans blockquote{margin:12px 0;padding:10px 14px;background:var(--gold-soft);
+    border-left:3px solid var(--gold);font-size:13.8px;color:#5f5527;}
+  .qans blockquote p{margin:0;color:inherit;font-size:inherit;}
+  .qmis{margin-top:14px;padding:10px 14px;background:var(--rust-soft);
+    border-left:3px solid var(--rust);border-radius:0 4px 4px 0;font-size:13.4px;color:#6b4545;}
+  .qmis b{color:var(--rust);}
+  .qsrc{margin-top:9px;font-size:12.2px;color:var(--ink-soft);}
+  .selftest{background:var(--card);border:1px solid var(--edge);border-radius:6px;
+    padding:22px 26px;margin-top:22px;}
+  .selftest li{margin-bottom:8px;}
+  @media(max-width:680px){.qcard{padding:16px 15px;} .qtitle{font-size:15.5px;}}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="nav"><a href="西游记-整体架构.html">整体架构</a><a href="西游记-问题手册.html">问题手册</a><a href="西游记-底本考订.html">底本考订</a><a href="../README.md">00 中文原典</a></div>
+  <div class="header">
+    <h1>《西游记》问题手册</h1>
+    <div class="subtitle">20 题 · 四层 · 先自己答，再展开</div>
+    <div class="author">底本：Project Gutenberg #23962 ｜ 100 回 ｜ 588,720 汉字 ｜ 引文用简体工作本</div>
+  </div>
+  <main>
+<h2>结构层 · 这本书是怎么搭起来的</h2>
+<article class="qcard" id="q1"><div class="qhead"><span class="qnum">Q1</span><span class="qlv">结构 · L1</span></div><h3 class="qtitle">取经项目是谁发起的？为什么需要唐僧？</h3><div class="qask">取经是唐僧自己要去的吗？为什么不让孙悟空一个筋斗把经取回来？</div><details><summary>展开参考答案</summary><div class="qans"><p>不是唐僧发起，是如来发起、观音执行。</p>
+<p>取经需要一个<strong>合法的人</strong>：有唐王的通关文牒、有「取经人」的身份、有佛教承认的根底。</p>
+<p>悟空有能力，但没有名分；一个筋斗能到西天，却取不回「合法」的经。</p>
+<p>所以队伍的核心不是「谁能打」，是<strong>谁能让这件事合法</strong>。</p>
+<p>唐僧是项目法人，悟空是能力，八戒是欲望，沙僧是执行，白龙马是基础设施。</p>
+<blockquote>
+<p>此宝唤做紧箍儿，虽是一样三个，但只是用各不同。</p>
+<p>——第八回</p>
+</blockquote></div></details><div class="qmis"><b>常见误读</b>　<p>把唐僧当「累赘」。没有他，取经只是妖仙的个人行为，不是国家/佛界的项目。</p></div><div class="qsrc">原文：第八回。</div></article>
+<article class="qcard" id="q2"><div class="qhead"><span class="qnum">Q2</span><span class="qlv">结构 · L1</span></div><h3 class="qtitle">八十一难是考验，还是流程？</h3><div class="qask">八十一难是佛祖安排的「考试」吗？为什么一定要凑够数？</div><details><summary>展开参考答案</summary><div class="qans"><p>它更像<strong>流程与审计</strong>，不是考试。</p>
+<ul>
+<li>每一难是一个审批/清算节点：谁出面、谁背书、谁被收编；</li>
+<li>难簿是审计底稿；少一难，项目不能结项；</li>
+<li>「九九数完」不是打够了怪，是流程走完了。</li>
+</ul>
+<p>所以八十一难的重点不是「难不难」，是<strong>有没有走完、有没有记录、有没有人验收</strong>。</p>
+<blockquote>
+<p>九九数完魔灭尽，三三行满道归根。</p>
+<p>——第九十九回</p>
+</blockquote></div></details><div class="qmis"><b>常见误读</b>　<p>把八十一难当「经验值」。它不产生等级，只产生<strong>合法性</strong>。</p></div><div class="qsrc">原文：第九十九回。</div></article>
+<article class="qcard" id="q3"><div class="qhead"><span class="qnum">Q3</span><span class="qlv">结构 · L2</span></div><h3 class="qtitle">为什么妖怪大多有后台？</h3><div class="qask">西游记里的妖怪，为什么很多最后被神仙收走，而不是被打死？</div><details><summary>展开参考答案</summary><div class="qans"><p>因为处理一个妖怪，不只看它做了什么，还看它<strong>是谁的人</strong>。</p>
+<ul>
+<li>青牛精是老君的坐骑，最后被老君收走；</li>
+<li>金角银角是老君的童子，被收走；</li>
+<li>大鹏是如来的亲戚，被收走；</li>
+<li>白骨夫人没有后台，被打死。</li>
+</ul>
+<p>这不是「佛道黑暗」，是<strong>组织现实</strong>：有后台的，走内部处理；没后台的，走外部清算。</p>
+<p>取经队伍一路上做的事，很多不是「降妖」，是<strong>替各方处理关系</strong>。</p>
+<blockquote>
+<p>他那脊梁上有一行字，叫做『白骨夫人』。</p>
+<p>——第二十七回</p>
+</blockquote></div></details><div class="qmis"><b>常见误读</b>　<p>把「有后台」读成作者反佛。它写的是权力结构，不是教义判断。</p></div><div class="qsrc">原文：第二十七回。</div></article>
+<article class="qcard" id="q4"><div class="qhead"><span class="qnum">Q4</span><span class="qlv">结构 · L2</span></div><h3 class="qtitle">孙悟空从齐天大圣到斗战胜佛，变了什么？</h3><div class="qask">悟空最后成佛，是他「变乖了」，还是「想通了」？</div><details><summary>展开参考答案</summary><div class="qans"><p>变的是<strong>位置</strong>，不是性格。</p>
+<ul>
+<li>齐天大圣：有能力，没有编制；不接受名分，只要名号；</li>
+<li>斗战胜佛：能力还在，但被编进了体系；名号变成了编制。</li>
+</ul>
+<p>紧箍咒不是让他信佛，是让他<strong>在成本约束下行动</strong>：不听话会痛，痛了就会算。</p>
+<p>他不是「觉悟」了，是<strong>项目完成了</strong>。</p>
+<blockquote>
+<p>皇帝轮流做，明年到我家。</p>
+<p>——第七回</p>
+</blockquote></div></details><div class="qmis"><b>常见误读</b>　<p>把成佛读成「修心成功」。修心是一层，收编是另一层；两层都要看。</p></div><div class="qsrc">原文：第七回。</div></article>
+<article class="qcard" id="q5"><div class="qhead"><span class="qnum">Q5</span><span class="qlv">结构 · L2</span></div><h3 class="qtitle">为什么结尾要安排「无字经/有字经」？</h3><div class="qask">好不容易到了西天，为什么先给无字经，后来又换有字经？</div><details><summary>展开参考答案</summary><div class="qans"><p>这一出把「真经」的性质说穿了：<strong>经不是知识，是授权</strong>。</p>
+<ul>
+<li>无字经也是真经，但东土众生「愚迷不悟」，读不了；</li>
+<li>有字经需要「人事」，不是免费发放；</li>
+<li>如来要的不是「你读懂」，是「你按流程来取」。</li>
+</ul>
+<p>所以「无字/有字」不是 bug，是<strong>授权形式的区别</strong>：给什么人、用什么形式、付什么成本。</p>
+<blockquote>
+<p>经不可轻传，亦不可以空取。</p>
+<p>——第九十八回</p>
+<p>白本者，乃无字真经，倒也是好的。</p>
+<p>——第九十八回</p>
+</blockquote></div></details><div class="qmis"><b>常见误读</b>　<p>把无字经读成「最高境界」。它也是真经，但在这个项目里，东土只配「有字」的。</p></div><div class="qsrc">原文：第九十八回。</div></article>
+<h2>矛盾层 · 哪里是真的冲突</h2>
+<article class="qcard" id="q6"><div class="qhead"><span class="qnum">Q6</span><span class="qlv">矛盾 · L1</span></div><h3 class="qtitle">孙悟空是反抗者，还是被招安者？</h3><div class="qask">悟空大闹天宫，最后却成佛。他到底是反抗英雄，还是被招安了？</div><details><summary>展开参考答案</summary><div class="qans"><p>两者都是，而且不矛盾。</p>
+<ul>
+<li>反抗是真的：他不接受「弼马温」的侮辱，也不接受玉帝的等级；</li>
+<li>被招安也是真的：五行山之后，他接受了取经项目，接受了紧箍咒，最后接受了「斗战胜佛」的编制。</li>
+</ul>
+<p>关键不是「他有没有屈服」，是<strong>他的能力被谁使用、被什么约束</strong>。</p>
+<p>从齐天大圣到斗战胜佛，他一直是那个悟空；变的是<strong>控制接口</strong>和<strong>编制</strong>。</p>
+<blockquote>
+<p>皇帝轮流做，明年到我家。</p>
+<p>——第七回</p>
+</blockquote></div></details><div class="qmis"><b>常见误读</b>　<p>只读前半段，把他当纯反抗者；或只读后半段，把他当「成熟了」。两边都少了一半。</p></div><div class="qsrc">原文：第七回。</div></article>
+<article class="qcard" id="q7"><div class="qhead"><span class="qnum">Q7</span><span class="qlv">矛盾 · L1</span></div><h3 class="qtitle">唐僧是慈悲，还是无能？</h3><div class="qask">唐僧一路上老是被骗、被捉，他到底有什么用？</div><details><summary>展开参考答案</summary><div class="qans"><p>他的功能不是「打」，是<strong>合法</strong>。</p>
+<ul>
+<li>他是唐王御弟，有通关文牒；</li>
+<li>他是「取经人」，是佛界承认的项目法人；</li>
+<li>他坚持「不杀生」，让项目在道德上站得住。</li>
+</ul>
+<p>没有他，悟空再强也只是妖；没有悟空，他一步也走不了。</p>
+<p>他不是「无能」，是<strong>能力不在同一个维度</strong>。</p>
+<blockquote>
+<p>心生，种种魔生；心灭，种种魔灭。</p>
+<p>——第十三回</p>
+</blockquote></div></details><div class="qmis"><b>常见误读</b>　<p>用战斗力衡量唐僧。他的资源是名分，不是武力。</p></div><div class="qsrc">原文：第十三回。</div></article>
+<article class="qcard" id="q8"><div class="qhead"><span class="qnum">Q8</span><span class="qlv">矛盾 · L2</span></div><h3 class="qtitle">八戒是贪欲，还是人性？</h3><div class="qask">八戒贪吃、贪睡、贪色，还老想散伙。他为什么能成净坛使者？</div><details><summary>展开参考答案</summary><div class="qans"><p>因为他是团队里<strong>最像人的那个</strong>。</p>
+<ul>
+<li>悟空是能力，唐僧是名分，沙僧是执行；只有八戒代表<strong>欲望与成本</strong>；</li>
+<li>他老想回高老庄，说明这个项目对个人没有吸引力；</li>
+<li>他最后也成佛（净坛使者），说明<strong>欲望不需要被消灭，只需要被编进流程</strong>。</li>
+</ul>
+<p>八戒不是反面教材，是项目里的<strong>真实人性</strong>。</p></div></details><div class="qmis"><b>常见误读</b>　<p>把八戒当纯喜剧角色。他的每一次退缩，都是对项目成本的提醒。</p></div><div class="qsrc">原文：无直接单句；见第十八至二十三回八戒的贪吃、偷懒、想散伙。</div></article>
+<article class="qcard" id="q9"><div class="qhead"><span class="qnum">Q9</span><span class="qlv">矛盾 · L2</span></div><h3 class="qtitle">佛界比天庭更公正吗？</h3><div class="qask">天庭讲等级，佛界讲慈悲。佛界是不是更公正？</div><details><summary>展开参考答案</summary><div class="qans"><p>不一定。</p>
+<ul>
+<li>天庭：招安、镇压、讲面子；</li>
+<li>佛界：也讲等级、也讲人事、也讲「经不可轻传」；</li>
+<li>阿傩、伽叶要「人事」，如来还说他们「卖贱了」。</li>
+</ul>
+<p>佛界不是「无权力的净土」，是<strong>另一套权力结构</strong>。</p>
+<p>它的「慈悲」是真的，它的「成本」也是真的；两者不矛盾。</p>
+<blockquote>
+<p>三藏无物奉承，即命沙僧取出紫金钵盂，双手奉上。</p>
+<p>——第九十八回</p>
+</blockquote></div></details><div class="qmis"><b>常见误读</b>　<p>把佛界当天堂。它是组织，不是乌托邦。</p></div><div class="qsrc">原文：第九十八回。</div></article>
+<article class="qcard" id="q10"><div class="qhead"><span class="qnum">Q10</span><span class="qlv">矛盾 · L2</span></div><h3 class="qtitle">取经是救赎，还是交易？</h3><div class="qask">取经是为了救东土众生，还是一场交易？</div><details><summary>展开参考答案</summary><div class="qans"><p>两层都有。</p>
+<ul>
+<li>救赎层：东土众生「愚迷不悟」，需要真经；</li>
+<li>交易层：取经要通关文牒、要人事、要编制、要完成八十一难。</li>
+</ul>
+<p>这不是「神圣被污染」，是<strong>神圣必须通过制度落地</strong>。</p>
+<p>没有交易层，经送不到东土；没有救赎层，交易就只是买卖。</p>
+<blockquote>
+<p>经不可轻传，亦不可以空取。</p>
+<p>——第九十八回</p>
+</blockquote></div></details><div class="qmis"><b>常见误读</b>　<p>只读「救赎」会看不见权力；只读「交易」会看不见信仰。两边都偏。</p></div><div class="qsrc">原文：第九十八回。</div></article>
+<h2>边界层 · 这本书解释不了什么</h2>
+<article class="qcard" id="q11"><div class="qhead"><span class="qnum">Q11</span><span class="qlv">边界 · L1</span></div><h3 class="qtitle">《西游记》是佛教宣传吗？</h3><div class="qask">这本书到处是佛、菩萨、经，它是不是在宣扬佛教？</div><details><summary>展开参考答案</summary><div class="qans"><p>它借佛道术语，但写的是<strong>小说</strong>，不是教义。</p>
+<ul>
+<li>它可以让阿傩、伽叶要「人事」，这不是佛教教义的正面表述；</li>
+<li>它可以让如来「卖经」，这是在写组织，不是在写佛法；</li>
+<li>它可以让悟空成佛，也可以让他被紧箍咒控制；这是权力叙事，不是修行指南。</li>
+</ul>
+<p>所以它能当<strong>宗教文化的材料</strong>，不能当<strong>佛教教义入门</strong>。</p>
+<blockquote>
+<p>经不可轻传，亦不可以空取。</p>
+<p>——第九十八回</p>
+</blockquote></div></details><div class="qmis"><b>常见误读</b>　<p>把小说里的佛界当成佛教本身。小说有小说的逻辑。</p></div><div class="qsrc">原文：第九十八回。</div></article>
+<article class="qcard" id="q12"><div class="qhead"><span class="qnum">Q12</span><span class="qlv">边界 · L1</span></div><h3 class="qtitle">把它当儿童故事，会漏掉什么？</h3><div class="qask">西游记是四大名著里最像儿童故事的一部。这样读会漏掉什么？</div><details><summary>展开参考答案</summary><div class="qans"><p>会漏掉<strong>组织与权力</strong>这一层。</p>
+<p>儿童读「打妖怪」，成人要读：</p>
+<ul>
+<li>谁收编谁；</li>
+<li>谁给谁背书；</li>
+<li>谁有后台，谁没有；</li>
+<li>真经为什么要「人事」；</li>
+<li>悟空为什么从齐天大圣变成斗战胜佛。</li>
+</ul>
+<p>这些不是「过度解读」，是文本自己写出来的。</p>
+<blockquote>
+<p>欲知造化会元功，须看西游释厄传。</p>
+<p>——第一回</p>
+</blockquote></div></details><div class="qmis"><b>常见误读</b>　<p>把「儿童可读」当成「只给儿童读」。可读性不等于浅。</p></div><div class="qsrc">原文：第一回。</div></article>
+<article class="qcard" id="q13"><div class="qhead"><span class="qnum">Q13</span><span class="qlv">边界 · L2</span></div><h3 class="qtitle">把它当职场/成功学，会不会过度？</h3><div class="qask">现在很多人把西游记当职场指南，这样读有问题吗？</div><details><summary>展开参考答案</summary><div class="qans"><p>有边界，但不是完全不能。</p>
+<ul>
+<li>能借：项目、审批、后台、编制、控制接口、审计；</li>
+<li>不能借：把悟空成佛读成「会来事」、把唐僧读成「无能领导」、把八十一难读成「KPI 打卡」。</li>
+</ul>
+<p>过度的地方在于：<strong>成功学只取「怎么做官」，不取「结构怎么吃人」</strong>。</p>
+<p>西游记的冷，不在教你升职，在让你看见<strong>收编的成本</strong>。</p>
+<blockquote>
+<p>他若不伏使唤，可将此箍儿与他戴在头上，自然见肉生根。</p>
+<p>——第八回</p>
+</blockquote></div></details><div class="qmis"><b>常见误读</b>　<p>把组织分析做成厚黑学。结构分析不等于道德相对主义。</p></div><div class="qsrc">原文：第八回。</div></article>
+<article class="qcard" id="q14"><div class="qhead"><span class="qnum">Q14</span><span class="qlv">边界 · L2</span></div><h3 class="qtitle">八十一难为什么不能当「打怪升级」？</h3><div class="qask">八十一难一难一难打过去，不就像游戏升级吗？</div><details><summary>展开参考答案</summary><div class="qans"><p>不一样。</p>
+<ul>
+<li>游戏升级：经验值累积，能力线性增长；</li>
+<li>八十一难：很多难不靠打，靠<strong>关系、审批、后台、人事</strong>；</li>
+<li>悟空的本事从头到尾差不多，变的是<strong>编制与约束</strong>，不是等级。</li>
+</ul>
+<p>所以它不是「升级流」，是<strong>流程流</strong>：同一套结构运行八十一次。</p>
+<blockquote>
+<p>九九数完魔灭尽，三三行满道归根。</p>
+<p>——第九十九回</p>
+</blockquote></div></details><div class="qmis"><b>常见误读</b>　<p>用游戏框架读。游戏让你变强，西游记让你看见「强也要被管」。</p></div><div class="qsrc">原文：第九十九回。</div></article>
+<article class="qcard" id="q15"><div class="qhead"><span class="qnum">Q15</span><span class="qlv">边界 · L2</span></div><h3 class="qtitle">「真经」到底指什么？</h3><div class="qask">真经是经书，是佛法，还是别的什么？</div><details><summary>展开参考答案</summary><div class="qans"><p>在小说里，它至少有三层：</p>
+<ol>
+<li><strong>文本</strong>：有字的经；</li>
+<li><strong>授权</strong>：谁有资格取、谁有资格传；</li>
+<li><strong>合法性</strong>：东土需要这套东西来安顿人心。</li>
+</ol>
+<p>所以「真经」不是一本书，是<strong>一套被承认的秩序</strong>。</p>
+<p>无字经也是真经，但有字经更适合「愚迷不悟」的东土——这就是授权形式的区别。</p>
+<blockquote>
+<p>白本者，乃无字真经，倒也是好的。</p>
+<p>——第九十八回</p>
+</blockquote></div></details><div class="qmis"><b>常见误读</b>　<p>把真经当「知识付费课程」。它的核心不是内容，是<strong>谁发、发给谁、怎么发</strong>。</p></div><div class="qsrc">原文：第九十八回。</div></article>
+<h2>对照层 · 和库里别的书对读</h2>
+<article class="qcard" id="q16"><div class="qhead"><span class="qnum">Q16</span><span class="qlv">对照 · L1</span></div><h3 class="qtitle">西游 vs 三国：招安 vs 争正统，结构同构吗？</h3><div class="qask">三国争正统，西游搞招安，两者有什么可比？</div><details><summary>展开参考答案</summary><div class="qans"><p>都在写<strong>能力如何获得合法性</strong>。</p>
+<ul>
+<li>三国：三方都有实力，但都要用「汉室/正统」给自己补名分；最后实力吞并名分。</li>
+<li>西游：悟空有能力，但没有名分；体制用紧箍咒把他收编，最后给他一个「斗战胜佛」的编制。</li>
+</ul>
+<p>同构在于：<strong>名分不是能力的自然结果，是体制授予的</strong>。</p>
+<p>差异在于：三国是多方竞争，西游是单方收编。</p></div></details><div class="qmis"><b>常见误读</b>　<p>把两者都读成「英雄故事」。它们都在问「谁有资格」。</p></div><div class="qsrc">原文：无直接对照原文；这是结构对照。</div></article>
+<article class="qcard" id="q17"><div class="qhead"><span class="qnum">Q17</span><span class="qlv">对照 · L1</span></div><h3 class="qtitle">西游 vs 水浒：招安的不同结局？</h3><div class="qask">梁山招安后去打仗，取经队伍招安后成佛。为什么结局差这么多？</div><details><summary>展开参考答案</summary><div class="qans"><p>因为<strong>招安的对象不同</strong>。</p>
+<ul>
+<li>梁山：被招安后仍是「工具」，朝廷用他们打方腊，最后鸟尽弓藏；</li>
+<li>取经队伍：被编进一个<strong>有终点的项目</strong>，八十一难走完，编制就兑现。</li>
+</ul>
+<p>梁山的招安没有「项目结项」，只有「被使用」；西游的招安有「难簿」、有「验收」、有「成佛」。</p>
+<p><strong>不是所有招安都一样；要看有没有终点和验收。</strong></p></div></details><div class="qmis"><b>常见误读</b>　<p>把「招安」当单一结局。招安之后有没有编制、有没有验收，才是关键。</p></div><div class="qsrc">原文：无直接对照原文；这是结构对照。</div></article>
+<article class="qcard" id="q18"><div class="qhead"><span class="qnum">Q18</span><span class="qlv">对照 · L2</span></div><h3 class="qtitle">唐僧 vs 刘备：名义领袖的作用？</h3><div class="qask">唐僧和刘备都不能打，为什么都能当领袖？</div><details><summary>展开参考答案</summary><div class="qans"><p>因为他们提供<strong>合法性</strong>。</p>
+<ul>
+<li>唐僧：唐王御弟、取经人、佛界承认；没有他，取经不合法；</li>
+<li>刘备：皇叔、仁义、汉室名分；没有他，蜀汉不合法。</li>
+</ul>
+<p>他们的能力不在战场，在<strong>把一件事说成「有资格做」</strong>。</p>
+<p>但合法性也有极限：刘备守不住荆州，唐僧管不住悟空；名分不能代替实力与控制。</p></div></details><div class="qmis"><b>常见误读</b>　<p>把「不能打」当「没用」。名义领袖的功能是让组织成立，不是亲自打仗。</p></div><div class="qsrc">原文：无直接对照原文；这是结构对照。</div></article>
+<article class="qcard" id="q19"><div class="qhead"><span class="qnum">Q19</span><span class="qlv">对照 · L2</span></div><h3 class="qtitle">观音 vs 诸葛亮：项目经理/军师？</h3><div class="qask">观音和诸葛亮都是「背后安排一切」的角色，他们像吗？</div><details><summary>展开参考答案</summary><div class="qans"><p>像在<strong>项目管理</strong>，不像在<strong>权力位置</strong>。</p>
+<ul>
+<li>观音：给任务、给资源（袈裟、锡杖、三个箍）、中途救场、最后验收；她是<strong>项目经理+审计</strong>。</li>
+<li>诸葛亮：定战略、管后勤、选人、北伐；他是<strong>军师+CEO</strong>，但没有最终授权。</li>
+</ul>
+<p>观音上面有如来，诸葛亮上面有刘备/刘禅；两人都要在<strong>授权范围内</strong>做事。</p>
+<p>差异在于：观音的授权更稳，诸葛亮的授权更依赖名分。</p></div></details><div class="qmis"><b>常见误读</b>　<p>把观音当「救苦救难的菩萨」，忽略她的项目管理功能；把诸葛亮当「神」，忽略他的授权边界。</p></div><div class="qsrc">原文：无直接对照原文；这是结构对照。</div></article>
+<article class="qcard" id="q20"><div class="qhead"><span class="qnum">Q20</span><span class="qlv">对照 · L2</span></div><h3 class="qtitle">西游的组织分析能迁移到现代吗？边界在哪？</h3><div class="qask">用「项目、审批、后台、编制」分析西游记，能迁移到现代组织吗？</div><details><summary>展开参考答案</summary><div class="qans"><p>能，但要改词：</p>
+<ul>
+<li>取经 → 一个跨部门项目；</li>
+<li>通关文牒 → 合规/授权文件；</li>
+<li>八十一难 → 审批与审计节点；</li>
+<li>紧箍咒 → 控制接口（合同、考核、权限）；</li>
+<li>人事 → 预算/资源交换；</li>
+<li>成佛 → 编制/职级。</li>
+</ul>
+<p>边界在于：现代组织有<strong>法律、市场、退出机制</strong>，不像取经团队那样不能退出；而且现代组织的「真经」可以是产品/技术，不只是合法性。</p>
+<p>所以它能当<strong>提问框架</strong>，不能当<strong>管理公式</strong>。</p></div></details><div class="qmis"><b>常见误读</b>　<p>把「后台」当唯一解释。现代组织还有能力、市场、法律；不能全化成关系。</p></div><div class="qsrc">原文：无直接对照原文；这是结构对照。</div></article>
+<div class="selftest"><h2 style="margin-top:0;">自测清单</h2><ul>
+<li>[ ] 我能说出取经项目的发起人、项目经理、项目法人分别是谁。</li>
+<li>[ ] 我能解释八十一难为什么不是「打怪升级」。</li>
+<li>[ ] 我能说出「有后台/没后台」的妖怪各一个例子。</li>
+<li>[ ] 我能解释悟空从齐天大圣到斗战胜佛，变的是什么。</li>
+<li>[ ] 我能说出「无字经/有字经」的区别，以及「人事」的作用。</li>
+<li>[ ] 我能解释唐僧的功能为什么不是战斗力。</li>
+<li>[ ] 我能把西游与三国/水浒各做一次结构对照。</li>
+<li>[ ] 我能说出「组织分析」迁移到现代时，哪一层不能直接类比。</li>
+</ul></div>
+  </main>
+  <div class="footer">《西游记》整体架构 · 引文逐条核 西游记_简体.txt · 底本问题见《底本考订》<br>先自己答，再展开；答案不是标准答案，是可以站住的读法 + 它的边界</div>
+</div>
+</body>
+</html>

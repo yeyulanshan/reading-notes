@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>《三国演义》问题手册</title>
+<style>
+  :root{
+    --paper:#f7f4ed;
+    --card:#fffdf8;
+    --edge:#ded6c8;
+    --ink:#2b2721;
+    --ink-mid:#5c5449;
+    --ink-soft:#8c8175;
+    --teal:#166060;
+    --teal-soft:#e6efee;
+    --rust:#b1442a;
+    --rust-soft:#f7e9e4;
+    --gold:#9a7420;
+    --gold-soft:#f5eeda;
+    --sage:#55703c;
+    --sage-soft:#ecf0e2;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--paper);color:var(--ink);padding:36px 20px 48px;line-height:1.88;
+    -webkit-font-smoothing:antialiased;
+  }
+  .container{max-width:920px;margin:0 auto;}
+
+  .header{
+    text-align:center;margin-bottom:30px;padding:44px 24px 40px;
+    background:var(--card);border:1px solid var(--edge);border-top:5px solid var(--teal);
+    border-radius:4px;
+  }
+  .header h1{font-size:27px;color:var(--ink);margin-bottom:12px;letter-spacing:.5px;}
+  .header .subtitle{font-size:14.5px;color:var(--ink-mid);}
+  .header .author{margin-top:16px;font-size:12.5px;color:var(--ink-soft);letter-spacing:.5px;}
+
+  main{
+    background:var(--card);border:1px solid var(--edge);border-radius:4px;
+    padding:34px 38px;
+  }
+
+  h1{font-size:23px;color:var(--ink);margin:8px 0 18px;}
+  h2{
+    font-size:20px;color:var(--ink);margin:40px 0 16px;
+    padding-left:13px;border-left:4px solid var(--teal);letter-spacing:.3px;
+  }
+  h2:first-child{margin-top:0;}
+  h3{font-size:16.5px;color:var(--teal);margin:28px 0 12px;font-weight:700;}
+  h4{font-size:15px;color:var(--ink-mid);margin:18px 0 8px;}
+
+  p{color:var(--ink-mid);font-size:14.5px;margin-bottom:12px;}
+  strong{color:var(--ink);}
+  em{color:var(--rust);font-style:normal;font-weight:600;}
+
+  ul,ol{margin:8px 0 14px 24px;}
+  li{color:var(--ink-mid);font-size:14.5px;margin-bottom:6px;}
+
+  hr{border:none;border-top:1px solid var(--edge);margin:26px 0;}
+
+  table{width:100%;border-collapse:collapse;margin:14px 0 18px;font-size:13.5px;}
+  th,td{padding:10px 12px;border:1px solid var(--edge);text-align:left;vertical-align:top;}
+  th{background:var(--teal-soft);color:var(--teal);font-weight:700;}
+  td{color:var(--ink-mid);}
+
+  blockquote{
+    background:var(--gold-soft);border:1px solid #e6dcc0;border-left:4px solid var(--gold);
+    border-radius:0 3px 3px 0;padding:16px 20px;margin:14px 0;
+  }
+  blockquote p{color:#6d5011;font-size:14px;font-style:italic;margin-bottom:8px;}
+  blockquote p:last-child{margin-bottom:0;}
+  blockquote strong{color:#5a420d;}
+
+  code{
+    background:var(--paper);padding:1.5px 6px;border-radius:3px;
+    font-family:Consolas,Monaco,monospace;font-size:13px;color:var(--teal);
+  }
+  pre{
+    background:var(--paper);border:1px solid var(--edge);border-radius:3px;
+    padding:14px 16px;overflow-x:auto;margin:12px 0 16px;
+  }
+  pre code{background:none;padding:0;line-height:1.65;}
+
+  /* 专业问题标题 */
+  .q-title{
+    background:var(--teal-soft);border-left:4px solid var(--teal);
+    border-radius:0 3px 3px 0;padding:13px 18px;margin:28px 0 12px;
+    color:var(--ink);font-size:15.5px;font-weight:700;line-height:1.7;
+  }
+
+  .footer{
+    text-align:center;margin-top:38px;padding:20px;color:var(--ink-soft);font-size:12.5px;line-height:1.9;
+  }
+
+  @media(max-width:640px){
+    .header h1{font-size:20px;}
+    h2{font-size:17.5px;}
+    body{padding:20px 14px 32px;}
+    main{padding:22px 18px;}
+  }
+
+  .nav{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:0 0 22px;}
+  .nav a{background:var(--card);border:1px solid var(--edge);border-radius:20px;
+    padding:6px 14px;font-size:13px;color:var(--teal);text-decoration:none;}
+  .nav a:hover{border-color:var(--teal);}
+  .qcard{background:var(--card);border:1px solid var(--edge);border-radius:6px;
+    padding:22px 26px;margin:18px 0;}
+  .qhead{display:flex;align-items:baseline;gap:10px;margin-bottom:8px;}
+  .qnum{background:var(--teal);color:#fff;font-family:Consolas,monospace;
+    font-size:12px;font-weight:700;padding:2px 9px;border-radius:3px;}
+  .qlv{font-size:12px;color:var(--rust);letter-spacing:.5px;}
+  .qtitle{font-size:17px;color:var(--ink);margin:0 0 10px;line-height:1.6;}
+  .qask{background:var(--teal-soft);border-left:3px solid var(--teal);
+    padding:10px 14px;border-radius:0 4px 4px 0;font-size:14px;color:var(--ink-mid);margin-bottom:12px;}
+  details{border:1px dashed var(--edge);border-radius:5px;padding:10px 14px;background:#fffefc;}
+  summary{cursor:pointer;font-size:13.5px;color:var(--teal);font-weight:700;}
+  .qans{margin-top:12px;}
+  .qans p{font-size:14px;color:var(--ink-mid);margin-bottom:11px;}
+  .qans blockquote{margin:12px 0;padding:10px 14px;background:var(--gold-soft);
+    border-left:3px solid var(--gold);font-size:13.8px;color:#5f5527;}
+  .qans blockquote p{margin:0;color:inherit;font-size:inherit;}
+  .qmis{margin-top:14px;padding:10px 14px;background:var(--rust-soft);
+    border-left:3px solid var(--rust);border-radius:0 4px 4px 0;font-size:13.4px;color:#6b4545;}
+  .qmis b{color:var(--rust);}
+  .qsrc{margin-top:9px;font-size:12.2px;color:var(--ink-soft);}
+  .selftest{background:var(--card);border:1px solid var(--edge);border-radius:6px;
+    padding:22px 26px;margin-top:22px;}
+  .selftest li{margin-bottom:8px;}
+  @media(max-width:680px){.qcard{padding:16px 15px;} .qtitle{font-size:15.5px;}}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="nav"><a href="三国演义-整体架构.html">整体架构</a><a href="三国演义-问题手册.html">问题手册</a><a href="三国演义-底本考订.html">底本考订</a><a href="../README.md">00 中文原典</a></div>
+  <div class="header">
+    <h1>《三国演义》问题手册</h1>
+    <div class="subtitle">20 题 · 四层 · 先自己答，再展开</div>
+    <div class="author">底本：Project Gutenberg #23950 ｜ 120 回 ｜ 484,892 汉字 ｜ 引文用简体工作本</div>
+  </div>
+  <main>
+<h2>结构层 · 这本书是怎么搭起来的</h2>
+<article class="qcard" id="q1"><div class="qhead"><span class="qnum">Q1</span><span class="qlv">结构 · L1</span></div><h3 class="qtitle">为什么说主角是「三本账」，不是某个人？</h3><div class="qask">如果主角是曹操、刘备或诸葛亮，这本书应该围绕一个人的成长、选择、胜负来组织。它实际是怎么组织的？</div><details><summary>展开参考答案</summary><div class="qans"><p>看每一次大战之前的「准备」。官渡之前，先写袁绍的家族名望与曹操的挟天子；赤壁之前，先写孙刘联盟与曹操的名分；夷陵之前，先写关羽之死与荆州归属。</p>
+<p>战争只是结算，真正的结构是三种资本：<strong>名分、实力、联盟</strong>。</p>
+<ul>
+<li>名分：汉室、皇叔、衣带诏、禅让；</li>
+<li>实力：地盘、兵、粮、人才；</li>
+<li>联盟：盟誓、婚姻、共同敌人、信用。</li>
+</ul>
+<p>谁能在三本账之间找到平衡，谁就占一时；谁把一本账当全部，谁就败。</p>
+<p>所以主角不是某个人，是<strong>三本账的错位</strong>。</p>
+<blockquote>
+<p>话说天下大势，分久必合，合久必分。</p>
+<p>——第一回</p>
+</blockquote></div></details><div class="qmis"><b>常见误读</b>　<p>把「三本账」读成「权谋三招」。账是结构，不是技巧；同一招在不同账本里结果相反。</p></div><div class="qsrc">原文：第一回。</div></article>
+<article class="qcard" id="q2"><div class="qhead"><span class="qnum">Q2</span><span class="qlv">结构 · L1</span></div><h3 class="qtitle">全书的三段结构怎么分？</h3><div class="qask">120 回太长，如果只分三段，应该怎么分？</div><details><summary>展开参考答案</summary><div class="qans"><ul>
+<li><strong>群雄段（1–37 回）</strong>：汉室失序，群雄并起；名分还在汉室手里，实力分散，联盟临时。</li>
+<li><strong>三分段（38–85 回）</strong>：隆中对、赤壁、入川、荆州、夷陵；三本账各自找到代理人——曹魏实力、蜀汉名分、东吴联盟。</li>
+<li><strong>归晋段（86–120 回）</strong>：北伐、司马篡魏、灭蜀、平吴；实力账吞并另外两本账，最后用禅让/封爵补一张名分收据。</li>
+</ul>
+<p>分段的依据不是「谁死了」，是<strong>三本账的折算方式变了</strong>。</p>
+<blockquote>
+<p>定三分隆中决策，战长江孙氏报雠。</p>
+<p>——第三十八回</p>
+<p>荐杜预老将献新谋，降孙皓三分归一统。</p>
+<p>——第一二○回</p>
+</blockquote></div></details><div class="qmis"><b>常见误读</b>　<p>按「曹操、刘备、诸葛亮」的死亡分段。人物死亡是结果，不是结构。</p></div><div class="qsrc">原文：第三十八回、第一二○回。</div></article>
+<article class="qcard" id="q3"><div class="qhead"><span class="qnum">Q3</span><span class="qlv">结构 · L2</span></div><h3 class="qtitle">为什么从「讨董」写起，而不是从黄巾？</h3><div class="qask">黄巾起义是更大的社会背景，为什么全书真正的开场是讨董？</div><details><summary>展开参考答案</summary><div class="qans"><p>黄巾是「乱」，讨董是「名分破产的现场」。</p>
+<p>董卓挟天子，诸侯以「勤王」为名起兵；每个人都用汉室的名分，每个人都不真为汉室。</p>
+<p>从这一刻起，<strong>名分变成了一件可以借用的工具</strong>，而不是一个共同的约束。</p>
+<p>全书后面的「挟天子以令诸侯」「衣带诏」「禅让」，都是讨董这场戏的延长线。</p>
+<blockquote>
+<p>话说天下大势，分久必合，合久必分。</p>
+<p>——第一回</p>
+</blockquote></div></details><div class="qmis"><b>常见误读</b>　<p>把讨董读成「正义联盟打败坏人」。它真正的结果是：联盟散了，名分还在，谁都可以用。</p></div><div class="qsrc">原文：第一回。</div></article>
+<article class="qcard" id="q4"><div class="qhead"><span class="qnum">Q4</span><span class="qlv">结构 · L2</span></div><h3 class="qtitle">章回体的「且听下回分解」在做什么？</h3><div class="qask">每回末尾都留一个悬念，这只是说书人的习惯吗？</div><details><summary>展开参考答案</summary><div class="qans"><p>它不只是习惯，是<strong>把读者绑在下一笔账上</strong>。</p>
+<p>章回体不让你停下来问「谁正义」，它让你一直看到「谁先透支」。</p>
+<p>每一回都是一个结算单位：前面铺条件，后面收结果；「下回分解」把因果推迟，让读者带着未结的账往下走。</p>
+<p>这也解释了为什么《三国演义》适合「连续读」，不适合「抽一章当管理案例」。</p>
+<blockquote>
+<p>且看下文分解。</p>
+<p>——底本常见回末语</p>
+</blockquote></div></details><div class="qmis"><b>常见误读</b>　<p>把章回体当纯粹的印刷分段。它是叙事节奏，也是因果装置。</p></div><div class="qsrc">原文：第一回回首、第三十八回回末。</div></article>
+<article class="qcard" id="q5"><div class="qhead"><span class="qnum">Q5</span><span class="qlv">结构 · L2</span></div><h3 class="qtitle">为什么结尾是「归晋」，不是「蜀汉复兴」？</h3><div class="qask">读者情感上站蜀汉，为什么作者不让蜀汉赢？</div><details><summary>展开参考答案</summary><div class="qans"><p>因为三本账里，蜀汉最漂亮的是名分，最薄的是实力，最需要维护的是联盟。</p>
+<p>这三个条件在夷陵之后逐个破裂：荆州丢了，联盟烧了，名分只剩一个「汉」字。</p>
+<p>司马氏没有名分，但有地盘、兵、粮、时间；最后用禅让补名分，用封爵补体面。</p>
+<p>「三分归一统」不是正义胜利，是<strong>实力账把另外两本账并了</strong>。</p>
+<p>罗贯中让读者看着蜀汉败，是要让「名分不能单独结账」这件事成立。</p>
+<blockquote>
+<p>荐杜预老将献新谋，降孙皓三分归一统。</p>
+<p>——第一二○回</p>
+</blockquote></div></details><div class="qmis"><b>常见误读</b>　<p>把结尾读成「晋朝统一天下」的历史常识。它同时也是全书的结构结论。</p></div><div class="qsrc">原文：第一二○回。</div></article>
+<h2>矛盾层 · 哪里是真的冲突</h2>
+<article class="qcard" id="q6"><div class="qhead"><span class="qnum">Q6</span><span class="qlv">矛盾 · L1</span></div><h3 class="qtitle">曹操「挟天子」是忠还是奸？</h3><div class="qask">曹操终身不称帝，却挟天子以令诸侯。他到底是在保汉，还是在篡汉？</div><details><summary>展开参考答案</summary><div class="qans"><p>这是<strong>名分账与实力账的条件性冲突</strong>，不是简单的忠奸二分。</p>
+<ul>
+<li>如果他真保汉，应该还政、守臣节；</li>
+<li>如果他真篡汉，应该早称帝；</li>
+<li>他选择第三条：<strong>借名分，不还名分；做实力，不背篡名</strong>。</li>
+</ul>
+<p>这不是「忠」或「奸」，是<strong>把名分当低息贷款</strong>：用汉室的信用，做自己的事；等儿子那一代再还本。</p>
+<p>所以曹操的「奸」不在杀人，在<strong>他把名分工具化了</strong>。</p>
+<blockquote>
+<p>宁教我负天下人，休教天下人负我。</p>
+<p>——第四回</p>
+</blockquote></div></details><div class="qmis"><b>常见误读</b>　<p>用「宁我负人」一句话给曹操定性。那句话是成本声明，不是全部政治结构。</p></div><div class="qsrc">原文：第四回。</div></article>
+<article class="qcard" id="q7"><div class="qhead"><span class="qnum">Q7</span><span class="qlv">矛盾 · L1</span></div><h3 class="qtitle">刘备的「仁义」是目的还是资本？</h3><div class="qask">刘备到处讲仁义，他是真信，还是拿仁义当招牌？</div><details><summary>展开参考答案</summary><div class="qans"><p>两者都有，但要分开看。</p>
+<ul>
+<li>作为<strong>目的</strong>：他确实相信「惟贤惟德可以服人」，遗诏里也这样教刘禅；</li>
+<li>作为<strong>资本</strong>：仁义让他获得名分、人才、联盟信用，是他唯一能跟曹操实力抗衡的东西。</li>
+</ul>
+<p>问题在于：<strong>当目的和资本冲突时，他选哪一个？</strong></p>
+<p>夷陵之战，他选的是兄弟义气（名分/情感），不是联盟与战略。结果是把蜀汉的最后一点实力也烧掉。</p>
+<p>所以刘备不是「假仁义」，是<strong>把仁义当成了可以单独结账的账本</strong>。</p>
+<blockquote>
+<p>兄弟如手足，妻子如衣服。</p>
+<p>——第十五回</p>
+<p>勿以恶小而为之，勿以善小而不为。</p>
+<p>——第八十五回</p>
+</blockquote></div></details><div class="qmis"><b>常见误读</b>　<p>把仁义读成「傻」或「伪」。它既是信念，也是资源；失败在于折算，不在真假。</p></div><div class="qsrc">原文：第十五回、第八十五回。</div></article>
+<article class="qcard" id="q8"><div class="qhead"><span class="qnum">Q8</span><span class="qlv">矛盾 · L2</span></div><h3 class="qtitle">关羽失荆州：是「大意」，还是结构失败？</h3><div class="qask">关羽失荆州，常被说成「大意」。真的是他个人疏忽吗？</div><details><summary>展开参考答案</summary><div class="qans"><p>个人性格有责任，但更是<strong>联盟账的破裂</strong>。</p>
+<p>荆州是孙刘联盟的抵押品：孙权要联姻、要地盘、要安全感；关羽拒婚、辱使、不让荆州。</p>
+<p>从东吴的角度，荆州在关羽手里，联盟就永远不安全；从蜀汉的角度，荆州是隆中对的前提，不能放。</p>
+<p><strong>双方都没有错，但两本账无法同时结清。</strong></p>
+<p>关羽的「义」让他不肯折算；孙权的「利」让他必须反手。</p>
+<p>所以这不是「大意」，是<strong>名分账拒绝与联盟账折算</strong>。</p>
+<blockquote>
+<p>我今误中奸计，有死而已，何必多言！</p>
+<p>——第七十七回</p>
+</blockquote></div></details><div class="qmis"><b>常见误读</b>　<p>把失荆州全算在关羽「骄傲」上。骄傲是触发点，结构才是原因。</p></div><div class="qsrc">原文：第七十七回前后，关羽败走麦城。</div></article>
+<article class="qcard" id="q9"><div class="qhead"><span class="qnum">Q9</span><span class="qlv">矛盾 · L2</span></div><h3 class="qtitle">诸葛亮隆中对为什么没能兑现？</h3><div class="qask">隆中对说得很清楚，为什么最后没有成功？是诸葛亮算错了吗？</div><details><summary>展开参考答案</summary><div class="qans"><p>隆中对不是预言，是<strong>条件句</strong>：</p>
+<blockquote>
+<p>若跨有荆益，保其岩阻，西和诸戎，南抚彝越，外结孙权，内修政理。</p>
+<p>——第三十八回</p>
+</blockquote>
+<p>它成立需要三个前提：跨有荆益、外结孙权、内修政理。</p>
+<p>后来：荆州丢了（前提一断），联盟烧了（前提二断），蜀汉国力最弱（前提三难成立）。</p>
+<p><strong>不是战略错，是条件被逐个删掉。</strong></p>
+<p>诸葛亮后期六出祁山，更像「以攻为守」：用北伐维持名分、凝聚内部、等待天下有变。</p>
+<p>他管得了账，改不了账本。</p>
+<blockquote>
+<p>诚如是，则大业可成，汉室可兴矣。</p>
+<p>——第三十八回</p>
+</blockquote></div></details><div class="qmis"><b>常见误读</b>　<p>把隆中对当「神机妙算的预言」。它是预算表，不是保证书。</p></div><div class="qsrc">原文：第三十八回。</div></article>
+<article class="qcard" id="q10"><div class="qhead"><span class="qnum">Q10</span><span class="qlv">矛盾 · L2</span></div><h3 class="qtitle">孙权为什么既联刘又反刘？</h3><div class="qask">孙权一会儿联刘抗曹，一会儿背盟袭荆州，他到底站哪边？</div><details><summary>展开参考答案</summary><div class="qans"><p>他站<strong>东吴的生存</strong>这一边。</p>
+<ul>
+<li>曹操南下，他必须联刘，否则单独扛不住；</li>
+<li>刘备取益州、关羽守荆州，东吴的安全感下降，他必须反刘；</li>
+<li>夷陵之后，蜀汉弱了，他又复盟，因为需要平衡曹魏。</li>
+</ul>
+<p>联盟对孙权不是信仰，是<strong>工具</strong>。这在道德上不好看，在结构上最理性。</p>
+<p>所以孙权不是「反复无常」，是<strong>把联盟账算得最清楚的人</strong>。</p>
+<blockquote>
+<p>孙权据有江东，已历三世，国险而民附，此可用为援，而不可图也。</p>
+<p>——第三十八回</p>
+</blockquote></div></details><div class="qmis"><b>常见误读</b>　<p>用「背信弃义」评价孙权。联盟的信用本来就有价格，他在付得起的时候付，付不起的时候不付。</p></div><div class="qsrc">原文：第三十八回。</div></article>
+<h2>边界层 · 这本书解释不了什么</h2>
+<article class="qcard" id="q11"><div class="qhead"><span class="qnum">Q11</span><span class="qlv">边界 · L1</span></div><h3 class="qtitle">演义与《三国志》的边界在哪？</h3><div class="qask">读《三国演义》能了解三国历史吗？边界在哪？</div><details><summary>展开参考答案</summary><div class="qans"><p>能了解「故事怎么讲」，不能直接了解「历史怎么发生」。</p>
+<p>演义大量加工：桃园结义、三顾茅庐的细节、草船借箭、空城计、关羽千里走单骑，都有文学重构。</p>
+<p>它可以当<strong>叙事与政治想象的样本</strong>，不能当<strong>史实依据</strong>。</p>
+<p>要判断历史，回《三国志》及裴注；要判断叙事，回演义。</p>
+<blockquote>
+<p>话说天下大势，分久必合，合久必分。</p>
+<p>——第一回</p>
+</blockquote></div></details><div class="qmis"><b>常见误读</b>　<p>用「七实三虚」当精确比例。它只是提醒，不是版本判据。</p></div><div class="qsrc">原文：第一回。</div></article>
+<article class="qcard" id="q12"><div class="qhead"><span class="qnum">Q12</span><span class="qlv">边界 · L1</span></div><h3 class="qtitle">「七实三虚」能不能当定论？</h3><div class="qask">常说《三国演义》「七分实、三分虚」，这个说法可靠吗？</div><details><summary>展开参考答案</summary><div class="qans"><p>可以当<strong>读法提醒</strong>，不能当<strong>统计结论</strong>。</p>
+<p>「七实三虚」没有统一口径：按人物、按事件、按回目，比例都不一样；而且「虚」也有不同层次——移花接木、时间错位、细节虚构、因果重构。</p>
+<p>把它当定论，会掩盖真正重要的问题：<strong>哪一处虚，是为了表达什么？</strong></p>
+<blockquote>
+<p>读法建议：具体人物、时间、战役回史书；叙事结构回演义。</p>
+</blockquote></div></details><div class="qmis"><b>常见误读</b>　<p>把「七实三虚」当挡箭牌，既不用查史书，也不用分析文学。</p></div><div class="qsrc">原文：无单一原文；这是后世评点传统中的概括。</div></article>
+<article class="qcard" id="q13"><div class="qhead"><span class="qnum">Q13</span><span class="qlv">边界 · L2</span></div><h3 class="qtitle">把三国当权谋教科书，会漏掉什么？</h3><div class="qask">很多人把三国当管理/权谋教材，这样读会漏掉什么？</div><details><summary>展开参考答案</summary><div class="qans"><p>会漏掉<strong>三本账的不可折算性</strong>。</p>
+<p>权谋教材喜欢总结「曹操会用人」「刘备会哭」「诸葛亮会算」，把结构问题变成个人技巧。</p>
+<p>但三国的关键恰恰是：<strong>个人技巧再强，也不能单独结清三本账</strong>。</p>
+<p>曹操会用人，仍不能称帝；刘备会哭，仍守不住荆州；诸葛亮会算，仍改不了条件。</p>
+<p>把三国读成「成功学」，就会把悲剧读成操作手册。</p>
+<blockquote>
+<p>宁教我负天下人，休教天下人负我。</p>
+<p>——第四回</p>
+</blockquote></div></details><div class="qmis"><b>常见误读</b>　<p>把「权谋」当结构。权谋是局部，账本是整体。</p></div><div class="qsrc">原文：第四回。</div></article>
+<article class="qcard" id="q14"><div class="qhead"><span class="qnum">Q14</span><span class="qlv">边界 · L2</span></div><h3 class="qtitle">「名分」为什么前期有用，后期没用？</h3><div class="qask">前期大家都抢汉室旗号，后期为什么没人真在乎汉室了？</div><details><summary>展开参考答案</summary><div class="qans"><p>名分的价值，取决于<strong>还有多少人愿意为它付成本</strong>。</p>
+<p>前期：汉室虽弱，但「奉天子」还能换合法性、换人才、换联盟；所以曹操要挟，刘备要认，孙权要受封。</p>
+<p>后期：曹操封魏王、曹丕受禅，汉室的名分被<strong>一次性兑现</strong>；再举汉室旗号，已经没有增量。</p>
+<p>名分不是「真假」问题，是<strong>信用问题</strong>：能用一次，不能用一辈子。</p>
+<blockquote>
+<p>今操已拥百万之众，挟天子以令诸侯，此诚不可与争锋。</p>
+<p>——第三十八回</p>
+</blockquote></div></details><div class="qmis"><b>常见误读</b>　<p>把名分当道德，不当资本。它是资本，会贬值。</p></div><div class="qsrc">原文：第三十八回。</div></article>
+<article class="qcard" id="q15"><div class="qhead"><span class="qnum">Q15</span><span class="qlv">边界 · L2</span></div><h3 class="qtitle">诸葛亮的「神化」边界在哪？</h3><div class="qask">鲁迅说《三国演义》「状诸葛之多智而近妖」，这个批评成立吗？</div><details><summary>展开参考答案</summary><div class="qans"><p>成立，但要分清「神化」和「结构」。</p>
+<ul>
+<li>神化：借东风、空城计、锦囊妙计，把诸葛亮写成能预知、能法术的人；</li>
+<li>结构：隆中对、出师表、依法治蜀，是真实的政治/战略能力。</li>
+</ul>
+<p>神化让读者记住「聪明」，却容易遮住真正的悲剧：<strong>他的战略前提已经不存在，他只能把剩余资源用完</strong>。</p>
+<p>所以读诸葛亮，既要看「智」，也要看「条件」。</p>
+<blockquote>
+<p>臣鞠躬尽瘁，死而后已。</p>
+<p>——第九十七回</p>
+</blockquote></div></details><div class="qmis"><b>常见误读</b>　<p>把神化当历史，或因为神化就否定其政治能力。两边都偷懒。</p></div><div class="qsrc">原文：第九十七回。</div></article>
+<h2>对照层 · 和库里别的书对读</h2>
+<article class="qcard" id="q16"><div class="qhead"><span class="qnum">Q16</span><span class="qlv">对照 · L1</span></div><h3 class="qtitle">三国 vs 水浒：同样聚义，为什么一个三分，一个招安？</h3><div class="qask">梁山也聚义，三国也结盟，为什么一个走向招安，一个走向三分？</div><details><summary>展开参考答案</summary><div class="qans"><p>因为<strong>名分账的位置不同</strong>。</p>
+<ul>
+<li>梁山：没有合法名分，只有「替天行道」的临时旗号；招安是唯一能把「义」换成「合法」的路径。</li>
+<li>三国：刘备有汉室名分，孙权有江东基业，曹操有天子在手；三方都能各自结账，不需要把所有人塞进一个朝廷。</li>
+</ul>
+<p>梁山的悲剧是「没有名分，只能求招安」；三国的悲剧是「都有名分，但谁也不能单独结清」。</p></div></details><div class="qmis"><b>常见误读</b>　<p>把两者都读成「农民起义」或「英雄聚义」。结构不同，结局不同。</p></div><div class="qsrc">原文：无直接对照原文；这是结构对照。</div></article>
+<article class="qcard" id="q17"><div class="qhead"><span class="qnum">Q17</span><span class="qlv">对照 · L1</span></div><h3 class="qtitle">三国 vs 红楼：天下与家，结构上有什么同构？</h3><div class="qask">一个写天下，一个写家，为什么可以放在一起读？</div><details><summary>展开参考答案</summary><div class="qans"><p>两者都在写<strong>关系网如何决定个人命运</strong>。</p>
+<ul>
+<li>三国：主角是「三本账」，人物是位置的承担者；个人再强，也不能单独改结构。</li>
+<li>红楼：主角是「贾府这张关系网」，宝玉是读数器，不是因果中心。</li>
+</ul>
+<p>同构在于：<strong>结果由位置和关系合力产生</strong>。</p>
+<p>差异在于：三国写「合法性」，红楼写「亲密关系」；一个向外，一个向内。</p></div></details><div class="qmis"><b>常见误读</b>　<p>把「同构」当「同一」。它们共享结构问题，不共享内容。</p></div><div class="qsrc">原文：无直接对照原文；这是结构对照。</div></article>
+<article class="qcard" id="q18"><div class="qhead"><span class="qnum">Q18</span><span class="qlv">对照 · L2</span></div><h3 class="qtitle">曹操 vs 司马懿：两种「实力」观？</h3><div class="qask">曹操和司马懿都靠实力，为什么一个留下「奸雄」名声，一个成功篡魏？</div><details><summary>展开参考答案</summary><div class="qans"><p>曹操是<strong>借名分做实力</strong>：他一辈子不称帝，把「汉臣」这张皮留着；他的实力需要名分来包装。</p>
+<p>司马是<strong>收购名分</strong>：他不创造合法性，等曹魏的名分烂掉，再让曹奂禅让；他的实力不需要自己解释。</p>
+<p>曹操是「创业者」，司马是「并购者」。</p>
+<p>一个要背骂名，一个只要等时间。</p></div></details><div class="qmis"><b>常见误读</b>　<p>把司马的成功当成「更聪明」。他赢在位置和时间，不只是智谋。</p></div><div class="qsrc">原文：无直接对照原文；这是结构对照。</div></article>
+<article class="qcard" id="q19"><div class="qhead"><span class="qnum">Q19</span><span class="qlv">对照 · L2</span></div><h3 class="qtitle">刘备 vs 宋江：名分资本的两种用法？</h3><div class="qask">刘备和宋江都靠「义」聚人，为什么一个能立国，一个只能招安？</div><details><summary>展开参考答案</summary><div class="qans"><p>刘备的「义」背后有<strong>汉室名分</strong>：皇叔、帝室之胄，可以转化为政权合法性。</p>
+<p>宋江的「义」背后没有名分：梁山只是「替天行道」，不是「正统」；所以只能求招安，把「义」换成朝廷的编制。</p>
+<p>同样是名分资本，刘备有<strong>存量</strong>，宋江只有<strong>流量</strong>。</p>
+<p>存量可以建国，流量只能换编制。</p>
+<blockquote>
+<p>兄弟如手足，妻子如衣服。</p>
+<p>——第十五回</p>
+</blockquote></div></details><div class="qmis"><b>常见误读</b>　<p>把宋江的招安读成「软骨头」。他没有刘备的牌，只能打另一副牌。</p></div><div class="qsrc">原文：第十五回。</div></article>
+<article class="qcard" id="q20"><div class="qhead"><span class="qnum">Q20</span><span class="qlv">对照 · L2</span></div><h3 class="qtitle">三本账能迁移到现代组织吗？边界在哪？</h3><div class="qask">名分、实力、联盟，这套框架能用来分析现代公司/组织吗？</div><details><summary>展开参考答案</summary><div class="qans"><p>能，但要改词：</p>
+<ul>
+<li>名分 → 合法性（牌照、资质、品牌、上级授权）；</li>
+<li>实力 → 现金流、人才、技术、渠道；</li>
+<li>联盟 → 合作、股权、供应链、共同敌人。</li>
+</ul>
+<p>边界在于：现代组织有<strong>法律与市场</strong>这两层，三国的「禅让/封爵」不能直接类比；而且现代组织的「名分」可以注册、可以诉讼，不像汉室那样靠人心。</p>
+<p>所以三本账可以当<strong>提问框架</strong>，不能当<strong>预测模型</strong>。</p>
+<blockquote>
+<p>话说天下大势，分久必合，合久必分。</p>
+<p>——第一回</p>
+</blockquote></div></details><div class="qmis"><b>常见误读</b>　<p>把三国当管理公式。它是结构启发，不是操作手册。</p></div><div class="qsrc">原文：第一回。</div></article>
+<div class="selftest"><h2 style="margin-top:0;">自测清单</h2><ul>
+<li>[ ] 我能说出「三本账」分别是什么，并各举一个例子。</li>
+<li>[ ] 我能把 120 回分成三段，并说出每段的结构变化。</li>
+<li>[ ] 我能解释「挟天子以令诸侯」为什么不是简单的忠/奸。</li>
+<li>[ ] 我能说出隆中对成立的三个前提，以及它们后来怎么断。</li>
+<li>[ ] 我能解释关羽失荆州为什么不只是「大意」。</li>
+<li>[ ] 我能说出「七实三虚」为什么不能当定论。</li>
+<li>[ ] 我能把三国与红楼/水浒各做一次结构对照。</li>
+<li>[ ] 我能说出三本账迁移到现代组织时，哪一层不能直接类比。</li>
+</ul></div>
+  </main>
+  <div class="footer">《三国演义》整体架构 · 引文逐条核 三国演义_简体.txt · 底本问题见《底本考订》<br>先自己答，再展开；答案不是标准答案，是可以站住的读法 + 它的边界</div>
+</div>
+</body>
+</html>
