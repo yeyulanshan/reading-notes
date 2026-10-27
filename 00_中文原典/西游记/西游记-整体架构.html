@@ -101,6 +101,19 @@
     body{padding:20px 14px 32px;}
     main{padding:22px 18px;}
   }
+
+  .nav{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:0 0 22px;}
+  .nav a{background:var(--card);border:1px solid var(--edge);border-radius:20px;
+    padding:6px 14px;font-size:13px;color:var(--teal);text-decoration:none;}
+  .nav a:hover{border-color:var(--teal);}
+  /* signature-art */
+  .book-art{margin:0 0 16px; padding:6px; background:var(--card);
+    border:1px solid var(--edge); border-radius:4px;}
+  .book-art svg{display:block; width:100%; height:auto;}
+  .book-art figcaption{font-size:12px; color:var(--ink-soft); text-align:center;
+    padding:5px 0 3px; letter-spacing:.03em;}
+  @media(max-width:640px){.book-art{padding:4px; margin-bottom:12px}
+    .book-art figcaption{font-size:11px}}
 </style>
 </head>
 <body>
@@ -113,7 +126,35 @@
   </div>
 
   <div class="nav"><a href="西游记-整体架构.html">整体架构</a><a href="西游记-问题手册.html">问题手册</a><a href="西游记-底本考订.html">底本考订</a><a href="../README.md">00 中文原典</a></div>
-  <main>
+    <!-- signature-art:xiyou -->
+  <figure class="book-art">
+    <svg viewBox="0 0 1600 420" role="img" aria-labelledby="xy-art-t xy-art-d">
+  <title id="xy-art-t">一条路，一道门，一个箍</title>
+  <desc id="xy-art-d">山路穿过一道门，云在山腰，前景石头上放着一个金色的箍。</desc>
+  <rect width="1600" height="420" fill="#f7f4ed"/>
+  <circle cx="1320" cy="96" r="42" fill="#e6c98f"/>
+  <path d="M0 250 L240 130 L460 230 L720 110 L980 230 L1240 140 L1480 230 L1600 190 L1600 420 L0 420 Z" fill="#e6efee"/>
+  <path d="M0 300 L280 200 L560 290 L840 190 L1120 290 L1380 220 L1600 300 L1600 420 L0 420 Z" fill="#cfe0dc"/>
+  <path d="M0 350 L300 270 L600 340 L900 260 L1200 340 L1460 290 L1600 340 L1600 420 L0 420 Z" fill="#166060"/>
+  <path d="M0 392 L260 350 L560 392 L880 348 L1180 392 L1460 358 L1600 390 L1600 420 L0 420 Z" fill="#2b2721"/>
+  <path d="M300 420 C380 360 470 350 560 320 C640 294 700 270 760 240 C820 210 850 180 880 150" fill="none" stroke="#d8c9a6" stroke-width="34"/>
+  <path d="M300 420 C380 360 470 350 560 320 C640 294 700 270 760 240 C820 210 850 180 880 150" fill="none" stroke="#9a7420" stroke-width="3" stroke-dasharray="9 13" opacity=".7"/>
+  <path d="M760 250 L760 130 Q880 50 1000 130 L1000 250" fill="none" stroke="#2b2721" stroke-width="12"/>
+  <path d="M740 250 L1020 250" stroke="#2b2721" stroke-width="12"/>
+  <path d="M800 250 L800 160 M880 250 L880 120 M960 250 L960 160" stroke="#2b2721" stroke-width="6"/>
+  <path d="M740 250 L720 280 L1040 280 L1020 250" fill="none" stroke="#2b2721" stroke-width="7"/>
+  <path d="M1000 130 q40-40 80 0 q36 36 76 0" fill="none" stroke="#f7f4ed" stroke-width="7" opacity=".7"/>
+  <path d="M180 260 q-30-26-6-54 q22-26 54-8 q28 16 8 46" fill="none" stroke="#166060" stroke-width="6" opacity=".7"/>
+  <path d="M1160 230 q-36-28-8-60 q24-28 58-8 q30 20 6 52" fill="none" stroke="#166060" stroke-width="6" opacity=".5"/>
+  <path d="M260 340 l110-54 86 54 -68 34 -90-10 z" fill="#cfe0dc"/>
+  <circle cx="380" cy="330" r="34" fill="none" stroke="#9a7420" stroke-width="10" stroke-dasharray="150 22"/>
+  <path d="M380 296 l-9-18 M380 364 l9 18" stroke="#9a7420" stroke-width="8"/>
+  <path d="M1220 350 q30-16 60 0 M1300 366 q24-12 48 0" fill="none" stroke="#f7f4ed" stroke-width="3" opacity=".6"/>
+</svg>
+    <figcaption>一条路，一道门，一个箍。</figcaption>
+  </figure>
+
+<main>
 <p><strong>底本</strong>：<code>00_中文原典/西游记/西游记_简体.txt</code>（据 Project Gutenberg #23962 繁转简）</p>
 <p><strong>规模</strong>：100 回 · 588,720 汉字 · 3 处 OCR 造字注记</p>
 <p><strong>这份文档回答</strong>：它为什么不是「打怪升级」，而是一个<strong>把最强的异端编入秩序</strong>的项目？</p>

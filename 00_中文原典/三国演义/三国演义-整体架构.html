@@ -101,6 +101,19 @@
     body{padding:20px 14px 32px;}
     main{padding:22px 18px;}
   }
+
+  .nav{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:0 0 22px;}
+  .nav a{background:var(--card);border:1px solid var(--edge);border-radius:20px;
+    padding:6px 14px;font-size:13px;color:var(--teal);text-decoration:none;}
+  .nav a:hover{border-color:var(--teal);}
+  /* signature-art */
+  .book-art{margin:0 0 16px; padding:6px; background:var(--card);
+    border:1px solid var(--edge); border-radius:4px;}
+  .book-art svg{display:block; width:100%; height:auto;}
+  .book-art figcaption{font-size:12px; color:var(--ink-soft); text-align:center;
+    padding:5px 0 3px; letter-spacing:.03em;}
+  @media(max-width:640px){.book-art{padding:4px; margin-bottom:12px}
+    .book-art figcaption{font-size:11px}}
 </style>
 </head>
 <body>
@@ -113,7 +126,41 @@
   </div>
 
   <div class="nav"><a href="三国演义-整体架构.html">整体架构</a><a href="三国演义-问题手册.html">问题手册</a><a href="三国演义-底本考订.html">底本考订</a><a href="../README.md">00 中文原典</a></div>
-  <main>
+    <!-- signature-art:sanguo -->
+  <figure class="book-art">
+    <svg viewBox="0 0 1600 420" role="img" aria-labelledby="sg-art-t sg-art-d">
+  <title id="sg-art-t">三本账</title>
+  <desc id="sg-art-d">江岸、远山、三面不同颜色的旗，以及一个站在岸边的人。</desc>
+  <rect width="1600" height="420" fill="#f7f4ed"/>
+  <circle cx="1290" cy="96" r="44" fill="#e6c98f"/>
+  <path d="M0 250 L220 150 L420 230 L650 130 L900 240 L1160 150 L1400 235 L1600 180 L1600 420 L0 420 Z" fill="#e6efee"/>
+  <path d="M0 292 L260 210 L500 280 L760 190 L1040 288 L1280 220 L1600 290 L1600 420 L0 420 Z" fill="#cfe0dc"/>
+  <path d="M0 330 Q260 300 520 330 T1040 328 T1600 330 L1600 420 L0 420 Z" fill="#dce9e6"/>
+  <path d="M0 362 Q300 338 600 362 T1200 360 T1600 362 L1600 420 L0 420 Z" fill="#166060"/>
+  <path d="M0 392 Q260 374 520 392 T1040 390 T1600 392 L1600 420 L0 420 Z" fill="#2b2721"/>
+  <g stroke="#2b2721" stroke-width="5" fill="none">
+    <path d="M392 350 L392 122"/>
+    <path d="M516 354 L516 144"/>
+    <path d="M640 350 L640 132"/>
+  </g>
+  <path d="M392 122 L500 150 L392 178 Z" fill="#166060"/>
+  <path d="M516 144 L624 170 L516 198 Z" fill="#b1442a"/>
+  <path d="M640 132 L748 158 L640 186 Z" fill="#9a7420"/>
+  <circle cx="440" cy="151" r="7" fill="#f7f4ed"/>
+  <rect x="548" y="159" width="13" height="13" fill="#f7f4ed"/>
+  <path d="M676 149 l8 14 -16 0 Z" fill="#f7f4ed"/>
+  <path d="M900 342 L960 292 L1020 342 Z" fill="#e6efee"/>
+  <path d="M916 342 L960 306 L1004 342 Z" fill="#b1442a"/>
+  <path d="M880 352 L1040 352 L1028 366 L892 366 Z" fill="#2b2721"/>
+  <circle cx="260" cy="330" r="9" fill="#2b2721"/>
+  <path d="M260 339 l-7 26 M260 339 l8 25 M260 350 l-16 18 M260 350 l16 16" stroke="#2b2721" stroke-width="4" fill="none"/>
+  <path d="M180 110 q20-16 40 0 M228 92 q16-12 32 0 M1190 190 q18-14 36 0" fill="none" stroke="#2b2721" stroke-width="3" opacity=".55"/>
+  <path d="M1150 300 q30-14 60 0 M1230 316 q24-12 48 0" fill="none" stroke="#f7f4ed" stroke-width="3" opacity=".55"/>
+</svg>
+    <figcaption>三本账：名分、实力、联盟。</figcaption>
+  </figure>
+
+<main>
 <p><strong>底本</strong>：<code>00_中文原典/三国演义/三国演义_简体.txt</code>（据 Project Gutenberg #23950 繁转简）</p>
 <p><strong>规模</strong>：120 回 · 484,892 汉字 · 61 处 OCR 造字注记</p>
 <p><strong>这份文档回答</strong>：它为什么不是「英雄+权谋」的故事，而是一部关于<strong>合法性如何折算</strong>的书？</p>
