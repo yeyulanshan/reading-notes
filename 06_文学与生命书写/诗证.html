@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>诗证 · 十二首</title>
+<meta name="description" content="诗证：十二首唐诗宋词，按它们能照见的那一页排。不是名句集，是证词。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Literata:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#a6b3bc; --sheet:#fffdf7; --ink:#1c1c1c; --muted:#38424a;
+  --accent:#2c3620; --accent-ink:#e3e2da;
+  --field-2:#b7c8be; --field-3:#d6c4b8; --field-4:#2c3620;
+  --rust:#a6533f; --gold:#9a743c;
+  --serif:"Literata","Songti SC","Noto Serif CJK SC","Source Han Serif SC","SimSun",serif;
+  --sans:"Microsoft YaHei","PingFang SC","Noto Sans CJK SC",sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--serif);font-size:18px;line-height:1.7}
+a{color:inherit;text-decoration:none}
+a:hover{text-decoration:underline;text-underline-offset:.18em}
+button{font:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
+.wrap{max-width:1280px;margin:0 auto;padding:0 5vw}
+.nav{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:18px;padding:22px 0;font-family:var(--sans);font-size:14px}
+.brand{font-family:var(--serif);font-size:18px}
+.navlinks{display:flex;flex-wrap:wrap;gap:20px;color:var(--muted)}
+.navlinks a:hover{color:var(--ink)}
+.quiet-btn{border:0;background:var(--accent);color:var(--accent-ink);padding:9px 14px;cursor:pointer;font-size:13px}
+.quiet-btn:hover{background:transparent;color:var(--accent)}
+.hero{padding:24px 0 0}
+.hero h1{font-size:clamp(92px,15vw,210px);line-height:.86;letter-spacing:-.05em;font-weight:500;margin:0 0 22px}
+.hero .lede{font-size:clamp(20px,1.7vw,25px);line-height:1.6;max-width:30ch;margin:0 0 16px}
+.hero .note{font-family:var(--sans);font-size:15px;line-height:1.8;color:var(--muted);max-width:42ch;margin:0}
+.hero-art{margin:34px 0 0;background:var(--field-2);overflow:hidden}
+.hero-art svg{display:block;width:100%;height:auto}
+.hero-art figcaption{font-family:var(--sans);font-size:13px;color:var(--muted);padding:6px 0 0}
+
+.domain{padding:clamp(66px,8vw,110px) 0}
+.domain:nth-of-type(odd){background:var(--field-2)}
+.domain:nth-of-type(even){background:var(--field-3)}
+.domain-head{display:grid;grid-template-columns:1fr 1fr;gap:5vw;align-items:end;margin-bottom:26px}
+.domain h2{font-size:clamp(38px,4.5vw,64px);line-height:1.02;letter-spacing:-.02em;font-weight:500;margin:0}
+.domain-note{font-family:var(--sans);font-size:16px;line-height:1.75;color:var(--muted);max-width:34ch;margin:0}
+.poem-list{display:grid;gap:0}
+.poem-row{display:grid;grid-template-columns:1.45fr 1fr;gap:6vw;padding:clamp(28px,4vw,48px) 0}
+.poem-row:first-child{padding-top:8px}
+.poem-quote blockquote{font-size:clamp(22px,2.2vw,31px);line-height:1.55;margin:0 0 10px;font-weight:400}
+.poem-quote .src{font-family:var(--sans);font-size:13px;color:var(--muted);letter-spacing:.03em}
+.poem-note p{font-family:var(--sans);font-size:15px;line-height:1.75;color:var(--muted);margin:0 0 12px;max-width:36ch}
+.poem-note b{color:var(--ink);font-weight:600}
+.poem-note a{color:var(--ink);border-bottom:1px solid currentColor}
+.poem-note a:hover{text-decoration:none;color:var(--rust)}
+.is-quiet .poem-note{display:none}
+.is-quiet .poem-row{grid-template-columns:1fr}
+.is-quiet .poem-quote blockquote{max-width:26ch}
+
+.how{padding:clamp(68px,8vw,110px) 0;background:var(--bg)}
+.how-grid{display:grid;grid-template-columns:1fr 1fr;gap:6vw}
+.how h2{font-size:clamp(38px,4vw,56px);font-weight:500;line-height:1.05;margin:0}
+.how p{font-family:var(--sans);font-size:16px;line-height:1.8;color:var(--muted);max-width:38ch;margin:0 0 14px}
+.how p:last-child{margin-bottom:0}
+
+.footer{background:var(--field-4);color:var(--accent-ink);padding:clamp(48px,6vw,80px) 0 28px}
+.footer-top{display:flex;justify-content:space-between;gap:30px;font-family:var(--sans);font-size:14px;line-height:1.8;color:#c3cdc6}
+.footer-links{display:flex;flex-wrap:wrap;gap:20px}
+.footer-links a{color:var(--accent-ink)}
+.footer-note{max-width:40ch}
+.footer-name{font-size:clamp(58px,13vw,170px);line-height:.9;letter-spacing:-.04em;margin:60px 0 20px;white-space:nowrap}
+.footer-bottom{font-family:var(--sans);font-size:13px;line-height:1.8;color:#c3cdc6;display:flex;justify-content:space-between;gap:24px}
+.footer-bottom p{margin:0}
+
+@media(max-width:860px){
+  .nav{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}
+  .brand{grid-column:1;grid-row:1}
+  .quiet-btn{grid-column:1/3;grid-row:3;justify-self:start;margin-top:2px}
+  .navlinks{grid-column:1/3;grid-row:2;justify-content:flex-start;gap:14px;font-size:13px}
+  .hero h1{font-size:clamp(88px,26vw,150px)}
+  .domain-head,.poem-row,.how-grid{grid-template-columns:1fr}
+  .domain-note{margin-top:16px}
+  .poem-row{gap:18px;padding:28px 0}
+  .poem-note p{max-width:42ch}
+  .footer-top{display:block}
+  .footer-links{margin-bottom:20px}
+  .footer-name{white-space:normal;font-size:clamp(58px,20vw,110px)}
+  .footer-bottom{display:block}
+  .footer-bottom p{margin:5px 0}
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <nav class="nav" aria-label="主导航">
+    <a class="brand" href="../index.html">底层 · 诗证</a>
+    <div class="navlinks">
+      <a href="#sanguo">三国</a>
+      <a href="#xiyou">西游</a>
+      <a href="#honglou">红楼</a>
+      <a href="#gudi">谷底</a>
+    </div>
+    <button class="quiet-btn" id="quietBtn" type="button" aria-pressed="false">只读诗</button>
+  </nav>
+
+  <header class="hero">
+    <h1>诗证</h1>
+    <p class="lede">诗不解释结构，只把结构里的人的处境说准。</p>
+    <p class="note">十二首。不是名句集，是按它们能照见的那一页排；每首只引短句，附“照见”和“它不解释什么”。</p>
+
+    <figure class="hero-art">
+      <svg viewBox="0 0 1600 420" role="img" aria-labelledby="poem-art-t poem-art-d">
+        <title id="poem-art-t">诗页</title>
+        <desc id="poem-art-d">一本摊开的书、一方砚台、一支笔、窗外的月与江。</desc>
+        <rect width="1600" height="420" fill="#b7c8be"/>
+        <circle cx="1280" cy="100" r="52" fill="#e3e2da"/>
+        <path d="M0 250 L240 160 L460 230 L700 140 L940 240 L1180 170 L1420 240 L1600 190 L1600 420 L0 420 Z" fill="#a6b3bc"/>
+        <path d="M0 300 L260 230 L520 290 L800 210 L1080 300 L1340 240 L1600 300 L1600 420 L0 420 Z" fill="#8f9e8f"/>
+        <path d="M0 350 Q300 320 600 350 T1200 348 T1600 350 L1600 420 L0 420 Z" fill="#2c3620"/>
+        <path d="M360 300 L760 300 L730 360 L390 360 Z" fill="#fffdf7"/>
+        <path d="M760 300 L1120 300 L1090 360 L730 360 Z" fill="#f7f4ed"/>
+        <path d="M760 300 L730 360" stroke="#2c3620" stroke-width="4"/>
+        <path d="M430 322 h260 M430 338 h230 M800 322 h250 M800 338 h220" stroke="#2c3620" stroke-width="3" opacity=".45"/>
+        <path d="M270 330 h64 v42 h-64 z" fill="#2c3620"/>
+        <ellipse cx="302" cy="330" rx="32" ry="10" fill="#1c1c1c"/>
+        <path d="M220 310 l60-36 8 8-60 36 z" fill="#a6533f"/>
+        <path d="M210 318 l24 12" stroke="#9a743c" stroke-width="5"/>
+        <path d="M1250 300 q40-40 80 0 M1330 300 q30-30 60 0" fill="none" stroke="#e3e2da" stroke-width="4" opacity=".65"/>
+      </svg>
+      <figcaption>诗页 · 书、砚、笔，和窗外的一条江。</figcaption>
+    </figure>
+  </header>
+</div>
+
+<main>
+
+  <section class="domain" id="sanguo">
+    <div class="wrap">
+      <div class="domain-head">
+        <h2>三国 · 兴亡</h2>
+        <p class="domain-note">三本账最后都要结算。诗不替谁翻案，只把“成了”和“没成”放在同一块石头上。</p>
+      </div>
+      <div class="poem-list">
+        <article class="poem-row">
+          <div class="poem-quote">
+            <blockquote>“功盖三分国，名成八阵图。<br>江流石不转，遗恨失吞吴。”</blockquote>
+            <p class="src">杜甫《八阵图》</p>
+          </div>
+          <div class="poem-note">
+            <p><b>照见</b><br><a href="../00_中文原典/三国演义/三国演义-整体架构.html">诸葛亮：把三本账写成表的人，最后被条件结账。</a></p>
+            <p><b>它不解释</b><br>不解释“遗恨”是谁的错；它只让石头留在江里。</p>
+          </div>
+        </article>
+
+        <article class="poem-row">
+          <div class="poem-quote">
+            <blockquote>“东风不与周郎便，<br>铜雀春深锁二乔。”</blockquote>
+            <p class="src">杜牧《赤壁》</p>
+          </div>
+          <div class="poem-note">
+            <p><b>照见</b><br><a href="../园门.html">赤壁：联盟、风向、偶然，都是账。</a></p>
+            <p><b>它不解释</b><br>不解释风是不是天命；它只问：如果没有那阵风。</p>
+          </div>
+        </article>
+
+        <article class="poem-row">
+          <div class="poem-quote">
+            <blockquote>“大江东去，浪淘尽，千古风流人物。<br>故垒西边，人道是，三国周郎赤壁。”</blockquote>
+            <p class="src">苏轼《念奴娇·赤壁怀古》</p>
+          </div>
+          <div class="poem-note">
+            <p><b>照见</b><br><a href="../00_中文原典/三国演义/三国演义-整体架构.html">三国叙事：英雄被时间淘洗，故事被后人指认。</a></p>
+            <p><b>它不解释</b><br>不解释谁是真英雄；它只写“人道是”。</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="domain" id="xiyou">
+    <div class="wrap">
+      <div class="domain-head">
+        <h2>西游 · 路途</h2>
+        <p class="domain-note">八十一难不是等风雨过去。路上的诗，写的都是“还在走”。</p>
+      </div>
+      <div class="poem-list">
+        <article class="poem-row">
+          <div class="poem-quote">
+            <blockquote>“莫听穿林打叶声，何妨吟啸且徐行。<br>竹杖芒鞋轻胜马，谁怕？一蓑烟雨任平生。”</blockquote>
+            <p class="src">苏轼《定风波》</p>
+          </div>
+          <div class="poem-note">
+            <p><b>照见</b><br><a href="../00_中文原典/西游记/西游记-整体架构.html">八十一难：难是流程，不是等雨停。</a></p>
+            <p><b>它不解释</b><br>不解释雨什么时候停；它只写雨里的人。</p>
+          </div>
+        </article>
+
+        <article class="poem-row">
+          <div class="poem-quote">
+            <blockquote>“零落成泥碾作尘，<br>只有香如故。”</blockquote>
+            <p class="src">陆游《卜算子·咏梅》</p>
+          </div>
+          <div class="poem-note">
+            <p><b>照见</b><br><a href="../00_中文原典/西游记/西游记-整体架构.html">悟空/收编：位置变了，什么没变？</a></p>
+            <p><b>它不解释</b><br>不解释“香”是不是自由；它只说不肯全变。</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="domain" id="honglou">
+    <div class="wrap">
+      <div class="domain-head">
+        <h2>红楼 · 盛衰</h2>
+        <p class="domain-note">关系网散的时候，没有一声巨响；只有花落、燕归、门牌换了。</p>
+      </div>
+      <div class="poem-list">
+        <article class="poem-row">
+          <div class="poem-quote">
+            <blockquote>“无可奈何花落去，<br>似曾相识燕归来。”</blockquote>
+            <p class="src">晏殊《浣溪沙》</p>
+          </div>
+          <div class="poem-note">
+            <p><b>照见</b><br><a href="../00_中文原典/紅樓夢/紅樓夢-整体架构.html">葬花/盛衰：花落不可逆，燕归不是原样。</a></p>
+            <p><b>它不解释</b><br>不解释循环是不是安慰；它只说循环里有损耗。</p>
+          </div>
+        </article>
+
+        <article class="poem-row">
+          <div class="poem-quote">
+            <blockquote>“旧时王谢堂前燕，<br>飞入寻常百姓家。”</blockquote>
+            <p class="src">刘禹锡《乌衣巷》</p>
+          </div>
+          <div class="poem-note">
+            <p><b>照见</b><br><a href="../00_中文原典/紅樓夢/紅樓夢-整体架构.html">抄家/关系网：网散后，门牌换了。</a></p>
+            <p><b>它不解释</b><br>不解释燕子是否记得旧主；它只写它回来了。</p>
+          </div>
+        </article>
+
+        <article class="poem-row">
+          <div class="poem-quote">
+            <blockquote>“物是人非事事休，<br>欲语泪先流。”</blockquote>
+            <p class="src">李清照《武陵春》</p>
+          </div>
+          <div class="poem-note">
+            <p><b>照见</b><br><a href="../00_中文原典/紅樓夢/紅樓夢-整体架构.html">人物散/物是人非：不是“想开点”，是先说不出话。</a></p>
+            <p><b>它不解释</b><br>不解释“休”是不是结束；它只写话到嘴边。</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="domain" id="gudi">
+    <div class="wrap">
+      <div class="domain-head">
+        <h2>谷底 · 人</h2>
+        <p class="domain-note">没有回音、被拒绝、一个人。诗不给方案，只把“还在”写出来。</p>
+      </div>
+      <div class="poem-list">
+        <article class="poem-row">
+          <div class="poem-quote">
+            <blockquote>“飘飘何所似？<br>天地一沙鸥。”</blockquote>
+            <p class="src">杜甫《旅夜书怀》</p>
+          </div>
+          <div class="poem-note">
+            <p><b>照见</b><br><a href="谷底书架.html">没有回音：天地很大，暂时没有你的位置。</a></p>
+            <p><b>它不解释</b><br>不解释天地会不会接纳；它只写漂着。</p>
+          </div>
+        </article>
+
+        <article class="poem-row">
+          <div class="poem-quote">
+            <blockquote>“沉舟侧畔千帆过，<br>病树前头万木春。”</blockquote>
+            <p class="src">刘禹锡《酬乐天扬州初逢席上见赠》</p>
+          </div>
+          <div class="poem-note">
+            <p><b>照见</b><br><a href="谷底书架.html">失败后：别人的船还在过。</a></p>
+            <p><b>它不解释</b><br>不解释沉舟会不会被捞起；它只写旁边有千帆。</p>
+          </div>
+        </article>
+
+        <article class="poem-row">
+          <div class="poem-quote">
+            <blockquote>“不才明主弃，<br>多病故人疏。”</blockquote>
+            <p class="src">孟浩然《岁暮归南山》</p>
+          </div>
+          <div class="poem-note">
+            <p><b>照见</b><br><a href="谷底书架.html">求职/被拒：古人把难听的话说在前面。</a></p>
+            <p><b>它不解释</b><br>不解释这是不是你的错；它只写被弃的感觉。</p>
+          </div>
+        </article>
+
+        <article class="poem-row">
+          <div class="poem-quote">
+            <blockquote>“亲朋无一字，<br>老病有孤舟。”</blockquote>
+            <p class="src">杜甫《登岳阳楼》</p>
+          </div>
+          <div class="poem-note">
+            <p><b>照见</b><br><a href="谷底书架.html">一个人：没有消息，只有身体和船。</a></p>
+            <p><b>它不解释</b><br>不解释孤舟会不会靠岸；它只写“无一字”。</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="how" id="how">
+    <div class="wrap how-grid">
+      <h2>怎么读</h2>
+      <div>
+        <p>不要背。不要找中心思想。你不是在考试。</p>
+        <p>一首诗能做的，不是替你决定，是让你在决定之前，先承认自己现在的样子。</p>
+        <p>读不下去就放下。诗不会生气。</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-links">
+        <a href="谷底书架.html">谷底书架</a>
+        <a href="诗证.html">诗证</a>
+        <a href="../index.html">回到项目</a>
+      </div>
+      <p class="footer-note">诗证 · 十二首。<br>诗不解释结构，只把结构里的人的处境说准。</p>
+    </div>
+    <p class="footer-name">诗证</p>
+    <div class="footer-bottom">
+      <p>诗均公版；引文据《唐诗宋词元曲大全集》逐句核对，只引短句。<br>插图：代码绘制。</p>
+      <p>不是名句集。<br>读不下去就放下。</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var btn = document.getElementById('quietBtn');
+  var page = document.body;
+  btn.addEventListener('click', function(){
+    var quiet = page.classList.toggle('is-quiet');
+    btn.setAttribute('aria-pressed', String(quiet));
+    btn.textContent = quiet ? '展开注释' : '只读诗';
+  });
+})();
+</script>
+</body>
+</html>
