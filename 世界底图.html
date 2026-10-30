@@ -61,8 +61,14 @@ button,input,select,textarea{font:inherit}
 .layer b{display:block;font-family:var(--serif);font-size:18px;font-weight:500;line-height:1.2}
 .layer small{display:block;font-size:13px;color:var(--muted);line-height:1.4;margin-top:2px}
 .layer .arrow{font-family:var(--serif);font-size:18px;color:var(--teal)}
-.forces{display:flex;flex-direction:column;justify-content:space-between;padding:6px 0;font-family:var(--sans);font-size:13px;color:var(--muted);line-height:1.3;text-align:right}
-.forces b{display:block;font-size:13px;color:var(--ink);font-weight:600;margin-bottom:2px}
+.forces{display:flex;flex-direction:column;justify-content:space-between;align-items:flex-end;gap:2px;padding:6px 0;font-family:var(--sans);font-size:13px;color:var(--muted);line-height:1.3;text-align:right}
+.forces-label{display:block;width:100%;font-size:13px;color:var(--ink);font-weight:600;margin-bottom:4px;text-align:right}
+.force{border:0;background:transparent;color:var(--muted);padding:2px 0;cursor:pointer;font:inherit;font-size:13px;line-height:1.4;text-align:right;display:inline-flex;align-items:center;gap:5px}
+.force::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--line);display:block;flex:0 0 auto}
+.force:hover{color:var(--teal)}
+.force:hover::before{background:var(--teal)}
+.force.is-active{color:var(--ink);font-weight:600}
+.force.is-active::before{background:var(--gold)}
 .here-note{font-family:var(--sans);font-size:13px;color:var(--ink);margin:16px 0 0;padding-left:16px;position:relative;line-height:1.7}
 .here-note::before{content:"";position:absolute;left:0;top:.55em;width:7px;height:7px;border-radius:50%;background:var(--gold)}
 .fog{
@@ -142,7 +148,9 @@ button,input,select,textarea{font:inherit}
   .hero h1{font-size:clamp(86px,22vw,150px)}
   .hero .lede{max-width:30ch}
   .map{grid-template-columns:54px minmax(0,1fr);padding:14px}
-  .forces{display:none}
+  .forces{display:flex;grid-column:1/3;flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:flex-start;gap:4px 10px;text-align:left;padding:10px 0 0}
+  .forces-label{width:auto;margin:0 2px 0 0;text-align:left}
+  .force{text-align:left}
   .legend-grid{grid-template-columns:1fr 1fr;gap:28px}
   .legend h2{grid-column:1/3}
   .locate-head{grid-template-columns:1fr;gap:20px}
@@ -158,7 +166,9 @@ button,input,select,textarea{font:inherit}
   .hero h1{font-size:clamp(72px,22vw,120px)}
   .map{grid-template-columns:1fr;padding:10px}
   .time-axis{display:none}
-  .forces{display:none}
+  .forces{display:flex;grid-column:1/2;flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:flex-start;gap:4px 10px;text-align:left;padding:10px 0 0}
+  .forces-label{width:auto;margin:0 2px 0 0;text-align:left}
+  .force{text-align:left}
   .layer{min-height:58px}
   .fog{grid-column:1/2}
   .legend-grid{grid-template-columns:1fr}
@@ -218,19 +228,20 @@ button,input,select,textarea{font:inherit}
             </button>
           </div>
 
-          <div class="forces" aria-hidden="true">
-            <div><b>力</b>资源</div>
-            <div>权力</div>
-            <div>激励</div>
-            <div>意义</div>
-            <div>偶然</div>
-            <div>反馈</div>
+          <div class="forces" aria-label="作用力">
+            <span class="forces-label">力</span>
+            <button class="force" type="button" data-force="资源" aria-pressed="false">资源</button>
+            <button class="force" type="button" data-force="权力" aria-pressed="false">权力</button>
+            <button class="force is-active" type="button" data-force="激励" aria-pressed="true">激励</button>
+            <button class="force" type="button" data-force="意义" aria-pressed="false">意义</button>
+            <button class="force" type="button" data-force="偶然" aria-pressed="false">偶然</button>
+            <button class="force" type="button" data-force="反馈" aria-pressed="false">反馈</button>
           </div>
 
           <div class="fog"><b>雾区</b><span>争议 · 未知 · 没人研究过</span></div>
         </div>
         <p class="here-note">你通常在这里：心智 · 关系 · 组织 / 制度之间来回。</p>
-        <p class="map-note">点一层，把它设为问题的“尺度”；再往下填你的问题。</p>
+        <p class="map-note">点一层，把它设为问题的“尺度”；点一个力，把它设为问题的主要作用力。坐标卡会直接更新。</p>
       </div>
     </div>
   </header>
@@ -366,6 +377,15 @@ button,input,select,textarea{font:inherit}
   var time = document.getElementById('time');
   var certainty = document.getElementById('certainty');
   var force = document.getElementById('force');
+  var forceButtons = Array.prototype.slice.call(document.querySelectorAll('.force'));
+
+  function syncForce(){
+    forceButtons.forEach(function(b){
+      var on = b.dataset.force === force.value;
+      b.classList.toggle('is-active', on);
+      b.setAttribute('aria-pressed', String(on));
+    });
+  }
 
   var examples = {
     work: {q:'我找不到工作。', scale:'组织 / 制度', mechanism:'社会', time:'人生', certainty:'争议', force:'激励'},
@@ -435,7 +455,7 @@ button,input,select,textarea{font:inherit}
       var ex = examples[btn.dataset.example];
       q.value = ex.q; scale.value = ex.scale; mechanism.value = ex.mechanism;
       time.value = ex.time; certainty.value = ex.certainty; force.value = ex.force;
-      render();
+      syncForce(); render();
       result.scrollIntoView({behavior:'smooth',block:'center'});
     });
   });
@@ -443,10 +463,23 @@ button,input,select,textarea{font:inherit}
   document.querySelectorAll('.layer').forEach(function(btn){
     btn.addEventListener('click', function(){
       scale.value = btn.dataset.scale;
+      render();
       document.getElementById('locate').scrollIntoView({behavior:'smooth',block:'start'});
     });
   });
 
+  forceButtons.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      force.value = btn.dataset.force;
+      syncForce();
+      render();
+      result.scrollIntoView({behavior:'smooth',block:'center'});
+    });
+  });
+
+  force.addEventListener('change', function(){ syncForce(); render(); });
+
+  syncForce();
   render();
 })();
 </script>
