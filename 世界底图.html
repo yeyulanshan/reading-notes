@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>世界底图 · 最小原型</title>
+<meta name="description" content="世界底图：不是世界观，是坐标。先知道自己在哪一层，再问要往哪走。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Literata:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#eaf2f6; --paper:#fbfcfc; --ink:#12232e; --muted:#455a66;
+  --teal:#246b8a; --teal-soft:#d9e8ee; --sage:#5f7f6a; --sage-soft:#e4ece5;
+  --gold:#8b7448; --gold-soft:#f0e8d5; --rust:#a6533f; --fog:#d5e0e5;
+  --line:#c9d9e0;
+  --serif:"Literata","Songti SC","Noto Serif CJK SC","Source Han Serif SC","SimSun",serif;
+  --sans:"Microsoft YaHei","PingFang SC","Noto Sans CJK SC",sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--serif);font-size:18px;line-height:1.7}
+a{color:inherit;text-decoration:none}
+a:hover{text-decoration:underline;text-underline-offset:.18em}
+button,input,select,textarea{font:inherit}
+::selection{background:var(--teal);color:var(--paper)}
+:focus-visible{outline:2px solid var(--teal);outline-offset:3px}
+.wrap{max-width:1280px;margin:0 auto;padding:0 5vw}
+.nav{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;padding:22px 0;font-family:var(--sans);font-size:14px}
+.brand{font-family:var(--serif);font-size:18px}
+.navlinks{display:flex;flex-wrap:wrap;gap:20px;color:var(--muted)}
+.navlinks a:hover{color:var(--ink)}
+.navcta{background:var(--teal);color:var(--paper);padding:8px 13px;font-size:13px}
+.navcta:hover{text-decoration:none;background:var(--ink)}
+.hero{padding:clamp(24px,4vw,54px) 0 clamp(54px,7vw,90px)}
+.hero-grid{display:grid;grid-template-columns:1fr 1.12fr;gap:clamp(32px,5vw,72px);align-items:end}
+.hero h1{font-size:clamp(86px,12.5vw,184px);line-height:.84;letter-spacing:-.055em;font-weight:500;margin:0 0 24px}
+.hero .lede{font-size:clamp(22px,2vw,30px);line-height:1.45;margin:0 0 14px;max-width:24ch}
+.hero .sub{font-family:var(--sans);font-size:16px;line-height:1.8;color:var(--muted);max-width:34ch;margin:0 0 22px}
+.hero .map-caption{font-family:var(--sans);font-size:13px;line-height:1.7;color:var(--muted);max-width:36ch;margin:14px 0 0}
+
+/* ---- map ---- */
+.map{
+  position:relative;background:var(--paper);padding:18px;
+  display:grid;grid-template-columns:68px minmax(0,1fr) 82px;gap:12px;
+}
+.time-axis{display:flex;flex-direction:column;justify-content:space-between;padding:6px 0;font-family:var(--sans);font-size:13px;color:var(--muted);line-height:1.3}
+.layers{display:grid;gap:4px}
+.layer{
+  appearance:none;border:0;text-align:left;cursor:pointer;
+  display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;
+  min-height:62px;padding:10px 12px;color:var(--ink);font-family:var(--sans);
+}
+.layer:nth-child(1){background:var(--teal-soft)}
+.layer:nth-child(2){background:var(--sage-soft)}
+.layer:nth-child(3){background:var(--gold-soft)}
+.layer:nth-child(4){background:#e9eef0}
+.layer:nth-child(5){background:#dfe9ed}
+.layer:nth-child(6){background:#e5ece4}
+.layer:hover{filter:brightness(.97)}
+.layer b{display:block;font-family:var(--serif);font-size:18px;font-weight:500;line-height:1.2}
+.layer small{display:block;font-size:13px;color:var(--muted);line-height:1.4;margin-top:2px}
+.layer .arrow{font-family:var(--serif);font-size:18px;color:var(--teal)}
+.forces{display:flex;flex-direction:column;justify-content:space-between;padding:6px 0;font-family:var(--sans);font-size:13px;color:var(--muted);line-height:1.3;text-align:right}
+.forces b{display:block;font-size:13px;color:var(--ink);font-weight:600;margin-bottom:2px}
+.here-note{font-family:var(--sans);font-size:13px;color:var(--ink);margin:16px 0 0;padding-left:16px;position:relative;line-height:1.7}
+.here-note::before{content:"";position:absolute;left:0;top:.55em;width:7px;height:7px;border-radius:50%;background:var(--gold)}
+.fog{
+  grid-column:2/3;display:flex;align-items:center;justify-content:space-between;gap:12px;
+  background:var(--fog);padding:11px 12px;font-family:var(--sans);color:var(--muted);
+}
+.fog b{font-family:var(--serif);font-size:16px;font-weight:500;color:var(--ink)}
+.fog span{font-size:13px;line-height:1.4;text-align:right}
+.map-note{font-family:var(--sans);font-size:13px;color:var(--muted);margin:10px 0 0;line-height:1.6}
+
+/* ---- legend ---- */
+.legend{background:var(--ink);color:var(--paper);padding:clamp(42px,5vw,64px) 0}
+.legend-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(24px,4vw,54px)}
+.legend h2{grid-column:1/5;font-size:clamp(28px,3vw,42px);font-weight:500;line-height:1.1;margin:0 0 26px;color:var(--paper)}
+.legend p{font-family:var(--sans);font-size:13px;line-height:1.8;color:#c9d6dc;margin:0;max-width:32ch}
+.legend .item small{display:block;font-family:var(--sans);font-size:13px;color:#9fb3bd;margin-bottom:8px}
+.legend .item p{font-family:var(--serif);font-size:17px;line-height:1.65;color:var(--paper);max-width:28ch}
+.legend .item p + p{font-family:var(--sans);font-size:13px;color:#c9d6dc;margin-top:8px}
+
+/* ---- locator ---- */
+.locate{padding:clamp(66px,8vw,110px) 0;background:var(--paper)}
+.locate-head{display:grid;grid-template-columns:1fr 1fr;gap:6vw;align-items:end;margin-bottom:clamp(30px,4vw,52px)}
+.locate h2{font-size:clamp(40px,5vw,72px);line-height:1.02;letter-spacing:-.025em;font-weight:500;margin:0}
+.locate .intro{font-family:var(--sans);font-size:16px;line-height:1.8;color:var(--muted);max-width:34ch;margin:0}
+.form{display:grid;gap:18px}
+.intro-note{font-family:var(--sans);font-size:16px;line-height:1.8;color:var(--muted);max-width:52ch;margin:16px 0 0}
+.field label{display:block;font-family:var(--sans);font-size:13px;color:var(--ink);margin-bottom:6px}
+.field textarea,.field select{
+  width:100%;border:0;background:var(--teal-soft);color:var(--ink);
+  padding:11px 12px;font-family:var(--sans);font-size:16px;line-height:1.6;
+}
+.field textarea{min-height:90px;resize:vertical}
+.selects{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+.actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:2px}
+.go{border:0;background:var(--teal);color:var(--paper);padding:12px 18px;font-family:var(--sans);font-size:14px;cursor:pointer}
+.go:hover{background:var(--ink)}
+.examples{display:flex;flex-wrap:wrap;gap:8px;font-family:var(--sans);font-size:13px;color:var(--muted)}
+.examples button{border:0;background:var(--teal-soft);color:var(--muted);padding:6px 9px;cursor:pointer;font:inherit}
+.examples button:hover{border-color:var(--teal);color:var(--teal)}
+.result{margin-top:34px;background:var(--teal-soft);padding:clamp(20px,3vw,30px);max-width:900px}
+.result .coord{font-family:var(--sans);font-size:13px;color:var(--muted);margin:0 0 10px;letter-spacing:.03em}
+.result .q{font-size:clamp(22px,2.4vw,30px);line-height:1.45;margin:0 0 20px;max-width:24em}
+.result ol{margin:0 0 18px 1.2em;padding:0;font-family:var(--sans);font-size:16px;line-height:1.8;color:var(--muted)}
+.result li{margin-bottom:7px}
+.result .limit{font-family:var(--sans);font-size:16px;line-height:1.7;color:var(--muted);margin:0;max-width:40ch}
+.result .next{font-family:var(--sans);font-size:14px;line-height:1.7;color:var(--muted);margin:16px 0 0;padding-top:14px;background:transparent}
+.result .next a{color:var(--teal);text-decoration:underline;text-underline-offset:.18em}
+.result .next a:hover{text-decoration:none;color:var(--rust)}
+
+/* ---- how / fog ---- */
+.how{padding:clamp(64px,8vw,100px) 0;background:var(--bg)}
+.how-grid{display:grid;grid-template-columns:1fr 1fr;gap:6vw}
+.how h2{font-size:clamp(38px,4vw,58px);font-weight:500;line-height:1.04;margin:0}
+.how-list{display:grid;gap:14px}
+.how-item{display:grid;grid-template-columns:26px 1fr;gap:10px;font-family:var(--sans);font-size:16px;line-height:1.7;color:var(--muted)}
+.how-item b{font-family:var(--serif);font-size:18px;color:var(--ink);font-weight:500}
+.fogsec{padding:clamp(54px,7vw,80px) 0;background:var(--ink);color:var(--paper)}
+.fogsec-grid{display:grid;grid-template-columns:1fr 1.2fr;gap:6vw;align-items:start}
+.fogsec h2{font-size:clamp(32px,3.6vw,48px);font-weight:500;line-height:1.08;margin:0}
+.fogsec p{font-family:var(--sans);font-size:16px;line-height:1.8;color:#c9d6dc;margin:0 0 12px;max-width:42ch}
+.fogsec p b{color:var(--paper);font-weight:600}
+.foot{padding:30px 0 24px;background:var(--ink);color:#c9d6dc;font-family:var(--sans);font-size:13px;line-height:1.8}
+.foot .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.foot a{color:#c9d6dc}
+
+/* ---- motion ---- */
+@media(prefers-reduced-motion:no-preference){
+  .hero-grid,.map,.layer,.legend-grid,.legend .item,.locate-head,.result,.how-grid,.how-item,.fogsec-grid,.fogsec p,.foot .wrap{animation:rise .7s cubic-bezier(.22,.61,.36,1) both}
+  .map{animation-delay:.04s}.layer:nth-child(2){animation-delay:.06s}.layer:nth-child(3){animation-delay:.08s}
+  .layer:nth-child(4){animation-delay:.10s}.layer:nth-child(5){animation-delay:.12s}.layer:nth-child(6){animation-delay:.14s}
+  .legend-grid{animation-delay:.08s}.locate-head{animation-delay:.12s}.result{animation-delay:.16s}
+  @keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+}
+
+@media(max-width:960px){
+  .hero-grid{grid-template-columns:1fr;align-items:start}
+  .hero h1{font-size:clamp(86px,22vw,150px)}
+  .hero .lede{max-width:30ch}
+  .map{grid-template-columns:54px minmax(0,1fr);padding:14px}
+  .forces{display:none}
+  .legend-grid{grid-template-columns:1fr 1fr;gap:28px}
+  .legend h2{grid-column:1/3}
+  .locate-head{grid-template-columns:1fr;gap:20px}
+  .selects{grid-template-columns:1fr 1fr}
+  .how-grid,.fogsec-grid{grid-template-columns:1fr;gap:28px}
+}
+@media(max-width:620px){
+  .wrap{padding:0 20px}
+  .nav{gap:10px;font-size:13px}
+  .navlinks{gap:12px}
+  .navcta{display:none}
+  .hero{padding-top:20px}
+  .hero h1{font-size:clamp(72px,22vw,120px)}
+  .map{grid-template-columns:1fr;padding:10px}
+  .time-axis{display:none}
+  .forces{display:none}
+  .layer{min-height:58px}
+  .fog{grid-column:1/2}
+  .legend-grid{grid-template-columns:1fr}
+  .legend h2{grid-column:1/2}
+  .selects{grid-template-columns:1fr}
+  .result ol{font-size:14px}
+  .foot .wrap{display:block}
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <nav class="nav" aria-label="主导航">
+    <a class="brand" href="index.html">底层 · 世界底图</a>
+    <div class="navlinks">
+      <a href="#map">地图</a>
+      <a href="#locate">定位</a>
+      <a href="#limits">边界</a>
+    </div>
+    <a class="navcta" href="#locate">定位一个问题</a>
+  </nav>
+
+  <header class="hero">
+    <div class="hero-grid">
+      <div>
+        <h1>世界底图</h1>
+        <p class="lede">不是世界观，是坐标。</p>
+        <p class="sub">先知道自己在哪一层，再问要往哪走。地图不替你回答，只帮你把问题放到一个位置上。</p>
+        <p class="map-caption">一张粗图：六个作用层 · 四种机制 · 四种时间 · 三种确定性。它一定不完整；空白也是地图的一部分。</p>
+      </div>
+
+      <div>
+        <div class="map" id="map" aria-label="世界底图的六个作用层">
+          <div class="time-axis" aria-hidden="true">
+            <span>深时</span><span>历史</span><span>人生</span><span>事件</span>
+          </div>
+
+          <div class="layers">
+            <button class="layer" data-scale="宇宙 / 地球" type="button">
+              <span><b>宇宙 / 地球</b><small>物理、气候、深时、尺度</small></span><span class="arrow">↗</span>
+            </button>
+            <button class="layer" data-scale="生命 / 身体" type="button">
+              <span><b>生命 / 身体</b><small>生物、健康、感知、寿命</small></span><span class="arrow">↗</span>
+            </button>
+            <button class="layer" data-scale="心智" type="button">
+              <span><b>心智</b><small>注意、情绪、记忆、判断</small></span><span class="arrow">↗</span>
+            </button>
+            <button class="layer" data-scale="关系" type="button">
+              <span><b>关系</b><small>家人、朋友、同伴、爱</small></span><span class="arrow">↗</span>
+            </button>
+            <button class="layer" data-scale="组织 / 制度" type="button">
+              <span><b>组织 / 制度</b><small>规则、权力、激励、责任</small></span><span class="arrow">↗</span>
+            </button>
+            <button class="layer" data-scale="技术" type="button">
+              <span><b>技术</b><small>工具、平台、AI、基础设施</small></span><span class="arrow">↗</span>
+            </button>
+          </div>
+
+          <div class="forces" aria-hidden="true">
+            <div><b>力</b>资源</div>
+            <div>权力</div>
+            <div>激励</div>
+            <div>意义</div>
+            <div>偶然</div>
+            <div>反馈</div>
+          </div>
+
+          <div class="fog"><b>雾区</b><span>争议 · 未知 · 没人研究过</span></div>
+        </div>
+        <p class="here-note">你通常在这里：心智 · 关系 · 组织 / 制度之间来回。</p>
+        <p class="map-note">点一层，把它设为问题的“尺度”；再往下填你的问题。</p>
+      </div>
+    </div>
+  </header>
+</div>
+
+<section class="legend" aria-label="地图图例">
+  <div class="wrap legend-grid">
+    <h2>读图先读图例</h2>
+    <div class="item">
+      <small>尺度</small>
+      <p>宇宙 / 地球 · 生命 / 身体 · 心智 · 关系 · 组织 / 制度 · 技术</p>
+      <p>不是学科分类，是作用层。</p>
+    </div>
+    <div class="item">
+      <small>机制</small>
+      <p>物理 · 生物 · 认知 · 社会 · 技术 · 关系 · 偶然</p>
+      <p>同一件事，通常不止一个机制。</p>
+    </div>
+    <div class="item">
+      <small>时间</small>
+      <p>深时 · 历史 · 人生 · 事件</p>
+      <p>深时是地质/宇宙尺度（百万—十亿年）；历史是人类的记录；人生是一辈子；事件是眼前。尺度错了，判断也会错。</p>
+    </div>
+    <div class="item">
+      <small>确定性</small>
+      <p>共识 · 争议 · 未知</p>
+      <p>不知道不是空白，是地图的一部分。</p>
+    </div>
+  </div>
+</section>
+
+<section class="locate" id="locate">
+  <div class="wrap">
+    <div class="locate-head">
+      <h2>把一个问题<br>放进去</h2>
+      <p class="intro">不是求答案，是先看它在哪一层。坐标卡不解决问题，它只把“我该怎么办”拆成几个能分别问的问题。</p>
+    </div>
+    <p class="intro-note">“同一个问题”不是同一句抱怨，而是同一对象、同一原因、同一能动者、同一解决标准。换一个尺度，这四样里只要有一个变了，它就是另一个问题。</p>
+
+    <form class="form" id="locator">
+      <div class="field">
+        <label for="question">你现在最想不通的一件事</label>
+        <textarea id="question" name="question">我找不到工作。</textarea>
+      </div>
+
+      <div class="selects">
+        <div class="field">
+          <label for="scale">尺度</label>
+          <select id="scale" name="scale">
+            <option>宇宙 / 地球</option><option>生命 / 身体</option><option>心智</option>
+            <option>关系</option><option selected>组织 / 制度</option><option>技术</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="mechanism">机制</label>
+          <select id="mechanism" name="mechanism">
+            <option>物理</option><option>生物</option><option>认知</option>
+            <option selected>社会</option><option>技术</option><option>关系</option><option>偶然</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="time">时间</label>
+          <select id="time" name="time">
+            <option>深时</option><option>历史</option><option selected>人生</option><option>事件</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="certainty">确定性</label>
+          <select id="certainty" name="certainty">
+            <option>共识</option><option selected>争议</option><option>未知</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="force">力</label>
+          <select id="force" name="force">
+            <option>资源</option><option>权力</option><option selected>激励</option>
+            <option>意义</option><option>偶然</option><option>反馈</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="go" type="submit">生成坐标卡</button>
+        <div class="examples">
+          <button type="button" data-example="work">示例：我找不到工作</button>
+          <button type="button" data-example="award">示例：国奖不公</button>
+          <button type="button" data-example="project">示例：要不要继续做项目</button>
+        </div>
+      </div>
+    </form>
+
+    <div class="result" id="result" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="how">
+  <div class="wrap how-grid">
+    <h2>一张图<br>怎么用</h2>
+    <div class="how-list">
+      <div class="how-item"><b>一</b><span>先问“这是哪一层”，不要先问“我哪里做错了”。</span></div>
+      <div class="how-item"><b>二</b><span>再问“哪些机制同时在起作用”，不要用一个原因解释全部。</span></div>
+      <div class="how-item"><b>三</b><span>再问“时间尺度有多长”，不要把事件的痛当成一生的结论。</span></div>
+      <div class="how-item"><b>四</b><span>最后问“哪些是共识、争议、未知”，不要把不知道当成知道。</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="fogsec" id="limits">
+  <div class="wrap fogsec-grid">
+    <h2>地图最重要的部分，<br>是它敢留白。</h2>
+    <div>
+      <p><b>这张图会错。</b>它把世界压成六个层、四种机制、四种时间；每一刀都切掉了东西。它的用处不是“完整”，是让你能说出：我大概在哪，我还不知道什么。</p>
+      <p><b>它不是世界观。</b>世界观要求你相信；底图允许你修改。凡是不能标出“争议”和“未知”的地图，都只是另一种迷雾。</p>
+      <p>最小原型 v0.1：先看它能不能把一团情绪，拆成三到五个可以分别提问的问题。不能，就改图；能，再长。</p>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="wrap">
+    <span>世界底图 · 最小原型 v0.1</span>
+    <span><a href="问题轴.html">问题轴</a> · <a href="判断卡.html">判断卡</a> · <a href="生态地图.html">生态地图</a> · <a href="index.html">回到项目</a></span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var form = document.getElementById('locator');
+  var result = document.getElementById('result');
+  var q = document.getElementById('question');
+  var scale = document.getElementById('scale');
+  var mechanism = document.getElementById('mechanism');
+  var time = document.getElementById('time');
+  var certainty = document.getElementById('certainty');
+  var force = document.getElementById('force');
+
+  var examples = {
+    work: {q:'我找不到工作。', scale:'组织 / 制度', mechanism:'社会', time:'人生', certainty:'争议', force:'激励'},
+    award: {q:'我在国奖评审里遇到了不公平。', scale:'组织 / 制度', mechanism:'社会', time:'事件', certainty:'争议', force:'权力'},
+    project: {q:'我不知道要不要继续做现在的项目。', scale:'心智', mechanism:'认知', time:'人生', certainty:'未知', force:'意义'}
+  };
+
+  var forceQuestions = {
+    '资源':'谁掌握资源？谁被资源卡住？换资源比换道理更可能吗？',
+    '权力':'谁有权定义问题、做决定、分配代价？这个权力从哪来？',
+    '激励':'谁被奖励、谁被惩罚？现在的规则在鼓励什么行为？',
+    '意义':'这件事对谁有意义？谁在替谁定义意义？',
+    '偶然':'哪些是运气、时机、路径依赖？哪些不是？',
+    '反馈':'什么反馈被放大、什么反馈被忽略？系统在从什么信号里学习？'
+  };
+
+  function questionsFor(s, m, t, c, f){
+    var out = [];
+    out.push('在「' + s + '」这一层，谁有权力、资源、规则？谁承担代价？');
+    out.push('「' + m + '」之外，还有哪些机制同时在起作用？哪一个是我一直没看见的？');
+    out.push(forceQuestions[f] || ('「' + f + '」在这里怎么起作用？'));
+    out.push('把时间拉到「' + t + '」：对象、原因、能动者、解决标准，哪一个变了？变了，就不是同一个问题。');
+    out.push('这里哪些是共识、哪些是争议、哪些是未知？我缺的是信息、权限，还是时间？');
+    out.push('我能动哪一层？不能动哪一层？我愿意为能动的那一层付出什么代价？');
+    return out;
+  }
+
+  function limitFor(s){
+    if(s === '组织 / 制度') return '你能动的：找到规则、执行者、盟友；不能动的：让整个制度立刻改变。';
+    if(s === '心智') return '你能动的：注意、解释、下一步；不能动的：让世界立刻配合你。';
+    if(s === '关系') return '你能动的：开口、设边界、找同盟；不能动的：替别人做选择。';
+    if(s === '技术') return '你能动的：换工具、改流程、补能力；不能动的：让技术自己变得公平。';
+    if(s === '生命 / 身体') return '你能动的：睡眠、就医、节奏；不能动的：用意志命令身体。';
+    return '你能动的：理解尺度、找证据、等窗口；不能动的：让宇宙按你的时间表运行。';
+  }
+
+  function nextFor(s){
+    if(s === '组织 / 制度') return '<a href="问题轴.html">问题轴</a> · <a href="判断卡.html">判断卡</a>';
+    if(s === '心智') return '<a href="判断卡.html">判断卡</a> · <a href="学习台.html">学习台</a>';
+    if(s === '关系') return '<a href="判断卡.html">判断卡</a> · <a href="00_中文原典/关系性自我-助人手册.html">关系性自我</a>';
+    if(s === '技术') return '<a href="问题轴.html">问题轴</a> · <a href="学习台.html">学习台</a>';
+    if(s === '生命 / 身体') return '<a href="06_文学与生命书写/谷底书架.html">谷底书架</a> · <a href="判断卡.html">判断卡</a>';
+    return '<a href="生态地图.html">生态地图</a> · <a href="判断卡.html">判断卡</a>';
+  }
+
+  function render(){
+    var text = q.value.trim() || '（你还没有写问题）';
+    var s = scale.value, m = mechanism.value, t = time.value, c = certainty.value, f = force.value;
+    var qs = questionsFor(s, m, t, c, f);
+    result.innerHTML = '<p class="q">“' + escapeHtml(text) + '”</p>' +
+      '<p class="coord">坐标：' + s + ' · ' + m + ' · ' + t + ' · ' + c + ' · ' + f + '</p>' +
+      '<ol>' + qs.map(function(x){ return '<li>' + escapeHtml(x) + '</li>'; }).join('') + '</ol>' +
+      '<p class="limit">' + escapeHtml(limitFor(s)) + '</p>' +
+      '<p class="next"><b>下一步</b>　' + nextFor(s) + '</p>';
+  }
+
+  function escapeHtml(x){
+    return String(x).replace(/[&<>"]/g, function(ch){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];
+    });
+  }
+
+  form.addEventListener('submit', function(e){ e.preventDefault(); render(); result.scrollIntoView({behavior:'smooth',block:'center'}); });
+
+  document.querySelectorAll('[data-example]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var ex = examples[btn.dataset.example];
+      q.value = ex.q; scale.value = ex.scale; mechanism.value = ex.mechanism;
+      time.value = ex.time; certainty.value = ex.certainty; force.value = ex.force;
+      render();
+      result.scrollIntoView({behavior:'smooth',block:'center'});
+    });
+  });
+
+  document.querySelectorAll('.layer').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      scale.value = btn.dataset.scale;
+      document.getElementById('locate').scrollIntoView({behavior:'smooth',block:'start'});
+    });
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
