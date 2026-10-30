@@ -384,9 +384,101 @@
   .hero-quote{max-width:780px; margin:14px auto 0; font-family:"Songti SC","Noto Serif CJK SC",serif;
     font-size:15px; color:var(--ink-2); text-align:center; letter-spacing:.03em;}
   .hero-quote span{display:block; font-size:11.5px; color:var(--ink-3); margin-top:2px; letter-spacing:.08em;}
+
+  /* domain illustrations */
+  .domain-icon{width:64px;height:64px;flex:0 0 64px;border-radius:12px;
+    background:transparent;border:0;box-shadow:none;font-size:0;overflow:hidden;}
+  .domain-art{display:block;width:100%;height:100%;}
+  @media(max-width:640px){
+    .domain-icon{width:52px;height:52px;flex-basis:52px;border-radius:10px;}
+  }
 </style>
 </head>
 <body>
+
+<svg aria-hidden="true" focusable="false" style="position:absolute;width:0;height:0;overflow:hidden">
+  <symbol id="ic-cross" viewBox="0 0 80 80">
+    <rect x="4" y="4" width="72" height="72" rx="12" fill="#eef5f8"/>
+    <path d="M20 26 L40 17 L61 28 L56 54 L36 63 L21 50 Z" fill="none" stroke="#2c7ea2" stroke-width="3"/>
+    <path d="M20 26 L36 63 M40 17 L56 54 M61 28 L21 50 M40 17 L40 40" stroke="#2c7ea2" stroke-width="2" opacity=".55"/>
+    <circle cx="40" cy="40" r="7" fill="#12232e"/>
+    <circle cx="20" cy="26" r="4" fill="#84744a"/><circle cx="61" cy="28" r="4" fill="#84744a"/>
+    <circle cx="36" cy="63" r="3" fill="#377972"/><circle cx="21" cy="50" r="3" fill="#377972"/>
+  </symbol>
+  <symbol id="ic-zhongguo" viewBox="0 0 80 80">
+    <rect x="4" y="4" width="72" height="72" rx="12" fill="#f4f0e4"/>
+    <circle cx="32" cy="39" r="19" fill="none" stroke="#2c7ea2" stroke-width="3"/>
+    <circle cx="49" cy="41" r="19" fill="none" stroke="#377972" stroke-width="3"/>
+    <path d="M29 41 Q40 29 52 42" fill="none" stroke="#12232e" stroke-width="2"/>
+    <rect x="24" y="60" width="10" height="10" fill="#a6533f"/>
+    <path d="M42 60 h14 M42 65 h11" stroke="#84744a" stroke-width="2"/>
+  </symbol>
+  <symbol id="ic-philo" viewBox="0 0 80 80">
+    <rect x="4" y="4" width="72" height="72" rx="12" fill="#eef4ec"/>
+    <path d="M17 62 H63 M23 62 V50 H57 V62 M30 50 V40 H50 V50" fill="none" stroke="#12232e" stroke-width="3"/>
+    <path d="M40 38 C31 31 33 22 41 19 C50 16 57 23 54 31 C52 37 44 40 42 32 C40 26 47 24 50 29" fill="none" stroke="#2c7ea2" stroke-width="3"/>
+    <circle cx="56" cy="22" r="4" fill="#84744a"/>
+  </symbol>
+  <symbol id="ic-mind" viewBox="0 0 80 80">
+    <rect x="4" y="4" width="72" height="72" rx="12" fill="#eef5f8"/>
+    <path d="M45 18 C28 18 20 29 22 42 C23 51 30 57 34 63 M45 18 C57 18 62 27 61 37 C60 44 55 47 54 54" fill="none" stroke="#12232e" stroke-width="3"/>
+    <circle cx="41" cy="38" r="9" fill="#fff" stroke="#2c7ea2" stroke-width="3"/>
+    <circle cx="41" cy="38" r="3.5" fill="#12232e"/>
+    <path d="M41 27 V21 M52 38 H58 M30 38 H24" stroke="#2c7ea2" stroke-width="2"/>
+    <circle cx="58" cy="22" r="3" fill="#84744a"/>
+  </symbol>
+  <symbol id="ic-nature" viewBox="0 0 80 80">
+    <rect x="4" y="4" width="72" height="72" rx="12" fill="#edf4e8"/>
+    <path d="M40 59 C24 59 17 48 22 37 C27 26 41 22 51 30 C60 37 59 50 49 54" fill="none" stroke="#377972" stroke-width="3"/>
+    <path d="M40 59 C40 47 47 38 58 31" fill="none" stroke="#2c7ea2" stroke-width="2"/>
+    <path d="M52 23 C65 20 67 34 58 39 C50 44 42 38 44 30 C45 25 48 23 52 23 Z" fill="none" stroke="#84744a" stroke-width="2.5"/>
+    <circle cx="59" cy="21" r="2.5" fill="#12232e"/>
+  </symbol>
+  <symbol id="ic-society" viewBox="0 0 80 80">
+    <rect x="4" y="4" width="72" height="72" rx="12" fill="#f2f0e8"/>
+    <path d="M15 61 H65 M19 61 V35 M33 61 V35 M47 61 V35 M61 61 V35" fill="none" stroke="#12232e" stroke-width="3"/>
+    <path d="M14 35 L40 20 L66 35" fill="none" stroke="#2c7ea2" stroke-width="3"/>
+    <path d="M19 42 H61 M19 49 H61" stroke="#84744a" stroke-width="2" opacity=".65"/>
+    <circle cx="40" cy="28" r="3" fill="#a6533f"/>
+  </symbol>
+  <symbol id="ic-history" viewBox="0 0 80 80">
+    <rect x="4" y="4" width="72" height="72" rx="12" fill="#eef2f5"/>
+    <path d="M12 55 Q25 45 38 52 T66 49 L66 65 L12 65 Z" fill="#dce9ef"/>
+    <path d="M12 48 Q24 38 37 45 T66 41 M12 41 Q24 31 37 38 T66 35" fill="none" stroke="#2c7ea2" stroke-width="2" opacity=".7"/>
+    <circle cx="55" cy="23" r="9" fill="#e6c98f"/>
+    <path d="M14 58 l8-8 6 6 8-9 7 7 10-11" fill="none" stroke="#84744a" stroke-width="2.5"/>
+    <circle cx="36" cy="28" r="2.5" fill="#12232e"/>
+  </symbol>
+  <symbol id="ic-literature" viewBox="0 0 80 80">
+    <rect x="4" y="4" width="72" height="72" rx="12" fill="#f4f0e4"/>
+    <path d="M40 34 C33 28 24 28 18 31 V57 C25 54 33 55 40 60 C47 55 55 54 62 57 V31 C56 28 47 28 40 34 Z" fill="#fff" stroke="#12232e" stroke-width="2.5"/>
+    <path d="M40 34 V60" stroke="#12232e" stroke-width="2"/>
+    <circle cx="57" cy="21" r="8" fill="#e6c98f"/>
+    <path d="M22 40 q8-3 14 1 M22 47 q8-3 14 1 M44 41 q8-3 14 0" fill="none" stroke="#2c7ea2" stroke-width="2" opacity=".7"/>
+  </symbol>
+  <symbol id="ic-tech" viewBox="0 0 80 80">
+    <rect x="4" y="4" width="72" height="72" rx="12" fill="#eef5f8"/>
+    <rect x="24" y="24" width="32" height="32" rx="3" fill="none" stroke="#12232e" stroke-width="3"/>
+    <rect x="34" y="34" width="12" height="12" fill="#2c7ea2"/>
+    <path d="M24 31 H15 M24 40 H15 M24 49 H15 M56 31 H65 M56 40 H65 M56 49 H65 M31 24 V15 M40 24 V15 M49 24 V15 M31 56 V65 M40 56 V65 M49 56 V65" stroke="#377972" stroke-width="2"/>
+    <circle cx="15" cy="31" r="2" fill="#84744a"/><circle cx="65" cy="49" r="2" fill="#84744a"/>
+  </symbol>
+  <symbol id="ic-intimacy" viewBox="0 0 80 80">
+    <rect x="4" y="4" width="72" height="72" rx="12" fill="#f5eeec"/>
+    <circle cx="32" cy="40" r="17" fill="none" stroke="#a6533f" stroke-width="3"/>
+    <circle cx="48" cy="40" r="17" fill="none" stroke="#2c7ea2" stroke-width="3"/>
+    <path d="M40 49 C36 44 38 39 42 39 C46 39 48 44 44 49 C43 50 41 51 40 52 C39 51 37 50 36 49" fill="none" stroke="#84744a" stroke-width="2" opacity=".8"/>
+    <circle cx="40" cy="24" r="2.5" fill="#84744a"/>
+  </symbol>
+  <symbol id="ic-pro" viewBox="0 0 80 80">
+    <rect x="4" y="4" width="72" height="72" rx="12" fill="#eef4f5"/>
+    <path d="M20 58 L40 20 L60 58 M26 48 H54" fill="none" stroke="#12232e" stroke-width="3"/>
+    <path d="M31 32 H49 M28 39 H52" stroke="#2c7ea2" stroke-width="2"/>
+    <circle cx="40" cy="58" r="4" fill="#84744a"/>
+    <path d="M14 64 H66" stroke="#377972" stroke-width="2" opacity=".7"/>
+  </symbol>
+</svg>
+
 
 <div class="progress" id="progress"></div>
 <div class="cursor-glow" id="glow" aria-hidden="true"></div>
@@ -511,7 +603,7 @@
 
     <section class="domain" id="__cross__">
       <header class="domain-head">
-        <span class="domain-icon">🕸️</span>
+        <span class="domain-icon"><svg class="domain-art" viewBox="0 0 80 80" aria-hidden="true"><use href="#ic-cross"></use></svg></span>
         <div class="domain-meta">
           <h2 class="domain-title">跨域 · 连接层</h2>
           <p class="domain-desc">一本书不会说出自己的边界。以下这些不按书组织，只按「它们在哪里撞上」。</p>
@@ -584,7 +676,7 @@
 
     <section class="domain" id="00_中文原典">
       <header class="domain-head">
-        <span class="domain-icon">🀄</span>
+        <span class="domain-icon"><svg class="domain-art" viewBox="0 0 80 80" aria-hidden="true"><use href="#ic-zhongguo"></use></svg></span>
         <div class="domain-meta">
           <h2 class="domain-title">中国智慧 · 关系性自我</h2>
           <p class="domain-desc">其他十个域都默认了一件事：自我是独立的个体，然后才谈关系。这一轴问的是——如果反过来呢？</p>
@@ -679,7 +771,7 @@
 
     <section class="domain" id="01_哲学与思维地基">
       <header class="domain-head">
-        <span class="domain-icon">🧠</span>
+        <span class="domain-icon"><svg class="domain-art" viewBox="0 0 80 80" aria-hidden="true"><use href="#ic-philo"></use></svg></span>
         <div class="domain-meta">
           <h2 class="domain-title">哲学与思维地基</h2>
           <p class="domain-desc">在认识任何东西之前，先弄清认识本身怎么才可能、会在哪里出错。</p>
@@ -725,7 +817,7 @@
 
     <section class="domain" id="02_心智与认知">
       <header class="domain-head">
-        <span class="domain-icon">💭</span>
+        <span class="domain-icon"><svg class="domain-art" viewBox="0 0 80 80" aria-hidden="true"><use href="#ic-mind"></use></svg></span>
         <div class="domain-meta">
           <h2 class="domain-title">心智与认知</h2>
           <p class="domain-desc">「我以为的世界」和「实际的世界」之间，隔着什么。</p>
@@ -780,7 +872,7 @@
 
     <section class="domain" id="03_自然与数学">
       <header class="domain-head">
-        <span class="domain-icon">🔬</span>
+        <span class="domain-icon"><svg class="domain-art" viewBox="0 0 80 80" aria-hidden="true"><use href="#ic-nature"></use></svg></span>
         <div class="domain-meta">
           <h2 class="domain-title">自然与数学</h2>
           <p class="domain-desc">唯一不涉及人的部分——正因如此，它是其他一切的校准基准。</p>
@@ -814,7 +906,7 @@
 
     <section class="domain" id="04_社会与制度">
       <header class="domain-head">
-        <span class="domain-icon">🏛️</span>
+        <span class="domain-icon"><svg class="domain-art" viewBox="0 0 80 80" aria-hidden="true"><use href="#ic-society"></use></svg></span>
         <div class="domain-meta">
           <h2 class="domain-title">社会与制度</h2>
           <p class="domain-desc">人与人之间那些不由感情决定的关系——产权、契约、税收、权力、组织。</p>
@@ -852,7 +944,7 @@
 
     <section class="domain" id="05_历史与地理">
       <header class="domain-head">
-        <span class="domain-icon">🌍</span>
+        <span class="domain-icon"><svg class="domain-art" viewBox="0 0 80 80" aria-hidden="true"><use href="#ic-history"></use></svg></span>
         <div class="domain-meta">
           <h2 class="domain-title">历史与地理</h2>
           <p class="domain-desc">为什么世界长成现在这个样子——长时段与大尺度的因果解释。</p>
@@ -885,7 +977,7 @@
 
     <section class="domain" id="06_文学与生命书写">
       <header class="domain-head">
-        <span class="domain-icon">📖</span>
+        <span class="domain-icon"><svg class="domain-art" viewBox="0 0 80 80" aria-hidden="true"><use href="#ic-literature"></use></svg></span>
         <div class="domain-meta">
           <h2 class="domain-title">文学与生命书写</h2>
           <p class="domain-desc">有些事无法被机制化：一个人在他具体处境里实际经历了什么，是数字和规律说不到的地方。</p>
@@ -916,7 +1008,7 @@
 
     <section class="domain" id="07_技术">
       <header class="domain-head">
-        <span class="domain-icon">💻</span>
+        <span class="domain-icon"><svg class="domain-art" viewBox="0 0 80 80" aria-hidden="true"><use href="#ic-tech"></use></svg></span>
         <div class="domain-meta">
           <h2 class="domain-title">技术</h2>
           <p class="domain-desc">别的地方只能读，这里可以动手试。抽象讲得对不对，跑一遍就知道。</p>
@@ -985,7 +1077,7 @@
 
     <section class="domain" id="08_性与亲密关系">
       <header class="domain-head">
-        <span class="domain-icon">❤️</span>
+        <span class="domain-icon"><svg class="domain-art" viewBox="0 0 80 80" aria-hidden="true"><use href="#ic-intimacy"></use></svg></span>
         <div class="domain-meta">
           <h2 class="domain-title">性与亲密关系</h2>
           <p class="domain-desc">你大部分的生命质量，取决于这个域。</p>
@@ -1026,7 +1118,7 @@
 
     <section class="domain" id="10_专业知识库">
       <header class="domain-head">
-        <span class="domain-icon">⚙️</span>
+        <span class="domain-icon"><svg class="domain-art" viewBox="0 0 80 80" aria-hidden="true"><use href="#ic-pro"></use></svg></span>
         <div class="domain-meta">
           <h2 class="domain-title">专业知识库</h2>
           <p class="domain-desc">这不是「底层」的延续，是另一个项目——组织单位是能力，不是书。这里的问题不是「什么是真的」，是「做出来能不能测」。</p>
